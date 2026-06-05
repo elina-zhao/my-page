@@ -1,0 +1,2250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Layout Template - Topbar + Sidebar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a9a6c;
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-secondary: #64748b;
+      --text-tertiary: #94a3b8;
+      --border: #e2e8f0;
+      --radius-sm: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ==============================
+           TOPBAR (fixed, full width)
+           ============================== */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+    }
+
+    .topbar .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .topbar .menu-toggle:hover { background: #f1f5f9; }
+
+    .topbar .logo-icon { display: flex; align-items: center; }
+    .topbar .logo-icon svg {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .topbar .brand-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .topbar .external-link {
+      display: inline-flex;
+      color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .topbar .external-link:hover { color: var(--text-secondary); }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar-actions .btn-new-episode {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .topbar-actions .btn-new-episode:hover { background: #334155; }
+
+    .topbar-actions .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 7px;
+      color: var(--text-secondary);
+      border-radius: 6px;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+    }
+    .topbar-actions .icon-btn:hover { background: #f1f5f9; }
+
+    .topbar-actions .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--text);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ==============================
+           SIDEBAR (fixed, below topbar)
+           ============================== */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 64px;
+      bottom: 0;
+      width: 230px;
+      background: #fff;
+      z-index: 100;
+      border-right: 1px solid var(--border);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      padding-top: 12px;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      color: rgb(102, 102, 102);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 50px;
+      transition: all 0.15s;
+    }
+    .sidebar-nav a:hover { background: #f1f5f9; }
+
+    .sidebar-nav a .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-nav a .nav-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--text-tertiary);
+      transition: stroke 0.15s;
+    }
+    .sidebar-nav a:hover .nav-icon svg { stroke: var(--text); }
+
+    .sidebar-nav a.active {
+      background: #f1f5f9;
+      color: #1e2939;
+      font-weight: 500;
+    }
+    .sidebar-nav a.active .nav-icon svg { stroke: #1e2939; }
+
+    .sidebar-nav .sub-menu {
+      padding-left: 34px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .sidebar-nav .sub-menu a {
+      font-size: 14px;
+      padding: 7px 14px;
+      border-radius: 50px;
+      color: rgb(102, 102, 102);
+    }
+    .sidebar-nav .sub-menu a.active {
+      background: #f1f5f9;
+      color: #1e2939;
+      font-weight: 500;
+    }
+
+    /* ==============================
+           OVERLAY (mobile only)
+           ============================== */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.3);
+      z-index: 99;
+    }
+
+    /* ==============================
+           MAIN CONTENT AREA
+           ============================== */
+    .main-panel {
+      margin-left: 230px;
+      margin-top: 64px;
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content {
+      padding: 32px 32px 32px 48px;
+      flex: 1;
+      max-width: 1240px;
+    }
+    .content h1 {
+      font-size: 32px;
+    }
+
+    /* ==============================
+           RESPONSIVE
+           ============================== */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        top: 60px;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.show { display: block; }
+      .main-panel { margin-left: 0; margin-top: 60px; }
+      .content { padding: 24px; }
+      .topbar { padding: 0 16px; height: 60px; }
+      .topbar .menu-toggle { display: flex; }
+    }
+
+    @media (max-width: 480px) {
+      .content { padding: 16px; }
+    }
+
+    /* ==============================
+           PAGE NAVIGATION
+           ============================== */
+    .page.hidden {
+      display: none;
+    }
+
+    /* ==============================
+           SOCIAL SHARE — GRID CARDS
+           ============================== */
+    .platform-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 1160px;
+    }
+    .platform-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 22px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      min-height: 91.9px;
+    }
+    .platform-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+      border-color: #cbd5e1;
+    }
+    .platform-card:has(.btn-connect.connected) {
+      border-color: #bbf7d0;
+      background: #fafefc;
+    }
+    .platform-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+    .platform-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+    .platform-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .platform-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    .platform-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+    }
+    .btn-connect,
+    .btn-edit {
+      padding: 7px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-connect {
+      background: var(--text);
+      color: #fff;
+      border: none;
+    }
+    .btn-connect:hover {
+      background: #334155;
+    }
+    .btn-connect.connected {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-connect.connected:hover {
+      background: #fef2f2;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+    .btn-edit {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-edit:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    @media (max-width: 720px) {
+      .platform-list {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+      }
+    }
+
+    /* ==============================
+           PODCAST APPS
+           ============================== */
+    .pa-trust {
+      margin-bottom: 48px;
+    }
+    .pa-trust-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+    }
+    .pa-trust-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px 48px;
+      align-items: center;
+    }
+    .pa-trust-grid img {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+
+    .pa-banner {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 40px 32px;
+      max-width: 900px;
+      position: relative;
+      overflow: hidden;
+    }
+    .pa-banner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), #38bdf8);
+      pointer-events: none;
+    }
+    .pa-banner-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+      max-width: 520px;
+    }
+    .pa-banner-body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0 0 24px;
+      max-width: 480px;
+    }
+    .pa-banner-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 11px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .pa-banner-btn:hover {
+      background: #334155;
+      transform: translateY(-1px);
+    }
+    .pa-banner-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .pa-checklist {
+      max-width: 700px;
+      padding-top: 8px;
+    }
+    .pa-checklist-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .pa-checklist-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .pa-checklist-count {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+    .pa-steps {
+      display: flex;
+      flex-direction: column;
+    }
+    .pa-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pa-step:last-child {
+      border-bottom: none;
+    }
+    .pa-step-num {
+      width: 28px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .pa-step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-tertiary);
+    }
+    .pa-step-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .pa-step-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .pa-step-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .pa-step-action {
+      flex-shrink: 0;
+    }
+    .pa-step-action .btn {
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 7px 22px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .pa-step-action .btn:hover {
+      background: #334155;
+    }
+    .pa-step-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #ecfdf5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pa-step-check svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--primary);
+    }
+
+    @media (max-width: 800px) {
+      .pa-hero {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .pa-hero-stats {
+        gap: 28px;
+      }
+      .pa-trust-grid {
+        gap: 24px 32px;
+      }
+      .pa-trust-grid img {
+        height: 28px;
+      }
+      .pa-banner {
+        padding: 32px 28px;
+      }
+      .pa-banner-meta {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+    }
+
+    /* ==============================
+           PODCAST APPS — DISTRIBUTION CARDS
+           ============================== */
+    .pa-dist-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 1160px;
+    }
+    .pa-dist-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      min-height: 76px;
+    }
+    .pa-dist-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+      border-color: #cbd5e1;
+    }
+    .pa-dist-card.submitted {
+      border-color: var(--border);
+      background: var(--surface);
+    }
+    .pa-dist-card {
+      align-items: flex-start;
+    }
+    .pa-dist-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+    .pa-dist-card-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .pa-dist-card-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+    }
+    .pa-dist-card-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .pa-dist-card-info .btn-connect.connected:hover {
+      background: #f1f5f9;
+      color: var(--text-secondary);
+      border-color: #cbd5e1;
+    }
+    .pa-dist-card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .pa-dist-card-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--primary);
+      background: #ecfdf5;
+      padding: 2px 8px;
+      border-radius: 4px;
+      line-height: 1.4;
+    }
+    .pa-dist-card-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 28px;
+    }
+    .pa-dist-status {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .pa-dist-status.submitted {
+      color: var(--primary);
+    }
+    @media (max-width: 720px) {
+      .pa-dist-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==============================
+           APPLE SUBMIT MODAL
+           ============================== */
+    .apple-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 999;
+      overflow-y: auto;
+    }
+    .apple-modal-overlay.show {
+      display: block;
+    }
+    .apple-modal {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 36px 36px;
+      position: relative;
+    }
+    .apple-modal-close {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      background: #f1f5f9;
+      border: none;
+      font-size: 22px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      z-index: 10;
+      transition: background 0.15s;
+    }
+    .apple-modal-close:hover { background: #e2e8f0; }
+    .apple-modal h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 4px;
+    }
+    .apple-modal .modal-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0 0 24px;
+    }
+    .apple-modal .already-link {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .apple-modal .already-link a {
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .apple-modal .micro-headline {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: normal;
+      color: var(--text-secondary);
+      margin: 24px 0 12px;
+    }
+    .apple-modal .setup-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .apple-modal .setup-text {
+      font-size: 14px;
+      color: var(--text);
+    }
+    .apple-modal .sc-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .apple-modal .sc-btn:hover {
+      background: #f1f5f9;
+    }
+    .apple-modal .sel-underline {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 4px 0;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: transparent;
+      cursor: pointer;
+      outline: none;
+      width: 220px;
+    }
+    .apple-modal .sel-underline:focus {
+      border-color: var(--text);
+    }
+    .apple-modal .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+    .apple-modal .check-row input[type="checkbox"] {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--text);
+      flex-shrink: 0;
+    }
+    .apple-modal .check-row span {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .apple-modal .check-row .terms-inline {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .apple-modal .btn-agree-all {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      padding: 8px 0 8px 30px;
+    }
+    .apple-modal .submit-footer {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+    }
+    .apple-modal .btn-big {
+      padding: 11px 32px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .apple-modal .btn-big.black {
+      background: var(--text);
+      color: #fff;
+    }
+    .apple-modal .btn-big.black:hover {
+      background: #334155;
+    }
+    .apple-modal .btn-big.black:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .apple-modal .btn-big.black:disabled:hover {
+      background: var(--text);
+    }
+
+    .apple-modal .acc-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .apple-modal .acc-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.15s;
+    }
+    .apple-modal .acc-header.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .apple-modal .acc-item.locked .acc-body {
+      display: none !important;
+    }
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .apple-modal .acc-arrow {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+      color: var(--text-tertiary);
+    }
+    .apple-modal .acc-item.open .acc-arrow {
+      transform: rotate(90deg);
+    }
+    .apple-modal .acc-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .apple-modal .acc-body {
+      display: none;
+      padding: 0 0 16px 26px;
+    }
+    .apple-modal .acc-item.open .acc-body {
+      display: block;
+    }
+    .apple-modal .acc-body p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .apple-modal .acc-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .apple-modal .acc-step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .apple-modal .acc-step span {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .apple-modal .acc-step a {
+      color: var(--primary);
+    }
+    .apple-modal .btn.black {
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .apple-modal .btn.black:hover {
+      background: #334155;
+    }
+    .apple-modal .locked-overlay {
+      text-align: center;
+      padding: 24px 0;
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    /* Apple Modal Tabs */
+    .apple-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .apple-tab {
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: inherit;
+    }
+    .apple-tab:hover {
+      color: var(--text-secondary);
+    }
+    .apple-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--text);
+      font-weight: 600;
+    }
+    .apple-tab.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .apple-tab.locked:hover {
+      color: var(--text-tertiary);
+    }
+    .apple-tab-content {
+      display: none;
+    }
+    .apple-tab-content.active {
+      display: block;
+    }
+    .apple-tab-lock-msg {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-tertiary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .apple-tab-lock-msg svg {
+      display: block;
+      margin: 0 auto 16px;
+      width: 40px;
+      height: 40px;
+      stroke: var(--text-tertiary);
+    }
+
+    /* ==============================
+           OAUTH CONNECT MODAL
+           ============================== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.show {
+      display: flex;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      width: 420px;
+      max-width: 90vw;
+      padding: 36px 32px 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      text-align: center;
+      position: relative;
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      line-height: 1;
+    }
+    .modal-close:hover { background: #f1f5f9; }
+    .modal-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .modal-icon-wrap svg {
+      width: 28px;
+      height: 28px;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .modal-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .modal-permissions {
+      text-align: left;
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+    .modal-permissions-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .modal-permission-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text);
+      padding: 4px 0;
+    }
+    .modal-permission-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+    .modal-permission-item .perm-check {
+      color: var(--primary);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .modal-btn {
+      padding: 10px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .modal-btn-primary {
+      background: var(--text);
+      color: #fff;
+    }
+    .modal-btn-primary:hover {
+      background: #334155;
+    }
+    .modal-btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .modal-btn-secondary:hover {
+      background: #f1f5f9;
+    }
+
+    /* Success state inside modal */
+    .modal-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0 8px;
+    }
+    .modal-success.show {
+      display: flex;
+    }
+    .modal-success-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #ecfdf5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .modal-success-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--primary);
+    }
+    .modal-success-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .modal-success-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ==============================
+           EMBEDDABLE PLAYER
+           ============================== */
+    .ep-layout {
+      display: flex;
+      gap: 48px;
+      align-items: flex-start;
+      margin-right: 0;
+    }
+    .ep-preview-panel {
+      width: 700px;
+      flex-shrink: 0;
+    }
+    .ep-preview-panel img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+      display: block;
+    }
+    .ep-section-header {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .ep-right-panel {
+      flex: 1;
+      min-width: 0;
+    }
+    .ep-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .ep-embed-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .ep-embed-box textarea {
+      width: 100%;
+      height: 90px;
+      border: none;
+      background: transparent;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+      resize: none;
+      outline: none;
+    }
+    .ep-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .ep-copy-btn:hover {
+      background: #334155;
+    }
+
+    .ep-control-group {
+      margin-top: 22px;
+    }
+    .ep-cg-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .ep-control-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 38px;
+    }
+    .ep-control-group select:focus {
+      border-color: var(--primary);
+    }
+
+    .ep-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0 0;
+    }
+    .ep-toggle {
+      margin-top: 0;
+      padding: 16px 0 4px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      transition: color 0.15s;
+    }
+    .ep-toggle:hover {
+      color: var(--primary);
+    }
+    .ep-toggle span {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      transition: transform 0.2s;
+    }
+    .ep-settings-panel {
+      margin-top: 16px;
+      padding-top: 4px;
+    }
+    .ep-settings-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 24px;
+    }
+    .ep-settings-row > div {
+      flex: 0 0 calc(50% - 12px);
+      min-width: 0;
+    }
+    .ep-field-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .ep-swatch-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .ep-swatch {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-block;
+      transition: box-shadow 0.15s;
+    }
+    .ep-swatch.active {
+      box-shadow: 0 0 0 2px #fff, 0 0 0 2px var(--primary);
+    }
+    .ep-settings-panel select,
+    .ep-settings-panel input[type="text"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .ep-settings-panel select:focus,
+    .ep-settings-panel input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+    .ep-subsection {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .ep-subsection-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 1200px) {
+      .ep-preview-panel {
+        width: 100%;
+      }
+      .ep-layout {
+        flex-direction: column;
+      }
+      .ep-right-panel {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== TOPBAR ===== -->
+  <header class="topbar">
+    <button class="menu-toggle" onclick="toggleSidebar()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="logo-icon">
+        <svg viewBox="0 0 34 34" fill="none">
+          <rect width="34" height="34" rx="8" fill="#1e293b"/>
+          <path d="M17 7a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0v-4a5 5 0 0 0-5-5z" fill="#fff"/>
+          <path d="M22 16v1a5 5 0 0 1-10 0v-1" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="17" y1="23" x2="17" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="13" y1="27" x2="21" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-text">Brand Name</span>
+      <a href="#" target="_blank" class="external-link" title="View Site">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </a>
+    </div>
+
+    <div class="topbar-actions">
+      <button class="btn-new-episode">+ New Item</button>
+      <button class="icon-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </button>
+      <div class="avatar">EZ</div>
+    </div>
+  </header>
+
+  <!-- ===== SIDEBAR OVERLAY ===== -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#" data-page="onboarding">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </span>
+        Onboarding
+      </a>
+      <a href="#" data-page="dashboard">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </span>
+        Dashboard
+      </a>
+      <a href="#" class="active" data-page="distribution">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </span>
+        Distribution
+      </a>
+      <div class="sub-menu">
+        <a href="#" class="active" onclick="switchSubPage(event, 'podcast-apps')">Podcast Apps</a>
+        <a href="#" onclick="switchSubPage(event, 'social-share')">Social Share</a>
+        <a href="#" onclick="switchSubPage(event, 'podcast-website')">Podcast Website</a>
+        <a href="#" onclick="switchSubPage(event, 'embeddable-player')">Embeddable Player</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-panel">
+    <div class="content" id="pageContent">
+      <!-- Default / Podcast Apps page -->
+      <div class="page" id="page-podcast-apps">
+
+        <div class="page-heading-title" style="font-size:28px;font-weight:700;color:var(--text);margin-bottom:8px;">Podcast Apps</div>
+        <p style="font-size:15px;color:var(--text-secondary);margin:0 0 32px;max-width:600px;">Distribute your podcast to every major platform and reach millions of listeners worldwide.</p>
+
+        <div class="pa-trust" style="margin-bottom:40px;" id="paTrust">
+          <div class="pa-trust-label">Distribute to</div>
+          <div class="pa-trust-grid">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/apple-podcast.png" alt="Apple Podcasts">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/spotify.png" alt="Spotify">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/youtube_logo.png" alt="YouTube">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/podbean-app.png" alt="Podbean App">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/AmazonMusic.png" alt="Amazon Music">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/iHeartRadio.png" alt="iHeartRadio">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/PlayerFM.png" alt="Player FM">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/Podchaser.webp" alt="Podchaser">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/BoomPlay.png" alt="Boomplay">
+            <img src="https://pbcdn1.podbean.com/fs1/site/images/admin5/ListenNotes.png" alt="Listen Notes">
+          </div>
+        </div>
+
+        <div id="promoSection">
+          <div class="pa-banner">
+            <div class="pa-banner-title">Your voice deserves to be heard everywhere.</div>
+            <p class="pa-banner-body">With a single click, publish your podcast to Apple Podcasts, Spotify, YouTube, Amazon Music, and more — and start growing your audience today.</p>
+            <button class="pa-banner-btn" onclick="showPrerequisites()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              Upgrade to Distribute
+            </button>
+          </div>
+        </div>
+
+        <div id="prereqSection" style="display:none;" class="pa-checklist">
+          <div class="pa-checklist-head">
+            <div class="pa-checklist-title">Before you distribute</div>
+            <span class="pa-checklist-count">Complete all 5 steps</span>
+          </div>
+          <div class="pa-steps">
+            <div class="pa-step" data-key="title">
+              <span class="pa-step-num">01</span>
+              <div class="pa-step-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </div>
+              <div class="pa-step-info">
+                <div class="pa-step-name">Podcast title &amp; description</div>
+              </div>
+              <div class="pa-step-action"><div class="pa-step-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+            </div>
+            <div class="pa-step" data-key="logo">
+              <span class="pa-step-num">02</span>
+              <div class="pa-step-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              </div>
+              <div class="pa-step-info">
+                <div class="pa-step-name">Upload podcast cover art</div>
+              </div>
+              <div class="pa-step-action"><button class="btn" onclick="completeStep(this)">Upload</button></div>
+            </div>
+            <div class="pa-step" data-key="category">
+              <span class="pa-step-num">03</span>
+              <div class="pa-step-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              </div>
+              <div class="pa-step-info">
+                <div class="pa-step-name">Podcast category</div>
+              </div>
+              <div class="pa-step-action"><button class="btn" onclick="completeStep(this)">Add</button></div>
+            </div>
+            <div class="pa-step" data-key="episode">
+              <span class="pa-step-num">04</span>
+              <div class="pa-step-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              </div>
+              <div class="pa-step-info">
+                <div class="pa-step-name">First episode</div>
+              </div>
+              <div class="pa-step-action"><button class="btn" onclick="completeStep(this)">Publish</button></div>
+            </div>
+            <div class="pa-step" data-key="language">
+              <span class="pa-step-num">05</span>
+              <div class="pa-step-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              </div>
+              <div class="pa-step-info">
+                <div class="pa-step-name">Podcast language</div>
+              </div>
+              <div class="pa-step-action"><div class="pa-step-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="distroSection" style="display:none;">
+          <div class="pa-dist-list" id="paDistList"></div>
+        </div>
+
+      </div>
+
+      <!-- Social Share page -->
+      <div class="page hidden" id="page-social-share">
+        <h1>Social Share</h1>
+        <p style="color:var(--text-secondary);margin-top:8px;margin-bottom:24px;">Auto-share your podcast episodes to social platforms. Click <strong>Connect</strong> to link your account.</p>
+
+        <div class="platform-list" id="platformList">
+          <!-- Facebook -->
+          <div class="platform-card" data-platform="facebook">
+            <div class="platform-card-header">
+              <div class="platform-icon" style="background:#1877f2;">
+                <svg viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </div>
+              <span class="platform-name">Facebook</span>
+              <div class="platform-card-actions">
+                <button class="btn-edit" id="btn-edit-facebook" onclick="openEdit('facebook')" style="display:none;">Edit</button>
+                <button class="btn-connect" id="btn-facebook" onclick="openConnect('facebook')">Connect</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LinkedIn -->
+          <div class="platform-card" data-platform="linkedin">
+            <div class="platform-card-header">
+              <div class="platform-icon" style="background:#0a66c2;">
+                <svg viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </div>
+              <span class="platform-name">LinkedIn</span>
+              <div class="platform-card-actions">
+                <button class="btn-connect" id="btn-linkedin" onclick="openConnect('linkedin')">Connect</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- YouTube -->
+          <div class="platform-card" data-platform="youtube">
+            <div class="platform-card-header">
+              <div class="platform-icon" style="background:#ff0000;">
+                <svg viewBox="0 0 24 24" fill="#fff"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              </div>
+              <span class="platform-name">YouTube</span>
+              <div class="platform-card-actions">
+                <button class="btn-connect" id="btn-youtube" onclick="openConnect('youtube')">Connect</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tumblr -->
+          <div class="platform-card" data-platform="tumblr">
+            <div class="platform-card-header">
+              <div class="platform-icon" style="background:#36465d;">
+                <svg viewBox="0 0 24 24" fill="#fff"><path d="M18.747 19.282a7.62 7.62 0 01-1.814.954c-.634.237-1.22.356-1.762.356-2.5 0-3.78-1.41-3.78-4.23v-4.78h-2.6V9.07c1.35-.448 2.538-1.327 3.244-2.496.476-.753.795-1.602.937-2.574h2.63v4.72h3.14v2.976h-3.13v4.44c0 .805.167 1.41.5 1.81.334.4.804.6 1.406.6.64 0 1.33-.157 2.07-.47l.56 2.2-.6.002z"/></svg>
+              </div>
+              <span class="platform-name">Tumblr</span>
+              <div class="platform-card-actions">
+                <button class="btn-connect" id="btn-tumblr" onclick="openConnect('tumblr')">Connect</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- WordPress -->
+          <div class="platform-card" data-platform="wordpress">
+            <div class="platform-card-header">
+              <div class="platform-icon" style="background:#21759b;">
+                <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm0 22c-5.52 0-10-4.48-10-10S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10zm4.37-7.05l-1.07-2.93c.38-.14.74-.3 1.07-.48.33-.18.58-.37.75-.58.17-.21.26-.44.26-.69 0-.17-.08-.35-.24-.54-.16-.19-.4-.35-.72-.48-.31-.14-.7-.22-1.15-.26-.46-.03-.99-.05-1.6-.05h-1.57l-1.6 4.52h1.83l.44-1.2h2.24l.48 1.2h1.88zm-3.57-3.6l.84-2.4h.25c.25 0 .47.01.67.03.2.02.37.07.5.14.14.08.21.19.21.35 0 .08-.03.18-.1.29s-.16.19-.28.27c-.12.08-.28.14-.47.19-.2.04-.43.07-.72.09a26 26 0 01-.9.04h-.76v1.4zm-7.85 3.6l1.35-3.76c.27-.75.49-1.34.63-1.77.14-.43.23-.8.26-1.1h.04c.03.3.13.68.29 1.13.16.45.37.99.63 1.62l1.35 3.88h1.93l-2.74-7.42H6.85l-2.7 7.42h1.8z"/></svg>
+              </div>
+              <span class="platform-name">WordPress</span>
+              <div class="platform-card-actions">
+                <button class="btn-connect" id="btn-wordpress" onclick="openConnect('wordpress')">Connect</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Podcast Website page -->
+      <div class="page hidden" id="page-podcast-website">
+        <h1>Podcast Website</h1>
+        <p style="color:var(--text-secondary);margin-top:8px;margin-bottom:24px;">Manage your podcast website settings.</p>
+      </div>
+
+      <!-- Embeddable Player page -->
+      <div class="page hidden" id="page-embeddable-player">
+        <h1>Embeddable Player</h1>
+        <p style="color:var(--text-secondary);margin-top:8px;margin-bottom:24px;">Embed a multi-episode player on your site. Customize the look and feel to match your brand. <a href="#" style="color:var(--primary);text-decoration:none;">Learn more</a></p>
+        <div class="ep-layout">
+          <div class="ep-preview-panel">
+            <img src="multiplayer.png" alt="Multi-player preview">
+          </div>
+          <div class="ep-right-panel">
+            <div class="ep-desc">Copy this code and paste it into your website or blog to embed the player.</div>
+            <div class="ep-embed-box">
+              <textarea id="embedCodeMulti" readonly="">&lt;iframe
+  src="https://www.podbean.com/player-v2/?i=abc123&amp;multi=1"
+  width="100%"
+  height="420"
+  frameborder="0"
+  scrolling="no"
+&gt;&lt;/iframe&gt;</textarea>
+            </div>
+            <button class="ep-copy-btn" onclick="var c=document.getElementById('embedCodeMulti').value;navigator.clipboard.writeText(c);this.textContent='Copied!';setTimeout(()=>{this.textContent='Copy Embed Code'},2000)">Copy Embed Code</button>
+
+            <div class="ep-control-group">
+              <div class="ep-cg-label">Display Order</div>
+              <select><option>Episodic (From New to Old)</option><option>Episodic (From Old to New)</option><option>Alphabetical</option></select>
+            </div>
+            <div class="ep-control-group">
+              <div class="ep-cg-label">Number of Episodes</div>
+              <select><option>10</option><option>5</option><option>15</option><option>20</option><option>All</option></select>
+            </div>
+            <div class="ep-control-group">
+              <div class="ep-cg-label">Episode Filters</div>
+              <select><option>All</option><option>Published only</option><option>Scheduled only</option><option>Draft only</option></select>
+            </div>
+
+            <div class="ep-toggle" onclick="var p=document.getElementById('epMoreSettings');var a=this.querySelector('span');if(p.style.display==='none'){p.style.display='';a.textContent='▾';}else{p.style.display='none';a.textContent='▸';}">
+              More Settings <span>▸</span>
+            </div>
+            <div id="epMoreSettings" class="ep-settings-panel" style="display:none;">
+              <div class="ep-settings-row">
+                <div>
+                  <div class="ep-field-label">Player color</div>
+                  <div class="ep-swatch-group">
+                    <span class="ep-swatch active" style="background:#fff;border:2px solid var(--border);" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active')"></span>
+                    <span class="ep-swatch" style="background:#1e293b;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active')"></span>
+                    <input type="color" value="#1a9a6c" style="width:24px;height:24px;border:none;border-radius:4px;cursor:pointer;padding:0;">
+                  </div>
+                </div>
+                <div>
+                  <div class="ep-field-label">Button color</div>
+                  <div class="ep-swatch-group">
+                    <span class="ep-swatch active" style="background:#1a9a6c;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active')"></span>
+                    <input type="color" value="#1a9a6c" style="width:24px;height:24px;border:none;border-radius:4px;cursor:pointer;padding:0;">
+                  </div>
+                </div>
+                <div>
+                  <div class="ep-field-label">Font color</div>
+                  <select><option>auto</option><option>white</option><option>black</option></select>
+                </div>
+                <div>
+                  <div class="ep-field-label">Height</div>
+                  <input type="text" value="315px (default)">
+                </div>
+                <div>
+                  <div class="ep-field-label">Font</div>
+                  <select><option>Arial</option><option>Roboto</option><option>Helvetica</option><option>Georgia</option></select>
+                </div>
+                <div>
+                  <div class="ep-field-label">Share</div>
+                  <select><option>Show</option><option>Hide</option></select>
+                </div>
+                <div>
+                  <div class="ep-field-label">Download</div>
+                  <select><option>Show</option><option>Hide</option></select>
+                </div>
+              </div>
+              <div class="ep-subsection">
+                <div class="ep-subsection-title">More Options</div>
+                <div class="ep-settings-row">
+                  <div>
+                    <div class="ep-field-label">Logo link</div>
+                    <select><option>Episode page</option><option>Podcast page</option><option>None</option></select>
+                  </div>
+                  <div>
+                    <div class="ep-field-label">Right-to-left text</div>
+                    <select><option>No</option><option>Yes</option></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== APPLE PODCASTS SUBMIT MODAL ===== -->
+  <div class="apple-modal-overlay" id="appleSubmitModal">
+    <div class="apple-modal">
+      <button class="apple-modal-close" onclick="closeAppleModal()">&times;</button>
+      <h2>Apple Podcasts</h2>
+      <p class="modal-sub">Set up and manage your Apple Podcasts integration.</p>
+
+      <div class="apple-tabs" id="appleTabs">
+        <button class="apple-tab active" data-tab="submit" onclick="switchAppleTab('submit')">Submit to Apple Podcasts</button>
+        <button class="apple-tab" data-tab="hls" id="appleTabHls" onclick="switchAppleTab('hls')">Enable HLS Video</button>
+        <button class="apple-tab" data-tab="subscriptions" id="appleTabSubscriptions" onclick="switchAppleTab('subscriptions')">Apple Podcasts Subscriptions</button>
+      </div>
+
+      <!-- Tab 1: Submit -->
+      <div class="apple-tab-content active" id="appleTabContent-submit">
+        <div class="already-link" style="cursor:pointer;" onclick="toggleExistingUrl()">
+          Already on Apple Podcasts via another host?
+          <a onclick="event.stopPropagation();toggleExistingUrl()">Save your existing URL here.</a>
+        </div>
+        <div id="existingUrlSection" style="display:none;margin-bottom:20px;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:10px;">
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">Your podcast URL in Apple Podcasts</div>
+          <input type="text" id="existingAppleUrl" placeholder="https://podcasts.apple.com/us/podcast/podcasting-smarter/id1130834513" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;">
+          <button class="btn black" style="margin-top:10px;" onclick="saveExistingAppleUrl()">Save</button>
+        </div>
+
+      <div class="micro-headline">Pre-requisites</div>
+      <div class="setup-row">
+        <div class="setup-text">Ensure your country is in the allowed list.</div>
+        <button class="sc-btn" onclick="alert('Showing allowed countries list')">Check List</button>
+      </div>
+      <div class="setup-row">
+        <div class="setup-text">Ensure "Remove from Apple Directory" is turned off in Feed Settings.</div>
+        <button class="sc-btn" onclick="alert('Go to Feed Settings')">Go to Settings</button>
+      </div>
+
+      <div class="micro-headline">Show Specifications</div>
+      <div class="setup-row">
+        <div class="setup-text">Content Rights</div>
+        <select class="sel-underline" id="selContentRights">
+          <option value="" selected disabled>Select...</option>
+          <option value="No third-party content">No third-party content</option>
+          <option value="Has rights to third-party content">Has rights to third-party content</option>
+        </select>
+      </div>
+      <div class="setup-row">
+        <div class="setup-text">Update Frequency</div>
+        <select class="sel-underline" id="selUpdateFreq">
+          <option value="" selected disabled>Select...</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Daily">Daily</option>
+          <option value="Biweekly">Biweekly</option>
+          <option value="Monthly">Monthly</option>
+          <option value="No Set Schedule">No Set Schedule</option>
+        </select>
+      </div>
+
+      <div class="micro-headline">Distribution Agreement</div>
+      <label class="check-row">
+        <input type="checkbox" onchange="checkAppleAgreements()">
+        <span>I request for Podbean to submit my podcast for distribution on Apple Podcasts. I agree with <a class="terms-inline" onclick="alert('Podbean Terms of Service')">Podbean's Terms of Service</a>.</span>
+      </label>
+      <label class="check-row">
+        <input type="checkbox" onchange="checkAppleAgreements()">
+        <span>I have reviewed Apple Podcasts' <a class="terms-inline" onclick="alert('Apple Podcasts content requirements')">content requirements</a> to ensure my podcast complies.</span>
+      </label>
+      <label class="check-row">
+        <input type="checkbox" onchange="checkAppleAgreements()">
+        <span>I certify that I have licensing rights for all music used in my podcast.</span>
+      </label>
+      <div style="display:flex;justify-content:flex-start;padding-left:30px;margin-top:4px;">
+        <button class="btn-agree-all" onclick="agreeAllApple()">Agree to All Terms</button>
+      </div>
+
+        <div class="submit-footer">
+          <button class="btn-big black" id="btnAppleSubmit" disabled>Submit to Apple Podcasts</button>
+        </div>
+      </div>
+
+      <!-- Tab 2: HLS Video -->
+      <div class="apple-tab-content" id="appleTabContent-hls">
+        <div id="appleTabHlsBody">
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;">Deliver video episodes to Apple Podcasts using HLS adaptive streaming. New video episodes will automatically use HLS after setup.</p>
+          <div class="acc-step"><div class="acc-step-num">1</div><span>If you haven't already, claim your podcast on Apple Podcasts in the step above.</span></div>
+          <div class="acc-step"><div class="acc-step-num">2</div><span>Sign in to <a href="https://podcastsconnect.apple.com" target="_blank">Apple Podcasts Connect</a> and download your API key. Follow <a href="https://support.apple.com/guide/podcasts/publish-video-podcasts-podc5e1e3f2c" target="_blank">Apple's instructions</a>.</span></div>
+          <div class="acc-step"><div class="acc-step-num">3</div><span>Upload the API key file below.</span></div>
+          <div style="margin-top:14px;"><button class="btn black">Upload API Key</button></div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Subscriptions -->
+      <div class="apple-tab-content" id="appleTabContent-subscriptions">
+        <div id="appleTabSubscriptionsBody">
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;">Offer premium subscriptions and earn revenue from your podcast directly through Apple Podcasts. Subscriptions let listeners support your show.</p>
+          <div class="acc-step"><div class="acc-step-num">1</div><span>If you haven't already, claim your podcast on Apple Podcasts in the step above.</span></div>
+          <div class="acc-step"><div class="acc-step-num">2</div><span>Sign in to <a href="https://podcastsconnect.apple.com" target="_blank">Apple Podcasts Connect</a>, go to the <strong>Subscriptions</strong> tab, and create your subscription channel.</span></div>
+          <div class="acc-step"><div class="acc-step-num">3</div><span>Once you have set up the Apple Podcasts Subscriptions, simply click on the option "Download your Apple Podcasts API Key" to save an API key provided by Apple directly to your computer. The file type is .p8 or .pem.</span></div>
+          <div class="acc-step"><div class="acc-step-num">4</div><span>Upload the API key file below.</span></div>
+          <div style="margin-top:14px;"><button class="btn black">Upload API Key</button></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== OAUTH CONNECT MODAL ===== -->
+  <div class="modal-overlay" id="oauthModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+
+      <!-- Default: Authorize step -->
+      <div id="modalAuthorize">
+        <div class="modal-icon-wrap" id="modalIcon"></div>
+        <div class="modal-title" id="modalTitle">Connect to Facebook</div>
+        <div class="modal-subtitle" id="modalSubtitle">Allow your podcast to auto-share new episodes to your Facebook page.</div>
+
+        <div class="modal-permissions">
+          <div class="modal-permissions-title">This app will receive:</div>
+          <div class="modal-permission-item">
+            <svg class="perm-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="modalPerm1">Access your Facebook Pages</span>
+          </div>
+          <div class="modal-permission-item">
+            <svg class="perm-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="modalPerm2">Publish new episodes as posts</span>
+          </div>
+          <div class="modal-permission-item">
+            <svg class="perm-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="modalPerm3">View your profile name and avatar</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="modal-btn modal-btn-primary" id="modalPrimaryBtn" onclick="authorizeApp()">Authorize</button>
+        </div>
+      </div>
+
+      <!-- Success step (shown after authorize) -->
+      <div class="modal-success" id="modalSuccess">
+        <div class="modal-success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="modal-success-title" id="successTitle">Connected to Facebook</div>
+        <div class="modal-success-sub" id="successSub">Your podcast will now auto-share new episodes.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== Podcast Apps: Show prerequisites =====
+    function showPrerequisites() {
+      document.getElementById('promoSection').style.display = 'none';
+      document.getElementById('prereqSection').style.display = '';
+    }
+
+    // ===== Prerequisite step tracking =====
+    var completedSteps = 2;
+    var totalSteps = 5;
+
+    // ===== Complete prerequisite step =====
+    function completeStep(btn) {
+      var check = document.createElement('div');
+      check.className = 'pa-step-check';
+      check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      btn.parentNode.replaceChild(check, btn);
+      completedSteps++;
+      if (completedSteps >= totalSteps) {
+        showDistributionApps();
+      }
+    }
+
+    // ===== Distribution app data =====
+    var distPlatformData = [
+      { key: 'apple-podcasts', name: 'Apple Podcasts', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/apple-podcast.png', features: ['HLS Video', 'Apple Podcast Subscription'] },
+      { key: 'spotify', name: 'Spotify', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/spotify.png', features: ['Accept mp3 audio only podcasts'], submitted: true },
+      { key: 'youtube-dist', name: 'YouTube', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/youtube_logo.png', features: ['Submit audio as statics video to YouTube'] },
+      { key: 'podbean-app', name: 'Podbean App', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/podbean-app.png' },
+      { key: 'amazon-music', name: 'Amazon Music / Audible', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/AmazonMusic.png' },
+      { key: 'iheartradio', name: 'iHeartRadio', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/iHeartRadio.png' },
+      { key: 'player-fm', name: 'Player FM', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/PlayerFM.png' },
+      { key: 'podchaser', name: 'Podchaser', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/Podchaser.webp' },
+      { key: 'boomplay', name: 'Boomplay', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/BoomPlay.png' },
+      { key: 'listen-notes', name: 'Listen Notes', img: 'https://pbcdn1.podbean.com/fs1/site/images/admin5/ListenNotes.png' }
+    ];
+    var distSubmitted = {};
+
+    distPlatformData.forEach(function(p) {
+      if (p.submitted) distSubmitted[p.key] = true;
+    });
+
+    // ===== Show distribution apps list =====
+    function showDistributionApps() {
+      document.getElementById('prereqSection').style.display = 'none';
+      document.getElementById('promoSection').style.display = 'none';
+      document.getElementById('paTrust').style.display = 'none';
+      document.getElementById('distroSection').style.display = '';
+      renderDistList();
+    }
+
+    // ===== Render distribution cards =====
+    function renderDistList() {
+      var list = document.getElementById('paDistList');
+      list.innerHTML = '';
+      distPlatformData.forEach(function(p) {
+        var isSubmitted = distSubmitted[p.key];
+        var card = document.createElement('div');
+        card.className = 'pa-dist-card' + (isSubmitted ? ' submitted' : '');
+        var inner = '';
+        var actionHtml = isSubmitted
+          ? '<button class="btn-connect connected" onclick="' + (p.key === 'apple-podcasts' ? "openAppleModal()" : (p.url ? "window.open(\'" + p.url + "\',\'_blank\')" : "")) + '">View</button>'
+          : '<button class="btn-connect" onclick="' + (p.key === 'apple-podcasts' ? "openAppleModal()" : "toggleDistSubmit(\'" + p.key + "\')") + '">Submit</button>';
+        if (p.features && p.features.length) {
+          inner = '<div style="display:flex;flex-direction:column;flex:1;min-width:0;">' +
+            '<div style="display:flex;align-items:center;gap:8px;">' +
+              '<span class="pa-dist-card-name">' + p.name + '</span>' +
+              '<div class="pa-dist-card-info">' + actionHtml + '</div>' +
+            '</div>' +
+            '<div class="pa-dist-card-tags">' +
+              p.features.map(function(f) { return '<span class="pa-dist-card-tag">' + f + '</span>'; }).join('') +
+            '</div>' +
+          '</div>';
+        } else {
+          inner = '<div style="display:flex;align-items:center;flex:1;min-width:0;gap:8px;align-self:center;">' +
+            '<span style="font-size:15px;font-weight:600;color:var(--text);flex:1;">' + p.name + '</span>' +
+            '<div class="pa-dist-card-info">' + actionHtml + '</div>' +
+          '</div>';
+        }
+        card.innerHTML = '<div class="pa-dist-card-icon"><img src="' + p.img + '" alt="' + p.name + '"></div>' + inner;
+        list.appendChild(card);
+      });
+    }
+
+    // ===== Toggle distribution platform submit =====
+    function toggleDistSubmit(key) {
+      if (distSubmitted[key]) {
+        distSubmitted[key] = false;
+      } else {
+        distSubmitted[key] = true;
+      }
+      renderDistList();
+    }
+
+    // ===== Apple Podcasts submit modal =====
+    var appleSubmitted = false;
+
+    function openAppleModal() {
+      document.getElementById('appleSubmitModal').classList.add('show');
+    }
+
+    function closeAppleModal() {
+      document.getElementById('appleSubmitModal').classList.remove('show');
+    }
+
+    function switchAppleTab(tab) {
+      var tabs = document.querySelectorAll('#appleTabs .apple-tab');
+      var contents = document.querySelectorAll('.apple-tab-content');
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      contents.forEach(function(c) { c.classList.remove('active'); });
+      document.querySelector('#appleTabs .apple-tab[data-tab="' + tab + '"]').classList.add('active');
+      document.getElementById('appleTabContent-' + tab).classList.add('active');
+    }
+
+    function checkAppleAgreements() {
+      var checks = document.querySelectorAll('#appleTabContent-submit .check-row input[type="checkbox"]');
+      var allChecked = true;
+      checks.forEach(function(c) { if (!c.checked) allChecked = false; });
+      document.getElementById('btnAppleSubmit').disabled = !allChecked;
+    }
+
+    function agreeAllApple() {
+      var checks = document.querySelectorAll('#appleTabContent-submit .check-row input[type="checkbox"]');
+      checks.forEach(function(c) { c.checked = true; });
+      checkAppleAgreements();
+    }
+
+    function toggleExistingUrl() {
+      var section = document.getElementById('existingUrlSection');
+      section.style.display = section.style.display === 'none' ? '' : 'none';
+    }
+
+    function saveExistingAppleUrl() {
+      var url = document.getElementById('existingAppleUrl').value.trim();
+      if (!url) return;
+      appleSubmitted = true;
+      distPlatformData[0].url = url;
+      document.getElementById('existingAppleUrl').value = '';
+      document.getElementById('existingUrlSection').style.display = 'none';
+      alert('Apple Podcasts URL saved successfully!');
+    }
+
+    document.addEventListener('click', function(e) {
+      if (e.target.id === 'btnAppleSubmit') {
+        distSubmitted['apple-podcasts'] = true;
+        distPlatformData[0].url = 'https://podcasts.apple.com/us/podcast/your-podcast/id123456';
+        appleSubmitted = true;
+        renderDistList();
+        closeAppleModal();
+      }
+    });
+
+    // ===== Sidebar toggle =====
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('show');
+    }
+
+    // ===== Page switching =====
+    function switchSubPage(e, pageId) {
+      e.preventDefault();
+      const subLinks = document.querySelectorAll('.sub-menu a');
+      subLinks.forEach(function(link) {
+        link.classList.remove('active');
+      });
+      e.currentTarget.classList.add('active');
+      document.querySelectorAll('.page').forEach(function(p) {
+        p.classList.add('hidden');
+      });
+      document.getElementById('page-' + pageId).classList.remove('hidden');
+    }
+
+    // ===== Platform connect data =====
+    var platformData = {
+      facebook: {
+        name: 'Facebook',
+        icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+        color: '#1877f2',
+        subtitle: 'Allow your podcast to auto-share new episodes to your Facebook page.',
+        perms: ['Access your Facebook Pages', 'Publish new episodes as posts', 'View your profile name and avatar'],
+        successTitle: 'Connected to Facebook',
+        successSub: 'Your podcast will now auto-share new episodes.'
+      },
+      linkedin: {
+        name: 'LinkedIn',
+        icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+        color: '#0a66c2',
+        subtitle: 'Allow your podcast to auto-share new episodes to your LinkedIn feed.',
+        perms: ['Create posts on your behalf', 'Read your profile information', 'Access your LinkedIn Company Pages'],
+        successTitle: 'Connected to LinkedIn',
+        successSub: 'Your podcast will now auto-share new episodes.'
+      },
+      youtube: {
+        name: 'YouTube',
+        icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+        color: '#ff0000',
+        subtitle: 'Allow your podcast to auto-share episodes to your YouTube channel.',
+        perms: ['Manage your YouTube channel', 'Upload videos on your behalf', 'Read your channel analytics'],
+        successTitle: 'Connected to YouTube',
+        successSub: 'Your podcast will now auto-share new episodes.'
+      },
+      tumblr: {
+        name: 'Tumblr',
+        icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M18.747 19.282a7.62 7.62 0 01-1.814.954c-.634.237-1.22.356-1.762.356-2.5 0-3.78-1.41-3.78-4.23v-4.78h-2.6V9.07c1.35-.448 2.538-1.327 3.244-2.496.476-.753.795-1.602.937-2.574h2.63v4.72h3.14v2.976h-3.13v4.44c0 .805.167 1.41.5 1.81.334.4.804.6 1.406.6.64 0 1.33-.157 2.07-.47l.56 2.2-.6.002z"/></svg>',
+        color: '#36465d',
+        subtitle: 'Allow your podcast to auto-share new episodes to your Tumblr blog.',
+        perms: ['Create new posts on your blog', 'Upload media and links', 'Read your blog information'],
+        successTitle: 'Connected to Tumblr',
+        successSub: 'Your podcast will now auto-share new episodes.'
+      },
+      wordpress: {
+        name: 'WordPress',
+        icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm0 22c-5.52 0-10-4.48-10-10S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10zm4.37-7.05l-1.07-2.93c.38-.14.74-.3 1.07-.48.33-.18.58-.37.75-.58.17-.21.26-.44.26-.69 0-.17-.08-.35-.24-.54-.16-.19-.4-.35-.72-.48-.31-.14-.7-.22-1.15-.26-.46-.03-.99-.05-1.6-.05h-1.57l-1.6 4.52h1.83l.44-1.2h2.24l.48 1.2h1.88zm-3.57-3.6l.84-2.4h.25c.25 0 .47.01.67.03.2.02.37.07.5.14.14.08.21.19.21.35 0 .08-.03.18-.1.29s-.16.19-.28.27c-.12.08-.28.14-.47.19-.2.04-.43.07-.72.09a26 26 0 01-.9.04h-.76v1.4zm-7.85 3.6l1.35-3.76c.27-.75.49-1.34.63-1.77.14-.43.23-.8.26-1.1h.04c.03.3.13.68.29 1.13.16.45.37.99.63 1.62l1.35 3.88h1.93l-2.74-7.42H6.85l-2.7 7.42h1.8z"/></svg>',
+        color: '#21759b',
+        subtitle: 'Allow your podcast to auto-share new episodes to your WordPress site.',
+        perms: ['Create posts on your WordPress site', 'Embed podcast player in posts', 'Access your site settings'],
+        successTitle: 'Connected to WordPress',
+        successSub: 'Your podcast will now auto-share new episodes.'
+      }
+    };
+
+    // ===== State: which platforms are connected =====
+    var connectedPlatforms = { facebook: true };
+
+    // ===== Open connect modal =====
+    function openConnect(platform) {
+      var data = platformData[platform];
+      if (!data) return;
+      document.getElementById('modalAuthorize').style.display = '';
+      document.getElementById('modalSuccess').classList.remove('show');
+      document.getElementById('modalIcon').innerHTML = data.icon;
+      document.getElementById('modalIcon').style.background = data.color;
+      document.getElementById('modalTitle').textContent = 'Connect to ' + data.name;
+      document.getElementById('modalSubtitle').textContent = data.subtitle;
+      document.getElementById('modalPerm1').textContent = data.perms[0];
+      document.getElementById('modalPerm2').textContent = data.perms[1];
+      document.getElementById('modalPerm3').textContent = data.perms[2];
+      document.getElementById('successTitle').textContent = data.successTitle;
+      document.getElementById('successSub').textContent = data.successSub;
+      document.getElementById('oauthModal').setAttribute('data-platform', platform);
+      document.getElementById('modalPrimaryBtn').textContent = 'Authorize';
+      document.getElementById('oauthModal').classList.add('show');
+    }
+
+    // ===== Close modal =====
+    function closeModal() {
+      document.getElementById('oauthModal').classList.remove('show');
+    }
+
+    // ===== Authorize app =====
+    function authorizeApp() {
+      var platform = document.getElementById('oauthModal').getAttribute('data-platform');
+      if (!platform) return;
+      var data = platformData[platform];
+      document.getElementById('modalAuthorize').style.display = 'none';
+      document.getElementById('modalSuccess').classList.add('show');
+      document.getElementById('successTitle').textContent = data.successTitle;
+      document.getElementById('successSub').textContent = data.successSub;
+      connectedPlatforms[platform] = true;
+      updatePlatformUI(platform);
+      setTimeout(function() {
+        closeModal();
+      }, 1500);
+    }
+
+    // ===== Disconnect platform =====
+    function disconnectPlatform(platform) {
+      connectedPlatforms[platform] = false;
+      updatePlatformUI(platform);
+    }
+
+    // ===== Update UI for a platform =====
+    function updatePlatformUI(platform) {
+      var btnEl = document.getElementById('btn-' + platform);
+      var editBtn = document.getElementById('btn-edit-' + platform);
+      if (connectedPlatforms[platform]) {
+        btnEl.textContent = 'Remove';
+        btnEl.className = 'btn-connect connected';
+        btnEl.onclick = function(e) {
+          e.stopPropagation();
+          disconnectPlatform(platform);
+        };
+        if (editBtn) editBtn.style.display = '';
+      } else {
+        btnEl.textContent = 'Connect';
+        btnEl.className = 'btn-connect';
+        btnEl.onclick = function() {
+          openConnect(platform);
+        };
+        if (editBtn) editBtn.style.display = 'none';
+      }
+    }
+
+    // ===== Open edit settings =====
+    function openEdit(platform) {
+      var data = platformData[platform];
+      if (!data) return;
+      document.getElementById('modalAuthorize').style.display = '';
+      document.getElementById('modalSuccess').classList.remove('show');
+      document.getElementById('modalIcon').innerHTML = data.icon;
+      document.getElementById('modalIcon').style.background = data.color;
+      document.getElementById('modalTitle').textContent = data.name + ' Settings';
+      document.getElementById('modalSubtitle').textContent = 'Manage your ' + data.name + ' connection settings.';
+      document.getElementById('modalPerm1').textContent = data.perms[0];
+      document.getElementById('modalPerm2').textContent = data.perms[1];
+      document.getElementById('modalPerm3').textContent = data.perms[2];
+      document.getElementById('successTitle').textContent = 'Settings saved';
+      document.getElementById('successSub').textContent = 'Your ' + data.name + ' settings have been updated.';
+      document.getElementById('oauthModal').setAttribute('data-platform', platform);
+      document.getElementById('modalPrimaryBtn').textContent = 'Save Settings';
+      document.getElementById('oauthModal').classList.add('show');
+    }
+
+    // ===== Initialize UI =====
+    function initSocialShare() {
+      for (var key in connectedPlatforms) {
+        if (connectedPlatforms.hasOwnProperty(key)) {
+          updatePlatformUI(key);
+        }
+      }
+    }
+    initSocialShare();
+
+    // ===== Close modals on overlay click =====
+    document.getElementById('oauthModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // ===== Close modals on Escape key =====
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+        closeAppleModal();
+      }
+    });
+  </script>
+
+</body>
+</html>
