@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podcasting Smarter: Tips, Tools &amp; Growth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 48px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    nav .nav-links { display: flex; gap: 40px; }
+    nav .nav-links a {
+      text-decoration: none;
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: color .15s;
+    }
+    nav .nav-links a:hover { color: #111; }
+    nav .nav-links a.active { color: #111; font-weight: 600; }
+
+    /* ── Hero ── */
+    .hero {
+      width: 100%;
+      padding: 80px 48px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .hero-left {
+      position: sticky;
+      top: 60px;
+    }
+    .hero .podcast-logo {
+      width: 400px; height: 400px;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.04), 0 12px 40px rgba(0,0,0,.1);
+    }
+    .hero .podcast-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .hero-right {
+      padding-top: 8px;
+    }
+    .hero-right h1 {
+      font-size: 76px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: 1.04;
+      color: #111;
+      margin-bottom: 24px;
+    }
+    .hero-right .desc-wrap {
+      margin-bottom: 36px;
+    }
+    .hero-right .desc-text {
+      font-size: 19px;
+      color: #64748b;
+      line-height: 1.8;
+      letter-spacing: .01em;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      line-clamp: 3;
+      overflow: hidden;
+      transition: -webkit-line-clamp .3s, line-clamp .3s;
+    }
+    .hero-right .desc-text.expanded {
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+    }
+    .hero-right .desc-toggle {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a9a6c;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      font-family: inherit;
+      letter-spacing: .02em;
+      transition: color .15s;
+    }
+    .hero-right .desc-toggle:hover { color: #158a5f; }
+
+    /* ── Listen On (in hero right) ── */
+    .hero-right .listen-on {
+      margin-bottom: 40px;
+    }
+    .hero-right .listen-on .label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+    .hero-right .listen-on .platforms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .hero-right .listen-on .platforms a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: #f8fafc;
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: .01em;
+      transition: background .15s;
+    }
+    .hero-right .listen-on .platforms a:hover { background: #f1f5f9; }
+    .hero-right .listen-on .platforms a img { width: 22px; height: 22px; border-radius: 4px; }
+
+    /* ── Featured Episode (full-width, between hero and episode list) ── */
+    .hero-featured {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      background: #f6f9f7;
+      border-radius: 24px;
+    }
+    .hero-featured .play-btn {
+      flex-shrink: 0;
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      border: none;
+      background: #1a9a6c;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: transform .2s, background .2s, box-shadow .2s;
+      box-shadow: 0 6px 24px rgba(26,154,108,.35);
+    }
+    .hero-featured .play-btn:hover { transform: scale(1.08); background: #158a5f; box-shadow: 0 8px 32px rgba(26,154,108,.45); }
+    .hero-featured .play-btn:active { transform: scale(.92); background: #0d6b47; box-shadow: 0 2px 8px rgba(26,154,108,.3); transition-duration: .05s; }
+    .hero-featured .play-btn svg { width: 36px; height: 36px; margin-left: 5px; }
+    .hero-featured .ep-info { flex: 1; min-width: 0; }
+    .hero-featured .ep-info .ep-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: #1a9a6c;
+      margin-bottom: 8px;
+    }
+    .hero-featured .ep-info h2 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: #111;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .hero-featured .ep-info .ep-meta {
+      font-size: 15px;
+      font-weight: 500;
+      color: #64748b;
+      letter-spacing: .02em;
+      margin-bottom: 8px;
+    }
+    .hero-featured .ep-info .ep-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .hero-featured .ep-info .ep-stats span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #94a3b8;
+    }
+    .hero-featured .ep-info .ep-stats span svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ── Episode List ── */
+    .episodes {
+      padding: 64px 48px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .episodes .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 32px;
+    }
+    .episode-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 28px 0;
+      border-top: 1px solid #f1f5f9;
+    }
+    .episode-item:last-child { border-bottom: 1px solid #f1f5f9; }
+    .episode-item .play-btn-sm {
+      flex-shrink: 0;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: #e8f5f0;
+      color: #1a9a6c;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .2s, color .2s, transform .2s, box-shadow .2s;
+      box-shadow: 0 2px 8px rgba(26,154,108,.12);
+      margin-top: 2px;
+    }
+    .episode-item .play-btn-sm:hover { background: #1a9a6c; color: #fff; box-shadow: 0 4px 16px rgba(26,154,108,.3); transform: scale(1.05); }
+    .episode-item .play-btn-sm:active { transform: scale(.88); background: #0d6b47; transition-duration: .05s; }
+    .episode-item .play-btn-sm svg { width: 20px; height: 20px; margin-left: 2px; }
+    .episode-item .ep-body { flex: 1; min-width: 0; }
+    .episode-item .ep-body .ep-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      color: #111;
+      margin-bottom: 6px;
+    }
+    .episode-item .ep-body .ep-desc {
+      font-size: 15px;
+      color: #64748b;
+      letter-spacing: .01em;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .episode-item .ep-body .ep-meta {
+      font-size: 13px;
+      color: #94a3b8;
+      letter-spacing: .02em;
+    }
+    .episode-item .ep-body .ep-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .episode-item .ep-body .ep-stats span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #94a3b8;
+    }
+    .episode-item .ep-body .ep-stats span svg {
+      width: 15px;
+      height: 15px;
+    }
+    .episode-item .ep-body .ep-meta .sep { margin: 0 8px; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 48px 24px 56px;
+      font-size: 13px;
+      color: #94a3b8;
+      letter-spacing: .02em;
+    }
+
+    /* ── Responsive ── */
+
+    /* Tablet landscape / small desktop */
+    @media (max-width: 1200px) {
+      .hero { gap: 48px; }
+      .hero .podcast-logo { width: 200px; height: 200px; }
+      .hero-right h1 { font-size: 56px; }
+      .hero-featured .play-btn { width: 72px; height: 72px; }
+      .hero-featured .play-btn svg { width: 28px; height: 28px; margin-left: 4px; }
+      .hero-featured .ep-info h2 { font-size: 26px; }
+    }
+
+    /* Tablet portrait */
+    @media (max-width: 900px) {
+      nav .nav-links { gap: 28px; }
+      .hero {
+        padding: 60px 32px 60px;
+        gap: 40px;
+      }
+      .hero .podcast-logo { width: 160px; height: 160px; }
+      .hero-right h1 { font-size: 44px; }
+      .hero-right .desc-text { font-size: 17px; }
+      .hero-right .listen-on .platforms a { padding: 10px 18px; font-size: 13px; }
+      .hero-right .listen-on .platforms a img { width: 18px; height: 18px; }
+      .hero-featured { padding: 32px 32px; }
+      .hero-featured .play-btn { width: 64px; height: 64px; }
+      .hero-featured .play-btn svg { width: 24px; height: 24px; margin-left: 3px; }
+      .hero-featured .ep-info h2 { font-size: 22px; }
+      .episodes { padding: 48px 32px 64px; }
+      .episode-item .ep-body .ep-title { font-size: 19px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      nav .nav-links { gap: 20px; }
+      nav .nav-links a { font-size: 12px; letter-spacing: .03em; }
+      .hero {
+        padding: 36px 20px 48px;
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .hero-left { position: static; }
+      .hero .podcast-logo { width: 100px; height: 100px; }
+      .hero-right { padding-top: 0; }
+      .hero-right h1 { font-size: 32px; margin-bottom: 16px; }
+      .hero-right .desc-wrap { margin-bottom: 24px; }
+      .hero-right .desc-text { font-size: 15px; line-height: 1.7; -webkit-line-clamp: 2; line-clamp: 2; }
+      .hero-right .listen-on { margin-bottom: 28px; }
+      .hero-right .listen-on .label { font-size: 10px; }
+      .hero-right .listen-on .platforms { gap: 6px; }
+      .hero-right .listen-on .platforms a { padding: 8px 14px; font-size: 12px; gap: 6px; }
+      .hero-right .listen-on .platforms a img { width: 16px; height: 16px; }
+      .hero-featured {
+        margin: 0 20px 0;
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        border-radius: 16px;
+      }
+      .hero-featured .play-btn { width: 52px; height: 52px; }
+      .hero-featured .play-btn svg { width: 20px; height: 20px; margin-left: 3px; }
+      .hero-featured .ep-info .ep-label { font-size: 11px; margin-bottom: 4px; }
+      .hero-featured .ep-info h2 { font-size: 19px; }
+      .hero-featured .ep-info .ep-meta { font-size: 13px; }
+      .hero-featured .ep-info .ep-stats { gap: 12px; }
+      .hero-featured .ep-info .ep-stats span { font-size: 12px; }
+      .hero-featured .ep-info .ep-stats span svg { width: 14px; height: 14px; }
+      .episodes { padding: 32px 20px 48px; }
+      .episodes .section-title { font-size: 11px; margin-bottom: 20px; }
+      .episode-item { flex-direction: column; gap: 12px; padding: 20px 0; }
+      .episode-item .play-btn-sm { width: 44px; height: 44px; }
+      .episode-item .play-btn-sm svg { width: 18px; height: 18px; }
+      .episode-item .ep-body .ep-title { font-size: 17px; }
+      .episode-item .ep-body .ep-desc { font-size: 14px; margin-bottom: 6px; }
+      .episode-item .ep-body .ep-meta { font-size: 12px; }
+      .episode-item .ep-body .ep-stats { gap: 12px; margin-top: 8px; }
+      .episode-item .ep-body .ep-stats span { font-size: 12px; gap: 3px; }
+      .episode-item .ep-body .ep-stats span svg { width: 13px; height: 13px; }
+      footer { padding: 32px 20px 40px; font-size: 12px; }
+    }
+
+    /* Small mobile */
+    @media (max-width: 480px) {
+      nav .nav-links { gap: 14px; }
+      nav .nav-links a { font-size: 11px; letter-spacing: .02em; }
+      .hero { padding: 28px 16px 40px; gap: 24px; }
+      .hero .podcast-logo { width: 80px; height: 80px; }
+      .hero-right h1 { font-size: 26px; margin-bottom: 12px; }
+      .hero-right .desc-text { font-size: 14px; }
+      .hero-right .listen-on .platforms a { padding: 6px 12px; font-size: 11px; }
+      .hero-right .listen-on .platforms a img { width: 14px; height: 14px; }
+      .hero-featured { margin: 0 16px 0; padding: 16px; }
+      .hero-featured .ep-info h2 { font-size: 16px; }
+      .episodes { padding: 24px 16px 40px; }
+      .episode-item .ep-body .ep-title { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Navigation ═══ -->
+  <nav>
+    <div class="nav-links">
+      <a href="#" class="active">Home</a>
+      <a href="#">Subscribe</a>
+      <a href="#">Resources</a>
+    </div>
+  </nav>
+
+  <!-- ═══ Hero ═══ -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="podcast-logo"><img src="podcast-logo.png" alt="Podcasting Smarter"></div>
+    </div>
+    <div class="hero-right">
+      <h1>Podcasting Smarter: Tips, Tools &amp; Growth</h1>
+      <div class="desc-wrap">
+        <div class="desc-text" id="podcastDesc">
+          The podcast for podcasters, by podcasters. Podcasting Smarter is the official
+          in-house podcast by Podbean with podcasting interviews, best practices and helpful tips.
+          Each week we sit down with successful podcasters, industry experts, and platform insiders
+          to unpack what's really working in podcasting right now. From audio engineering and monetization
+          strategies to audience growth hacks and the latest AI tools — we cover the full spectrum of
+          what it takes to build and sustain a great podcast. Whether you're just starting your first show
+          or you're a seasoned creator with millions of downloads, you'll walk away with actionable insights
+          you can apply immediately. Subscribe now and join thousands of podcasters leveling up their craft.
+        </div>
+        <button class="desc-toggle" id="descToggle" onclick="toggleDesc()">Read More ↓</button>
+      </div>
+
+      <div class="listen-on">
+        <div class="label">Listen On</div>
+        <div class="platforms">
+          <a href="#"><img src="listen on logos/apple-podcast.png" alt="Apple Podcasts"> Apple Podcasts</a>
+          <a href="#"><img src="listen on logos/spotify.png" alt="Spotify"> Spotify</a>
+          <a href="#"><img src="listen on logos/AmazonMusic.png" alt="Amazon Music"> Amazon Music</a>
+          <a href="#"><img src="listen on logos/BoomPlay.png" alt="BoomPlay"> BoomPlay</a>
+          <a href="#"><img src="listen on logos/iHeartRadio.png" alt="iHeartRadio"> iHeartRadio</a>
+          <a href="#"><img src="listen on logos/podbean-app.png" alt="Podbean App"> Podbean App</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Latest Episode ═══ -->
+  <section class="hero-featured">
+    <button class="play-btn" title="Play episode" onclick="playEpisode(this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>
+    </button>
+    <div class="ep-info">
+      <div class="ep-label">Latest Episode</div>
+      <h2>The Future of Podcasting: AI Tools &amp; Trends in 2026</h2>
+      <div class="ep-meta">May 28, 2026 &middot; 42 min</div>
+      <div class="ep-stats">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> 20</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 6.1K</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 12</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Episode List ═══ -->
+  <section class="episodes">
+    <div class="section-title">All Episodes</div>
+
+    <div class="episode-item">
+      <button class="play-btn-sm" title="Play episode" onclick="playEpisode(this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>
+      </button>
+      <div class="ep-body">
+        <div class="ep-title">Growing Your Audience with Cross-Promotion</div>
+        <div class="ep-desc">Learn how top podcasters collaborate to reach new listeners through strategic cross-promotion and guest swapping.</div>
+        <div class="ep-meta">May 21, 2026 <span class="sep">&middot;</span> 38 min</div>
+        <div class="ep-stats">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> 48</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 4.2K</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 8</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="episode-item">
+      <button class="play-btn-sm" title="Play episode" onclick="playEpisode(this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>
+      </button>
+      <div class="ep-body">
+        <div class="ep-title">Monetization Beyond Ads: Memberships &amp; Premium Content</div>
+        <div class="ep-desc">A deep dive into alternative revenue streams for podcasters, from listener memberships to exclusive premium feeds.</div>
+        <div class="ep-meta">May 14, 2026 <span class="sep">&middot;</span> 45 min</div>
+        <div class="ep-stats">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> 32</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 3.2K</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="episode-item">
+      <button class="play-btn-sm" title="Play episode" onclick="playEpisode(this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>
+      </button>
+      <div class="ep-body">
+        <div class="ep-title">Audio Quality 101: Recording Like a Pro</div>
+        <div class="ep-desc">Microphone techniques, room treatment, and post-production tips to make your podcast sound polished and professional.</div>
+        <div class="ep-meta">May 7, 2026 <span class="sep">&middot;</span> 36 min</div>
+        <div class="ep-stats">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> 28</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 2.9K</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 4</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="episode-item">
+      <button class="play-btn-sm" title="Play episode" onclick="playEpisode(this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>
+      </button>
+      <div class="ep-body">
+        <div class="ep-title">SEO for Podcasters: Getting Found on Search Engines</div>
+        <div class="ep-desc">Optimize your show notes, transcripts, and metadata so new listeners can discover your podcast through Google and other search tools.</div>
+        <div class="ep-meta">Apr 30, 2026 <span class="sep">&middot;</span> 41 min</div>
+        <div class="ep-stats">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> 22</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 2.1K</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 6</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="episode-item">
+      <button class="play-btn-sm" title="Play episode" onclick="playEpisode(this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>
+      </button>
+      <div class="ep-body">
+        <div class="ep-title">Interview with Sarah Chen: Building a Podcast Network</div>
+        <div class="ep-desc">The founder of Kaleidoscope Media shares her journey from solo podcaster to running a network of 12 shows with millions of downloads.</div>
+        <div class="ep-meta">Apr 23, 2026 <span class="sep">&middot;</span> 52 min</div>
+        <div class="ep-stats">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> 62</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 8.2K</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 15</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Footer ═══ -->
+  <footer>
+    &copy; 2026 Podcasting Smarter. All rights reserved.
+  </footer>
+
+  <script>
+    function playEpisode(el) {
+      var items = document.querySelectorAll('.episode-item .play-btn-sm, .hero-featured .play-btn');
+      items.forEach(function(btn) {
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>';
+      });
+      el.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    }
+
+    function toggleDesc() {
+      var text = document.getElementById('podcastDesc');
+      var btn = document.getElementById('descToggle');
+      text.classList.toggle('expanded');
+      btn.textContent = text.classList.contains('expanded') ? 'Show Less ↑' : 'Read More ↓';
+    }
+  </script>
+
+</body>
+</html>

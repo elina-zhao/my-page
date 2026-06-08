@@ -1,0 +1,4035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Studio · Podbean Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════
+   RESET & BASE
+   ══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f4f4f6;
+  color: #111;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══════════════════════════════════════════════════
+   TOP BAR
+   ══════════════════════════════════════════════════ */
+.topbar {
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  letter-spacing: -.3px;
+}
+
+.topbar-logo-icon {
+  width: 28px; height: 28px;
+  background: #111;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.topbar-logo-icon svg { width: 14px; height: 14px; }
+
+.topbar-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  letter-spacing: .3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topbar-badge::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #2e7d32;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-podcast-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+}
+
+.topbar-sep {
+  width: 1px;
+  height: 20px;
+  background: #e5e5e5;
+}
+
+/* ══════════════════════════════════════════════════
+   MAIN LAYOUT
+   ══════════════════════════════════════════════════ */
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════
+   LEFT PANEL
+   ══════════════════════════════════════════════════ */
+.panel {
+  width: 340px;
+  min-width: 340px;
+  background: #fff;
+  border-right: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.panel-inner {
+  padding: 24px 20px;
+  flex: 1;
+}
+
+.panel-section {
+  margin-bottom: 28px;
+}
+
+.panel-section:last-child { margin-bottom: 0; }
+
+.panel-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 12px;
+}
+
+/* ── Background Toggle ── */
+.bg-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+.bg-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+  border: 1.5px solid #e5e5e5;
+  background: #fff;
+  color: #888;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.bg-option:hover {
+  background: #f8f8f8;
+  color: #555;
+}
+
+.bg-option.active {
+  background: #f0f0f0;
+  border-color: #111;
+  color: #111;
+}
+
+.bg-option svg {
+  flex-shrink: 0;
+}
+
+/* ── AI Generation Button ── */
+
+/* ── Section Toggles ── */
+.section-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 8px 8px 2px;
+  border-radius: 8px;
+  cursor: grab;
+  transition: background .15s, box-shadow .15s, opacity .15s;
+  user-select: none;
+  background: #fff;
+}
+
+.section-toggle:hover { background: #f8f8f8; }
+
+.section-toggle.dragging {
+  opacity: 0.4;
+  background: #f0f0f0;
+}
+
+.section-toggle.drag-over {
+  border-top: 2px solid #3b82f6;
+  margin-top: -2px;
+}
+
+.section-toggle.drag-over-bottom {
+  border-bottom: 2px solid #3b82f6;
+  margin-bottom: -2px;
+}
+
+.section-toggle-drag {
+  font-size: 13px;
+  color: #ccc;
+  letter-spacing: -1px;
+  cursor: grab;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.section-toggle:hover .section-toggle-drag {
+  color: #999;
+}
+
+.section-toggle-icon {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.section-toggle-label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.section-toggle-badge {
+  font-size: 10px;
+  color: #999;
+  background: #f0f0f0;
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input { display: none; }
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: #ccc;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  left: 3px; top: 3px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform .2s;
+}
+
+.toggle-switch input:checked + .toggle-slider { background: #111; }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+/* ══════════════════════════════════════════════════
+   PREVIEW AREA
+   ══════════════════════════════════════════════════ */
+.preview-area {
+  flex: 1;
+  background: #e8e8ec;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 32px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.preview-frame {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 20px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.04);
+}
+
+.preview-frame-top {
+  height: 36px;
+  background: #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 7px;
+}
+
+.pf-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+.preview-content {
+  /* Brand mode variables will be applied here */
+  --p-bg: #ffffff;
+  --p-card: #ffffff;
+  --p-text: #111111;
+  --p-text-secondary: #64748b;
+  --p-accent: #111111;
+  --p-accent-hover: #333333;
+  --p-accent-soft: #f5f5f5;
+  --p-nav-bg: #ffffff;
+  --p-nav-text: #111111;
+  --p-nav-border: #e5e5e5;
+  --p-border: #e5e5e5;
+  --p-radius: 8px;
+  --p-radius-lg: 12px;
+  --p-font-ui: "Inter", sans-serif;
+  --p-font-heading: "Inter", sans-serif;
+  --p-font-body: "Inter", sans-serif;
+  --p-hero-layout: row;
+  --p-hero-align: left;
+  --p-card-shadow: 0 1px 3px rgba(0,0,0,.06);
+  --p-card-radius: 8px;
+  --p-nav-style: light;
+}
+
+/* ══════ BRAND MODE VARIATIONS ══════ */
+
+/* Minimal */
+.preview-content[data-mode="minimal"] {
+  --p-bg: #ffffff;
+  --p-card: #ffffff;
+  --p-text: #1a1a1a;
+  --p-text-secondary: #888888;
+  --p-accent: #3b82f6;
+  --p-accent-soft: #eff6ff;
+  --p-nav-bg: #ffffff;
+  --p-nav-text: #1a1a1a;
+  --p-nav-border: #e5e5e5;
+  --p-border: #eeeeee;
+  --p-radius: 0px;
+  --p-radius-lg: 0px;
+  --p-font-heading: "Inter", sans-serif;
+  --p-font-body: "Inter", sans-serif;
+  --p-hero-layout: row;
+  --p-hero-align: left;
+  --p-card-shadow: none;
+  --p-card-radius: 0px;
+  --p-nav-style: light;
+}
+
+/* Dark Override */
+.preview-content.dark {
+  --p-bg: #121212;
+  --p-card: #1e1e1e;
+  --p-text: #e8e8e8;
+  --p-text-secondary: #888888;
+  --p-accent-soft: #1a2a3a;
+  --p-nav-bg: #0d0d0d;
+  --p-nav-text: #e8e8e8;
+  --p-nav-border: #2a2a2a;
+  --p-border: #2a2a2a;
+  --p-card-shadow: 0 2px 12px rgba(0,0,0,.3);
+  --p-radius: 0px;
+  --p-radius-lg: 0px;
+  --p-card-radius: 0px;
+}
+
+/* Dark mode — Listen On items */
+.preview-content.dark .pc-listen-item {
+  background: #1a1a1a;
+  color: #ccc;
+}
+.preview-content.dark .pc-listen-item:hover {
+  background: #1a2a3a;
+}
+
+/* Dark mode — Host section */
+.preview-content.dark .cs-card {
+  background: #1a1a1a;
+}
+.preview-content.dark .cs-avatar {
+  background: #333;
+  color: #888;
+}
+
+/* Dark mode — Newsletter */
+.preview-content.dark .pc-newsletter {
+  background: #1a1a1a;
+}
+.preview-content.dark .pc-newsletter-form input {
+  background: #0d0d0d;
+  border-color: #333;
+  color: #e8e8e8;
+}
+.preview-content.dark .pc-newsletter-form input:focus {
+  border-color: var(--p-accent);
+}
+.preview-content.dark .pc-newsletter-form input::placeholder {
+  color: #666;
+}
+
+/* Dark mode — Hero off indicator */
+.preview-content.dark .pc-hero-off-indicator {
+  border-bottom-color: #2a2a2a;
+}
+.preview-content.dark .pc-hero-off-line {
+  background: #2a2a2a;
+}
+
+/* Dark mode — Episode cards */
+.preview-content.dark .pc-ep-card {
+  background: #1a1a1a;
+}
+.preview-content.dark .pc-ep-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.preview-content.dark .pc-ep-cover {
+  background: #0d0d0d;
+}
+
+/* Dark mode — Episode metadata */
+.preview-content.dark .pc-ep-date-sep {
+  background: #444;
+}
+.preview-content.dark .pc-ep-action-btn {
+  color: #666;
+}
+.preview-content.dark .pc-ep-action-btn:hover {
+  background: #2a2a2a;
+  color: var(--p-accent);
+}
+.preview-content.dark .pc-section-link { color: #666; }
+.preview-content.dark .pc-section-link:hover { color: var(--p-accent); }
+
+/* Dark mode — Footer */
+.preview-content.dark .pc-footer {
+  border-top-color: #2a2a2a;
+}
+
+/* Dark mode — Episode card accent bar */
+.preview-content.dark .pc-ep-card.playing::after {
+  background: var(--p-accent);
+}
+
+/* Dark mode — Now playing card state */
+.preview-content.dark .pc-ep-card.playing .pc-ep-play-btn {
+  background: var(--p-accent);
+  color: #fff;
+}
+
+
+/* ══════════════════════════════════════════════════
+   PREVIEW CONTENT STYLES (use CSS vars)
+   ══════════════════════════════════════════════════ */
+.preview-content {
+  background: var(--p-bg);
+  color: var(--p-text);
+  font-family: var(--p-font-body);
+  transition: background .4s ease, color .4s ease;
+}
+
+/* Top Bar (Podbean branding) */
+.pc-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 100px;
+  background: var(--p-nav-bg);
+  border-bottom: 1px solid var(--p-nav-border);
+  transition: background .4s ease, border-color .4s ease;
+}
+
+.pc-top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pc-top-logo {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.pc-top-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--p-text-secondary);
+  font-family: var(--p-font-ui);
+}
+
+.pc-top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pc-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--p-border);
+  background: var(--p-card);
+  color: var(--p-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--p-font-ui);
+  cursor: pointer;
+  transition: border-color .2s, color .2s, background .2s;
+}
+
+.pc-top-btn:hover {
+  border-color: var(--p-accent);
+  color: var(--p-accent);
+}
+
+.pc-top-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.pc-top-follow {
+  border-color: #3b82f6;
+  color: #fff;
+  background: #3b82f6;
+}
+
+.pc-top-follow:hover {
+  filter: brightness(1.12);
+}
+
+.pc-top-follow.following {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+  filter: brightness(1);
+}
+
+/* Dark mode top bar */
+.preview-content.dark .pc-top-bar {
+  border-bottom-color: #2a2a2a;
+}
+.preview-content.dark .pc-top-btn {
+  background: #1a1a1a;
+  border-color: #333;
+  color: #ccc;
+}
+.preview-content.dark .pc-top-btn:hover {
+  border-color: var(--p-accent);
+  color: var(--p-accent);
+}
+.preview-content.dark .pc-top-follow {
+  border-color: #3b82f6;
+  color: #fff;
+  background: #3b82f6;
+}
+.preview-content.dark .pc-top-follow:hover {
+  filter: brightness(1.2);
+}
+
+/* Navigation */
+.pc-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 16px 100px;
+  position: relative;
+  background: var(--p-nav-bg);
+  transition: background .4s ease;
+}
+
+.pc-nav a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  text-transform: none;
+  color: var(--p-nav-text);
+  opacity: .65;
+  transition: opacity .2s;
+  font-family: var(--p-font-ui);
+}
+
+.pc-nav a:hover { opacity: 1; }
+.pc-nav a.active { opacity: 1; font-weight: 600; }
+
+/* Hero */
+.pc-hero {
+  display: flex;
+  flex-direction: var(--p-hero-layout);
+  align-items: center;
+  gap: 80px;
+  padding: 48px 100px 64px;
+  text-align: var(--p-hero-align);
+  transition: all .4s ease;
+}
+
+.pc-hero-cover {
+  width: 400px; height: 400px;
+  border-radius: var(--p-card-radius);
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,.12);
+}
+
+.pc-hero-cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pc-hero-content { flex: 1; }
+
+.pc-hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  color: var(--p-text);
+  margin-bottom: 10px;
+  font-family: var(--p-font-heading);
+}
+
+.pc-hero-desc-wrap {
+  position: relative;
+}
+
+.pc-hero-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  line-clamp: 5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  font-size: 18px;
+  color: var(--p-text-secondary);
+  line-height: 1.7;
+  font-family: var(--p-font-body);
+}
+
+.pc-hero-desc.expanded {
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+}
+
+.pc-hero-desc-toggle {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #3b82f6;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  letter-spacing: .01em;
+  transition: opacity .15s;
+}
+
+.pc-hero-desc-toggle:hover { opacity: 0.75; }
+.pc-hero-desc-toggle.hidden { display: none; }
+
+/* Sections common */
+.pc-section {
+  padding: 0 100px 60px;
+}
+
+/* ── Hero Toggle States ── */
+.pc-hero-wrap {
+  overflow: hidden;
+  transition: max-height .5s ease, opacity .4s ease;
+  max-height: 600px;
+  opacity: 1;
+  position: relative;
+}
+
+.pc-hero-wrap.hero-off {
+  max-height: 0;
+  opacity: 0;
+}
+
+.pc-hero-off-indicator {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 40px;
+  border-bottom: 1px solid var(--p-border);
+  font-size: 14px;
+  color: var(--p-text-secondary);
+  font-family: var(--p-font-ui);
+  transition: opacity .4s ease;
+}
+
+.pc-hero-off-indicator.visible {
+  display: flex;
+}
+
+.pc-hero-off-line {
+  flex: 1;
+  height: 1px;
+  background: var(--p-border);
+}
+
+.pc-hero-off-badge {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #bbb;
+  white-space: nowrap;
+}
+
+.pc-ep-grid-wrap {
+  transition: max-height .5s ease, opacity .4s ease, margin .4s ease;
+  overflow: hidden;
+  max-height: 2000px;
+  opacity: 1;
+}
+
+.pc-ep-grid-wrap.grid-off {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+}
+
+
+
+/* Episodes Page */
+.pc-episodes-page {
+  animation: pageFadeIn .25s ease;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pc-episode-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--p-border);
+  transition: background .15s;
+}
+.pc-episode-row:first-child { padding-top: 0; }
+.pc-episode-row:last-child { border-bottom: none; }
+
+.pc-episode-row-cover {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.pc-episode-row-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+
+.pc-episode-row-info { flex: 1; min-width: 0; }
+
+.pc-episode-row-meta {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--p-text-secondary);
+  margin-bottom: 4px;
+  font-family: var(--p-font-ui);
+}
+
+.pc-episode-row-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--p-text);
+  margin-bottom: 6px;
+  font-family: var(--p-font-heading);
+  line-height: 1.3;
+}
+
+.pc-episode-row-desc {
+  font-size: 14px;
+  color: var(--p-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  font-family: var(--p-font-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.pc-episode-row-footer { display: flex; align-items: center; gap: 16px; }
+
+.pc-episode-row-dur {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--p-text-secondary);
+  font-family: var(--p-font-body);
+}
+
+.pc-episode-row-action {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--p-accent);
+  cursor: pointer;
+  font-family: var(--p-font-ui);
+  transition: opacity .15s;
+}
+.pc-episode-row-action:hover { opacity: .75; }
+
+.pc-episode-row-play {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--p-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 18px;
+  transition: transform .2s, background .2s;
+}
+.pc-episode-row-play:hover { transform: scale(1.06); }
+.pc-episode-row-play svg { width: 18px; height: 18px; margin-left: 2px; }
+
+/* Dark mode for episodes page */
+.preview-content.dark .pc-episode-row { border-bottom-color: #2a2a2a; }
+.preview-content.dark .pc-episode-row-cover { box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+/* Host section transitions */
+/* Newsletter transitions */
+.pc-newsletter-wrap {
+  overflow: hidden;
+  transition: max-height .5s ease, opacity .4s ease;
+  max-height: 400px;
+  opacity: 1;
+}
+
+.pc-newsletter-wrap.newsletter-off {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* Listen On Section */
+.pc-listen-wrap {
+  overflow: hidden;
+  transition: max-height .5s ease, opacity .4s ease;
+  max-height: 300px;
+  opacity: 1;
+}
+
+.pc-listen-wrap.listen-off {
+  max-height: 0;
+  opacity: 0;
+}
+
+.pc-listen {
+  padding: 0;
+}
+
+.pc-listen-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--p-text-secondary);
+  margin-bottom: 14px;
+  font-family: var(--p-font-ui);
+}
+
+.pc-listen-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pc-listen-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 30px;
+  background: var(--p-card);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--p-text);
+  transition: background .2s, box-shadow .2s;
+  font-family: var(--p-font-body);
+}
+
+.pc-listen-item:hover {
+  background: var(--p-accent-soft);
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.pc-listen-item img {
+  width: 36px; height: 36px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.pc-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.pc-section-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--p-text);
+  font-family: var(--p-font-heading);
+  letter-spacing: -.02em;
+}
+
+.pc-section-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--p-text-secondary);
+  text-decoration: none;
+  font-family: var(--p-font-ui);
+}
+
+.pc-section-link:hover { color: var(--p-accent); }
+
+/* Episode Grid */
+.pc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 44px;
+}
+
+.pc-ep-card {
+  background: var(--p-card);
+  border-radius: var(--p-card-radius);
+  overflow: hidden;
+  box-shadow: var(--p-card-shadow);
+  transition: all .4s ease, box-shadow .3s ease, transform .3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.pc-ep-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  transform: translateY(-2px);
+}
+
+.pc-ep-cover {
+  aspect-ratio: 1;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--p-bg);
+}
+
+.pc-ep-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+
+.pc-ep-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.08);
+  transition: background .3s ease;
+  z-index: 2;
+  border-radius: 4px;
+}
+
+.pc-ep-card:hover .pc-ep-cover-overlay {
+  background: rgba(0,0,0,.03);
+}
+
+/* Episode number badge */
+/* Play button */
+.pc-ep-play-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: none;
+  background: var(--p-accent);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background .2s, transform .2s, box-shadow .2s;
+  box-shadow: 0 2px 12px rgba(0,0,0,.18);
+}
+
+.pc-ep-card:hover .pc-ep-play-btn {
+  filter: brightness(1.12);
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+}
+
+.pc-ep-play-btn:active { transform: translate(-50%, -50%) scale(.92) !important; }
+
+.pc-ep-play-btn svg {
+  width: 32px; height: 32px;
+  margin-left: 4px;
+}
+
+/* Now playing state */
+.pc-ep-card.playing .pc-ep-play-btn {
+  background: var(--p-accent);
+  color: #fff;
+  box-shadow: 0 2px 16px rgba(0,0,0,.25);
+}
+
+.pc-ep-card.playing .pc-ep-cover-overlay {
+  background: rgba(0,0,0,.25);
+}
+
+.pc-ep-card.playing::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--p-accent);
+  z-index: 3;
+}
+
+/* Card body */
+.pc-ep-body {
+  padding: 14px 16px 16px;
+}
+
+.pc-ep-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--p-text);
+  margin-bottom: 4px;
+  line-height: 1.35;
+  font-family: var(--p-font-heading);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.pc-ep-excerpt {
+  font-size: 14px;
+  color: var(--p-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
+  font-family: var(--p-font-body);
+}
+
+.pc-ep-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Date */
+.pc-ep-date {
+  font-size: 14px;
+  color: var(--p-text-secondary);
+  font-family: var(--p-font-body);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pc-ep-date-sep {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--p-border);
+}
+
+.pc-ep-date-dur {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--p-text-secondary);
+  font-family: var(--p-font-body);
+}
+
+.pc-ep-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.pc-ep-card:hover .pc-ep-actions {
+  opacity: 1;
+}
+
+.pc-ep-action-btn {
+  width: 28px; height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--p-text-secondary);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s;
+  font-size: 14px;
+}
+
+.pc-ep-action-btn:hover { background: var(--p-accent-soft); color: var(--p-accent); }
+
+/* Custom Sections */
+.cs-card {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 40px;
+  border-radius: var(--p-radius-lg);
+  background: var(--p-card);
+  transition: all .4s ease;
+  margin-bottom: 16px;
+  height: 400px;
+  box-sizing: border-box;
+}
+.cs-card:last-child { margin-bottom: 0; }
+
+.cs-card.style-text {
+  flex-direction: column;
+  text-align: center;
+  gap: 16px;
+  justify-content: center;
+}
+
+.cs-card.style-image-left {
+  flex-direction: row;
+  text-align: left;
+}
+
+.cs-card.style-image-right {
+  flex-direction: row-reverse;
+  text-align: left;
+}
+
+.cs-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #ddd, #bbb);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: #888;
+}
+
+.cs-card.style-image-left .cs-avatar,
+.cs-card.style-image-right .cs-avatar {
+  width: 360px; height: 360px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--p-accent), transparent);
+  overflow: hidden;
+}
+
+.cs-card.style-image-left .cs-avatar img,
+.cs-card.style-image-right .cs-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cs-card.style-text .cs-avatar {
+  display: none;
+}
+
+.cs-info { flex: 1; min-width: 0; }
+
+.cs-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--p-text);
+  margin-bottom: 6px;
+  font-family: var(--p-font-heading);
+}
+
+.cs-content {
+  font-size: 18px;
+  color: var(--p-text-secondary);
+  line-height: 1.6;
+  font-family: var(--p-font-body);
+}
+
+/* Custom section panel controls */
+.section-custom-group {
+  margin-top: 4px;
+}
+
+.section-custom-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.section-custom-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+.section-custom-add {
+  border: none;
+  background: transparent;
+  color: #3b82f6;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: background .15s;
+}
+
+.section-custom-add:hover { background: #eff6ff; }
+
+.section-custom-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 6px 2px;
+  border-radius: 8px;
+  cursor: grab;
+  transition: background .15s, box-shadow .15s;
+  user-select: none;
+  margin-bottom: 3px;
+}
+
+.section-custom-item:hover { background: #f8f8f8; }
+
+.section-custom-item.dragging { opacity: 0.4; background: #f0f0f0; }
+
+.sc-drag {
+  font-size: 14px;
+  color: #ccc;
+  cursor: grab;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.section-custom-item:hover .sc-drag { color: #999; }
+
+.sc-label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sc-style-select {
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  background: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  color: #555;
+  outline: none;
+  cursor: pointer;
+  max-width: 80px;
+}
+
+.sc-style-select:focus { border-color: #111; }
+
+.sc-remove-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #bbb;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+
+.sc-remove-btn:hover { background: #fef0f0; color: #c92b3b; }
+
+.section-custom-item .toggle-switch {
+  width: 32px;
+  height: 18px;
+}
+
+.section-custom-item .toggle-slider::before {
+  width: 12px;
+  height: 12px;
+  left: 3px;
+  top: 3px;
+}
+
+.section-custom-item .toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(14px);
+}
+
+/* Custom section two-row layout */
+.cs-toggle.cs-dynamic-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 8px 8px 8px 2px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  cursor: grab;
+}
+
+.cs-toggle-row1 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.cs-toggle-row2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0 2px 18px;
+  width: 100%;
+}
+
+.cs-toggle-row2 ._edit-btn,
+.cs-toggle-row2 ._rm-btn {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: border-color .15s, background .15s;
+  color: #555;
+}
+
+.cs-toggle-row2 ._edit-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: #f0f7ff;
+}
+
+.cs-toggle-row2 ._rm-btn:hover {
+  border-color: #c92b3b;
+  color: #c92b3b;
+  background: #fef0f0;
+}
+
+.cs-toggle-row2 .toggle-switch {
+  margin-left: auto;
+}
+
+.cs-toggle.cs-dynamic-wrap .section-toggle-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Add Custom Section button */
+.add-custom-section-area {
+  padding: 10px 4px 2px;
+}
+
+.add-custom-section-btn {
+  width: 100%;
+  height: 36px;
+  border: 1.5px dashed #ccc;
+  border-radius: 8px;
+  background: transparent;
+  color: #888;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+
+.add-custom-section-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* Custom Section Edit Button & Form */
+.sc-edit-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #bbb;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+
+.sc-edit-btn:hover { background: #f0f0f0; color: #555; }
+
+/* Section edit form (optimized) */
+.cs-edit-form {
+  display: none;
+  padding: 14px;
+  margin: 0 0 8px 0;
+  border-radius: 0 0 10px 10px;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-top: none;
+}
+
+.cs-edit-form.open { display: block; }
+
+.cs-edit-form-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cs-edit-row {
+  display: flex;
+  gap: 12px;
+}
+
+.cs-edit-row .cs-edit-field {
+  flex: 1;
+  margin: 0;
+}
+
+.cs-edit-field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.cs-edit-field input[type="text"],
+.cs-edit-field textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  outline: none;
+  transition: border-color .15s;
+  box-sizing: border-box;
+}
+
+.cs-edit-field input[type="text"]:focus,
+.cs-edit-field textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,.1);
+}
+
+.cs-edit-field textarea {
+  min-height: 52px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.cs-edit-field select {
+  width: 100%;
+  height: 34px;
+  padding: 0 28px 0 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  transition: border-color .15s;
+}
+
+.cs-edit-field select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,.1);
+}
+
+.cs-select-wrap {
+  position: relative;
+}
+
+.cs-select-wrap::after {
+  content: "▾";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #999;
+  pointer-events: none;
+}
+
+/* Image row compact */
+.cs-edit-image-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cs-edit-image-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: #e5e5e5;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #aaa;
+  overflow: hidden;
+}
+
+.cs-edit-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+._up-btn {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #fff;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: border-color .15s;
+}
+
+._up-btn:hover { border-color: #999; }
+._up-btn input[type="file"] { display: none; }
+
+._rm-img {
+  height: 30px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #c92b3b;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+}
+
+._rm-img:hover { background: #fef0f0; }
+
+/* Edit action buttons */
+.cs-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+._edit-cancel {
+  height: 34px;
+  padding: 0 18px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color .15s, background .15s;
+}
+
+._edit-cancel:hover {
+  border-color: #ccc;
+  background: #f8f8f8;
+}
+
+._edit-save {
+  height: 34px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+._edit-save:hover { background: #333; }
+
+
+/* Navigation Panel */
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 8px 8px 4px;
+  border-radius: 8px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  cursor: grab;
+  transition: border-color .15s;
+}
+.nav-item:hover { border-color: #e0e0e0; }
+.nav-item.dragging { opacity: 0.4; }
+.nav-item.drag-over { border-top-color: #3b82f6; }
+.nav-item.drag-over-bottom { border-bottom-color: #3b82f6; }
+
+.nav-item-row1 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+.nav-item-drag {
+  font-size: 14px;
+  color: #ccc;
+  cursor: grab;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+.nav-item:hover .nav-item-drag { color: #999; }
+
+.nav-item-name {
+  flex: 1;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  outline: none;
+  min-width: 0;
+}
+.nav-item-name:focus { border-color: #3b82f6; }
+
+
+.nav-item-rm {
+  width: 20px; height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #bbb;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.nav-item-rm:hover { background: #fef0f0; color: #c92b3b; }
+
+.nav-item-row2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0 2px 22px;
+}
+.nav-item-type {
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #555;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-item-type:focus { border-color: #3b82f6; }
+
+.nav-item-input {
+  flex: 1;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  outline: none;
+  min-width: 0;
+}
+.nav-item-input:focus { border-color: #3b82f6; }
+.nav-item-input.hidden { display: none; }
+
+.nav-item-select {
+  flex: 1;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  min-width: 0;
+}
+.nav-item-select:focus { border-color: #3b82f6; }
+.nav-item-select.hidden { display: none; }
+
+.nav-add-area {
+  padding: 2px 0;
+}
+.nav-add-btn {
+  width: 100%;
+  height: 32px;
+  border: 1.5px dashed #ddd;
+  border-radius: 8px;
+  background: transparent;
+  color: #888;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.nav-add-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.nav-search-toggle {
+  padding: 2px 0 6px;
+}
+
+.nav-search-toggle .section-toggle {
+  background: transparent;
+  padding: 6px 8px;
+}
+
+/* Search icon in preview nav */
+.pc-nav-search {
+  position: absolute;
+  right: 100px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity .2s;
+  font-size: 16px;
+  line-height: 1;
+  z-index: 2;
+}
+.pc-nav-search:hover { opacity: 1; }
+.pc-nav-search.hidden { display: none; }
+
+/* Search bar expanded mode */
+.pc-search-bar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--p-card);
+  border: 1px solid var(--p-border);
+  border-radius: 8px;
+  padding: 4px 6px;
+  width: 60%;
+  max-width: 400px;
+  z-index: 3;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  transition: all .3s ease;
+}
+.pc-search-bar.hidden { display: none; }
+
+.pc-search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--p-text);
+  outline: none;
+  min-width: 0;
+}
+.pc-search-bar input::placeholder {
+  color: #bbb;
+}
+
+.pc-search-bar .pc-search-btn {
+  height: 28px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 5px;
+  background: var(--p-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+  transition: filter .15s;
+}
+.pc-search-bar .pc-search-btn:hover { filter: brightness(1.12); }
+
+.pc-search-bar .pc-search-cancel {
+  height: 28px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--p-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+.pc-search-bar .pc-search-cancel:hover { background: var(--p-accent-soft); }
+
+/* Social Links Panel */
+
+.social-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.social-link-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  transition: border-color .15s;
+}
+
+.social-link-item:hover {
+  border-color: #e0e0e0;
+}
+
+.social-link-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.social-link-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  min-width: 50px;
+  flex-shrink: 0;
+}
+
+.social-link-input {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+  outline: none;
+  transition: border-color .15s;
+}
+
+.social-link-input:focus {
+  border-color: #3b82f6;
+}
+
+.social-link-item .toggle-switch {
+  width: 30px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.social-link-item .toggle-slider::before {
+  width: 10px;
+  height: 10px;
+  left: 3px;
+  top: 3px;
+}
+
+.social-link-item .toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(14px);
+}
+
+/* Settings Note */
+.panel-section-settings {
+  padding-top: 0;
+}
+
+.settings-note {
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: #888;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+}
+
+.settings-note a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.settings-note a:hover {
+  text-decoration: underline;
+}
+
+/* Newsletter */
+.pc-newsletter {
+  text-align: center;
+  padding: 40px;
+  border-radius: var(--p-radius-lg);
+  background: var(--p-card);
+  transition: all .4s ease;
+}
+
+.pc-newsletter-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--p-text);
+  margin-bottom: 8px;
+  font-family: var(--p-font-heading);
+}
+
+.pc-newsletter-desc {
+  font-size: 14px;
+  color: var(--p-text-secondary);
+  margin-bottom: 16px;
+  font-family: var(--p-font-body);
+}
+
+.pc-newsletter-form {
+  display: flex;
+  gap: 8px;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.pc-newsletter-form input {
+  flex: 1;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--p-border);
+  border-radius: 20px;
+  font-size: 14px;
+  font-family: var(--p-font-ui);
+  outline: none;
+  color: var(--p-text);
+  background: var(--p-bg);
+}
+
+.pc-newsletter-form input:focus { border-color: var(--p-accent); }
+
+.pc-newsletter-form button {
+  height: 42px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 20px;
+  background: var(--p-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--p-font-ui);
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.pc-newsletter-form button:hover { filter: brightness(1.12); }
+
+/* Footer */
+.pc-footer {
+  text-align: center;
+  padding: 28px 100px;
+  font-size: 14px;
+  color: var(--p-text-secondary);
+  border-top: 1px solid var(--p-border);
+  font-family: var(--p-font-body);
+  transition: all .4s ease;
+}
+
+.pc-footer-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.pc-footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  transition: opacity .2s;
+}
+
+.pc-footer-social a:hover { opacity: 0.8; }
+
+.pc-footer-copy {
+  font-size: 14px;
+  color: var(--p-text-secondary);
+  font-family: var(--p-font-body);
+}
+
+/* ══════════════════════════════════════════════════
+   COLOR PICKER
+   ══════════════════════════════════════════════════ */
+.color-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.color-picker-preview {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #e5e5e5;
+  flex-shrink: 0;
+  transition: background .2s;
+}
+
+.color-picker-hex {
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  font-family: "SF Mono", "Menlo", monospace;
+  flex: 1;
+}
+
+.color-reset-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  background: #fff;
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color .15s, color .15s;
+}
+
+.color-reset-btn:hover { border-color: #999; color: #333; }
+
+/* Color preset custom (+) button */
+.color-preset-custom {
+  background: #f5f5f5;
+  border-color: #ddd;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.custom-plus {
+  font-size: 18px;
+  font-weight: 300;
+  color: #888;
+  line-height: 1;
+}
+
+.color-preset-custom:hover { border-color: #999; }
+.color-preset-custom.active { border-color: #111; }
+
+/* Custom color panel (expandable) */
+.custom-color-panel {
+  display: none;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.custom-color-panel.open {
+  display: block;
+  animation: panelFadeIn .15s ease;
+}
+
+@keyframes panelFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hex label */
+.custom-color-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-bottom: 8px;
+}
+
+.custom-color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.custom-color-row input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 2px;
+  cursor: pointer;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.custom-color-row input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.custom-color-row input[type="color"]::-webkit-color-swatch { border: none; border-radius: 5px; }
+
+.custom-color-row input[type="text"] {
+  flex: 1 1 80px;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: "SF Mono", "Menlo", monospace;
+  color: #333;
+  background: #f8f8f8;
+  outline: none;
+  transition: border-color .15s, background .15s;
+}
+
+.custom-color-row input[type="text"]:focus {
+  border-color: #111;
+  background: #fff;
+}
+
+.custom-color-row input[type="text"]::placeholder {
+  color: #bbb;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.custom-color-apply {
+  height: 40px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+}
+
+.custom-color-apply:hover {
+  background: #333;
+}
+
+/* Font Selector (Dropdown) */
+.font-select-wrapper {
+  position: relative;
+}
+
+.font-select {
+  width: 100%;
+  height: 42px;
+  padding: 0 36px 0 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: border-color .15s;
+}
+
+.font-select:focus { border-color: #111; }
+
+.font-select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: #999;
+  pointer-events: none;
+}
+
+.color-presets {
+  display: flex;
+  gap: 8px;
+}
+
+.color-preset {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color .15s, transform .15s;
+  padding: 0;
+}
+
+.color-preset:hover { transform: scale(1.15); }
+.color-preset.active { border-color: #111; }
+
+/* ══════════════════════════════════════════════════
+   SCROLLBAR
+   ══════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════ */
+@media (max-width: 1000px) {
+  .panel { width: 280px; min-width: 280px; }
+  .preview-area { padding: 16px; }
+}
+
+@media (max-width: 820px) {
+  .main { flex-direction: column; }
+  .panel { width: 100%; min-width: 0; max-height: 45vh; border-right: none; border-bottom: 1px solid #e5e5e5; }
+  .preview-area { padding: 12px; }
+  .preview-content { --p-hero-layout: column; --p-hero-align: center; }
+  .pc-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .pc-hero { padding: 32px 40px 48px; }
+  .pc-section { padding: 0 40px 40px; }
+  .pc-hero-title { font-size: 36px; }
+  .pc-hero-cover { width: 180px; height: 180px; }
+  .cs-card { min-height: auto; padding: 28px; gap: 24px; }
+  .cs-card.style-image-left, .cs-card.style-image-right { flex-direction: column; text-align: center; }
+  .cs-card.style-image-left .cs-avatar, .cs-card.style-image-right .cs-avatar { width: 200px; height: 200px; }
+  .pc-hero-off-indicator { padding: 12px 24px; }
+  .pc-hero-off-badge { font-size: 12px; }
+  .pc-ep-actions { opacity: 1; }
+  .pc-listen { padding: 0; }
+  .pc-newsletter-form { flex-direction: column; }
+  .pc-hero-off-indicator { padding: 10px 16px; }
+}
+
+@media (max-width: 420px) {
+  .pc-grid { grid-template-columns: 1fr; }
+  .pc-ep-excerpt { display: none; }
+}
+
+@media (max-width: 480px) {
+  .panel-inner { padding: 16px; }
+  .bg-option { font-size: 12px; padding: 8px 10px; }
+  .pc-hero-title { font-size: 28px; }
+  .pc-hero { padding: 24px 24px 36px; }
+  .pc-section { padding: 0 24px 30px; }
+  .pc-ep-title { font-size: 13px; }
+  .pc-ep-body { padding: 12px 14px 14px; }
+  .pc-listen { padding: 0; }
+  .pc-listen-item { padding: 8px 14px; font-size: 12px; }
+  .pc-listen-item img { width: 18px; height: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ TOP BAR ═══════════════ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">
+      <div class="topbar-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      </div>
+      Brand Studio
+    </div>
+    <span class="topbar-badge">AI Auto-sync</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-podcast-name">The Creative Pulse</span>
+    <span class="topbar-sep"></span>
+    <span style="font-size:12px;color:#999;">12 episodes</span>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN LAYOUT ═══════════════ -->
+<div class="main">
+
+  <!-- ─── LEFT PANEL ─── -->
+  <aside class="panel" id="leftPanel">
+    <div class="panel-inner">
+
+      <!-- Background Mode -->
+      <div class="panel-section">
+        <div class="panel-label">Background</div>
+        <div class="bg-toggle" id="bgToggle">
+          <button class="bg-option active" data-bg="light">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            Light
+          </button>
+          <button class="bg-option" data-bg="dark">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            Dark
+          </button>
+        </div>
+      </div>
+
+      <!-- Accent Color -->
+      <div class="panel-section">
+        <div class="panel-label">Button Color</div>
+        <div class="color-picker-row">
+          <div class="color-picker-preview" id="colorPreview" style="background:#3b82f6;"></div>
+          <span class="color-picker-hex" id="colorHexValue">#3b82f6</span>
+          <button class="color-reset-btn" id="colorResetBtn" title="Reset to default">&#8634;</button>
+        </div>
+        <div class="color-presets" id="colorPresets">
+          <button class="color-preset" data-color="#3b82f6" style="background:#3b82f6;" title="Blue"></button>
+          <button class="color-preset" data-color="#06d6a0" style="background:#06d6a0;" title="Teal"></button>
+          <button class="color-preset" data-color="#ff6b6b" style="background:#ff6b6b;" title="Coral"></button>
+          <button class="color-preset" data-color="#8b5cf6" style="background:#8b5cf6;" title="Purple"></button>
+          <button class="color-preset" data-color="#f59e0b" style="background:#f59e0b;" title="Gold"></button>
+          <button class="color-preset color-preset-custom" id="customColorBtn" title="Custom color">
+            <span class="custom-plus">+</span>
+          </button>
+        </div>
+        <div class="custom-color-panel" id="customColorPanel">
+          <div class="custom-color-label">Hex Value</div>
+          <div class="custom-color-row">
+            <input type="color" id="customColorPicker" value="#3b82f6">
+            <input type="text" id="customHexInput" value="#3b82f6" placeholder="#000000" maxlength="7">
+            <button class="custom-color-apply" id="customColorApply">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Font -->
+      <div class="panel-section">
+        <div class="panel-label">Font</div>
+        <div class="font-select-wrapper">
+          <select class="font-select" id="fontSelect">
+            <option value="inter" selected>Inter</option>
+            <option value="sans">System Sans</option>
+            <option value="serif">Playfair Display</option>
+            <option value="dm-sans">DM Sans</option>
+          </select>
+          <span class="font-select-arrow">&#9662;</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="panel-section">
+        <div class="panel-label">Navigation</div>
+        <div class="nav-list" id="navList"></div>
+        <div class="nav-add-area">
+          <button class="nav-add-btn" id="addNavBtn">+ Add Link</button>
+        </div>
+        <div class="nav-search-toggle">
+          <label class="section-toggle" style="padding:4px 2px;cursor:pointer;">
+            <span class="section-toggle-icon" style="font-size:14px;">&#128269;</span>
+            <span class="section-toggle-label" style="font-size:14px;font-weight:500;">Search</span>
+            <label class="toggle-switch"><input type="checkbox" id="navSearchToggle" checked><span class="toggle-slider"></span></label>
+          </label>
+        </div>
+      </div>
+
+      <!-- Sections -->
+      <div class="panel-section">
+        <div class="panel-label">Sections <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;font-size:10px;">&nbsp;· toggle on site</span></div>
+        <div class="section-list" id="sectionToggles">
+          <div class="section-toggle" draggable="true" data-section="listen">
+            <span class="section-toggle-drag">⋮⋮</span>
+            <span class="section-toggle-icon">&#9654;</span>
+            <span class="section-toggle-label">Podcast available on</span>
+            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="section-toggle" draggable="true" data-section="grid">
+            <span class="section-toggle-drag">⋮⋮</span>
+            <span class="section-toggle-icon">&#9776;</span>
+            <span class="section-toggle-label">Episode Grid</span>
+            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="section-toggle" draggable="true" data-section="newsletter">
+            <span class="section-toggle-drag">⋮⋮</span>
+            <span class="section-toggle-icon">&#9993;</span>
+            <span class="section-toggle-label">Newsletter CTA</span>
+            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="add-custom-section-area" id="addCustomSectionArea">
+            <button class="add-custom-section-btn" id="addCustomSectionBtn">+ Add Custom Section</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <div class="panel-section">
+        <div class="panel-label">Social Links</div>
+        <div class="social-links-list" id="socialLinksList">
+          <div class="social-link-item" data-platform="facebook">
+            <img src="listen on logos/podbean-app.png" alt="" style="display:none;">
+            <span class="social-link-icon" style="background:#1877f2;">f</span>
+            <span class="social-link-name">Facebook</span>
+            <input type="text" class="social-link-input" data-platform="facebook" placeholder="https://www.facebook.com/yourpage" value="https://www.facebook.com/">
+            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="social-link-item" data-platform="x">
+            <span class="social-link-icon" style="background:#111;">𝕏</span>
+            <span class="social-link-name">X</span>
+            <input type="text" class="social-link-input" data-platform="x" placeholder="https://x.com/yourhandle" value="https://x.com/">
+            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="social-link-item" data-platform="instagram">
+            <span class="social-link-icon" style="background:#e4405f;">⏺</span>
+            <span class="social-link-name">Instagram</span>
+            <input type="text" class="social-link-input" data-platform="instagram" placeholder="https://www.instagram.com/yourhandle" value="https://www.instagram.com/">
+            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="social-link-item" data-platform="youtube">
+            <span class="social-link-icon" style="background:#ff0000;">▶</span>
+            <span class="social-link-name">YouTube</span>
+            <input type="text" class="social-link-input" data-platform="youtube" placeholder="https://www.youtube.com/@yourchannel" value="https://www.youtube.com/@">
+            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="social-link-item" data-platform="linkedin">
+            <span class="social-link-icon" style="background:#0a66c2;">in</span>
+            <span class="social-link-name">LinkedIn</span>
+            <input type="text" class="social-link-input" data-platform="linkedin" placeholder="https://www.linkedin.com/in/yourprofile" value="https://www.linkedin.com/in/">
+            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Link -->
+      <div class="panel-section panel-section-settings">
+        <div class="settings-note">
+          Update your podcast title, description, artwork, and copyright information in <a href="#">Settings</a>.
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ─── PREVIEW AREA ─── -->
+  <main class="preview-area">
+    <div class="preview-frame">
+      <div class="preview-frame-top">
+        <div class="pf-dot" style="background:#ff5f57;"></div>
+        <div class="pf-dot" style="background:#febc2e;"></div>
+        <div class="pf-dot" style="background:#28c840;"></div>
+        <span style="margin-left:12px;font-size:11px;color:#999;">thecreativepulse.podbean.com</span>
+      </div>
+
+      <!-- Preview Content -->
+      <div class="preview-content" data-mode="minimal" id="previewContent" style="--p-accent:#3b82f6;">
+
+        <!-- Top Bar -->
+        <div class="pc-top-bar">
+          <div class="pc-top-bar-left">
+            <img class="pc-top-logo" src="podbean.svg" alt="Podbean">
+            <span class="pc-top-text">Create your podcast for free</span>
+          </div>
+          <div class="pc-top-bar-right">
+            <button class="pc-top-btn pc-top-share">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share
+            </button>
+            <button class="pc-top-btn pc-top-follow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Follow
+            </button>
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="pc-nav">
+          <a href="#" class="active">Home</a>
+          <a href="#">Episodes</a>
+          <a href="#">About</a>
+          <a href="#">Subscribe</a>
+        </nav>
+
+        <!-- Hero Off Indicator (visible when hero is toggled off) -->
+        <div class="pc-hero-off-indicator" id="heroOffIndicator">
+          <span class="pc-hero-off-line"></span>
+          <span class="pc-hero-off-badge">Hero hidden</span>
+          <span class="pc-hero-off-line"></span>
+        </div>
+
+        <!-- Hero -->
+        <div class="pc-hero-wrap" id="heroWrap" data-section="hero">
+          <div class="pc-hero">
+            <div class="pc-hero-cover"><img src="podcast-logo.png" alt="Podcast"></div>
+            <div class="pc-hero-content">
+              <h1 class="pc-hero-title">The Creative Pulse</h1>
+              <div class="pc-hero-desc-wrap">
+                <div class="pc-hero-desc" id="heroDescription">A weekly podcast exploring the intersection of creativity, culture, and technology — where art meets innovation and ideas come to life. Each episode features in-depth conversations with artists, musicians, writers, designers, filmmakers, and creative entrepreneurs who are shaping the cultural landscape in profound and unexpected ways. From emerging voices breaking new ground to established pioneers redefining their fields, every story offers a unique window into the creative process.
+
+Join us as we explore topics like overcoming creative blocks, building sustainable creative careers, the impact of AI on artistic expression, finding your authentic voice, collaborating across disciplines, and much more. Whether you are a seasoned creative professional looking for fresh inspiration or just starting your journey and seeking guidance, this podcast delivers actionable insights, honest conversations, and a healthy dose of motivation to help you pursue your creative passions with confidence and purpose.</div>
+                <button class="pc-hero-desc-toggle hidden" id="heroDescToggle" onclick="toggleHeroDesc()">Read more ↓</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Listen On -->
+        <div class="pc-section">
+          <div class="pc-listen-wrap" id="listenWrap" data-section="listen">
+            <div class="pc-listen">
+              <div class="pc-listen-title">Podcast available on</div>
+              <div class="pc-listen-grid">
+                <a href="#" class="pc-listen-item"><img src="listen on logos/apple-podcast.png" alt="Apple Podcasts"> Apple Podcasts</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/spotify.png" alt="Spotify"> Spotify</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/AmazonMusic.png" alt="Amazon Music"> Amazon Music</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/BoomPlay.png" alt="BoomPlay"> BoomPlay</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/iHeartRadio.png" alt="iHeartRadio"> iHeartRadio</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/podbean-app.png" alt="Podbean App"> Podbean App</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Episode Grid -->
+        <div class="pc-section">
+          <div class="pc-ep-grid-wrap" id="gridWrap" data-section="grid">
+            <div class="pc-section-header">
+              <span class="pc-section-title">Latest Episodes</span>
+              <a href="#" class="pc-section-link" id="viewAllLink">View all &rarr;</a>
+            </div>
+            <div class="pc-grid">
+              <div class="pc-ep-card" data-ep="0">
+                <div class="pc-ep-cover">
+                  <div class="pc-ep-cover-overlay"></div>
+                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
+                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+                </div>
+                <div class="pc-ep-body">
+                  <div class="pc-ep-title">Building Creative Communities Online</div>
+                  <div class="pc-ep-excerpt">How digital platforms are reshaping the way artists connect, collaborate, and grow their audiences in 2026.</div>
+                  <div class="pc-ep-footer">
+                    <div class="pc-ep-date">May 29<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">38 min</span></div>
+                    <div class="pc-ep-actions">
+                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
+                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pc-ep-card" data-ep="1">
+                <div class="pc-ep-cover">
+                  <div class="pc-ep-cover-overlay"></div>
+                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
+                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+                </div>
+                <div class="pc-ep-body">
+                  <div class="pc-ep-title">The Future of Independent Media</div>
+                  <div class="pc-ep-excerpt">An exploration of how indie creators are building sustainable media businesses outside traditional publishing models.</div>
+                  <div class="pc-ep-footer">
+                    <div class="pc-ep-date">May 22<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">51 min</span></div>
+                    <div class="pc-ep-actions">
+                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
+                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pc-ep-card" data-ep="2">
+                <div class="pc-ep-cover">
+                  <div class="pc-ep-cover-overlay"></div>
+                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
+                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+                </div>
+                <div class="pc-ep-body">
+                  <div class="pc-ep-title">Design Thinking in Everyday Life</div>
+                  <div class="pc-ep-excerpt">A practical guide to applying design thinking principles to daily challenges — from cooking to career decisions.</div>
+                  <div class="pc-ep-footer">
+                    <div class="pc-ep-date">May 15<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">41 min</span></div>
+                    <div class="pc-ep-actions">
+                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
+                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pc-ep-card" data-ep="3">
+                <div class="pc-ep-cover">
+                  <div class="pc-ep-cover-overlay"></div>
+                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
+                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+                </div>
+                <div class="pc-ep-body">
+                  <div class="pc-ep-title">Mastering Remote Interviews: Tips from Pros</div>
+                  <div class="pc-ep-excerpt">Equipment, preparation, and techniques to record studio-quality interviews from anywhere in the world.</div>
+                  <div class="pc-ep-footer">
+                    <div class="pc-ep-date">May 8<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">44 min</span></div>
+                    <div class="pc-ep-actions">
+                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
+                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pc-ep-card" data-ep="4">
+                <div class="pc-ep-cover">
+                  <div class="pc-ep-cover-overlay"></div>
+                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
+                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+                </div>
+                <div class="pc-ep-body">
+                  <div class="pc-ep-title">The Business of Podcasting: Sponsorships 101</div>
+                  <div class="pc-ep-excerpt">How to attract, pitch, and retain sponsors for your podcast — from CPM rates to long-term partnerships.</div>
+                  <div class="pc-ep-footer">
+                    <div class="pc-ep-date">May 1<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">36 min</span></div>
+                    <div class="pc-ep-actions">
+                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
+                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pc-ep-card" data-ep="5">
+                <div class="pc-ep-cover">
+                  <div class="pc-ep-cover-overlay"></div>
+                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
+                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+                </div>
+                <div class="pc-ep-body">
+                  <div class="pc-ep-title">Audio Editing for Beginners: A Complete Walkthrough</div>
+                  <div class="pc-ep-excerpt">Step-by-step guidance on editing your podcast episodes — cutting, leveling, noise removal, and mastering export.</div>
+                  <div class="pc-ep-footer">
+                    <div class="pc-ep-date">Apr 24<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">47 min</span></div>
+                    <div class="pc-ep-actions">
+                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
+                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
+                    </div>
+                  </div>
+                </div>
+              </div>            </div>
+          </div>
+        </div>
+
+        <!-- Custom Sections Container (dynamic) -->
+        <div id="customSectionsAnchor"></div>
+
+        <!-- Newsletter -->
+        <div class="pc-section">
+          <div class="pc-newsletter-wrap" id="newsletterWrap" data-section="newsletter">
+            <div class="pc-newsletter">
+              <div class="pc-newsletter-title">Stay Inspired</div>
+              <p class="pc-newsletter-desc">Get weekly insights from the world of creativity, delivered every Tuesday.</p>
+              <div class="pc-newsletter-form">
+                <input type="email" placeholder="your@email.com">
+                <button type="submit">Subscribe</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="pc-footer">
+          <div class="pc-footer-social" id="footerSocialIcons"></div>
+          <div class="pc-footer-copy">&copy; 2026 The Creative Pulse. Hosted by Podbean.</div>
+        </div>
+
+        <!-- Episodes Page View (hidden by default) -->
+        <div id="episodesPage" style="display:none;">
+          <div class="pc-top-bar">
+            <div class="pc-top-bar-left">
+              <img class="pc-top-logo" src="podbean.svg" alt="Podbean">
+              <span class="pc-top-text">Create your podcast for free</span>
+            </div>
+            <div class="pc-top-bar-right">
+              <button class="pc-top-btn pc-top-share">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                Share
+              </button>
+              <button class="pc-top-btn pc-top-follow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                Follow
+              </button>
+            </div>
+          </div>
+          <nav class="pc-nav" id="episodesPageNav">
+            <a href="#">Home</a>
+            <a href="#" class="active">Episodes</a>
+            <a href="#">Subscribe</a>
+            <span class="pc-nav-search" title="Search">&#128269;</span>
+            <div class="pc-search-bar hidden">
+              <input type="text" class="_search-input" placeholder="Search episodes..." autofocus>
+              <button class="pc-search-btn">Search</button>
+              <button class="pc-search-cancel">Cancel</button>
+            </div>
+          </nav>
+          <div class="pc-episodes-page" style="padding:48px 100px 60px;">
+            <div class="pc-episodes-header" style="margin-bottom:24px;">
+              <h1 class="pc-episodes-title" style="font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:var(--p-text);font-family:var(--p-font-heading);margin-bottom:8px;">All Episodes</h1>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <p class="pc-episodes-subtitle" style="font-size:14px;color:var(--p-text-secondary);font-family:var(--p-font-body);">6 episodes</p>
+                <div class="ep-sort-bar" style="display:flex;gap:4px;">
+                  <button class="ep-sort-btn active" data-sort="newest" style="height:30px;padding:0 12px;border:1px solid var(--p-border);border-radius:6px;background:var(--p-card);color:var(--p-text);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--p-font-ui);transition:background .15s,border-color .15s;">Newest First</button>
+                  <button class="ep-sort-btn" data-sort="oldest" style="height:30px;padding:0 12px;border:1px solid var(--p-border);border-radius:6px;background:transparent;color:var(--p-text-secondary);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--p-font-ui);transition:background .15s,border-color .15s;">Oldest First</button>
+                </div>
+              </div>
+            </div>
+            <div class="pc-episodes-list">
+              <div class="pc-episode-row">
+                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
+                <div class="pc-episode-row-info">
+                  <div class="pc-episode-row-meta">Episode 6 &middot; Jun 5, 2026</div>
+                  <div class="pc-episode-row-title">Finding Your Voice: The Art of Storytelling</div>
+                  <div class="pc-episode-row-desc">How to craft compelling narratives that resonate with listeners, featuring insights from award-winning storytellers and narrative designers.</div>
+                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">45 min</span><span class="pc-episode-row-action">Play Episode</span></div>
+                </div>
+                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+              </div>
+              <div class="pc-episode-row">
+                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
+                <div class="pc-episode-row-info">
+                  <div class="pc-episode-row-meta">Episode 5 &middot; May 29, 2026</div>
+                  <div class="pc-episode-row-title">Building Creative Communities Online</div>
+                  <div class="pc-episode-row-desc">How digital platforms are reshaping the way artists connect, collaborate, and grow their audiences in 2026.</div>
+                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">38 min</span><span class="pc-episode-row-action">Play Episode</span></div>
+                </div>
+                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+              </div>
+              <div class="pc-episode-row">
+                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
+                <div class="pc-episode-row-info">
+                  <div class="pc-episode-row-meta">Episode 4 &middot; May 22, 2026</div>
+                  <div class="pc-episode-row-title">The Future of Independent Media</div>
+                  <div class="pc-episode-row-desc">An exploration of how indie creators are building sustainable media businesses outside traditional publishing models.</div>
+                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">51 min</span><span class="pc-episode-row-action">Play Episode</span></div>
+                </div>
+                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+              </div>
+              <div class="pc-episode-row">
+                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
+                <div class="pc-episode-row-info">
+                  <div class="pc-episode-row-meta">Episode 3 &middot; May 15, 2026</div>
+                  <div class="pc-episode-row-title">Design Thinking in Everyday Life</div>
+                  <div class="pc-episode-row-desc">A practical guide to applying design thinking principles to daily challenges from cooking to career decisions.</div>
+                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">41 min</span><span class="pc-episode-row-action">Play Episode</span></div>
+                </div>
+                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+              </div>
+              <div class="pc-episode-row">
+                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
+                <div class="pc-episode-row-info">
+                  <div class="pc-episode-row-meta">Episode 2 &middot; May 8, 2026</div>
+                  <div class="pc-episode-row-title">Mastering Remote Interviews: Tips from Pros</div>
+                  <div class="pc-episode-row-desc">Equipment, preparation, and techniques to record studio-quality interviews from anywhere in the world.</div>
+                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">44 min</span><span class="pc-episode-row-action">Play Episode</span></div>
+                </div>
+                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+              </div>
+              <div class="pc-episode-row">
+                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
+                <div class="pc-episode-row-info">
+                  <div class="pc-episode-row-meta">Episode 1 &middot; May 1, 2026</div>
+                  <div class="pc-episode-row-title">The Business of Podcasting: Sponsorships 101</div>
+                  <div class="pc-episode-row-desc">How to attract, pitch, and retain sponsors for your podcast from CPM rates to long-term partnerships.</div>
+                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">36 min</span><span class="pc-episode-row-action">Play Episode</span></div>
+                </div>
+                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  // ════════════════════════════════════════════
+  // ACCENT COLOR (PLAY BUTTON COLOR)
+  // ════════════════════════════════════════════
+  const previewContent = document.getElementById('previewContent');
+  const colorPreview = document.getElementById('colorPreview');
+  const colorHex = document.getElementById('colorHexValue');
+  const colorPresets = document.querySelectorAll('.color-preset:not(.color-preset-custom)');
+  const colorReset = document.getElementById('colorResetBtn');
+  const defaultColor = '#3b82f6';
+  const customColorBtn = document.getElementById('customColorBtn');
+  const customColorPanel = document.getElementById('customColorPanel');
+  const customColorPicker = document.getElementById('customColorPicker');
+  const customHexInput = document.getElementById('customHexInput');
+  const customColorApply = document.getElementById('customColorApply');
+
+  function setAccentColor(hex) {
+    previewContent.style.setProperty('--p-accent', hex);
+    colorPreview.style.background = hex;
+    colorHex.textContent = hex;
+    colorPresets.forEach(p => p.classList.toggle('active', p.dataset.color === hex));
+    customColorBtn.classList.toggle('active', false);
+  }
+
+  colorPresets.forEach(btn => {
+    btn.addEventListener('click', () => setAccentColor(btn.dataset.color));
+  });
+
+  colorReset.addEventListener('click', () => setAccentColor(defaultColor));
+
+  // Custom color panel toggle
+  customColorBtn.addEventListener('click', () => {
+    customColorPanel.classList.toggle('open');
+  });
+
+  // Sync color picker ↔ hex input
+  customColorPicker.addEventListener('input', () => {
+    customHexInput.value = customColorPicker.value;
+  });
+
+  customHexInput.addEventListener('input', () => {
+    const val = customHexInput.value.trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+      customColorPicker.value = val;
+    }
+  });
+
+  // Apply custom color
+  function applyCustomColor() {
+    const val = customHexInput.value.trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+      setAccentColor(val);
+      customColorPanel.classList.remove('open');
+    }
+  }
+
+  customColorApply.addEventListener('click', applyCustomColor);
+  customHexInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') applyCustomColor();
+  });
+
+  // ════════════════════════════════════════════
+  // BACKGROUND (LIGHT / DARK)
+  // ════════════════════════════════════════════
+  const bgOptions = document.querySelectorAll('.bg-option');
+
+  bgOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      bgOptions.forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+      if (opt.dataset.bg === 'dark') {
+        previewContent.classList.add('dark');
+      } else {
+        previewContent.classList.remove('dark');
+      }
+    });
+  });
+
+  // ════════════════════════════════════════════
+  // FONT SWITCHING
+  // ════════════════════════════════════════════
+  const fontMap = {
+    'inter': { heading: '"Inter", sans-serif', body: '"Inter", sans-serif', ui: '"Inter", sans-serif' },
+    'sans': { heading: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', body: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', ui: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+    'serif': { heading: '"Playfair Display", Georgia, serif', body: '"Inter", sans-serif', ui: '"Inter", sans-serif' },
+    'dm-sans': { heading: '"DM Sans", sans-serif', body: '"Inter", sans-serif', ui: '"Inter", sans-serif' },
+  };
+
+  const fontSelect = document.getElementById('fontSelect');
+
+  fontSelect.addEventListener('change', () => {
+    const font = fontMap[fontSelect.value];
+    if (font) {
+      previewContent.style.setProperty('--p-font-heading', font.heading);
+      previewContent.style.setProperty('--p-font-body', font.body);
+      previewContent.style.setProperty('--p-font-ui', font.ui);
+    }
+  });
+
+  // NAVIGATION
+var navItems = [];
+var defaultNavs = [
+  { name: 'Home', link: '/', type: 'fixed' },
+  { name: 'Episodes', link: '/episodes', type: 'fixed' },
+  { name: 'Subscribe', link: '#subscribe', type: 'custom', linkType: 'page', pageId: 'subscribe' },
+];
+
+// Podbean pages (simulated - in real app would come from API)
+var podbeanPages = [
+  { id: 'p1', title: 'About' },
+  { id: 'p2', title: 'Contact' },
+  { id: 'p3', title: 'Sponsors' },
+  { id: 'p4', title: 'FAQ' },
+  { id: 'subscribe', title: 'Subscribe' },
+];
+
+function initNavItems() {
+  navItems = defaultNavs.map(function(n) {
+    return {
+      name: n.name,
+      link: n.link || (n.linkType === 'page' ? '/page/' + n.pageId : '#'),
+      type: n.type,
+      linkType: n.linkType || 'link',
+      pageId: n.pageId || ''
+    };
+  });
+}
+initNavItems();
+
+var navList = document.getElementById('navList');
+var addNavBtn = document.getElementById('addNavBtn');
+
+function renderNav() {
+  if (!navList) return;
+  navList.innerHTML = '';
+
+  for (var i = 0; i < navItems.length; i++) {
+    var item = navItems[i];
+    var isFixed = item.type === 'fixed';
+
+    var row2Html = '';
+    if (!isFixed) {
+      row2Html += '<select class="nav-item-type" data-idx="' + i + '">';
+      row2Html += '<option value="link"' + (item.linkType === 'link' ? ' selected' : '') + '>Custom Link</option>';
+      row2Html += '<option value="page"' + (item.linkType === 'page' ? ' selected' : '') + '>Podbean Page</option>';
+      row2Html += '</select>';
+
+      if (item.linkType === 'link') {
+        row2Html += '<input type="text" class="nav-item-input" data-idx="' + i + '" value="' + item.link + '" placeholder="https://">';
+        row2Html += '<select class="nav-item-select hidden" data-idx="' + i + '"></select>';
+      } else {
+        row2Html += '<input type="text" class="nav-item-input hidden" data-idx="' + i + '" value="' + item.link + '">';
+        row2Html += '<select class="nav-item-select" data-idx="' + i + '">';
+        row2Html += '<option value="">Select a page...</option>';
+        for (var p = 0; p < podbeanPages.length; p++) {
+          row2Html += '<option value="' + podbeanPages[p].id + '"' + (item.pageId === podbeanPages[p].id ? ' selected' : '') + '>' + podbeanPages[p].title + '</option>';
+        }
+        row2Html += '</select>';
+      }
+    } else {
+      row2Html += '<input type="text" class="nav-item-input" data-idx="' + i + '" value="' + item.link + '" readonly style="background:#f5f5f5;color:#999;">';
+    }
+
+    var rmHtml = isFixed ? '' : '<button class="nav-item-rm" data-idx="' + i + '">\u2715</button>';
+
+    var el = document.createElement('div');
+    el.className = 'nav-item';
+    el.draggable = true;
+    el.dataset.idx = i;
+    el.innerHTML =
+      '<div class="nav-item-row1">' +
+        '<span class="nav-item-drag">\u22ee\u22ee</span>' +
+        '<input type="text" class="nav-item-name" data-idx="' + i + '" value="' + item.name + '">' +
+        rmHtml +
+      '</div>' +
+      '<div class="nav-item-row2">' + row2Html + '</div>';
+    navList.appendChild(el);
+  }
+
+  updatePreviewNav();
+
+  // Bind name input
+  var nameInputs = navList.querySelectorAll('.nav-item-name');
+  for (var i = 0; i < nameInputs.length; i++) {
+    nameInputs[i].addEventListener('input', function() {
+      var idx = parseInt(this.dataset.idx);
+      if (idx >= 0 && idx < navItems.length) {
+        navItems[idx].name = this.value.trim() || navItems[idx].name;
+        updatePreviewNav();
+      }
+    });
+  }
+
+  // Bind link type (for non-fixed)
+  var typeSelects = navList.querySelectorAll('.nav-item-type');
+  for (var i = 0; i < typeSelects.length; i++) {
+    typeSelects[i].addEventListener('change', function() {
+      var idx = parseInt(this.dataset.idx);
+      if (idx < 0 || idx >= navItems.length) return;
+      navItems[idx].linkType = this.value;
+      renderNav();
+    });
+  }
+
+  // Bind custom link input
+  var linkInputs = navList.querySelectorAll('.nav-item-input:not([readonly])');
+  for (var i = 0; i < linkInputs.length; i++) {
+    linkInputs[i].addEventListener('input', function() {
+      var idx = parseInt(this.dataset.idx);
+      if (idx >= 0 && idx < navItems.length) {
+        navItems[idx].link = this.value;
+        updatePreviewNav();
+      }
+    });
+  }
+
+  // Bind page select
+  var pageSelects = navList.querySelectorAll('.nav-item-select');
+  for (var i = 0; i < pageSelects.length; i++) {
+    pageSelects[i].addEventListener('change', function() {
+      var idx = parseInt(this.dataset.idx);
+      if (idx >= 0 && idx < navItems.length) {
+        navItems[idx].pageId = this.value;
+        var page = null;
+        for (var p = 0; p < podbeanPages.length; p++) {
+          if (podbeanPages[p].id === this.value) { page = podbeanPages[p]; break; }
+        }
+        navItems[idx].link = page ? '/page/' + page.id : '';
+        updatePreviewNav();
+      }
+    });
+  }
+
+  // Bind remove
+  var rmBtns = navList.querySelectorAll('.nav-item-rm');
+  for (var i = 0; i < rmBtns.length; i++) {
+    rmBtns[i].addEventListener('click', function(e) {
+      e.stopPropagation();
+      var idx = parseInt(this.dataset.idx);
+      if (idx < 0 || idx >= navItems.length) return;
+      if (navItems[idx].type === 'fixed') return; // Cannot remove fixed items
+      navItems.splice(idx, 1);
+      renderNav();
+    });
+  }
+
+  // Bind drag events on the navList
+  setupNavDrag();
+}
+
+function updatePreviewNav() {
+  var nav = document.querySelector('.pc-nav');
+  if (!nav) return;
+  nav.innerHTML = '';
+  for (var i = 0; i < navItems.length; i++) {
+    var a = document.createElement('a');
+    a.href = navItems[i].link || '#';
+    a.textContent = navItems[i].name || 'Link';
+    if (i === 0) a.className = 'active';
+    nav.appendChild(a);
+  }
+  // Search icon + bar container
+  var cb = document.getElementById('navSearchToggle');
+  var showSearch = !cb || cb.checked;
+  var span = document.createElement('span');
+  span.className = 'pc-nav-search' + (showSearch ? '' : ' hidden');
+  span.textContent = '🔍';
+  span.title = 'Search';
+  span.dataset.open = 'false';
+  nav.appendChild(span);
+
+  // Search bar (initially hidden)
+  var bar = document.createElement('div');
+  bar.className = 'pc-search-bar hidden';
+  bar.innerHTML =
+    '<input type="text" class="_search-input" placeholder="Search episodes..." autofocus>' +
+    '<button class="pc-search-btn">Search</button>' +
+    '<button class="pc-search-cancel">Cancel</button>';
+  nav.appendChild(bar);
+
+  // Click search icon → show bar
+  span.addEventListener('click', function() {
+    if (span.dataset.open === 'true') return;
+    // Hide links, show bar
+    var links = nav.querySelectorAll('a');
+    for (var i = 0; i < links.length; i++) links[i].style.visibility = 'hidden';
+    span.style.visibility = 'hidden';
+    bar.classList.remove('hidden');
+    span.dataset.open = 'true';
+    var inp = bar.querySelector('._search-input');
+    if (inp) setTimeout(function() { inp.focus(); }, 100);
+  });
+
+  // Cancel → revert
+  var cancelBtn = bar.querySelector('.pc-search-cancel');
+  cancelBtn.addEventListener('click', function() {
+    bar.classList.add('hidden');
+    span.dataset.open = 'false';
+    span.style.visibility = '';
+    var links = nav.querySelectorAll('a');
+    for (var i = 0; i < links.length; i++) links[i].style.visibility = '';
+  });
+
+  // Search button → alert simulation
+  var searchBtn = bar.querySelector('.pc-search-btn');
+  searchBtn.addEventListener('click', function() {
+    var inp = bar.querySelector('._search-input');
+    var query = inp ? inp.value.trim() : '';
+    if (query) {
+      alert('Search for: "' + query + '"\\n(In a real Podbean site this would show search results)');
+    }
+  });
+
+  // Enter key → same as Search
+  var inp = bar.querySelector('._search-input');
+  if (inp) {
+    inp.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') searchBtn.click();
+      if (e.key === 'Escape') cancelBtn.click();
+    });
+  }
+}
+
+// Search toggle binding
+var searchCb = document.getElementById('navSearchToggle');
+if (searchCb) {
+  searchCb.addEventListener('change', function() {
+    var icon = document.querySelector('.pc-nav-search');
+    if (icon) {
+      icon.classList.toggle('hidden', !this.checked);
+      // Also hide search bar if open
+      if (!this.checked) {
+        var bar = document.querySelector('.pc-search-bar');
+        if (bar) bar.classList.add('hidden');
+        icon.dataset.open = 'false';
+        icon.style.visibility = '';
+        var links = document.querySelectorAll('.pc-nav a');
+        for (var i = 0; i < links.length; i++) links[i].style.visibility = '';
+      }
+    }
+  });
+}
+
+// Drag-and-drop for nav items
+function setupNavDrag() {
+  var items = navList.querySelectorAll('.nav-item');
+  for (var i = 0; i < items.length; i++) {
+    items[i].addEventListener('dragstart', function(e) {
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', this.dataset.idx);
+    });
+    items[i].addEventListener('dragend', function() {
+      this.classList.remove('dragging');
+      navList.querySelectorAll('.nav-item').forEach(function(el) { el.classList.remove('drag-over', 'drag-over-bottom'); });
+    });
+    items[i].addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      var srcIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      var tgtIdx = parseInt(this.dataset.idx);
+      if (isNaN(srcIdx) || isNaN(tgtIdx) || srcIdx === tgtIdx) return;
+      // Only allow reordering if both are fixed or both are non-fixed? Let's allow any
+      var rect = this.getBoundingClientRect();
+      var above = e.clientY < rect.top + rect.height / 2;
+      navList.querySelectorAll('.nav-item').forEach(function(el) { el.classList.remove('drag-over', 'drag-over-bottom'); });
+      this.classList.toggle('drag-over', above);
+      this.classList.toggle('drag-over-bottom', !above);
+    });
+    items[i].addEventListener('drop', function(e) {
+      e.preventDefault();
+      var srcIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      var tgtIdx = parseInt(this.dataset.idx);
+      if (isNaN(srcIdx) || isNaN(tgtIdx) || srcIdx === tgtIdx) return;
+
+      var rect = this.getBoundingClientRect();
+      var before = e.clientY < rect.top + rect.height / 2;
+
+      // Reorder array
+      var item = navItems.splice(srcIdx, 1)[0];
+      var newIdx = tgtIdx;
+      if (srcIdx < tgtIdx) newIdx = tgtIdx - 1;
+      if (!before) newIdx = tgtIdx;
+      navItems.splice(newIdx, 0, item);
+
+      renderNav();
+    });
+  }
+}
+
+addNavBtn.addEventListener('click', function() {
+  navItems.push({
+    name: 'Link ' + (navItems.length + 1),
+    link: 'https://',
+    type: 'custom',
+    linkType: 'link',
+    pageId: ''
+  });
+  renderNav();
+});
+
+// Initial render
+renderNav();
+
+
+  // PAGE NAVIGATION (Home / Episodes)
+  var homeSections = document.getElementById('previewContent').querySelectorAll('.pc-top-bar, .pc-nav, .pc-hero-wrap, .pc-hero-off-indicator, .pc-section, .pc-footer');
+  var episodesPage = document.getElementById('episodesPage');
+
+  function setActiveNav(navEl, pageName) {
+    if (!navEl) return;
+    var links = navEl.querySelectorAll('a');
+    for (var i = 0; i < links.length; i++) {
+      links[i].className = '';
+      if (links[i].textContent.trim().toLowerCase() === pageName) {
+        links[i].className = 'active';
+      }
+    }
+  }
+
+  function switchToPage(page) {
+    // Home content sections (exclude top-bar and nav - they stay visible or switch to episodes page versions)
+    var homeSections = document.querySelectorAll('.preview-content > .pc-hero-wrap, .preview-content > .pc-hero-off-indicator, .preview-content > .pc-section, .preview-content > .pc-footer');
+    if (page === 'home') {
+      if (episodesPage) episodesPage.style.display = 'none';
+      for (var i = 0; i < homeSections.length; i++) homeSections[i].style.display = '';
+      // Show home's top-bar and nav
+      var homeTopBar = document.querySelector('.preview-content > .pc-top-bar');
+      var homeNav = document.querySelector('.preview-content > .pc-nav');
+      if (homeTopBar) homeTopBar.style.display = '';
+      if (homeNav) homeNav.style.display = '';
+      setActiveNav(homeNav, 'home');
+    } else if (page === 'episodes') {
+      if (episodesPage) episodesPage.style.display = '';
+      for (var i = 0; i < homeSections.length; i++) homeSections[i].style.display = 'none';
+      // Hide home's top-bar and nav (episodes page has its own)
+      var homeTopBar = document.querySelector('.preview-content > .pc-top-bar');
+      var homeNav = document.querySelector('.preview-content > .pc-nav');
+      if (homeTopBar) homeTopBar.style.display = 'none';
+      if (homeNav) homeNav.style.display = 'none';
+      setActiveNav(episodesPage ? episodesPage.querySelector('.pc-nav') : null, 'episodes');
+    }
+  }
+
+  // View all link
+  var viewAllLink = document.getElementById('viewAllLink');
+  if (viewAllLink) {
+    viewAllLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      switchToPage('episodes');
+    });
+  }
+
+  // Nav links - bind on all navs (home nav rebuilds dynamically, episodes nav is static)
+  function bindNavClick(navEl) {
+    if (!navEl) return;
+    var links = navEl.querySelectorAll('a');
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener('click', function(e) {
+        e.preventDefault();
+        var text = this.textContent.trim().toLowerCase();
+        if (text === 'episodes') {
+          switchToPage('episodes');
+        } else {
+          switchToPage('home');
+        }
+      });
+    }
+  }
+
+  // Override updatePreviewNav to also bind nav clicks after rebuild
+  var origUpdateNav = updatePreviewNav;
+  updatePreviewNav = function() {
+    if (origUpdateNav) origUpdateNav();
+    setTimeout(function() {
+      bindNavClick(document.querySelector('.preview-content > .pc-nav'));
+    }, 50);
+  };
+
+  // Also bind clicks on the initial nav (renderNav already ran, so bind now)
+  setTimeout(function() {
+    bindNavClick(document.querySelector('.preview-content > .pc-nav'));
+  }, 100);
+
+  // Bind nav clicks in episodes page (it uses static nav, so one-time bind is enough)
+  if (episodesPage) {
+    setTimeout(function() {
+      bindNavClick(episodesPage.querySelector('.pc-nav'));
+    }, 100);
+  }
+
+  // Bind search on episodes page nav
+  if (episodesPage) {
+    var epNav = document.getElementById('episodesPageNav');
+    if (epNav) {
+      var epSearchIcon = epNav.querySelector('.pc-nav-search');
+      var epSearchBar = epNav.querySelector('.pc-search-bar');
+      if (epSearchIcon && epSearchBar) {
+        epSearchIcon.addEventListener('click', function() {
+          var links = epNav.querySelectorAll('a');
+          for (var i = 0; i < links.length; i++) links[i].style.visibility = 'hidden';
+          epSearchIcon.style.visibility = 'hidden';
+          epSearchBar.classList.remove('hidden');
+          var inp = epSearchBar.querySelector('._search-input');
+          if (inp) setTimeout(function() { inp.focus(); }, 100);
+        });
+        var epCancelBtn = epSearchBar.querySelector('.pc-search-cancel');
+        if (epCancelBtn) {
+          epCancelBtn.addEventListener('click', function() {
+            epSearchBar.classList.add('hidden');
+            epSearchIcon.style.visibility = '';
+            var links = epNav.querySelectorAll('a');
+            for (var i = 0; i < links.length; i++) links[i].style.visibility = '';
+          });
+        }
+        var epSearchBtn = epSearchBar.querySelector('.pc-search-btn');
+        if (epSearchBtn) {
+          epSearchBtn.addEventListener('click', function() {
+            var inp = epSearchBar.querySelector('._search-input');
+            var query = inp ? inp.value.trim() : '';
+            if (query) alert('Search for: "' + query + '"\n(In a real Podbean site this would show search results)');
+          });
+        }
+        var epInput = epSearchBar.querySelector('._search-input');
+        if (epInput) {
+          epInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && epSearchBtn) epSearchBtn.click();
+            if (e.key === 'Escape' && epCancelBtn) epCancelBtn.click();
+          });
+        }
+      }
+    }
+  }
+
+  // Sort episodes (newest / oldest)
+  function parseEpDate(dateStr) {
+    var months = {'Jan':0,'Feb':1,'Mar':2,'Apr':3,'May':4,'Jun':5,'Jul':6,'Aug':7,'Sep':8,'Oct':9,'Nov':10,'Dec':11};
+    var parts = dateStr.replace(',','').split(' ');
+    if (parts.length >= 3) {
+      var m = months[parts[0]];
+      var d = parseInt(parts[1]);
+      var y = parseInt(parts[2]);
+      if (m !== undefined && !isNaN(d) && !isNaN(y)) return new Date(y, m, d);
+    }
+    return new Date(0);
+  }
+
+  var sortBtns = document.querySelectorAll('.ep-sort-btn');
+  for (var si = 0; si < sortBtns.length; si++) {
+    sortBtns[si].addEventListener('click', function() {
+      var list = document.querySelector('.pc-episodes-list');
+      if (!list) return;
+      var rows = Array.from(list.querySelectorAll('.pc-episode-row'));
+      var sortVal = this.dataset.sort;
+
+      // Update button states
+      sortBtns.forEach(function(b) {
+        b.style.background = 'transparent';
+        b.style.color = 'var(--p-text-secondary)';
+        b.classList.remove('active');
+      });
+      this.style.background = 'var(--p-card)';
+      this.style.color = 'var(--p-text)';
+      this.classList.add('active');
+
+      // Sort rows
+      rows.sort(function(a, b) {
+        var dateA = a.querySelector('.pc-episode-row-meta');
+        var dateB = b.querySelector('.pc-episode-row-meta');
+        var timeA = dateA ? parseEpDate(dateA.textContent.replace('Episode ','').split('·')[1].trim()) : new Date(0);
+        var timeB = dateB ? parseEpDate(dateB.textContent.replace('Episode ','').split('·')[1].trim()) : new Date(0);
+        return sortVal === 'newest' ? timeB - timeA : timeA - timeB;
+      });
+
+      // Reorder DOM
+      for (var r = 0; r < rows.length; r++) list.appendChild(rows[r]);
+    });
+  }
+
+  // Episodes page play buttons
+  if (episodesPage) {
+    episodesPage.addEventListener('click', function(e) {
+      var playBtn = e.target.closest('.pc-episode-row-play');
+      var actionBtn = e.target.closest('.pc-episode-row-action');
+      if (playBtn || actionBtn) {
+        var row = (playBtn || actionBtn).closest('.pc-episode-row');
+        if (row) {
+          var title = row.querySelector('.pc-episode-row-title');
+          if (title) {
+            alert('Now playing: "' + title.textContent + '"\n(In a real Podbean site, this would start playback)');
+          }
+        }
+      }
+    });
+  }
+
+// SOCIAL LINKS
+  // SOCIAL LINKS
+  var socialIcons = {
+    'facebook': { icon: 'f', color: '#1877f2' },
+    'x': { icon: 'X', color: '#111' },
+    'instagram': { icon: 'I', color: '#e4405f' },
+    'youtube': { icon: 'Y', color: '#ff0000' },
+    'linkedin': { icon: 'in', color: '#0a66c2' },
+  };
+
+  function renderSocialIcons() {
+    var container = document.getElementById('footerSocialIcons');
+    if (!container) return;
+    var html = '';
+    var items = document.querySelectorAll('.social-link-item');
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var cb = item.querySelector('.social-link-cb');
+      if (!cb || !cb.checked) continue;
+      var input = item.querySelector('.social-link-input');
+      if (!input) continue;
+      var url = input.value.trim();
+      var platform = input.dataset.platform;
+      var info = socialIcons[platform];
+      if (!info || !url || url === 'https://' || url === 'https://www.') continue;
+      html += '<a href="' + url + '" target="_blank" rel="noopener" style="background:' + info.color + ';">' + info.icon + '</a>';
+    }
+    container.innerHTML = html;
+  }
+
+  var socialInputs = document.querySelectorAll('.social-link-input');
+  for (var i = 0; i < socialInputs.length; i++) {
+    socialInputs[i].addEventListener('input', renderSocialIcons);
+  }
+
+  var socialCbs = document.querySelectorAll('.social-link-cb');
+  for (var i = 0; i < socialCbs.length; i++) {
+    socialCbs[i].addEventListener('change', renderSocialIcons);
+  }
+
+  renderSocialIcons();
+
+  // SECTIONS
+  var sectionMap = {
+    'listen': { id: 'listenWrap', off: 'listen-off' },
+    'grid': { id: 'gridWrap', off: 'grid-off' },
+    'newsletter': { id: 'newsletterWrap', off: 'newsletter-off' },
+  };
+
+  var _csId = 0;
+  var _csList = [];
+
+  _csList.push({
+    id: 'cs_' + (_csId++),
+    title: 'About the Host',
+    content: 'Maya Rodriguez has been making podcasts for over ten years. She started her first show in a small closet with a borrowed microphone and never looked back. Today she hosts and produces The Creative Pulse, where she talks to artists, musicians, and designers from around the world about how they make their work and what drives them to keep creating.',
+    style: 'image-right',
+    visible: true,
+    image: null
+  });
+
+  var _panel = document.getElementById('sectionToggles');
+  var _preview = document.getElementById('previewContent');
+  var _addBtn = document.getElementById('addCustomSectionBtn');
+
+  function _esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function _rebuild() {
+    // Remove old CS elements from panel
+    var olds = _panel.querySelectorAll('.cs-dynamic');
+    for (var i = olds.length - 1; i >= 0; i--) olds[i].remove();
+    
+    // Remove old CS previews
+    var oldp = _preview.querySelectorAll('.cs-dynamic-preview');
+    for (var i = oldp.length - 1; i >= 0; i--) oldp[i].remove();
+
+    // Find where to insert in panel
+    var anchor = document.getElementById('addCustomSectionArea');
+
+    // Find newsletter section in preview
+    var nls = document.getElementById('newsletterWrap');
+    var nlsSection = null;
+    if (nls) {
+      var p = nls.parentNode;
+      while (p) {
+        if (p.classList && p.classList.contains('pc-section')) { nlsSection = p; break; }
+        p = p.parentNode;
+      }
+    }
+
+    // Build each custom section
+    for (var j = 0; j < _csList.length; j++) {
+      var cs = _csList[j];
+
+      // Panel toggle line - two rows
+      var tog = document.createElement('div');
+      tog.className = 'section-toggle cs-toggle cs-dynamic cs-dynamic-wrap';
+      tog.draggable = true;
+      tog.dataset.csId = cs.id;
+      tog.innerHTML =
+        '<div class="cs-toggle-row1">' +
+          '<span class="section-toggle-drag">\u22ee\u22ee</span>' +
+          '<span class="section-toggle-icon">\u270f</span>' +
+          '<span class="section-toggle-label">' + _esc(cs.title) + '</span>' +
+        '</div>' +
+        '<div class="cs-toggle-row2">' +
+          '<button class="_edit-btn" data-cs-id="' + cs.id + '">\u270e Edit</button>' +
+          '<button class="_rm-btn" data-cs-id="' + cs.id + '">\u2715 Remove</button>' +
+          '<label class="toggle-switch"><input type="checkbox" class="_cs-cb" data-cs-id="' + cs.id + '"' + (cs.visible ? ' checked' : '') + '><span class="toggle-slider"></span></label>' +
+        '</div>';
+      if (anchor) _panel.insertBefore(tog, anchor);
+
+      // Edit form - style first, then conditional fields
+      var imgPrev = cs.image ? '<img src="' + cs.image + '">' : '\uD83D\uDCF7';
+      var upText = cs.image ? 'Change' : 'Upload';
+      var rmImg = cs.image ? '<button class="_rm-img" data-cs-id="' + cs.id + '">Remove</button>' : '';
+      var hasImage = (cs.style !== 'text');
+      var form = document.createElement('div');
+      form.className = 'cs-edit-form cs-dynamic';
+      form.dataset.csId = cs.id;
+      form.style.display = 'none';
+      form.innerHTML =
+        '<div class="cs-edit-form-inner">' +
+          '<div class="cs-edit-field"><label>Style</label><div class="cs-select-wrap"><select class="_inp-style">' +
+            '<option value="text"' + (cs.style === 'text' ? ' selected' : '') + '>Text only</option>' +
+            '<option value="image-left"' + (cs.style === 'image-left' ? ' selected' : '') + '>Image Left</option>' +
+            '<option value="image-right"' + (cs.style === 'image-right' ? ' selected' : '') + '>Image Right</option>' +
+          '</select></div></div>' +
+          '<div class="cs-edit-field"><label>Title</label><input type="text" class="_inp-title" value="' + _esc(cs.title) + '" placeholder="Section title"></div>' +
+          '<div class="cs-edit-field"><label>Content</label><textarea class="_inp-content" placeholder="Write your section content here..." rows="3">' + _esc(cs.content) + '</textarea></div>' +
+          '<div class="cs-edit-field cs-edit-image-field" style="' + (hasImage ? '' : 'display:none;') + '"><label>Image</label><div class="cs-edit-image-row">' +
+            '<div class="cs-edit-image-preview">' + imgPrev + '</div>' +
+            '<button class="_up-btn" data-cs-id="' + cs.id + '">' + upText + '<input type="file" accept="image/*"></button>' +
+            rmImg +
+          '</div></div>' +
+          '<div class="cs-edit-actions"><button class="_edit-cancel">Cancel</button><button class="_edit-save">Save</button></div>' +
+        '</div>';
+      if (anchor) _panel.insertBefore(form, anchor);
+
+      // Preview section
+      var imgHtml = cs.image ? '<img src="' + cs.image + '">' : '\uD83D\uDC64';
+      var sec = document.createElement('div');
+      sec.className = 'pc-section cs-dynamic-preview';
+      sec.dataset.csId = cs.id;
+      sec.style.display = cs.visible ? '' : 'none';
+      sec.innerHTML =
+        '<div class="cs-card style-' + cs.style + '">' +
+          '<div class="cs-avatar">' + imgHtml + '</div>' +
+          '<div class="cs-info">' +
+            '<div class="cs-title">' + _esc(cs.title) + '</div>' +
+            '<div class="cs-content">' + _esc(cs.content) + '</div>' +
+          '</div>' +
+        '</div>';
+      if (nlsSection) {
+        _preview.insertBefore(sec, nlsSection);
+      } else {
+        _preview.appendChild(sec);
+      }
+    }
+
+    // Bind checkbox toggles
+    var cbs = _panel.querySelectorAll('._cs-cb');
+    for (var i = 0; i < cbs.length; i++) {
+      cbs[i].addEventListener('change', function() {
+        var id = this.dataset.csId;
+        for (var k = 0; k < _csList.length; k++) {
+          if (_csList[k].id === id) {
+            _csList[k].visible = this.checked;
+            var el = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
+            if (el) el.style.display = this.checked ? '' : 'none';
+            break;
+          }
+        }
+      });
+    }
+
+    // Bind edit buttons
+    var ebts = _panel.querySelectorAll('._edit-btn');
+    for (var i = 0; i < ebts.length; i++) {
+      ebts[i].addEventListener('click', function(e) {
+        e.stopPropagation();
+        var id = this.dataset.csId;
+        var f = _panel.querySelector('.cs-edit-form[data-cs-id="' + id + '"]');
+        if (f) f.style.display = f.style.display === 'block' ? 'none' : 'block';
+      });
+    }
+
+    // Bind style change → toggle image field & update preview immediately
+    var ss = _panel.querySelectorAll('._inp-style');
+    for (var i = 0; i < ss.length; i++) {
+      ss[i].addEventListener('change', function() {
+        var f = this.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        var newStyle = this.value;
+
+        // Toggle image field visibility
+        var imgField = f.querySelector('.cs-edit-image-field');
+        if (imgField) {
+          imgField.style.display = (newStyle === 'text') ? 'none' : '';
+        }
+
+        // Update preview style immediately
+        var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
+        if (prev) {
+          var card = prev.querySelector('.cs-card');
+          if (card) {
+            card.className = 'cs-card style-' + newStyle;
+          }
+        }
+      });
+    }
+
+    // Bind remove buttons
+    var rbts = _panel.querySelectorAll('._rm-btn');
+    for (var i = 0; i < rbts.length; i++) {
+      rbts[i].addEventListener('click', function(e) {
+        e.stopPropagation();
+        var id = this.dataset.csId;
+        for (var k = 0; k < _csList.length; k++) {
+          if (_csList[k].id === id) { _csList.splice(k, 1); break; }
+        }
+        _rebuild();
+      });
+    }
+
+    // Bind real-time title & content preview
+    var tit = _panel.querySelectorAll('._inp-title');
+    for (var i = 0; i < tit.length; i++) {
+      tit[i].addEventListener('input', function() {
+        var f = this.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        var newVal = this.value.trim() || 'Untitled';
+        // Update preview title
+        var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
+        if (prev) {
+          var titleEl = prev.querySelector('.cs-title');
+          if (titleEl) titleEl.textContent = newVal;
+        }
+        // Update toggle label
+        var labelEl = _panel.querySelector('.cs-toggle[data-cs-id="' + id + '"] .section-toggle-label');
+        if (labelEl) labelEl.textContent = newVal;
+      });
+    }
+
+    var cin = _panel.querySelectorAll('._inp-content');
+    for (var i = 0; i < cin.length; i++) {
+      cin[i].addEventListener('input', function() {
+        var f = this.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        var newVal = this.value.trim() || '&nbsp;';
+        var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
+        if (prev) {
+          var contentEl = prev.querySelector('.cs-content');
+          if (contentEl) contentEl.textContent = this.value;
+        }
+      });
+    }
+
+    // Bind save buttons
+    var sbs = _panel.querySelectorAll('._edit-save');
+    for (var i = 0; i < sbs.length; i++) {
+      sbs[i].addEventListener('click', function() {
+        var f = this.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        for (var k = 0; k < _csList.length; k++) {
+          if (_csList[k].id === id) {
+            var cs = _csList[k];
+            var ti = f.querySelector('._inp-title');
+            var ci = f.querySelector('._inp-content');
+            var si = f.querySelector('._inp-style');
+            if (ti) cs.title = ti.value.trim() || cs.title;
+            if (ci) cs.content = ci.value.trim() || cs.content;
+            if (si) cs.style = si.value;
+            _rebuild();
+            break;
+          }
+        }
+      });
+    }
+
+    // Bind cancel buttons
+    var cbs2 = _panel.querySelectorAll('._edit-cancel');
+    for (var i = 0; i < cbs2.length; i++) {
+      cbs2[i].addEventListener('click', function() {
+        var f = this.closest('.cs-edit-form');
+        if (f) f.style.display = 'none';
+      });
+    }
+
+    // Bind image upload
+    var ubs = _panel.querySelectorAll('._up-btn input[type="file"]');
+    for (var i = 0; i < ubs.length; i++) {
+      ubs[i].addEventListener('change', function(e) {
+        var btn = this.closest('._up-btn');
+        var f = btn.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        if (!e.target.files || !e.target.files[0]) return;
+        var r = new FileReader();
+        r.onload = function(ev) {
+          for (var k = 0; k < _csList.length; k++) {
+            if (_csList[k].id === id) { _csList[k].image = ev.target.result; _rebuild(); break; }
+          }
+        };
+        r.readAsDataURL(e.target.files[0]);
+      });
+    }
+
+    // Bind image remove
+    var irs = _panel.querySelectorAll('._rm-img');
+    for (var i = 0; i < irs.length; i++) {
+      irs[i].addEventListener('click', function() {
+        var f = this.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        for (var k = 0; k < _csList.length; k++) {
+          if (_csList[k].id === id) { _csList[k].image = null; _rebuild(); break; }
+        }
+      });
+    }
+  }
+
+  // Add button
+  _addBtn.addEventListener('click', function() {
+    _csList.push({
+      id: 'cs_' + (_csId++),
+      title: 'Custom Section ' + (_csList.length + 1),
+      content: 'Write something about your podcast, your guests, or your mission.',
+      style: 'text',
+      visible: true,
+      image: null
+    });
+    _rebuild();
+  });
+
+  // Built-in section toggles
+  var bCbs = document.querySelectorAll('.section-toggle[data-section] input[type="checkbox"]');
+  for (var i = 0; i < bCbs.length; i++) {
+    bCbs[i].addEventListener('change', function() {
+      var sec = this.closest('.section-toggle').dataset.section;
+      var m = sectionMap[sec];
+      if (m) {
+        var el = document.getElementById(m.id);
+        if (el) el.classList.toggle(m.off, !this.checked);
+      }
+    });
+  }
+
+  // Drag-and-Drop
+  var dragSrc = null;
+  _panel.addEventListener('dragstart', function(e) {
+    var t = e.target.closest('.section-toggle');
+    if (!t) return;
+    dragSrc = t;
+    t.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', 'x');
+  });
+  _panel.addEventListener('dragend', function() {
+    var ts = document.querySelectorAll('.section-toggle');
+    for (var i = 0; i < ts.length; i++) ts[i].classList.remove('dragging','drag-over','drag-over-bottom');
+  });
+  _panel.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    var t = e.target.closest('.section-toggle');
+    if (!t || t === dragSrc) return;
+    var rect = t.getBoundingClientRect();
+    var above = e.clientY < rect.top + rect.height / 2;
+    var ts = document.querySelectorAll('.section-toggle');
+    for (var i = 0; i < ts.length; i++) ts[i].classList.remove('drag-over','drag-over-bottom');
+    t.classList.toggle('drag-over', above);
+    t.classList.toggle('drag-over-bottom', !above);
+  });
+  function _getPreview(toggle) {
+    var sec = toggle.dataset.section;
+    var csId = toggle.dataset.csId;
+    if (sec) {
+      var m = sectionMap[sec];
+      if (m) {
+        var el = document.getElementById(m.id);
+        if (el) {
+          var p = el.parentNode;
+          while (p) { if (p.classList.contains('pc-section')) return p; p = p.parentNode; }
+        }
+      }
+    } else if (csId) {
+      return _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + csId + '"]');
+    }
+    return null;
+  }
+  _panel.addEventListener('drop', function(e) {
+    e.preventDefault();
+    var t = e.target.closest('.section-toggle');
+    if (!t || !dragSrc || t === dragSrc) return;
+    var rect = t.getBoundingClientRect();
+    var before = e.clientY < rect.top + rect.height / 2;
+    if (before) _panel.insertBefore(dragSrc, t);
+    else _panel.insertBefore(dragSrc, t.nextSibling);
+    // Move edit form too
+    var df = null;
+    if (dragSrc.classList.contains('cs-toggle')) df = _panel.querySelector('.cs-edit-form[data-cs-id="' + dragSrc.dataset.csId + '"]');
+    var tf = null;
+    if (t.classList.contains('cs-toggle')) tf = _panel.querySelector('.cs-edit-form[data-cs-id="' + t.dataset.csId + '"]');
+    if (df) {
+      if (tf) { if (before) _panel.insertBefore(df, tf); else _panel.insertBefore(df, tf.nextSibling); }
+      else _panel.insertBefore(df, dragSrc.nextSibling);
+    }
+    // Move preview
+    var sp = _getPreview(dragSrc);
+    var tp = _getPreview(t);
+    if (sp && tp && sp !== tp) {
+      if (before) _preview.insertBefore(sp, tp);
+      else _preview.insertBefore(sp, tp.nextSibling);
+    }
+    var ts = document.querySelectorAll('.section-toggle');
+    for (var i = 0; i < ts.length; i++) ts[i].classList.remove('drag-over','drag-over-bottom','dragging');
+    dragSrc = null;
+  });
+
+  // Initial render
+  _rebuild();
+  // ════════════════════════════════════════════
+  // EPISODE PLAY
+  // ════════════════════════════════════════════
+  const playIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>';
+  const pauseIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+  // Hero description expand/collapse
+  var heroDesc = document.getElementById('heroDescription');
+  var heroToggle = document.getElementById('heroDescToggle');
+
+  if (heroDesc && heroToggle) {
+    // Check if description overflows
+    setTimeout(function() {
+      if (heroDesc.scrollHeight > heroDesc.clientHeight) {
+        heroToggle.classList.remove('hidden');
+      }
+    }, 200);
+  }
+
+  function toggleHeroDesc() {
+    if (!heroDesc || !heroToggle) return;
+    heroDesc.classList.toggle('expanded');
+    var isExpanded = heroDesc.classList.contains('expanded');
+    heroToggle.textContent = isExpanded ? 'Show less ↑' : 'Read more ↓';
+    // Re-check overflow when collapsing
+    if (!isExpanded) {
+      setTimeout(function() {
+        if (heroDesc.scrollHeight > heroDesc.clientHeight) {
+          heroToggle.classList.remove('hidden');
+        } else {
+          heroToggle.classList.add('hidden');
+        }
+      }, 50);
+    }
+  }
+
+  const epCards = document.querySelectorAll('.pc-ep-card');
+
+  function setAllPaused() {
+    epCards.forEach(c => {
+      c.classList.remove('playing');
+      const btn = c.querySelector('.pc-ep-play-btn');
+      if (btn) btn.innerHTML = playIcon;
+    });
+  }
+
+  epCards.forEach(card => {
+    const playBtn = card.querySelector('.pc-ep-play-btn');
+    if (playBtn) {
+      playBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (card.classList.contains('playing')) {
+          card.classList.remove('playing');
+          playBtn.innerHTML = playIcon;
+        } else {
+          setAllPaused();
+          card.classList.add('playing');
+          playBtn.innerHTML = pauseIcon;
+        }
+      });
+    }
+
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.pc-ep-action-btn')) return;
+      const btn = card.querySelector('.pc-ep-play-btn');
+      if (card.classList.contains('playing')) {
+        card.classList.remove('playing');
+        if (btn) btn.innerHTML = playIcon;
+      } else {
+        setAllPaused();
+        card.classList.add('playing');
+        if (btn) btn.innerHTML = pauseIcon;
+      }
+    });
+  });
+
+  // Top Bar Share & Follow
+  var topShareSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+  var topFollowSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>';
+  var checkedSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  var topShare = document.querySelector('.pc-top-share');
+  var topFollow = document.querySelector('.pc-top-follow');
+
+  if (topShare) {
+    topShare.addEventListener('click', function() {
+      var url = window.location.href;
+      var title = 'The Creative Pulse -- A podcast about creativity and culture';
+      if (navigator.share) {
+        navigator.share({ title: title, url: url }).catch(function() {});
+      } else {
+        navigator.clipboard.writeText(url).then(function() {
+          topShare.innerHTML = checkedSvg + ' Copied!';
+          setTimeout(function() {
+            topShare.innerHTML = topShareSvg + ' Share';
+          }, 2000);
+        }).catch(function() {});
+      }
+    });
+  }
+
+  if (topFollow) {
+    topFollow.addEventListener('click', function() {
+      this.classList.toggle('following');
+      if (this.classList.contains('following')) {
+        this.innerHTML = checkedSvg + ' Following';
+      } else {
+        this.innerHTML = topFollowSvg + ' Follow';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
