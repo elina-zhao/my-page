@@ -1,0 +1,3234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podcast Website</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg-page: #ffffff;
+    --bg-white: #ffffff;
+    --bg-hover: #f5f5f5;
+    --bg-active: #f2f2f2;
+    --border: #e5e5e5;
+    --border-light: #f0f0f0;
+    --text-primary: #111111;
+    --text-secondary: #555555;
+    --text-muted: #999999;
+    --accent: #111111;
+    --accent-indigo: #4f46e5;
+    --green: #428200;
+    --green-bg: rgba(66,130,0,0.08);
+    --orange: #e87c00;
+    --orange-bg: rgba(232,124,0,0.08);
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    min-height: 100vh;
+    letter-spacing: -0.01em;
+  }
+
+  /* ===== LEFT SIDEBAR ===== */
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--bg-page);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    user-select: none;
+  }
+
+  .sidebar-brand {
+    padding: 22px 20px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sidebar-brand-icon {
+    width: 28px; height: 28px;
+    background: #111;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sidebar-brand-icon svg { width: 15px; height: 15px; }
+
+  .sidebar-brand-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 0 12px;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    font-size: 13.5px;
+    font-weight: 450;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .sidebar-item svg {
+    flex-shrink: 0;
+    opacity: 0.55;
+  }
+
+  .sidebar-item.active svg {
+    opacity: 0.85;
+  }
+
+  .sidebar-item:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .sidebar-item.active {
+    background: #e8e8e8;
+    color: var(--text-primary);
+    font-weight: 550;
+    border-radius: 20px;
+  }
+
+  /* Expandable group */
+  .nav-group { margin: 0; }
+
+  .nav-group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    font-size: 13.5px;
+    font-weight: 450;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .nav-group-header svg {
+    flex-shrink: 0;
+    opacity: 0.55;
+  }
+
+  .nav-group-header:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .nav-group-header .expand-arrow {
+    margin-left: auto;
+    font-size: 8px;
+    color: var(--text-muted);
+    transition: transform 0.15s;
+    flex-shrink: 0;
+  }
+
+  .nav-group.expanded .nav-group-header {
+    color: var(--text-primary);
+    font-weight: 550;
+  }
+  .nav-group.expanded .nav-group-header .expand-arrow { transform: rotate(90deg); }
+
+  .nav-sub-items {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.25s ease;
+    padding-left: 26px;
+  }
+
+  .nav-group.expanded .nav-sub-items { max-height: 300px; }
+
+  .nav-sub-item {
+    display: block;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 440;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .nav-sub-item:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .nav-sub-item.active {
+    background: #e8e8e8;
+    color: var(--text-primary);
+    font-weight: 550;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .user-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #e5e5e5;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--text-muted);
+  }
+
+  .user-info { font-size: 12px; color: var(--text-secondary); }
+
+  /* ===== MAIN AREA ===== */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-y: auto;
+  }
+
+  /* --- Page header --- */
+  .page-header {
+    padding: 28px 36px 0;
+    flex-shrink: 0;
+  }
+
+  .page-title {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  .page-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 18px;
+  }
+
+  /* --- Tab bar --- */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    padding: 0 36px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .tab-item {
+    font-size: 13px;
+    font-weight: 450;
+    color: var(--text-muted);
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    font-family: var(--font-sans);
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    letter-spacing: 0.01em;
+  }
+
+  .tab-item:hover { color: var(--text-primary); }
+
+  .tab-item.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* --- Content --- */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 56px 56px;
+    max-width: 1200px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .tab-panel-heading {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.2px;
+  }
+
+  /* --- Buttons --- */
+  .btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    font-family: var(--font-sans);
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+
+  .btn-primary { background: #111; color: #fff; }
+  .btn-primary:hover { background: #333; }
+
+  .btn-secondary {
+    background: var(--bg-white);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: #f5f5f5; border-color: #ccc; }
+
+  .btn-ghost { background: transparent; color: var(--text-secondary); }
+  .btn-ghost:hover { color: var(--text-primary); background: var(--bg-hover); }
+
+  .btn-sm { padding: 5px 12px; font-size: 11.5px; }
+  .btn-xs { padding: 4px 10px; font-size: 11px; }
+
+  /* ===== TAB: Website Themes ===== */
+
+  /* Current theme card */
+  .current-theme {
+    display: flex;
+    gap: 22px;
+    padding: 0 0 28px;
+    margin-bottom: 28px;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ct-preview {
+    width: 200px;
+    height: 130px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+    border: 1px solid var(--border);
+  }
+
+  .ctp-topbar {
+    height: 24px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 5px;
+  }
+
+  .ctp-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .ctp-body {
+    flex: 1;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ctp-block { height: 7px; border-radius: 3px; background: #eee; }
+  .ctp-block.accent { height: 20px; }
+  .ctp-block.card-block {
+    height: 28px;
+    width: 100%;
+    background: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+  }
+
+  .ct-info { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+
+  .ct-name {
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ct-badge {
+    font-size: 10px;
+    padding: 2px 9px;
+    border-radius: 20px;
+    background: #f0f0f0;
+    color: #666;
+    font-weight: 500;
+  }
+
+  .ct-desc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .ct-actions {
+    margin-top: 4px;
+    display: flex;
+    gap: 8px;
+  }
+
+  /* Section header */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .section-header h2 {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* Theme grid */
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+  }
+
+  .theme-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .theme-card:hover {
+    border-color: #bbb;
+    transform: translateY(-1px);
+  }
+
+  .theme-card.selected {
+    border-color: #111;
+  }
+
+  .tc-preview {
+    height: 130px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tcp-top {
+    height: 22px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    padding: 0 9px;
+    gap: 4px;
+  }
+
+  .tcp-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  .tcp-body {
+    flex: 1;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .tcp-block { height: 5px; border-radius: 2px; background: #eee; }
+  .tcp-block.accent { height: 16px; }
+  .tcp-block.card-block {
+    height: 20px;
+    width: 100%;
+    background: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+  }
+
+  .tc-info {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tc-name { font-size: 12.5px; font-weight: 500; }
+
+  /* Apply banner */
+  .apply-banner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    margin-bottom: 22px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .apply-banner.visible { display: flex; }
+
+  .ab-text { display: flex; align-items: center; gap: 8px; }
+
+  .ab-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+  }
+
+  .ab-close:hover { color: var(--text-primary); }
+
+  /* ===== TAB: Website URL ===== */
+
+  /* Status dot */
+  .status-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .status-dot.connected { background: var(--green-bg); color: var(--green); }
+  .status-dot.connected::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .status-dot.pending { background: var(--orange-bg); color: var(--orange); }
+  .status-dot.pending::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    margin-bottom: 14px;
+  }
+
+  .card h3 {
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .input-row { display: flex; gap: 8px; align-items: center; }
+
+  .form-group input[type="text"],
+  .form-group input[type="url"] {
+    padding: 10px 14px;
+    background: #f5f5f5;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border 0.15s, background 0.15s;
+  }
+
+  .form-group input:focus { border-color: #111; }
+
+  .domain-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    color: var(--text-muted);
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+
+  .dns-link {
+    font-size: 11.5px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .dns-link:hover { text-decoration: underline; }
+
+  /* ===== TAB: Pages ===== */
+
+  .pages-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .pages-new-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 8px 18px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: background 0.15s;
+  }
+
+  .pages-new-btn:hover { background: #333; }
+
+  .pages-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .pages-table th,
+  .pages-table td {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 13.5px;
+    vertical-align: middle;
+  }
+
+  .pages-table th {
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: 0.2px;
+    padding-bottom: 12px;
+  }
+
+  .pages-table td {
+    color: var(--text-secondary);
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .pages-table td:first-child,
+  .pages-table td:nth-child(2) {
+    color: var(--text-primary);
+  }
+
+  .pages-table input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #111;
+    cursor: pointer;
+  }
+
+  .pages-table tbody tr:hover td { background: #f8f8f8; }
+
+  .pages-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+
+  .pages-pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .pages-pagination .active {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #1f1f1f;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .pages-pagination .disabled {
+    color: #ccc;
+    cursor: default;
+    user-select: none;
+  }
+
+  .page-create-form {
+    max-width: 700px;
+    padding: 12px 0;
+  }
+
+  .page-create-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .page-create-form .sp-editor-box {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .page-create-form .sp-editor-preview {
+    text-align: left;
+    min-height: 200px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+
+  /* ===== Theme Editor Overlay ===== */
+  .editor-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    background: #f5f5f5;
+  }
+
+  .editor-overlay.visible { display: flex; }
+
+  .editor-toolbar {
+    height: 52px;
+    background: #303030;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex-shrink: 0;
+    position: relative;
+    font-family: var(--font-sans);
+  }
+
+  .editor-toolbar-left,
+  .editor-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .editor-page-btn {
+    height: 38px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 4px;
+    background: #4a4a4a;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .editor-toolbar-tab {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    opacity: 0.85;
+  }
+
+  .editor-toolbar-tab:hover { opacity: 1; }
+
+  .editor-toolbar-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+
+  .editor-cancel-btn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .editor-save-btn {
+    height: 38px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 5px;
+    background: #4f8f00;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .editor-save-btn:hover { filter: brightness(0.92); }
+
+  .editor-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .editor-preview {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .editor-hero-area {
+    background-image:
+      linear-gradient(rgba(17, 20, 45, 0.42), rgba(17, 20, 45, 0.58)),
+      url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=80");
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+  }
+
+  .editor-site-nav {
+    height: 68px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,.15);
+    flex-shrink: 0;
+  }
+
+  .editor-nav-wrapper {
+    position: relative;
+  }
+
+  .editor-nav-wrapper:hover .nav-hover-card,
+  .nav-hover-card.open {
+    display: block;
+  }
+
+  .editor-hero-wrapper {
+    position: relative;
+  }
+
+  .editor-hero-wrapper:hover .hero-hover-card,
+  .hero-hover-card.open {
+    display: block;
+  }
+
+  .hero-hover-card {
+    display: none;
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    width: 218px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 7px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.04);
+    z-index: 20;
+  }
+
+  .nav-hover-card {
+    display: none;
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    width: 218px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 7px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.04);
+    z-index: 20;
+  }
+
+  .nav-hover-btn {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    color: #333;
+  }
+
+  .nav-hover-btn:hover { background: #f7f7f7; }
+
+  .nav-hover-btn .nh-icon { font-size: 16px; }
+
+  .nsc-links {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 4px;
+  }
+
+  .nsc-link-input {
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    outline: none;
+    background: #fafafa;
+    color: var(--text-primary);
+  }
+
+  .nsc-link-input:focus { border-color: #111; }
+
+  .sp-inline-select {
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: #fff;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    outline: none;
+    cursor: pointer;
+    min-width: 90px;
+    text-align: center;
+  }
+
+  .sp-inline-select:focus { border-color: #111; }
+
+  .sp-text-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    outline: none;
+    color: var(--text-primary);
+    background: #fff;
+  }
+
+  .sp-text-input:focus { border-color: #111; }
+
+  .nav-section-title {
+    margin-top: 28px !important;
+    margin-bottom: 12px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+  }
+
+  .nav-link-list {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .nav-link-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px 0 4px;
+    height: 44px;
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .nav-link-item:last-child { border-bottom: none; }
+
+  .nav-link-drag {
+    font-size: 16px;
+    color: #bbb;
+    cursor: grab;
+    padding: 4px 2px;
+    letter-spacing: -2px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .nav-link-label {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .nav-link-edit,
+  .nav-link-remove {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: 13px;
+    color: #999;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .nav-link-edit:hover { background: #f0f0f0; color: #333; }
+  .nav-link-remove:hover { background: #fef0f0; color: #c92b3b; }
+
+  .add-link-area {
+    margin-top: 16px;
+  }
+
+  .add-link-btn {
+    width: 100%;
+    height: 42px;
+    border: 1px dashed #ccc;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+    cursor: pointer;
+    border-radius: 6px;
+    font-family: var(--font-sans);
+  }
+
+  .add-link-btn:hover {
+    border-color: #999;
+    color: #555;
+  }
+
+  .add-link-form {
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fafafa;
+  }
+
+  .add-link-form .editor-field { margin-bottom: 14px; }
+  .add-link-form .editor-field:last-of-type { margin-bottom: 0; }
+
+  .mobile-bg-label-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .optional-badge {
+    font-size: 10px;
+    font-weight: 500;
+    color: #888;
+    background: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  .mobile-bg-size {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .info-icon-wrapper {
+    position: relative;
+    cursor: help;
+  }
+
+  .info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+  }
+
+  .info-icon:hover { border-color: #999; color: #666; }
+
+  .info-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 240px;
+    background: #333;
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 10px 12px;
+    border-radius: 6px;
+    white-space: normal;
+    text-align: left;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  .info-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #333;
+  }
+
+  .info-icon-wrapper:hover .info-tooltip {
+    display: block;
+  }
+
+  .nav-link-edit-form {
+    padding: 14px;
+    background: #fafafa;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-link-edit-form .editor-field {
+    margin-bottom: 12px;
+  }
+
+  .nav-link-edit-form .editor-field:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .nav-link-edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .nav-link-edit-actions button {
+    flex: 1;
+    height: 36px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .nav-link-edit-save {
+    background: #111;
+    color: #fff;
+    border: 0;
+  }
+
+  .nav-link-edit-save:hover { background: #333; }
+
+  .nav-link-edit-cancel {
+    background: #fff;
+    color: #333;
+    border: 1px solid var(--border);
+  }
+
+  .nav-link-edit-cancel:hover { background: #f5f5f5; }
+
+  .editor-hero {
+    padding: 80px 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+  }
+
+  .editor-hero h2 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .editor-hero p {
+    margin-top: 18px;
+    font-size: 18px;
+    opacity: 0.9;
+  }
+
+  .editor-hero .listen-on {
+    margin-top: 44px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  /* Design Panel */
+  .editor-panel {
+    width: 400px;
+    min-width: 400px;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    background: #fff;
+    border-left: 1px solid var(--border);
+    box-shadow: -2px 0 16px rgba(0,0,0,.05);
+    z-index: 10;
+  }
+
+  .editor-panel.visible { display: flex; }
+
+  .editor-panel-header {
+    padding: 22px 24px 0;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .editor-panel-tabs {
+    display: flex;
+    gap: 22px;
+  }
+
+  .editor-panel-tab {
+    padding: 0 0 13px;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: color 0.15s;
+  }
+
+  .editor-panel-tab.active {
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--text-primary);
+  }
+
+  .editor-panel-tab:hover { color: var(--text-primary); }
+
+  .editor-panel-body {
+    flex: 1;
+    padding: 22px 24px;
+    overflow-y: auto;
+  }
+
+  .editor-panel-content { display: none; }
+  .editor-panel-content.active { display: block; }
+
+  .editor-group-title {
+    margin: 0 0 14px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .editor-field {
+    margin-bottom: 20px;
+  }
+
+  .editor-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .editor-field select {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .editor-field select:focus { border-color: #111; }
+
+  .editor-color-input {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .editor-radio-row {
+    display: flex;
+    gap: 28px;
+  }
+
+  .editor-radio-row label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+
+  .editor-radio-row input[type="radio"] {
+    accent-color: #111;
+  }
+
+  .editor-help {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
+    border-radius: 50%;
+    background: #1677ff;
+    color: #fff;
+    font-size: 12px;
+    vertical-align: middle;
+    cursor: help;
+  }
+
+  .editor-image-picker {
+    position: relative;
+    display: inline-block;
+    width: 130px;
+    height: 130px;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .editor-image-picker input { display: none; }
+
+  .editor-image-picker img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .editor-image-picker span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    background: rgba(0,0,0,.72);
+    color: #fff;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .editor-panel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .editor-reset-btn {
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .editor-reset-btn:hover { color: var(--text-primary); }
+
+  .editor-done-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .editor-done-btn:hover { background: #333; }
+
+  /* ===== Editor: Add Section ===== */
+  .section-insert {
+    position: relative;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .section-insert::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 2px dashed #1677ff;
+  }
+
+  .add-section-btn {
+    position: relative;
+    z-index: 2;
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 6px;
+    background: #1677ff;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  }
+
+  .add-section-btn:hover { filter: brightness(0.9); }
+
+  .editable-section {
+    position: relative;
+    width: calc(100% - 120px);
+    margin: 0 auto;
+    padding: 70px 80px;
+    background: #fff;
+    min-height: 300px;
+    text-align: center;
+  }
+
+  .editable-section h2 {
+    font-size: 32px;
+    margin-bottom: 18px;
+    font-weight: 700;
+  }
+
+  .editable-section p {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #3d3d3d;
+  }
+
+  .section-actions {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 218px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 7px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.04);
+    display: none;
+    z-index: 10;
+  }
+
+  .editable-section:hover .section-actions,
+  .section-actions.open { display: block; }
+
+  .section-action-btn {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    color: #333;
+    letter-spacing: 0.01em;
+  }
+
+  .section-action-btn:hover { background: #f7f7f7; }
+
+  .section-action-btn .sa-icon { font-size: 16px; }
+
+  .section-action-row {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #777;
+  }
+
+  .section-remove-btn { color: #c92b3b; }
+
+  /* Episode Section */
+  .episode-section {
+    position: relative;
+    width: calc(100% - 120px);
+    margin: 0 auto;
+    padding: 60px 80px;
+    background: #fff;
+    text-align: center;
+  }
+
+  .episode-section:hover .section-actions,
+  .episode-section .section-actions.open { display: block; }
+
+  .ep-section-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    color: #111;
+  }
+
+  .ep-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .ep-card {
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+
+  .ep-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+
+  .ep-card-img {
+    height: 140px;
+    background: #f0f0f0;
+  }
+
+  .ep-card-body {
+    padding: 16px;
+  }
+
+  .ep-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #111;
+  }
+
+  .ep-card-date {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Site Footer */
+  .site-footer {
+    position: relative;
+    width: 100%;
+    padding: 40px 60px;
+    background: #111;
+    color: #fff;
+    text-align: center;
+  }
+
+  .site-footer:hover .section-actions,
+  .site-footer .section-actions.open { display: block; }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .footer-copyright {
+    font-size: 13px;
+    color: #999;
+  }
+
+  .footer-social-icons {
+    display: flex;
+    gap: 16px;
+  }
+
+  .footer-social-icons span {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #ccc;
+  }
+
+  .footer-social-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .footer-social-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .footer-social-icon.fb { background: #1877f2; }
+  .footer-social-icon.x { background: #111; }
+  .footer-social-icon.ig { background: #e4405f; }
+  .footer-social-icon.yt { background: #ff0000; }
+  .footer-social-icon.li { background: #0a66c2; }
+
+  .footer-social-prefix {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 0 10px;
+    background: #f5f5f5;
+    white-space: nowrap;
+    border-right: 1px solid var(--border);
+    height: 38px;
+    line-height: 38px;
+    flex-shrink: 0;
+  }
+
+  .footer-social-input {
+    flex: 1;
+    height: 38px;
+    border: 0;
+    padding: 0 12px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    outline: none;
+  }
+
+  /* Section Edit Panel (slides from right) */
+  .section-panel {
+    position: fixed;
+    top: 52px;
+    right: 0;
+    width: 400px;
+    height: calc(100vh - 52px);
+    background: #fff;
+    box-shadow: -2px 0 16px rgba(0,0,0,.05);
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    z-index: 2100;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border);
+  }
+
+  .section-panel.open { transform: translateX(0); }
+
+  .sp-header {
+    padding: 22px 24px 0;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .sp-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .sp-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .sp-close {
+    border: 0;
+    background: transparent;
+    font-size: 28px;
+    color: var(--text-muted);
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .sp-close:hover { color: var(--text-primary); }
+
+  .sp-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+  }
+
+  .sp-group-title {
+    margin: 8px 0 12px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .sp-group-title-dark {
+    margin: 8px 0 12px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .sp-setting-row {
+    min-height: 56px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .sp-setting-row select {
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: #fff;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    outline: none;
+    cursor: pointer;
+    min-width: 110px;
+  }
+
+  .sp-setting-row .sp-color-input,
+  .sp-setting-row .sp-toggle {
+    flex-shrink: 0;
+  }
+
+  .sp-number-box {
+    width: 100px;
+    height: 44px;
+    border: 0;
+    border-radius: 6px;
+    background: #f0f0f0;
+    text-align: center;
+    font-size: 16px;
+    font-family: var(--font-sans);
+  }
+
+  .sp-icon-options {
+    display: flex;
+    gap: 12px;
+  }
+
+  .sp-option-icon {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+    color: #666;
+  }
+
+  .sp-option-icon.active { background: #e9e9e9; }
+
+  .sp-toggle {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+  }
+
+  .sp-toggle input { display: none; }
+
+  .sp-toggle-slider {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: #999;
+    cursor: pointer;
+  }
+
+  .sp-toggle-slider::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 4px;
+    top: 4px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s;
+  }
+
+  .sp-toggle input:checked + .sp-toggle-slider { background: #111; }
+  .sp-toggle input:checked + .sp-toggle-slider::before { transform: translateX(20px); }
+
+  .sp-color-dot {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid #e5e5e5;
+    background: #111;
+  }
+
+  .sp-color-dot.light { background: #f8f4f1; }
+
+  .sp-color-input {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid #ddd;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  .sp-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+  .sp-color-input::-webkit-color-swatch { border: none; border-radius: 50%; }
+
+  .sp-anchor-input {
+    width: 100%;
+    height: 52px;
+    border: 0;
+    background: #f0f0f0;
+    padding: 0 16px;
+    font-size: 16px;
+    border-radius: 6px;
+    font-family: var(--font-sans);
+  }
+
+  .sp-editor-box {
+    border: 1px solid var(--border);
+    margin-top: 14px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .sp-editor-header {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sp-editor-header select {
+    flex: 1;
+    height: 40px;
+    border: 0;
+    border-right: 1px solid var(--border);
+    padding: 0 10px;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    background: #fafafa;
+    outline: none;
+  }
+
+  .sp-editor-format {
+    height: 40px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .sp-editor-preview {
+    min-height: 140px;
+    overflow: auto;
+    padding: 24px;
+    text-align: center;
+    font-size: 15px;
+    outline: none;
+  }
+
+  .sp-editor-preview h2 {
+    font-size: 28px;
+    margin: 0 0 18px;
+  }
+
+  .sp-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .sp-reset-btn {
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .sp-reset-btn:hover { color: var(--text-primary); }
+
+  .sp-done-btn {
+    border: 0;
+    border-radius: 20px;
+    background: #111;
+    color: #fff;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .sp-done-btn:hover { background: #333; }
+
+  .css-editor-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    font-size: 13px;
+    font-family: "SF Mono", "Menlo", "Monaco", monospace;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    color: var(--text-primary);
+    background: #fafafa;
+  }
+
+  .css-editor-textarea:focus { border-color: #111; background: #fff; }
+
+  .css-editor-textarea::placeholder {
+    color: #aaa;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .sp-tabs-custom {
+    display: flex;
+    gap: 20px;
+    padding-bottom: 2px;
+  }
+
+  .sp-tab-custom {
+    border: 0;
+    background: transparent;
+    padding: 0 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .sp-tab-custom.active {
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--text-primary);
+  }
+
+  .sp-content-custom { display: none; }
+  .sp-content-custom.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ===== LEFT SIDEBAR ===== -->
+<aside class="sidebar">
+
+  <div class="sidebar-brand">
+    <div class="sidebar-brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+    </div>
+    <span class="sidebar-brand-text">podbean demo</span>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1"/></svg>
+      Episodes
+    </div>
+
+    <div class="nav-group expanded">
+      <div class="nav-group-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Distribution
+        <span class="expand-arrow">&#9654;</span>
+      </div>
+      <div class="nav-sub-items">
+        <div class="nav-sub-item" data-page="apps">Podcast Apps</div>
+        <div class="nav-sub-item" data-page="social">Social Share</div>
+        <div class="nav-sub-item active" data-page="website">Podcast Website</div>
+        <div class="nav-sub-item" data-page="player">Embeddable Player</div>
+      </div>
+    </div>
+
+    <div class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Analytics
+    </div>
+    <div class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Monetize
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-avatar">MP</div>
+    <span class="user-info">My Podcast</span>
+  </div>
+
+</aside>
+
+<!-- ===== MAIN AREA ===== -->
+<div class="main">
+
+  <div class="page-header">
+    <h1 class="page-title">Podcast Website</h1>
+    <p class="page-desc">Customize your podcast website, domain, and pages</p>
+  </div>
+
+  <!-- Horizontal tabs -->
+  <div class="tab-bar">
+    <button class="tab-item active" data-tab="themes">Website themes</button>
+    <button class="tab-item" data-tab="url">Website URL</button>
+    <button class="tab-item" data-tab="pages">Pages</button>
+  </div>
+
+  <div class="content">
+
+    <!-- ========== TAB: Website Themes ========== -->
+    <div class="tab-panel active" id="panel-themes">
+
+      <h2 class="tab-panel-heading">Website Themes</h2>
+
+      <!-- Apply banner -->
+      <div class="apply-banner" id="applyBanner">
+        <div class="ab-text">&#10003; <strong id="bannerThemeName">Modern</strong> applied.</div>
+        <button class="ab-close" onclick="hideBanner()">&times;</button>
+      </div>
+
+      <!-- Current theme -->
+      <div class="current-theme" id="currentThemeCard">
+        <div class="ct-preview" id="ctPreview">
+          <div class="ctp-topbar">
+            <div class="ctp-dot" style="background:#ff3b30"></div>
+            <div class="ctp-dot" style="background:#ff9500"></div>
+            <div class="ctp-dot" style="background:#428200"></div>
+          </div>
+          <div class="ctp-body">
+            <div class="ctp-block accent" style="background:var(--accent)"></div>
+            <div class="ctp-block" style="width:100%;"></div>
+            <div class="ctp-block" style="width:60%;"></div>
+            <div class="ctp-block card-block"></div>
+            <div class="ctp-block" style="width:35%;"></div>
+          </div>
+        </div>
+        <div class="ct-info">
+          <div class="ct-name">Modern <span class="ct-badge">Active</span></div>
+          <div class="ct-desc">Clean, content-focused layout with a bold hero section and card-based episode grid.</div>
+          <div class="ct-actions">
+            <button class="btn btn-primary btn-sm">Customize</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theme gallery -->
+      <div class="section-header"><h2>Theme Gallery</h2></div>
+      <div class="theme-grid" id="themeGrid"></div>
+    </div>
+
+    <!-- ========== TAB: Website URL ========== -->
+    <div class="tab-panel" id="panel-url">
+
+      <h2 class="tab-panel-heading">Website URL</h2>
+
+      <div class="card">
+        <h3>Podcast Website URL <span class="status-dot connected" style="margin-left:8px;">Active</span></h3>
+        <p class="card-desc">Your free subdomain on Podbean.</p>
+        <div class="form-group">
+          <label>Subdomain</label>
+          <div class="input-row">
+            <input type="text" value="my-awesome-podcast" style="flex:0 0 200px;">
+            <span class="domain-prefix">.podbean.com</span>
+            <button class="btn btn-secondary btn-sm">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Own Domain <span class="status-dot pending" style="margin-left:8px;">Not connected</span></h3>
+        <p class="card-desc">Use a custom domain (e.g. mypodcast.com).</p>
+        <div class="form-group">
+          <label>Domain name</label>
+          <div class="input-row">
+            <input type="url" placeholder="e.g. mypodcast.com">
+            <button class="btn btn-primary btn-sm">Connect</button>
+          </div>
+        </div>
+        <div style="margin-top:4px;">
+          <a href="#" class="dns-link">View DNS setup guide &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== TAB: Pages ========== -->
+    <div class="tab-panel" id="panel-pages">
+
+      <div class="pages-header" id="pagesHeaderBar">
+        <h2 class="tab-panel-heading" style="margin-bottom:0;">Pages</h2>
+        <button class="pages-new-btn" id="newPageBtn">+ New Page</button>
+      </div>
+
+      <!-- Page List View -->
+      <div id="pageListView">
+        <table class="pages-table">
+          <thead>
+            <tr>
+              <th style="width:44px;"><input type="checkbox" onclick="document.querySelectorAll('.page-row-check').forEach(c=>c.checked=this.checked)"></th>
+              <th>Page</th>
+              <th>User</th>
+              <th>&darr; When</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="page-row-check"></td>
+              <td>Untitled Page - 2026-05-29 02:50:25</td>
+              <td>melodywtesting16</td>
+              <td>May 29, 2026</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="page-row-check"></td>
+              <td>Untitled Page - 2026-05-29 02:49:42</td>
+              <td>melodywtesting16</td>
+              <td>May 29, 2026</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pages-footer">
+          <span>Showing 1 to 2 of 2 entries</span>
+          <div class="pages-pagination">
+            <span class="disabled">&laquo;</span>
+            <span class="active">1</span>
+            <span class="disabled">&raquo;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Page View -->
+      <div id="pageCreateView" style="display:none;">
+        <div class="page-create-form">
+          <div class="editor-field">
+            <label>Title</label>
+            <input type="text" class="sp-text-input" placeholder="Enter page title">
+          </div>
+
+          <div class="editor-field">
+            <label>Description</label>
+            <div class="sp-editor-box">
+              <div class="sp-editor-header">
+                <select><option>Paragraph</option><option>Heading 1</option><option>Heading 2</option></select>
+                <select><option>System Font</option><option>Inter</option><option>Roboto</option><option>Georgia</option></select>
+                <select><option>14pt</option><option>12pt</option><option>18pt</option><option>24pt</option></select>
+              </div>
+              <div class="sp-editor-format">
+                <span style="cursor:pointer;font-weight:700;">B</span>
+                <span style="cursor:pointer;font-style:italic;">I</span>
+                <span style="cursor:pointer;text-decoration:underline;">U</span>
+                <span style="cursor:pointer;color:#ccc;">|</span>
+                <span style="cursor:pointer;">≡</span>
+                <span style="cursor:pointer;">≡</span>
+                <span style="cursor:pointer;color:#ccc;">|</span>
+                <span style="cursor:pointer;">&lt;/&gt;</span>
+                <span style="cursor:pointer;">🔗</span>
+              </div>
+              <div class="sp-editor-preview" contenteditable="true" style="text-align:left;min-height:200px;">
+                <p style="color:var(--text-muted);">Write your page description here...</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="page-create-actions">
+            <button class="sp-reset-btn" id="cancelCreatePage">Cancel</button>
+            <button class="sp-done-btn" id="publishPage">Publish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // --- Themes data ---
+  const themes = [
+    { id:'modern', name:'Modern', desc:'Clean, content-focused with bold hero & card grid.', accent:'#111', bg:'#fff', blocks:[{w:'accent',h:20},{w:'w1',h:7},{w:'w2',h:7},{w:'card',h:28},{w:'w3',h:7}] },
+    { id:'classic', name:'Classic', desc:'Traditional layout with sidebar and serif feel.', accent:'#374151', bg:'#fafaf8', blocks:[{w:'accent',h:16},{w:'w1',h:7},{w:'w1',h:7},{w:'w2',h:20},{w:'w3',h:7}] },
+    { id:'minimal', name:'Minimal', desc:'Stripped-down, text-first with generous whitespace.', accent:'#1d1d1f', bg:'#fff', blocks:[{w:'w1',h:7},{w:'w3',h:22},{w:'w2',h:7},{w:'w1',h:7},{w:'w3',h:7}] },
+    { id:'bold', name:'Bold', desc:'Vibrant gradients and large typography.', accent:'#ff3b30', bg:'#fff', blocks:[{w:'accent',h:24},{w:'w1',h:7},{w:'w3',h:7},{w:'card',h:22},{w:'w2',h:7}] },
+    { id:'dark', name:'Dark Mode', desc:'Dark background with high-contrast accents.', accent:'#5ba300', bg:'#1a1a2e', blocks:[{w:'accent',h:20},{w:'w1',h:7},{w:'w2',h:7},{w:'w3',h:7},{w:'card',h:24}] },
+    { id:'magazine', name:'Magazine', desc:'Multi-column grid for content-rich shows.', accent:'#d946ef', bg:'#fff', blocks:[{w:'accent',h:16},{w:'card',h:18},{w:'card',h:18},{w:'w2',h:7},{w:'w3',h:7}] },
+    { id:'warm', name:'Warm', desc:'Soft earth tones, rounded, friendly.', accent:'#ff9500', bg:'#fef9f0', blocks:[{w:'accent',h:18},{w:'w1',h:7},{w:'w3',h:7},{w:'w2',h:12},{w:'w1',h:7}] },
+    { id:'studio', name:'Studio', desc:'Full-bleed imagery, minimal chrome.', accent:'#06b6d4', bg:'#f8fafc', blocks:[{w:'accent',h:28},{w:'w2',h:7},{w:'w3',h:7},{w:'card',h:18},{w:'w1',h:7}] }
+  ];
+
+  let currentThemeId = 'modern';
+
+  function renderThemeGallery() {
+    document.getElementById('themeGrid').innerHTML = themes.map(t => {
+      const sel = t.id === currentThemeId;
+      const bh = t.blocks.map(b => {
+        if (b.w === 'accent') return `<div class="tcp-block accent" style="background:${t.accent};height:${b.h}px;"></div>`;
+        if (b.w === 'card') return `<div class="tcp-block card-block" style="height:${b.h}px;"></div>`;
+        return `<div class="tcp-block" style="height:${b.h}px;width:${b.w==='w1'?'100%':b.w==='w2'?'60%':'35%'};"></div>`;
+      }).join('');
+      return `<div class="theme-card${sel?' selected':''}" onclick="selectTheme('${t.id}')">
+        <div class="tc-preview" style="background:${t.bg};">
+          <div class="tcp-top">
+            <div class="tcp-dot" style="background:#ff3b30"></div>
+            <div class="tcp-dot" style="background:#ff9500"></div>
+            <div class="tcp-dot" style="background:#428200"></div>
+          </div>
+          <div class="tcp-body">${bh}</div>
+        </div>
+        <div class="tc-info">
+          <span class="tc-name">${t.name}</span>
+          ${sel ? '<span class="status-dot connected" style="font-size:10px;">Active</span>' : '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();selectTheme(\''+t.id+'\')">Apply</button>'}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function selectTheme(id) {
+    currentThemeId = id;
+    const t = themes.find(x => x.id === id);
+    const bh = t.blocks.map(b => {
+      if (b.w === 'accent') return `<div class="ctp-block accent" style="background:${t.accent};height:${b.h}px;"></div>`;
+      if (b.w === 'card') return `<div class="ctp-block card-block" style="height:${b.h}px;"></div>`;
+      return `<div class="ctp-block" style="height:${b.h}px;width:${b.w==='w1'?'100%':b.w==='w2'?'60%':'35%'};"></div>`;
+    }).join('');
+    document.querySelector('#ctPreview .ctp-body').innerHTML = bh;
+    document.querySelector('.ct-name').innerHTML = `${t.name} <span class="ct-badge">Active</span>`;
+    document.querySelector('.ct-desc').textContent = t.desc;
+    renderThemeGallery();
+    document.getElementById('bannerThemeName').textContent = t.name;
+    const banner = document.getElementById('applyBanner');
+    banner.classList.add('visible');
+    clearTimeout(banner._timeout);
+    banner._timeout = setTimeout(() => hideBanner(), 8000);
+  }
+
+  function hideBanner() { document.getElementById('applyBanner').classList.remove('visible'); }
+
+  // --- Tab switching ---
+  document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // --- Sidebar ---
+  document.querySelectorAll('.nav-group-header').forEach(h => {
+    h.addEventListener('click', () => h.parentElement.classList.toggle('expanded'));
+  });
+
+  document.querySelectorAll('.nav-sub-item').forEach(item => {
+    item.addEventListener('click', e => {
+      e.stopPropagation();
+      document.querySelectorAll('.nav-sub-item').forEach(s => s.classList.remove('active'));
+      item.classList.add('active');
+      const page = item.dataset.page;
+
+      if (page === 'website') {
+        // Show website content with tabs
+        document.querySelector('.page-header').style.display = '';
+        document.querySelector('.tab-bar').style.display = '';
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        const firstTab = document.querySelector('.tab-item[data-tab="themes"]');
+        if (firstTab) firstTab.classList.add('active');
+        const firstPanel = document.getElementById('panel-themes');
+        if (firstPanel) firstPanel.classList.add('active');
+      } else {
+        // Hide website content for other sub-items
+        document.querySelector('.page-header').style.display = 'none';
+        document.querySelector('.tab-bar').style.display = 'none';
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      }
+
+      document.querySelector('.main').scrollTop = 0;
+    });
+  });
+
+  renderThemeGallery();
+
+  // Editor setup runs after DOM is fully parsed
+  document.addEventListener('DOMContentLoaded', () => {
+    // --- Customize button ---
+    const customizeBtn = document.querySelector('.ct-actions .btn-primary');
+    if (customizeBtn) {
+      customizeBtn.addEventListener('click', () => {
+        document.getElementById('editorOverlay').classList.add('visible');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    // --- New Page ---
+    const newPageBtn = document.getElementById('newPageBtn');
+    const pageListView = document.getElementById('pageListView');
+    const pageCreateView = document.getElementById('pageCreateView');
+    const cancelCreatePage = document.getElementById('cancelCreatePage');
+    const publishPage = document.getElementById('publishPage');
+    const pagesHeaderBar = document.getElementById('pagesHeaderBar');
+
+    if (newPageBtn && pageListView && pageCreateView) {
+      newPageBtn.addEventListener('click', () => {
+        pageListView.style.display = 'none';
+        pageCreateView.style.display = 'block';
+        pagesHeaderBar.querySelector('h2').textContent = 'Create Page';
+        newPageBtn.style.display = 'none';
+      });
+    }
+    if (cancelCreatePage && pageListView && pageCreateView) {
+      cancelCreatePage.addEventListener('click', () => {
+        pageListView.style.display = '';
+        pageCreateView.style.display = 'none';
+        pagesHeaderBar.querySelector('h2').textContent = 'Pages';
+        newPageBtn.style.display = '';
+        // Clear form
+        const titleInput = pageCreateView.querySelector('input[type="text"]');
+        const editor = pageCreateView.querySelector('.sp-editor-preview');
+        if (titleInput) titleInput.value = '';
+        if (editor) editor.innerHTML = '<p style="color:var(--text-muted);">Write your page description here...</p>';
+      });
+    }
+    if (publishPage) {
+      publishPage.addEventListener('click', () => {
+        alert('Page published!');
+        pageListView.style.display = '';
+        pageCreateView.style.display = 'none';
+        pagesHeaderBar.querySelector('h2').textContent = 'Pages';
+        newPageBtn.style.display = '';
+      });
+    }
+
+    // --- Editor overlay ---
+    const editorCancel = document.getElementById('editorCancel');
+    const editorDone = document.getElementById('editorDone');
+    const editorOverlay = document.getElementById('editorOverlay');
+    const editorSave = document.getElementById('editorSave');
+
+    if (editorCancel) editorCancel.addEventListener('click', closeEditor);
+    if (editorDone) editorDone.addEventListener('click', closeEditor);
+    if (editorOverlay) {
+      editorOverlay.addEventListener('click', e => {
+        if (e.target === editorOverlay) closeEditor();
+      });
+    }
+    if (editorSave) {
+      editorSave.addEventListener('click', () => {
+        alert('Theme saved!');
+        closeEditor();
+      });
+    }
+
+    // Editor panel tabs
+    document.querySelectorAll('.editor-panel-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.editor-panel-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.editor-panel-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        const content = document.getElementById('editor-' + tab.dataset.tab);
+        if (content) content.classList.add('active');
+      });
+    });
+
+    // Toggle design panel
+    const designBtn = document.getElementById('editorDesignBtn');
+    const designPanel = document.getElementById('designPanel');
+    const closeDesignPanel = document.getElementById('closeDesignPanel');
+    const doneDesignPanel = document.getElementById('doneDesignPanel');
+
+    if (designBtn && designPanel) {
+      designBtn.addEventListener('click', () => designPanel.classList.add('open'));
+    }
+    if (closeDesignPanel && designPanel) {
+      closeDesignPanel.addEventListener('click', () => designPanel.classList.remove('open'));
+    }
+    if (doneDesignPanel && designPanel) {
+      doneDesignPanel.addEventListener('click', () => designPanel.classList.remove('open'));
+    }
+
+    // Design panel tabs
+    document.querySelectorAll('.sp-tab-custom').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.sp-tab-custom').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.sp-content-custom').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        const content = document.getElementById(tab.dataset.tab);
+        if (content) content.classList.add('active');
+      });
+    });
+
+    // Section panel
+    const sectionPanel = document.getElementById('sectionPanel');
+    const openSectionBtn = document.getElementById('openSectionPanel');
+    const closeSectionBtn = document.getElementById('closeSectionPanel');
+    const doneSectionBtn = document.getElementById('doneSectionPanel');
+
+    if (openSectionBtn && sectionPanel) {
+      openSectionBtn.addEventListener('click', () => sectionPanel.classList.add('open'));
+    }
+    if (closeSectionBtn && sectionPanel) {
+      closeSectionBtn.addEventListener('click', () => sectionPanel.classList.remove('open'));
+    }
+    if (doneSectionBtn && sectionPanel) {
+      doneSectionBtn.addEventListener('click', () => sectionPanel.classList.remove('open'));
+    }
+
+    // Navigation settings panel
+    const navSettingsPanel = document.getElementById('navSettingsPanel');
+    const openNavSettings = document.getElementById('openNavSettings');
+    const closeNavSettings = document.getElementById('closeNavSettings');
+    const doneNavSettings = document.getElementById('doneNavSettings');
+
+    if (openNavSettings && navSettingsPanel) {
+      openNavSettings.addEventListener('click', () => navSettingsPanel.classList.add('open'));
+    }
+    if (closeNavSettings && navSettingsPanel) {
+      closeNavSettings.addEventListener('click', () => navSettingsPanel.classList.remove('open'));
+    }
+    if (doneNavSettings && navSettingsPanel) {
+      doneNavSettings.addEventListener('click', () => navSettingsPanel.classList.remove('open'));
+    }
+
+    // Add link toggle
+    const addLinkBtn = document.getElementById('addLinkBtn');
+    const addLinkForm = document.getElementById('addLinkForm');
+    if (addLinkBtn && addLinkForm) {
+      addLinkBtn.addEventListener('click', () => {
+        addLinkForm.style.display = addLinkForm.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+
+    // Done add link
+    const doneAddLink = document.getElementById('doneAddLink');
+    if (doneAddLink && addLinkForm) {
+      doneAddLink.addEventListener('click', () => {
+        const inputs = addLinkForm.querySelectorAll('input[type="text"]');
+        const select = addLinkForm.querySelector('select');
+        const textVal = inputs[0] ? inputs[0].value.trim() : '';
+        if (!textVal) return;
+        const linkVal = inputs[1] ? inputs[1].value.trim() : '';
+        const typeVal = select ? select.value : 'link';
+        const list = document.getElementById('navLinkList');
+        const item = document.createElement('div');
+        item.className = 'nav-link-item';
+        item.dataset.type = typeVal;
+        item.dataset.link = linkVal;
+        item.innerHTML = `
+          <span class="nav-link-drag">⋮⋮</span>
+          <span class="nav-link-label">${textVal}</span>
+          <button class="nav-link-edit" title="Edit">✎</button>
+          <button class="nav-link-remove" title="Remove">✕</button>
+        `;
+        list.appendChild(item);
+        inputs[0].value = '';
+        if (inputs[1]) inputs[1].value = '';
+        addLinkForm.style.display = 'none';
+      });
+    }
+
+    // Nav link actions (event delegation)
+    const navLinkList = document.getElementById('navLinkList');
+    if (navLinkList) {
+      navLinkList.addEventListener('click', (e) => {
+        const removeBtn = e.target.closest('.nav-link-remove');
+        const editBtn = e.target.closest('.nav-link-edit');
+        if (removeBtn) {
+          removeBtn.closest('.nav-link-item').remove();
+        }
+        if (editBtn) {
+          const item = editBtn.closest('.nav-link-item');
+          // Close any existing edit form
+          const existing = item.querySelector('.nav-link-edit-form');
+          if (existing) {
+            existing.remove();
+            return;
+          }
+          // Close other open edit forms
+          navLinkList.querySelectorAll('.nav-link-edit-form').forEach(f => f.remove());
+          const label = item.querySelector('.nav-link-label');
+          const currentText = label.textContent;
+          const currentType = item.dataset.type || 'link';
+          const currentLink = item.dataset.link || '';
+          const form = document.createElement('div');
+          form.className = 'nav-link-edit-form';
+          form.innerHTML = `
+            <div class="editor-field">
+              <label>Text</label>
+              <input type="text" class="sp-text-input" value="${currentText}" placeholder="Link label">
+            </div>
+            <div class="editor-field">
+              <label>Type</label>
+              <select>
+                <option value="link" ${currentType === 'link' ? 'selected' : ''}>Links</option>
+                <option value="page" ${currentType === 'page' ? 'selected' : ''}>Page</option>
+                <option value="tag" ${currentType === 'tag' ? 'selected' : ''}>Tag</option>
+              </select>
+            </div>
+            <div class="editor-field">
+              <label>Link</label>
+              <input type="text" class="sp-text-input" value="${currentLink}" placeholder="https://">
+            </div>
+            <div class="nav-link-edit-actions">
+              <button class="nav-link-edit-cancel">Cancel</button>
+              <button class="nav-link-edit-save">Save</button>
+            </div>
+          `;
+          item.after(form);
+          const textInput = form.querySelector('input[type="text"]');
+          textInput.focus();
+          textInput.select();
+          // Cancel
+          form.querySelector('.nav-link-edit-cancel').addEventListener('click', () => form.remove());
+          // Save
+          form.querySelector('.nav-link-edit-save').addEventListener('click', () => {
+            const inputs = form.querySelectorAll('input[type="text"]');
+            const select = form.querySelector('select');
+            const newText = inputs[0].value.trim() || currentText;
+            const newLink = inputs[1].value.trim();
+            const newType = select.value;
+            label.textContent = newText;
+            item.dataset.type = newType;
+            item.dataset.link = newLink;
+            form.remove();
+          });
+        }
+      });
+    }
+
+    // CSS Editor panel
+    const cssEditorPanel = document.getElementById('cssEditorPanel');
+    const cssEditorBtn = document.getElementById('editorCssBtn');
+    const closeCssEditor = document.getElementById('closeCssEditor');
+    const doneCssEditor = document.getElementById('doneCssEditor');
+
+    if (cssEditorBtn && cssEditorPanel) {
+      cssEditorBtn.addEventListener('click', () => cssEditorPanel.classList.add('open'));
+    }
+    if (closeCssEditor && cssEditorPanel) {
+      closeCssEditor.addEventListener('click', () => cssEditorPanel.classList.remove('open'));
+    }
+    if (doneCssEditor && cssEditorPanel) {
+      doneCssEditor.addEventListener('click', () => cssEditorPanel.classList.remove('open'));
+    }
+
+    // Episode Settings panel
+    const epSettingsPanel = document.getElementById('epSettingsPanel');
+    const openEpSettings = document.getElementById('openEpisodeSettings');
+    const closeEpSettings = document.getElementById('closeEpSettings');
+    const doneEpSettings = document.getElementById('doneEpSettings');
+
+    if (openEpSettings && epSettingsPanel) {
+      openEpSettings.addEventListener('click', () => epSettingsPanel.classList.add('open'));
+    }
+    if (closeEpSettings && epSettingsPanel) {
+      closeEpSettings.addEventListener('click', () => epSettingsPanel.classList.remove('open'));
+    }
+    if (doneEpSettings && epSettingsPanel) {
+      doneEpSettings.addEventListener('click', () => epSettingsPanel.classList.remove('open'));
+    }
+
+    // Footer Settings panel
+    const footerSettingsPanel = document.getElementById('footerSettingsPanel');
+    const openFooterSettings = document.getElementById('openFooterSettings');
+    const closeFooterSettings = document.getElementById('closeFooterSettings');
+    const doneFooterSettings = document.getElementById('doneFooterSettings');
+
+    if (openFooterSettings && footerSettingsPanel) {
+      openFooterSettings.addEventListener('click', () => footerSettingsPanel.classList.add('open'));
+    }
+    if (closeFooterSettings && footerSettingsPanel) {
+      closeFooterSettings.addEventListener('click', () => footerSettingsPanel.classList.remove('open'));
+    }
+    if (doneFooterSettings && footerSettingsPanel) {
+      doneFooterSettings.addEventListener('click', () => footerSettingsPanel.classList.remove('open'));
+    }
+
+    // Footer tabs
+    document.querySelectorAll('.footer-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.footer-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.footer-tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        const content = document.getElementById(tab.dataset.footerTab);
+        if (content) content.classList.add('active');
+      });
+    });
+
+    // Home Page Header Settings panel
+    const headerSettingsPanel = document.getElementById('headerSettingsPanel');
+    const openHeaderSettings = document.getElementById('openHeaderSettings');
+    const closeHeaderSettings = document.getElementById('closeHeaderSettings');
+    const doneHeaderSettings = document.getElementById('doneHeaderSettings');
+
+    if (openHeaderSettings && headerSettingsPanel) {
+      openHeaderSettings.addEventListener('click', () => headerSettingsPanel.classList.add('open'));
+    }
+    if (closeHeaderSettings && headerSettingsPanel) {
+      closeHeaderSettings.addEventListener('click', () => headerSettingsPanel.classList.remove('open'));
+    }
+    if (doneHeaderSettings && headerSettingsPanel) {
+      doneHeaderSettings.addEventListener('click', () => headerSettingsPanel.classList.remove('open'));
+    }
+
+    // Mobile background toggle
+    const showMobileBg = document.getElementById('showMobileBg');
+    const mobileBgForm = document.getElementById('mobileBgForm');
+    if (showMobileBg && mobileBgForm) {
+      showMobileBg.addEventListener('click', () => {
+        mobileBgForm.style.display = mobileBgForm.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+
+    function closeEditor() {
+      const el = document.getElementById('editorOverlay');
+      if (el) el.classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+  });
+</script>
+
+<!-- Theme Editor Overlay -->
+<div class="editor-overlay" id="editorOverlay">
+  <header class="editor-toolbar">
+    <div class="editor-toolbar-left">
+      <button class="editor-page-btn">Home Page &#9662;</button>
+      <button class="editor-toolbar-tab" id="editorDesignBtn">Design</button>
+      <button class="editor-toolbar-tab" id="editorCssBtn">CSS Editor</button>
+    </div>
+    <div class="editor-toolbar-title">Theme Editor</div>
+    <div class="editor-toolbar-right">
+      <button class="editor-cancel-btn" id="editorCancel">Cancel</button>
+      <button class="editor-save-btn" id="editorSave">Save Now</button>
+    </div>
+  </header>
+
+  <div class="editor-body">
+    <div class="editor-preview">
+      <div class="editor-hero-area">
+        <div class="editor-nav-wrapper">
+          <nav class="editor-site-nav">
+            <span>Home</span>
+            <span>Episodes</span>
+            <span>About</span>
+            <span>Contact</span>
+          </nav>
+          <div class="nav-hover-card">
+            <button class="nav-hover-btn" id="openNavSettings">
+              <span class="nh-icon">&#9998;</span> EDIT NAVIGATION
+            </button>
+          </div>
+        </div>
+        <div class="editor-hero-wrapper">
+          <section class="editor-hero">
+            <div>
+              <h2 id="editorSiteTitle">Podbean Demo</h2>
+              <p id="editorTagline">New podcast weblog</p>
+              <div class="listen-on">Listen on: &#128308; &#128308; &#128308;</div>
+            </div>
+          </section>
+          <div class="hero-hover-card">
+            <button class="nav-hover-btn" id="openHeaderSettings">
+              <span class="nh-icon">&#9998;</span> EDIT HEADER
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-insert">
+        <button class="add-section-btn">ADD SECTION</button>
+      </div>
+
+      <!-- Episode Section -->
+      <section class="episode-section" id="episodeSection">
+        <div class="section-actions">
+          <button class="section-action-btn" id="openEpisodeSettings">
+            <span class="sa-icon">&#9998;</span> EDIT EPISODE DISPLAY
+          </button>
+          <div class="section-action-row">
+            <span style="cursor:pointer;">&#8593;</span>
+            <span style="cursor:pointer;">&#8595;</span>
+          </div>
+        </div>
+        <h2 class="ep-section-title">Episodes</h2>
+        <div class="ep-grid">
+          <div class="ep-card">
+            <div class="ep-card-img"></div>
+            <div class="ep-card-body">
+              <div class="ep-card-title">Episode Title</div>
+              <div class="ep-card-date">May 29, 2026</div>
+            </div>
+          </div>
+          <div class="ep-card">
+            <div class="ep-card-img"></div>
+            <div class="ep-card-body">
+              <div class="ep-card-title">Episode Title</div>
+              <div class="ep-card-date">May 22, 2026</div>
+            </div>
+          </div>
+          <div class="ep-card">
+            <div class="ep-card-img"></div>
+            <div class="ep-card-body">
+              <div class="ep-card-title">Episode Title</div>
+              <div class="ep-card-date">May 15, 2026</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-insert">
+        <button class="add-section-btn" id="addSectionBtn">ADD SECTION</button>
+      </div>
+
+      <section class="editable-section" id="editableSection">
+        <div class="section-actions" id="sectionActions">
+          <button class="section-action-btn" id="openSectionPanel">
+            <span class="sa-icon">&#9998;</span> EDIT SECTION
+          </button>
+          <div class="section-action-row">
+            <span class="move-up" style="cursor:pointer;">&#8593;</span>
+            <span class="move-down" style="cursor:pointer;color:#ccc;">&#8595;</span>
+          </div>
+          <button class="section-action-btn section-remove-btn">
+            <span class="sa-icon">&#128465;</span> REMOVE
+          </button>
+        </div>
+        <h2>Your Title</h2>
+        <p>This is the description area. You can write an introduction or add anything you want to tell your audience. This can help potential listeners better understand and become interested in your podcast.</p>
+      </section>
+
+      <div class="section-insert">
+        <button class="add-section-btn">ADD SECTION</button>
+      </div>
+
+      <!-- Site Footer -->
+      <footer class="site-footer" id="siteFooter">
+        <div class="section-actions">
+          <button class="section-action-btn" id="openFooterSettings">
+            <span class="sa-icon">&#9998;</span> EDIT FOOTER
+          </button>
+        </div>
+        <div class="footer-inner">
+          <div class="footer-copyright">© 2026 My Podcast. All rights reserved.</div>
+          <div class="footer-social-icons">
+            <span>f</span><span>x</span><span>in</span><span>▶</span><span>in</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    </div>
+
+    <!-- Section Edit Panel -->
+    <aside class="section-panel" id="sectionPanel">
+      <div class="sp-header">
+        <div class="sp-top">
+          <div class="sp-title">Edit Section</div>
+          <button class="sp-close" id="closeSectionPanel">&times;</button>
+        </div>
+      </div>
+      <div class="sp-body">
+        <div class="sp-setting-row">
+          <span>Font Color</span>
+          <input type="color" value="#111111" class="sp-color-input">
+        </div>
+
+        <div class="sp-setting-row">
+          <span>Background Color</span>
+          <input type="color" value="#f8f4f1" class="sp-color-input">
+        </div>
+
+        <div class="sp-group-title" style="margin-top:8px;">Content</div>
+
+        <div class="sp-editor-box">
+          <div class="sp-editor-header">
+            <select><option>Heading 2</option><option>Heading 1</option><option>Paragraph</option></select>
+            <select><option>System Font</option><option>Inter</option><option>Roboto</option><option>Georgia</option></select>
+            <select><option>18pt</option><option>14pt</option><option>24pt</option><option>32pt</option></select>
+          </div>
+          <div class="sp-editor-format">
+            <span style="cursor:pointer;font-weight:700;">B</span>
+            <span style="cursor:pointer;font-style:italic;">I</span>
+            <span style="cursor:pointer;text-decoration:underline;">U</span>
+            <span style="cursor:pointer;color:#888;">&mdash;</span>
+            <span style="cursor:pointer;">&#9776;</span>
+            <span style="cursor:pointer;">&#9776;</span>
+            <span style="cursor:pointer;color:#888;">&mdash;</span>
+            <span style="cursor:pointer;">&lt;&gt;</span>
+            <span style="cursor:pointer;">&#128279;</span>
+          </div>
+          <div class="sp-editor-preview" contenteditable="true">
+            <h2>Your Title</h2>
+            <p>This is the description area. You can write an introduction or add anything you want to tell your audience. This can help potential listeners better understand and become interested in your podcast.</p>
+          </div>
+        </div>
+      </div>
+      <div class="sp-footer">
+        <button class="sp-reset-btn">Reset to default</button>
+        <button class="sp-done-btn" id="doneSectionPanel">Done</button>
+      </div>
+    </aside>
+
+    <!-- Navigation Settings Panel -->
+    <aside class="section-panel" id="navSettingsPanel">
+      <div class="sp-header">
+        <div class="sp-top">
+          <div class="sp-title">Navigation Settings</div>
+          <button class="sp-close" id="closeNavSettings">&times;</button>
+        </div>
+      </div>
+      <div class="sp-body">
+        <div class="sp-setting-row">
+          <span>Font Color</span>
+          <input type="color" value="#ffffff" class="sp-color-input">
+        </div>
+
+        <div class="sp-setting-row">
+          <span>Background Color</span>
+          <input type="color" value="#000000" class="sp-color-input">
+        </div>
+
+        <div class="sp-group-title nav-section-title">Navigation Links</div>
+        <div class="nav-link-list" id="navLinkList">
+          <div class="nav-link-item" data-type="link" data-link="">
+            <span class="nav-link-drag">⋮⋮</span>
+            <span class="nav-link-label">Home</span>
+            <button class="nav-link-edit" title="Edit">✎</button>
+            <button class="nav-link-remove" title="Remove">✕</button>
+          </div>
+          <div class="nav-link-item" data-type="page" data-link="/episodes">
+            <span class="nav-link-drag">⋮⋮</span>
+            <span class="nav-link-label">Episodes</span>
+            <button class="nav-link-edit" title="Edit">✎</button>
+            <button class="nav-link-remove" title="Remove">✕</button>
+          </div>
+          <div class="nav-link-item" data-type="page" data-link="/about">
+            <span class="nav-link-drag">⋮⋮</span>
+            <span class="nav-link-label">About</span>
+            <button class="nav-link-edit" title="Edit">✎</button>
+            <button class="nav-link-remove" title="Remove">✕</button>
+          </div>
+          <div class="nav-link-item" data-type="page" data-link="/contact">
+            <span class="nav-link-drag">⋮⋮</span>
+            <span class="nav-link-label">Contact</span>
+            <button class="nav-link-edit" title="Edit">✎</button>
+            <button class="nav-link-remove" title="Remove">✕</button>
+          </div>
+        </div>
+
+        <div class="add-link-area">
+          <button class="add-link-btn" id="addLinkBtn">+ Add links</button>
+          <div class="add-link-form" id="addLinkForm" style="display:none;">
+            <div class="editor-field">
+              <label>Text</label>
+              <input type="text" class="sp-text-input" placeholder="Link label">
+            </div>
+            <div class="editor-field">
+              <label>Type</label>
+              <select>
+                <option value="link" selected>Links</option>
+                <option value="page">Page</option>
+                <option value="tag">Tag</option>
+              </select>
+            </div>
+            <div class="editor-field">
+              <label>Link</label>
+              <input type="text" class="sp-text-input" placeholder="https://">
+            </div>
+            <button class="sp-done-btn" style="width:100%;margin-top:4px;" id="doneAddLink">Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="sp-footer">
+        <button class="sp-reset-btn">Reset to default</button>
+        <button class="sp-done-btn" id="doneNavSettings">Done</button>
+      </div>
+    </aside>
+
+    <!-- CSS Editor Panel -->
+    <aside class="section-panel" id="cssEditorPanel">
+      <div class="sp-header">
+        <div class="sp-top">
+          <div class="sp-title">CSS Editor</div>
+          <button class="sp-close" id="closeCssEditor">&times;</button>
+        </div>
+      </div>
+      <div class="sp-body" style="padding:16px 24px;">
+        <textarea class="css-editor-textarea" placeholder="We highly recommend you use our intelligent theme editor (Distribution &gt; Podcast Website &gt; Customize) to design your podcast website. To add your theme file here, you should have some kind of knowledge about html and css."></textarea>
+      </div>
+      <div class="sp-footer">
+        <button class="sp-reset-btn">Reset to default</button>
+        <button class="sp-done-btn" id="doneCssEditor">Done</button>
+      </div>
+    </aside>
+
+    <!-- Design Panel -->
+    <aside class="section-panel" id="designPanel">
+      <div class="sp-header">
+        <div class="sp-top">
+          <div class="sp-title">Design</div>
+          <button class="sp-close" id="closeDesignPanel">&times;</button>
+        </div>
+        <div class="sp-tabs-custom">
+          <button class="sp-tab-custom active" data-tab="tab-design">Design</button>
+          <button class="sp-tab-custom" data-tab="tab-branding">Branding</button>
+          <button class="sp-tab-custom" data-tab="tab-player">Player</button>
+          <button class="sp-tab-custom" data-tab="tab-episode">Episode</button>
+        </div>
+      </div>
+      <div class="sp-body">
+        <div class="sp-content-custom active" id="tab-design">
+          <div class="sp-setting-row">
+            <span>Mode</span>
+            <select><option>Light</option><option>Dark</option></select>
+          </div>
+          <div class="sp-setting-row">
+            <span>Font</span>
+            <select><option>Inter</option><option>Roboto</option><option>Open Sans</option><option>Georgia</option></select>
+          </div>
+          <div class="sp-setting-row">
+            <span>Secondary Font</span>
+            <select><option>PT Sans</option><option>Lato</option><option>Merriweather</option><option>Source Sans Pro</option></select>
+          </div>
+        </div>
+        <div class="sp-content-custom" id="tab-branding">
+          <div class="editor-field">
+            <label>Favicon (120 &times; 120 px)</label>
+            <label class="editor-image-picker" style="width:130px;height:130px;min-height:0;border:1px dashed #ccc;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fafafa;">
+              <input type="file" accept="image/*">
+              <span style="position:static;background:none;color:#888;padding:0;font-size:12px;">Upload image</span>
+            </label>
+          </div>
+          <div class="sp-setting-row">
+            <span>Cookies Notice</span>
+            <label class="sp-toggle">
+              <input type="checkbox" checked>
+              <span class="sp-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="sp-content-custom" id="tab-player">
+          <div class="sp-setting-row">
+            <span>Player Color</span>
+            <input type="color" value="#ff2d2d" class="sp-color-input">
+          </div>
+          <div class="sp-setting-row">
+            <span>Player Style</span>
+            <div class="editor-radio-row">
+              <label><input type="radio" name="playerStyle" checked> Style 1</label>
+              <label><input type="radio" name="playerStyle"> Style 2</label>
+            </div>
+          </div>
+          <div class="sp-setting-row">
+            <span>Player Sound Waves <span class="editor-help">?</span></span>
+            <label class="sp-toggle">
+              <input type="checkbox" checked>
+              <span class="sp-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="sp-content-custom" id="tab-episode">
+          <div class="sp-setting-row">
+            <span>"Custom Section" on Episode Page</span>
+            <label class="sp-toggle">
+              <input type="checkbox" checked>
+              <span class="sp-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="sp-footer">
+        <button class="sp-reset-btn">Reset to default</button>
+        <button class="sp-done-btn" id="doneDesignPanel">Done</button>
+      </div>
+    </aside>
+
+    <!-- Episode Settings Panel -->
+    <aside class="section-panel" id="epSettingsPanel">
+      <div class="sp-header">
+        <div class="sp-top">
+          <div class="sp-title">Episode Settings</div>
+          <button class="sp-close" id="closeEpSettings">&times;</button>
+        </div>
+      </div>
+      <div class="sp-body">
+        <div class="sp-setting-row">
+          <span>Episode List Type</span>
+          <select id="epListType">
+            <option value="grid" selected>Grid View</option>
+            <option value="simple">Simple List View</option>
+            <option value="list">List View</option>
+          </select>
+        </div>
+
+        <div class="sp-setting-row">
+          <span>Episodes Per Page</span>
+          <input type="number" class="sp-number-box" value="6" min="1" max="50">
+        </div>
+
+        <div class="sp-setting-row">
+          <span>Stats on the site</span>
+          <label class="sp-toggle">
+            <input type="checkbox" checked>
+            <span class="sp-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="sp-footer">
+        <button class="sp-reset-btn">Reset to default</button>
+        <button class="sp-done-btn" id="doneEpSettings">Done</button>
+      </div>
+    </aside>
+
+    <!-- Footer Settings Panel -->
+    <aside class="section-panel" id="footerSettingsPanel">
+      <div class="sp-header">
+        <div class="sp-top">
+          <div class="sp-title">Footer Settings</div>
+          <button class="sp-close" id="closeFooterSettings">&times;</button>
+        </div>
+        <div class="sp-tabs-custom">
+          <button class="sp-tab-custom footer-tab active" data-footer-tab="footer-layout">Layout</button>
+          <button class="sp-tab-custom footer-tab" data-footer-tab="footer-social">Social</button>
+        </div>
+      </div>
+      <div class="sp-body">
+        <div class="sp-content-custom footer-tab-content active" id="footer-layout">
+          <div class="sp-setting-row">
+            <span>Alignment</span>
+            <select id="footerAlignment">
+              <option value="justified" selected>Justified</option>
+              <option value="centered">Centered</option>
+            </select>
+          </div>
+
+          <div class="sp-setting-row">
+            <span>Font Color</span>
+            <input type="color" value="#ffffff" class="sp-color-input">
+          </div>
+
+          <div class="sp-setting-row">
+            <span>Background Color</span>
+            <input type="color" value="#111111" class="sp-color-input">
+          </div>
+
+          <div class="editor-field" style="margin-top:16px;">
+            <label>Copyright</label>
+            <input type="text" class="sp-text-input" value="© 2026 My Podcast. All rights reserved." placeholder="Copyright text">
+          </div>
+        </div>
+
+        <div class="sp-content-custom footer-tab-content" id="footer-social">
+          <div class="sp-group-title-dark">Social Media Links</div>
+          <div class="footer-social-fields">
+            <div class="footer-social-field">
+              <span class="footer-social-icon fb">f</span>
+              <span class="footer-social-prefix">https://www.facebook.com/</span>
+              <input type="text" class="footer-social-input" placeholder="yourpage">
+            </div>
+            <div class="footer-social-field">
+              <span class="footer-social-icon x">𝕏</span>
+              <span class="footer-social-prefix">https://x.com/</span>
+              <input type="text" class="footer-social-input" placeholder="yourhandle">
+            </div>
+            <div class="footer-social-field">
+              <span class="footer-social-icon ig">⏺</span>
+              <span class="footer-social-prefix">https://www.instagram.com/</span>
+              <input type="text" class="footer-social-input" placeholder="yourhandle">
+            </div>
+            <div class="footer-social-field">
+              <span class="footer-social-icon yt">▶</span>
+              <span class="footer-social-prefix">https://www.youtube.com/</span>
+              <input type="text" class="footer-social-input" placeholder="yourchannel">
+            </div>
+            <div class="footer-social-field">
+              <span class="footer-social-icon li">in</span>
+              <span class="footer-social-prefix">https://www.linkedin.com/</span>
+              <input type="text" class="footer-social-input" placeholder="yourprofile">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sp-footer">
+        <button class="sp-reset-btn">Reset to default</button>
+        <button class="sp-done-btn" id="doneFooterSettings">Done</button>
+      </div>
+    </aside>
+
+    <!-- Home Page Header Settings Panel -->
+    <aside class="section-panel" id="headerSettingsPanel">
+      <div class="sp-header">
+        <div class="sp-top">
+          <div class="sp-title">Home Page Header Settings</div>
+          <button class="sp-close" id="closeHeaderSettings">&times;</button>
+        </div>
+      </div>
+      <div class="sp-body">
+        <div class="sp-setting-row">
+          <span>Font Color</span>
+          <input type="color" value="#ffffff" class="sp-color-input">
+        </div>
+
+        <div class="sp-setting-row">
+          <span>Background Color</span>
+          <input type="color" value="#111111" class="sp-color-input">
+        </div>
+
+        <div class="editor-field" style="margin-top:16px;">
+          <label>Background Image (1920 × 500 px)</label>
+          <label class="editor-image-picker" style="width:100%;height:auto;min-height:90px;border:1px dashed #ccc;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fafafa;">
+            <input type="file" accept="image/*">
+            <span style="position:static;background:none;color:#888;padding:0;">Upload image</span>
+          </label>
+        </div>
+
+        <button class="add-link-btn" id="showMobileBg" style="margin-top:8px;">+ Add mobile background image</button>
+        <div class="add-link-form" id="mobileBgForm" style="display:none;">
+          <div class="editor-field" style="margin-bottom:0;">
+            <div class="mobile-bg-label-row">
+              <span>Mobile Background Image</span>
+              <span class="optional-badge">Optional</span>
+              <span class="info-icon-wrapper" style="margin-left:-2px;">
+                <span class="info-icon">ⓘ</span>
+                <span class="info-tooltip">You can set your own header image for mobile (recommended), or your site background image will be used by default.</span>
+              </span>
+            </div>
+            <div class="mobile-bg-size">Recommended size: 450 × 240 px</div>
+            <label class="editor-image-picker" style="width:100%;height:auto;min-height:90px;border:1px dashed #ccc;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:12px;">
+              <input type="file" accept="image/*">
+              <span style="position:static;background:none;color:#888;padding:0;">Upload image</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="sp-footer">
+        <button class="sp-reset-btn">Reset to default</button>
+        <button class="sp-done-btn" id="doneHeaderSettings">Done</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>
