@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brand Studio · Podbean Concept</title>
+<title>Theme Editor · Podbean Concept</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
@@ -91,11 +91,70 @@ body {
   gap: 12px;
 }
 
-.topbar-podcast-name {
+.topbar-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+}
+.topbar-save-btn:hover { background: #333; }
+.topbar-save-btn.disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  background: #999;
+  pointer-events: none;
+}
+.topbar-save-btn svg { flex-shrink: 0; }
+
+.topbar-cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  color: #555;
   font-size: 13px;
   font-weight: 500;
-  color: #555;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
 }
+.topbar-cancel-btn:hover {
+  border-color: #d92b3b;
+  color: #d92b3b;
+}
+
+.topbar-view-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  color: #555;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.topbar-view-site:hover {
+  border-color: #111;
+  color: #111;
+}
+.topbar-view-site svg { flex-shrink: 0; }
 
 .topbar-sep {
   width: 1px;
@@ -126,7 +185,7 @@ body {
 }
 
 .panel-inner {
-  padding: 24px 20px;
+  padding: 28px 24px;
   flex: 1;
 }
 
@@ -137,11 +196,11 @@ body {
 .panel-section:last-child { margin-bottom: 0; }
 
 .panel-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: #999;
+  letter-spacing: .06em;
+  text-transform: none;
+  color: #555;
   margin-bottom: 12px;
 }
 
@@ -164,7 +223,7 @@ body {
   border: 1.5px solid #e5e5e5;
   background: #fff;
   color: #888;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   font-family: inherit;
 }
@@ -223,7 +282,7 @@ body {
 }
 
 .section-toggle-drag {
-  font-size: 13px;
+  font-size: 15px;
   color: #ccc;
   letter-spacing: -1px;
   cursor: grab;
@@ -249,7 +308,7 @@ body {
 
 .section-toggle-label {
   flex: 1;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #333;
 }
@@ -311,8 +370,17 @@ body {
   width: 100%;
   background: #fff;
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible;
+  position: relative;
   box-shadow: 0 2px 20px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.04);
+}
+.preview-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.04);
 }
 
 .preview-frame-top {
@@ -350,6 +418,8 @@ body {
   --p-card-shadow: 0 1px 3px rgba(0,0,0,.06);
   --p-card-radius: 8px;
   --p-nav-style: light;
+  --p-banner-bg: #0080FF;
+  --p-banner-text: #111111;
 }
 
 /* ══════ BRAND MODE VARIATIONS ══════ */
@@ -360,7 +430,7 @@ body {
   --p-card: #ffffff;
   --p-text: #1a1a1a;
   --p-text-secondary: #888888;
-  --p-accent: #3b82f6;
+  --p-accent: #FF0000;
   --p-accent-soft: #eff6ff;
   --p-nav-bg: #ffffff;
   --p-nav-text: #1a1a1a;
@@ -412,23 +482,6 @@ body {
   color: #888;
 }
 
-/* Dark mode — Newsletter */
-.preview-content.dark .pc-newsletter {
-  background: #1a1a1a;
-}
-.preview-content.dark .pc-newsletter-form input {
-  background: #0d0d0d;
-  border-color: #333;
-  color: #e8e8e8;
-}
-.preview-content.dark .pc-newsletter-form input:focus {
-  border-color: var(--p-accent);
-}
-.preview-content.dark .pc-newsletter-form input::placeholder {
-  color: #666;
-}
-
-/* Dark mode — Hero off indicator */
 .preview-content.dark .pc-hero-off-indicator {
   border-bottom-color: #2a2a2a;
 }
@@ -494,8 +547,8 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 10px 100px;
-  background: var(--p-nav-bg);
-  border-bottom: 1px solid var(--p-nav-border);
+  background: #000000;
+  border-bottom: 1px solid #000000;
   transition: background .4s ease, border-color .4s ease;
 }
 
@@ -597,7 +650,7 @@ body {
   gap: 32px;
   padding: 16px 100px;
   position: relative;
-  background: var(--p-nav-bg);
+  background: var(--p-banner-bg);
   transition: background .4s ease;
 }
 
@@ -607,7 +660,7 @@ body {
   font-weight: 500;
   letter-spacing: .05em;
   text-transform: none;
-  color: var(--p-nav-text);
+  color: var(--p-banner-text);
   opacity: .65;
   transition: opacity .2s;
   font-family: var(--p-font-ui);
@@ -644,7 +697,7 @@ body {
 .pc-hero-content { flex: 1; }
 
 .pc-hero-title {
-  font-size: 48px;
+  font-size: 44px;
   font-weight: 800;
   letter-spacing: -.03em;
   line-height: 1.15;
@@ -665,7 +718,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-word;
-  font-size: 18px;
+  font-size: 17px;
   color: var(--p-text-secondary);
   line-height: 1.7;
   font-family: var(--p-font-body);
@@ -681,7 +734,8 @@ body {
   margin-top: 6px;
   font-size: 14px;
   font-weight: 600;
-  color: #3b82f6;
+  color: var(--p-banner-text);
+  opacity: 0.65;
   cursor: pointer;
   border: none;
   background: none;
@@ -691,7 +745,7 @@ body {
   transition: opacity .15s;
 }
 
-.pc-hero-desc-toggle:hover { opacity: 0.75; }
+.pc-hero-desc-toggle:hover { opacity: 1; }
 .pc-hero-desc-toggle.hidden { display: none; }
 
 /* Sections common */
@@ -706,7 +760,10 @@ body {
   max-height: 600px;
   opacity: 1;
   position: relative;
+  background: var(--p-banner-bg);
 }
+.pc-hero-wrap .pc-hero-title { color: var(--p-banner-text); }
+.pc-hero-wrap .pc-hero-desc { color: var(--p-banner-text); opacity: 0.75; }
 
 .pc-hero-wrap.hero-off {
   max-height: 0;
@@ -757,7 +814,128 @@ body {
   margin-bottom: 0;
 }
 
+/* Explore Episodes button */
+.pc-explore-wrap {
+  text-align: center;
+  margin-top: 32px;
+}
+.pc-explore-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 100px;
+  background: var(--p-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--p-font-ui);
+  cursor: pointer;
+  transition: filter .15s, transform .15s;
+}
+.pc-explore-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
 
+/* Featured Episode */
+.pc-featured-wrap {
+  overflow: hidden;
+  transition: max-height .5s ease, opacity .4s ease;
+  max-height: 800px;
+  opacity: 1;
+}
+.pc-featured-wrap.featured-off {
+  max-height: 0;
+  opacity: 0;
+}
+.pc-featured-ep {
+  padding: 48px 56px;
+  border-radius: var(--p-radius-lg);
+  background: var(--p-card);
+  transition: all .4s ease;
+}
+.pc-featured-inner {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+}
+.pc-featured-cover {
+  width: 400px;
+  height: 400px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,.12);
+}
+.pc-featured-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+.pc-featured-info { flex: 1; min-width: 0; padding-top: 12px; }
+.pc-featured-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--p-text);
+  margin-bottom: 16px;
+  font-family: var(--p-font-heading);
+  letter-spacing: -.03em;
+  line-height: 1.15;
+}
+.pc-featured-desc {
+  font-size: 18px;
+  color: var(--p-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  font-family: var(--p-font-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  line-clamp: 4;
+  overflow: hidden;
+}
+.pc-featured-meta {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--p-text-secondary);
+  margin-bottom: 24px;
+  font-family: var(--p-font-body);
+}
+.pc-featured-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 100px;
+  background: var(--p-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--p-font-ui);
+  transition: filter .15s, transform .15s;
+}
+.pc-featured-play:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.pc-featured-play svg { width: 18px; height: 18px; }
+.preview-content.dark .pc-featured-ep { background: #1a1a1a; }
+.preview-content.dark .pc-featured-cover { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .pc-featured-inner { gap: 40px; }
+  .pc-featured-cover { width: 280px; height: 280px; }
+  .pc-featured-title { font-size: 28px; }
+  .pc-featured-desc { font-size: 16px; }
+}
+@media (max-width: 820px) {
+  .pc-featured-inner { flex-direction: column; align-items: center; text-align: center; gap: 28px; }
+  .pc-featured-ep { padding: 32px; }
+  .pc-featured-cover { width: 200px; height: 200px; }
+  .pc-featured-title { font-size: 24px; }
+  .pc-featured-desc { font-size: 15px; -webkit-line-clamp: 3; line-clamp: 3; }
+}
+@media (max-width: 480px) {
+  .pc-featured-ep { padding: 24px; }
+  .pc-featured-cover { width: 140px; height: 140px; }
+  .pc-featured-title { font-size: 20px; }
+  .pc-featured-desc { font-size: 14px; -webkit-line-clamp: 2; line-clamp: 2; }
+}
 
 /* Episodes Page */
 .pc-episodes-page {
@@ -801,7 +979,7 @@ body {
 }
 
 .pc-episode-row-title {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--p-text);
   margin-bottom: 6px;
@@ -810,7 +988,7 @@ body {
 }
 
 .pc-episode-row-desc {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--p-text-secondary);
   line-height: 1.5;
   margin-bottom: 8px;
@@ -862,26 +1040,13 @@ body {
 /* Dark mode for episodes page */
 .preview-content.dark .pc-episode-row { border-bottom-color: #2a2a2a; }
 .preview-content.dark .pc-episode-row-cover { box-shadow: 0 2px 8px rgba(0,0,0,.3); }
-/* Host section transitions */
-/* Newsletter transitions */
-.pc-newsletter-wrap {
-  overflow: hidden;
-  transition: max-height .5s ease, opacity .4s ease;
-  max-height: 400px;
-  opacity: 1;
-}
-
-.pc-newsletter-wrap.newsletter-off {
-  max-height: 0;
-  opacity: 0;
-}
-
 /* Listen On Section */
 .pc-listen-wrap {
   overflow: hidden;
   transition: max-height .5s ease, opacity .4s ease;
   max-height: 300px;
   opacity: 1;
+  margin-top: 60px;
 }
 
 .pc-listen-wrap.listen-off {
@@ -894,7 +1059,7 @@ body {
 }
 
 .pc-listen-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: .14em;
   text-transform: uppercase;
@@ -917,7 +1082,7 @@ body {
   border-radius: 30px;
   background: var(--p-card);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--p-text);
   transition: background .2s, box-shadow .2s;
@@ -943,7 +1108,7 @@ body {
 }
 
 .pc-section-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--p-text);
   font-family: var(--p-font-heading);
@@ -967,6 +1132,75 @@ body {
   gap: 44px;
 }
 
+/* Episode List Layout */
+.pc-ep-list {
+  display: flex;
+  flex-direction: column;
+}
+.pc-ep-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--p-border);
+  transition: background .15s;
+}
+.pc-ep-list-item:first-child { padding-top: 0; }
+.pc-ep-list-item:last-child { border-bottom: none; }
+.pc-ep-list-cover {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.pc-ep-list-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+.pc-ep-list-info { flex: 1; min-width: 0; }
+.pc-ep-list-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--p-text);
+  margin-bottom: 4px;
+  font-family: var(--p-font-heading);
+  line-height: 1.3;
+}
+.pc-ep-list-desc {
+  font-size: 13px;
+  color: var(--p-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 6px;
+  font-family: var(--p-font-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.pc-ep-list-footer { display: flex; align-items: center; gap: 16px; }
+.pc-ep-list-date {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--p-text-secondary);
+  font-family: var(--p-font-body);
+}
+.pc-ep-list-play {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--p-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform .2s, background .2s;
+}
+.pc-ep-list-play:hover { transform: scale(1.06); }
+.pc-ep-list-play svg { width: 18px; height: 18px; margin-left: 2px; }
+
 .pc-ep-card {
   background: var(--p-card);
   border-radius: var(--p-card-radius);
@@ -978,8 +1212,8 @@ body {
 }
 
 .pc-ep-card:hover {
-  box-shadow: 0 4px 20px rgba(0,0,0,.08);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,.10);
+  transform: translateY(-4px);
 }
 
 .pc-ep-cover {
@@ -1070,11 +1304,11 @@ body {
 
 /* Card body */
 .pc-ep-body {
-  padding: 14px 16px 16px;
+  padding: 16px 18px 18px;
 }
 
 .pc-ep-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--p-text);
   margin-bottom: 4px;
@@ -1088,7 +1322,7 @@ body {
 }
 
 .pc-ep-excerpt {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--p-text-secondary);
   line-height: 1.5;
   margin-bottom: 10px;
@@ -1108,7 +1342,7 @@ body {
 
 /* Date */
 .pc-ep-date {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--p-text-secondary);
   font-family: var(--p-font-body);
   display: flex;
@@ -1123,7 +1357,7 @@ body {
 }
 
 .pc-ep-date-dur {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--p-text-secondary);
   font-family: var(--p-font-body);
@@ -1131,17 +1365,13 @@ body {
 
 .pc-ep-actions {
   display: flex;
-  gap: 8px;
-  opacity: 0;
+  align-items: center;
+  gap: 2px;
   transition: opacity .2s ease;
 }
 
-.pc-ep-card:hover .pc-ep-actions {
-  opacity: 1;
-}
-
 .pc-ep-action-btn {
-  width: 28px; height: 28px;
+  width: 32px; height: 32px;
   border: none;
   border-radius: 50%;
   background: transparent;
@@ -1149,10 +1379,21 @@ body {
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: background .15s, color .15s;
-  font-size: 14px;
+  flex-shrink: 0;
 }
+.pc-ep-action-btn svg { display: block; }
 
 .pc-ep-action-btn:hover { background: var(--p-accent-soft); color: var(--p-accent); }
+
+.pc-ep-action-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--p-text-secondary);
+  min-width: 18px;
+  text-align: left;
+  margin-right: 6px;
+  font-family: var(--p-font-ui);
+}
 
 /* Custom Sections */
 .cs-card {
@@ -1199,7 +1440,7 @@ body {
 .cs-card.style-image-right .cs-avatar {
   width: 360px; height: 360px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--p-accent), transparent);
+  background: linear-gradient(135deg, #6b7280, transparent);
   overflow: hidden;
 }
 
@@ -1217,7 +1458,7 @@ body {
 .cs-info { flex: 1; min-width: 0; }
 
 .cs-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--p-text);
   margin-bottom: 6px;
@@ -1225,7 +1466,7 @@ body {
 }
 
 .cs-content {
-  font-size: 18px;
+  font-size: 17px;
   color: var(--p-text-secondary);
   line-height: 1.6;
   font-family: var(--p-font-body);
@@ -1244,7 +1485,7 @@ body {
 }
 
 .section-custom-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #555;
 }
@@ -1281,7 +1522,7 @@ body {
 .section-custom-item.dragging { opacity: 0.4; background: #f0f0f0; }
 
 .sc-drag {
-  font-size: 14px;
+  font-size: 15px;
   color: #ccc;
   cursor: grab;
   flex-shrink: 0;
@@ -1293,7 +1534,7 @@ body {
 
 .sc-label {
   flex: 1;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #333;
   white-space: nowrap;
@@ -1409,12 +1650,28 @@ body {
   background: #fef0f0;
 }
 
-.cs-toggle-row2 .toggle-switch {
-  margin-left: auto;
+.cs-toggle-row1 ._edit-icon,
+.cs-toggle-row1 ._rm-icon {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #f7f7f7;
+  font-size: 15px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s, color .15s, border-color .15s;
+  padding: 0;
+  color: #777;
 }
+.cs-toggle-row1 ._edit-icon:hover { background: #eef4ff; color: #3b82f6; border-color: #3b82f6; }
+.cs-toggle-row1 ._rm-icon:hover { background: #fef0f0; color: #d92b3b; border-color: #d92b3b; }
 
 .cs-toggle.cs-dynamic-wrap .section-toggle-label {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -1477,12 +1734,16 @@ body {
 .cs-edit-form-inner {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 }
 
 .cs-edit-row {
   display: flex;
   gap: 12px;
+}
+
+.cs-edit-field {
+  padding: 4px 0;
 }
 
 .cs-edit-row .cs-edit-field {
@@ -1492,12 +1753,12 @@ body {
 
 .cs-edit-field label {
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  letter-spacing: .04em;
+  text-transform: none;
   color: #999;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .cs-edit-field input[type="text"],
@@ -1637,13 +1898,13 @@ body {
 }
 
 ._edit-cancel {
-  height: 34px;
-  padding: 0 18px;
+  height: 28px;
+  padding: 0 12px;
   border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #fff;
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   font-family: inherit;
@@ -1656,13 +1917,13 @@ body {
 }
 
 ._edit-save {
-  height: 34px;
-  padding: 0 20px;
+  height: 28px;
+  padding: 0 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #111;
   color: #fff;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
@@ -1705,7 +1966,7 @@ body {
   width: 100%;
 }
 .nav-item-drag {
-  font-size: 14px;
+  font-size: 15px;
   color: #ccc;
   cursor: grab;
   flex-shrink: 0;
@@ -1832,16 +2093,13 @@ body {
 
 /* Search icon in preview nav */
 .pc-nav-search {
-  position: absolute;
-  right: 100px;
-  top: 50%;
-  transform: translateY(-50%);
   opacity: 0.5;
   cursor: pointer;
   transition: opacity .2s;
   font-size: 16px;
   line-height: 1;
-  z-index: 2;
+  margin-left: 24px;
+  flex-shrink: 0;
 }
 .pc-nav-search:hover { opacity: 1; }
 .pc-nav-search.hidden { display: none; }
@@ -1914,7 +2172,7 @@ body {
 }
 .pc-search-bar .pc-search-cancel:hover { background: var(--p-accent-soft); }
 
-/* Social Links Panel */
+/* Social links Panel */
 
 .social-links-list {
   display: flex;
@@ -2000,7 +2258,7 @@ body {
 }
 
 .settings-note {
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.6;
   color: #888;
   padding: 12px;
@@ -2018,68 +2276,6 @@ body {
 .settings-note a:hover {
   text-decoration: underline;
 }
-
-/* Newsletter */
-.pc-newsletter {
-  text-align: center;
-  padding: 40px;
-  border-radius: var(--p-radius-lg);
-  background: var(--p-card);
-  transition: all .4s ease;
-}
-
-.pc-newsletter-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--p-text);
-  margin-bottom: 8px;
-  font-family: var(--p-font-heading);
-}
-
-.pc-newsletter-desc {
-  font-size: 14px;
-  color: var(--p-text-secondary);
-  margin-bottom: 16px;
-  font-family: var(--p-font-body);
-}
-
-.pc-newsletter-form {
-  display: flex;
-  gap: 8px;
-  max-width: 380px;
-  margin: 0 auto;
-}
-
-.pc-newsletter-form input {
-  flex: 1;
-  height: 42px;
-  padding: 0 14px;
-  border: 1px solid var(--p-border);
-  border-radius: 20px;
-  font-size: 14px;
-  font-family: var(--p-font-ui);
-  outline: none;
-  color: var(--p-text);
-  background: var(--p-bg);
-}
-
-.pc-newsletter-form input:focus { border-color: var(--p-accent); }
-
-.pc-newsletter-form button {
-  height: 42px;
-  padding: 0 20px;
-  border: none;
-  border-radius: 20px;
-  background: var(--p-accent);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: var(--p-font-ui);
-  cursor: pointer;
-  transition: background .2s;
-}
-
-.pc-newsletter-form button:hover { filter: brightness(1.12); }
 
 /* Footer */
 .pc-footer {
@@ -2122,6 +2318,123 @@ body {
   font-family: var(--p-font-body);
 }
 
+/* Cookie Notice */
+.pc-cookie-notice {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 100px;
+  background: #1a1a2e;
+  color: #e8e8e8;
+  font-size: 13px;
+  font-family: var(--p-font-body);
+  line-height: 1.5;
+  transition: all .4s ease;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.pc-cookie-notice.hidden { display: none; }
+.pc-cookie-notice-text { flex: 1; min-width: 0; }
+.pc-cookie-notice-btn {
+  flex-shrink: 0;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+  white-space: nowrap;
+}
+.pc-cookie-notice-btn:hover { filter: brightness(1.12); }
+.preview-content.dark .pc-cookie-notice { background: #0d0d0d; }
+
+/* Footer Settings - Cookie Editor */
+.cookie-editor-box {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.cookie-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #e5e5e5;
+  flex-wrap: wrap;
+}
+.cookie-editor-toolbar button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  color: #555;
+  transition: background .15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.cookie-editor-toolbar button:hover { background: #e5e5e5; }
+.cookie-editor-toolbar .sep {
+  width: 1px;
+  height: 20px;
+  background: #ddd;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+.cookie-editor-toolbar input[type="color"] {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  flex-shrink: 0;
+}
+.cookie-editor-content {
+  min-height: 120px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  line-height: 1.7;
+  color: #333;
+  background: #fff;
+}
+.cookie-editor-content:focus {
+  box-shadow: inset 0 0 0 1px #3b82f6;
+}
+.cookie-editor-content h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+.cookie-editor-content p {
+  margin: 0 0 6px;
+}
+.cookie-editor-content p:last-child {
+  margin-bottom: 0;
+}
+
 /* ══════════════════════════════════════════════════
    COLOR PICKER
    ══════════════════════════════════════════════════ */
@@ -2129,7 +2442,8 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
 }
 
 .color-picker-preview {
@@ -2139,6 +2453,23 @@ body {
   border: 2px solid #e5e5e5;
   flex-shrink: 0;
   transition: background .2s;
+}
+
+._cs-color-input {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #e5e5e5;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+._cs-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+._cs-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
 }
 
 .color-picker-hex {
@@ -2210,11 +2541,11 @@ body {
 
 /* Hex label */
 .custom-color-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: #bbb;
+  color: #999;
   margin-bottom: 8px;
 }
 
@@ -2271,7 +2602,7 @@ body {
   border-radius: 8px;
   background: #111;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
@@ -2280,6 +2611,261 @@ body {
 }
 
 .custom-color-apply:hover {
+  background: #333;
+}
+
+/* Custom section edit form - color circle */
+._cs-color-circle,
+.color-swatch-circle {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #e5e5e5;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color .15s;
+}
+._cs-color-circle:hover,
+.color-swatch-circle:hover {
+  border-color: #999;
+}
+
+/* Featured episode picker */
+._feat-picker {
+  width: 100%;
+  margin-top: 6px;
+  position: relative;
+}
+._feat-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color .15s;
+}
+._feat-trigger:hover {
+  border-color: #ccc;
+}
+._feat-trigger:focus-within {
+  border-color: #111;
+}
+._feat-trigger-label {
+  flex: 1;
+  font-size: 13px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+._feat-trigger-label._feat-default {
+  color: #999;
+}
+._feat-trigger-arrow {
+  font-size: 10px;
+  color: #bbb;
+  flex-shrink: 0;
+  transition: transform .15s;
+}
+._feat-trigger.open ._feat-trigger-arrow {
+  transform: rotate(180deg);
+}
+._feat-clear-btn {
+  border: none;
+  background: none;
+  color: #bbb;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+  display: none;
+}
+._feat-clear-btn:hover {
+  color: #333;
+}
+._feat-clear-btn.show {
+  display: block;
+}
+._feat-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  z-index: 100;
+  max-height: 180px;
+  overflow-y: auto;
+  display: none;
+  margin-top: 4px;
+}
+._feat-suggestions.open {
+  display: block;
+}
+._feat-suggestion-item {
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: background .1s;
+}
+._feat-suggestion-item:hover {
+  background: #f5f5f5;
+}
+._feat-suggestion-item.highlight {
+  background: #eef0ff;
+  font-weight: 500;
+}
+
+/* Custom color picker modal */
+._cp-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 10000;
+  background: rgba(0,0,0,.3);
+}
+._cp-popup {
+  position: fixed;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.15);
+  padding: 20px;
+  width: 260px;
+  animation: cpFadeIn .12s ease;
+  margin: 0;
+}
+@keyframes cpFadeIn {
+  from { opacity: 0; transform: scale(.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+._cp-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+._cp-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+._cp-swatch-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+._cp-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1.5px solid #ddd;
+  flex-shrink: 0;
+}
+._cp-native-wrap {
+  flex: 1;
+}
+._cp-native-wrap input[type="color"] {
+  width: 100%;
+  height: 40px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 2px;
+  cursor: pointer;
+  background: transparent;
+}
+._cp-native-wrap input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+._cp-native-wrap input[type="color"]::-webkit-color-swatch { border: none; border-radius: 5px; }
+._cp-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+._cp-row label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+._cp-hex-input {
+  flex: 1;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: "SF Mono", "Menlo", monospace;
+  color: #333;
+  outline: none;
+  transition: border-color .15s;
+}
+._cp-hex-input:focus {
+  border-color: #111;
+}
+._cp-rgb-input {
+  width: 52px;
+  height: 36px;
+  padding: 0 6px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: "SF Mono", "Menlo", monospace;
+  color: #333;
+  text-align: center;
+  outline: none;
+  transition: border-color .15s;
+}
+._cp-rgb-input:focus {
+  border-color: #111;
+}
+._cp-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+._cp-cancel {
+  height: 32px;
+  padding: 0 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #fff;
+  color: #666;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+._cp-cancel:hover {
+  border-color: #999;
+  color: #333;
+}
+._cp-ok {
+  height: 32px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 6px;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s;
+}
+._cp-ok:hover {
   background: #333;
 }
 
@@ -2345,6 +2931,63 @@ body {
 ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
 /* ══════════════════════════════════════════════════
+   MENU / SUB-VIEWS
+   ══════════════════════════════════════════════════ */
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background .15s;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+.menu-item:hover { background: #f5f5f5; }
+.menu-item + .menu-item { margin-top: 2px; }
+.menu-arrow { color: #ccc; font-size: 20px; transition: color .15s; line-height: 1; }
+.menu-item:hover .menu-arrow { color: #999; }
+
+.menu-back {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 0 16px;
+  border: none;
+  background: none;
+  color: #888;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color .15s;
+}
+.menu-back:hover { color: #333; }
+
+.menu-view { animation: menuFadeIn .15s ease; }
+@keyframes menuFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+.css-editor-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: "SF Mono", "Menlo", "Monaco", monospace;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  color: #333;
+  background: #fafafa;
+  transition: border-color .15s, background .15s;
+  box-sizing: border-box;
+}
+.css-editor-textarea:focus { border-color: #111; background: #fff; }
+
+/* ══════════════════════════════════════════════════
    RESPONSIVE
    ══════════════════════════════════════════════════ */
 @media (max-width: 1000px) {
@@ -2360,32 +3003,31 @@ body {
   .pc-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .pc-hero { padding: 32px 40px 48px; }
   .pc-section { padding: 0 40px 40px; }
-  .pc-hero-title { font-size: 36px; }
+  .pc-hero-title { font-size: 32px; }
   .pc-hero-cover { width: 180px; height: 180px; }
   .cs-card { min-height: auto; padding: 28px; gap: 24px; }
   .cs-card.style-image-left, .cs-card.style-image-right { flex-direction: column; text-align: center; }
   .cs-card.style-image-left .cs-avatar, .cs-card.style-image-right .cs-avatar { width: 200px; height: 200px; }
   .pc-hero-off-indicator { padding: 12px 24px; }
   .pc-hero-off-badge { font-size: 12px; }
-  .pc-ep-actions { opacity: 1; }
   .pc-listen { padding: 0; }
-  .pc-newsletter-form { flex-direction: column; }
   .pc-hero-off-indicator { padding: 10px 16px; }
 }
 
 @media (max-width: 420px) {
   .pc-grid { grid-template-columns: 1fr; }
   .pc-ep-excerpt { display: none; }
+  .pc-ep-list-desc { display: none; }
 }
 
 @media (max-width: 480px) {
   .panel-inner { padding: 16px; }
   .bg-option { font-size: 12px; padding: 8px 10px; }
-  .pc-hero-title { font-size: 28px; }
+  .pc-hero-title { font-size: 26px; }
   .pc-hero { padding: 24px 24px 36px; }
   .pc-section { padding: 0 24px 30px; }
-  .pc-ep-title { font-size: 13px; }
-  .pc-ep-body { padding: 12px 14px 14px; }
+  .pc-ep-title { font-size: 14px; }
+  .pc-ep-body { padding: 14px 16px 16px; }
   .pc-listen { padding: 0; }
   .pc-listen-item { padding: 8px 14px; font-size: 12px; }
   .pc-listen-item img { width: 18px; height: 18px; }
@@ -2401,14 +3043,19 @@ body {
       <div class="topbar-logo-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       </div>
-      Brand Studio
+      Theme Editor
     </div>
-    <span class="topbar-badge">AI Auto-sync</span>
   </div>
   <div class="topbar-right">
-    <span class="topbar-podcast-name">The Creative Pulse</span>
-    <span class="topbar-sep"></span>
-    <span style="font-size:12px;color:#999;">12 episodes</span>
+    <button class="topbar-cancel-btn" onclick="cancelChanges()">Cancel</button>
+    <button class="topbar-save-btn disabled" onclick="saveChanges()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save
+    </button>
+    <a class="topbar-view-site" href="javascript:void(0)" onclick="viewSite()">
+      View site
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
   </div>
 </header>
 
@@ -2419,149 +3066,216 @@ body {
   <aside class="panel" id="leftPanel">
     <div class="panel-inner">
 
-      <!-- Background Mode -->
-      <div class="panel-section">
-        <div class="panel-label">Background</div>
-        <div class="bg-toggle" id="bgToggle">
-          <button class="bg-option active" data-bg="light">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            Light
-          </button>
-          <button class="bg-option" data-bg="dark">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            Dark
-          </button>
-        </div>
-      </div>
+      <!-- ═══ MAIN MENU ═══ -->
+      <div id="menuMainView">
+        <div class="panel-label" style="margin-bottom:6px;">Customizations</div>
 
-      <!-- Accent Color -->
-      <div class="panel-section">
-        <div class="panel-label">Button Color</div>
-        <div class="color-picker-row">
-          <div class="color-picker-preview" id="colorPreview" style="background:#3b82f6;"></div>
-          <span class="color-picker-hex" id="colorHexValue">#3b82f6</span>
-          <button class="color-reset-btn" id="colorResetBtn" title="Reset to default">&#8634;</button>
+        <div class="menu-item" onclick="showMenuView('color-font')">
+          <span>Color and font</span>
+          <span class="menu-arrow">&#8250;</span>
         </div>
-        <div class="color-presets" id="colorPresets">
-          <button class="color-preset" data-color="#3b82f6" style="background:#3b82f6;" title="Blue"></button>
-          <button class="color-preset" data-color="#06d6a0" style="background:#06d6a0;" title="Teal"></button>
-          <button class="color-preset" data-color="#ff6b6b" style="background:#ff6b6b;" title="Coral"></button>
-          <button class="color-preset" data-color="#8b5cf6" style="background:#8b5cf6;" title="Purple"></button>
-          <button class="color-preset" data-color="#f59e0b" style="background:#f59e0b;" title="Gold"></button>
-          <button class="color-preset color-preset-custom" id="customColorBtn" title="Custom color">
-            <span class="custom-plus">+</span>
-          </button>
+        <div class="menu-item" onclick="showMenuView('navigation')">
+          <span>Top navigation</span>
+          <span class="menu-arrow">&#8250;</span>
         </div>
-        <div class="custom-color-panel" id="customColorPanel">
-          <div class="custom-color-label">Hex Value</div>
-          <div class="custom-color-row">
-            <input type="color" id="customColorPicker" value="#3b82f6">
-            <input type="text" id="customHexInput" value="#3b82f6" placeholder="#000000" maxlength="7">
-            <button class="custom-color-apply" id="customColorApply">Apply</button>
+        <div class="menu-item" onclick="showMenuView('home-sections')">
+          <span>Homepage layout</span>
+          <span class="menu-arrow">&#8250;</span>
+        </div>
+        <div class="menu-item" onclick="showMenuView('footer')">
+          <span>Footer</span>
+          <span class="menu-arrow">&#8250;</span>
+        </div>
+        <div class="menu-item" onclick="showMenuView('css')">
+          <span>CSS editor</span>
+          <span class="menu-arrow">&#8250;</span>
+        </div>
+
+        <hr style="border:none;border-top:1px solid #eee;margin:20px 0 16px;">
+
+        <div class="panel-section panel-section-settings" style="border:none;padding:0;margin:0;">
+          <div class="settings-note">
+            Update your podcast title, description, artwork, and copyright information in <a href="#">Settings</a>.
           </div>
         </div>
       </div>
 
-      <!-- Font -->
-      <div class="panel-section">
-        <div class="panel-label">Font</div>
-        <div class="font-select-wrapper">
-          <select class="font-select" id="fontSelect">
-            <option value="inter" selected>Inter</option>
-            <option value="sans">System Sans</option>
-            <option value="serif">Playfair Display</option>
-            <option value="dm-sans">DM Sans</option>
-          </select>
-          <span class="font-select-arrow">&#9662;</span>
+      <!-- ═══ COLOR AND FONT ═══ -->
+      <div id="menuView-color-font" class="menu-view" style="display:none;">
+        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <div class="panel-label">Color and font</div>
+
+        <div class="panel-section" style="margin-bottom:20px;">
+          <div class="panel-label" style="margin-bottom:10px;">Mode</div>
+          <div class="bg-toggle" id="bgToggle">
+            <button class="bg-option active" data-bg="light">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              Light
+            </button>
+            <button class="bg-option" data-bg="dark">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              Dark
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-section" style="margin-bottom:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="panel-label" style="margin-bottom:0;">Header background</div>
+            <div class="color-swatch-circle" id="bannerColorPreview" style="background:#0080FF;" data-color="#0080FF"></div>
+          </div>
+        </div>
+
+        <div class="panel-section" style="margin-bottom:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="panel-label" style="margin-bottom:0;">Header text color</div>
+            <div class="color-swatch-circle" id="bannerTextColorPreview" style="background:#111111;" data-color="#111111"></div>
+          </div>
+        </div>
+
+        <div class="panel-section" style="margin-bottom:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="panel-label" style="margin-bottom:0;">Brand color</div>
+            <div class="color-swatch-circle" id="colorPreview" style="background:#FF0000;" data-color="#FF0000"></div>
+          </div>
+        </div>
+
+        <div class="panel-section" style="margin-bottom:0;">
+          <div class="panel-label" style="margin-bottom:10px;">Font</div>
+          <div class="font-select-wrapper">
+            <select class="font-select" id="fontSelect">
+              <option value="inter" selected>Inter</option>
+              <option value="sans">System Sans</option>
+              <option value="serif">Playfair Display</option>
+              <option value="dm-sans">DM Sans</option>
+            </select>
+            <span class="font-select-arrow">&#9662;</span>
+          </div>
         </div>
       </div>
 
-      <!-- Navigation -->
-      <div class="panel-section">
-        <div class="panel-label">Navigation</div>
+      <!-- ═══ TOP NAVIGATION ═══ -->
+      <div id="menuView-navigation" class="menu-view" style="display:none;">
+        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <div class="panel-label">Top navigation</div>
         <div class="nav-list" id="navList"></div>
         <div class="nav-add-area">
           <button class="nav-add-btn" id="addNavBtn">+ Add Link</button>
         </div>
-        <div class="nav-search-toggle">
-          <label class="section-toggle" style="padding:4px 2px;cursor:pointer;">
-            <span class="section-toggle-icon" style="font-size:14px;">&#128269;</span>
-            <span class="section-toggle-label" style="font-size:14px;font-weight:500;">Search</span>
-            <label class="toggle-switch"><input type="checkbox" id="navSearchToggle" checked><span class="toggle-slider"></span></label>
+      </div>
+
+      <!-- ═══ FOOTER ═══ -->
+      <div id="menuView-footer" class="menu-view" style="display:none;">
+        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <div class="panel-label">Footer</div>
+
+        <div class="panel-section" style="margin-bottom:20px;">
+          <div class="panel-label" style="margin-bottom:10px;">Social links</div>
+          <div class="social-links-list" id="socialLinksList">
+            <div class="social-link-item" data-platform="facebook">
+              <span class="social-link-icon" style="background:#1877f2;">f</span>
+              <span class="social-link-name">Facebook</span>
+              <input type="text" class="social-link-input" data-platform="facebook" placeholder="https://www.facebook.com/yourpage" value="https://www.facebook.com/">
+            </div>
+            <div class="social-link-item" data-platform="x">
+              <span class="social-link-icon" style="background:#111;">&#120143;</span>
+              <span class="social-link-name">X</span>
+              <input type="text" class="social-link-input" data-platform="x" placeholder="https://x.com/yourhandle" value="https://x.com/">
+            </div>
+            <div class="social-link-item" data-platform="instagram">
+              <span class="social-link-icon" style="background:#e4405f;">&#10799;</span>
+              <span class="social-link-name">Instagram</span>
+              <input type="text" class="social-link-input" data-platform="instagram" placeholder="https://www.instagram.com/yourhandle" value="https://www.instagram.com/">
+            </div>
+            <div class="social-link-item" data-platform="youtube">
+              <span class="social-link-icon" style="background:#ff0000;">&#9654;</span>
+              <span class="social-link-name">YouTube</span>
+              <input type="text" class="social-link-input" data-platform="youtube" placeholder="https://www.youtube.com/@yourchannel" value="https://www.youtube.com/@">
+            </div>
+            <div class="social-link-item" data-platform="linkedin">
+              <span class="social-link-icon" style="background:#0a66c2;">in</span>
+              <span class="social-link-name">LinkedIn</span>
+              <input type="text" class="social-link-input" data-platform="linkedin" placeholder="https://www.linkedin.com/in/yourprofile" value="https://www.linkedin.com/in/">
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section" style="margin-bottom:0;">
+          <div class="panel-label" style="margin-bottom:10px;">Cookie banner</div>
+          <label class="section-toggle" style="padding:4px 2px;cursor:pointer;gap:10px;">
+            <span class="section-toggle-label">Show cookie banner</span>
+            <label class="toggle-switch"><input type="checkbox" id="cookieToggle" checked onchange="toggleCookieNotice(this.checked)"><span class="toggle-slider"></span></label>
           </label>
+          <div class="cookie-editor-box" id="cookieEditorBox">
+            <div class="cookie-editor-toolbar">
+              <button onclick="document.execCommand('bold')" title="Bold"><b>B</b></button>
+              <button onclick="document.execCommand('italic')" title="Italic"><i>I</i></button>
+              <button onclick="document.execCommand('underline')" title="Underline"><u>U</u></button>
+              <span class="sep"></span>
+              <button onclick="document.execCommand('insertUnorderedList')" title="Bullet list">&#8226;</button>
+              <button onclick="document.execCommand('insertOrderedList')" title="Numbered list">#</button>
+              <span class="sep"></span>
+              <input type="color" onchange="event.preventDefault(); document.execCommand('foreColor', false, this.value)" title="Font color">
+            </div>
+            <div class="cookie-editor-content" id="cookieEditorContent" contenteditable="true" oninput="updateCookieNoticeText();_setDirty()">
+              <p>This website uses cookies to ensure you get the best experience on our website.</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Sections -->
-      <div class="panel-section">
-        <div class="panel-label">Sections <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;font-size:10px;">&nbsp;· toggle on site</span></div>
+      <!-- ═══ CSS EDITOR ═══ -->
+      <div id="menuView-css" class="menu-view" style="display:none;">
+        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <div class="panel-label">CSS editor</div>
+        <textarea class="css-editor-textarea" placeholder="Add custom CSS to style your podcast website..."></textarea>
+        <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.6;">Custom CSS will be applied to your live podcast website. Use with caution. <a href="#" style="color:#111;text-decoration:underline;">Read more</a></p>
+      </div>
+
+      <!-- ═══ HOME SECTIONS ═══ -->
+      <div id="menuView-home-sections" class="menu-view" style="display:none;">
+        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <div class="panel-label">Homepage layout</div>
         <div class="section-list" id="sectionToggles">
-          <div class="section-toggle" draggable="true" data-section="listen">
-            <span class="section-toggle-drag">⋮⋮</span>
-            <span class="section-toggle-icon">&#9654;</span>
-            <span class="section-toggle-label">Podcast available on</span>
-            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+
+          <div class="section-toggle" draggable="true" data-section="featured" style="flex-wrap:wrap;padding-bottom:12px;gap:4px;">
+            <div style="display:flex;align-items:center;gap:6px;width:100%;">
+              <span class="section-toggle-drag">&#8942;&#8942;</span>
+              <span class="section-toggle-label">Featured episode</span>
+              <label class="toggle-switch" style="margin-left:auto;"><input type="checkbox" id="featuredToggle" onchange="toggleFeatured(this.checked)"><span class="toggle-slider"></span></label>
+            </div>
+            <div id="featuredOptions" style="width:100%;padding-left:22px;display:block;">
+              <div class="_feat-picker" id="featPicker">
+                <div class="_feat-trigger" id="featTrigger" tabindex="0">
+                  <span class="_feat-trigger-label _feat-default" id="featLabel">Latest episode</span>
+                  <button class="_feat-clear-btn" id="featClearBtn">&times;</button>
+                  <span class="_feat-trigger-arrow">&#9662;</span>
+                </div>
+                <div class="_feat-suggestions" id="featSuggestions"></div>
+              </div>
+            </div>
           </div>
-          <div class="section-toggle" draggable="true" data-section="grid">
-            <span class="section-toggle-drag">⋮⋮</span>
-            <span class="section-toggle-icon">&#9776;</span>
-            <span class="section-toggle-label">Episode Grid</span>
-            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+
+          <div class="section-toggle" draggable="true" data-section="grid" style="flex-wrap:wrap;padding-bottom:16px;gap:4px;">
+            <div style="display:flex;align-items:center;gap:6px;width:100%;">
+              <span class="section-toggle-drag">&#8942;&#8942;</span>
+              <span class="section-toggle-label">Episode display</span>
+            </div>
+            <div class="bg-toggle" id="epLayoutToggle" style="width:100%;padding-left:22px;">
+              <button class="bg-option active" data-layout="grid" onclick="setEpisodeLayout('grid')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                Grid
+              </button>
+              <button class="bg-option" data-layout="list" onclick="setEpisodeLayout('list')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                List
+              </button>
+            </div>
           </div>
-          <div class="section-toggle" draggable="true" data-section="newsletter">
-            <span class="section-toggle-drag">⋮⋮</span>
-            <span class="section-toggle-icon">&#9993;</span>
-            <span class="section-toggle-label">Newsletter CTA</span>
-            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-          </div>
+
           <div class="add-custom-section-area" id="addCustomSectionArea">
-            <button class="add-custom-section-btn" id="addCustomSectionBtn">+ Add Custom Section</button>
+            <button class="add-custom-section-btn" id="addCustomSectionBtn">+ Add custom section</button>
           </div>
-        </div>
-      </div>
-
-      <!-- Social Links -->
-      <div class="panel-section">
-        <div class="panel-label">Social Links</div>
-        <div class="social-links-list" id="socialLinksList">
-          <div class="social-link-item" data-platform="facebook">
-            <img src="listen on logos/podbean-app.png" alt="" style="display:none;">
-            <span class="social-link-icon" style="background:#1877f2;">f</span>
-            <span class="social-link-name">Facebook</span>
-            <input type="text" class="social-link-input" data-platform="facebook" placeholder="https://www.facebook.com/yourpage" value="https://www.facebook.com/">
-            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
-          </div>
-          <div class="social-link-item" data-platform="x">
-            <span class="social-link-icon" style="background:#111;">𝕏</span>
-            <span class="social-link-name">X</span>
-            <input type="text" class="social-link-input" data-platform="x" placeholder="https://x.com/yourhandle" value="https://x.com/">
-            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
-          </div>
-          <div class="social-link-item" data-platform="instagram">
-            <span class="social-link-icon" style="background:#e4405f;">⏺</span>
-            <span class="social-link-name">Instagram</span>
-            <input type="text" class="social-link-input" data-platform="instagram" placeholder="https://www.instagram.com/yourhandle" value="https://www.instagram.com/">
-            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
-          </div>
-          <div class="social-link-item" data-platform="youtube">
-            <span class="social-link-icon" style="background:#ff0000;">▶</span>
-            <span class="social-link-name">YouTube</span>
-            <input type="text" class="social-link-input" data-platform="youtube" placeholder="https://www.youtube.com/@yourchannel" value="https://www.youtube.com/@">
-            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
-          </div>
-          <div class="social-link-item" data-platform="linkedin">
-            <span class="social-link-icon" style="background:#0a66c2;">in</span>
-            <span class="social-link-name">LinkedIn</span>
-            <input type="text" class="social-link-input" data-platform="linkedin" placeholder="https://www.linkedin.com/in/yourprofile" value="https://www.linkedin.com/in/">
-            <label class="toggle-switch"><input type="checkbox" class="social-link-cb" checked><span class="toggle-slider"></span></label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Settings Link -->
-      <div class="panel-section panel-section-settings">
-        <div class="settings-note">
-          Update your podcast title, description, artwork, and copyright information in <a href="#">Settings</a>.
         </div>
       </div>
 
@@ -2579,7 +3293,7 @@ body {
       </div>
 
       <!-- Preview Content -->
-      <div class="preview-content" data-mode="minimal" id="previewContent" style="--p-accent:#3b82f6;">
+      <div class="preview-content" data-mode="minimal" id="previewContent" style="--p-accent:#FF0000;">
 
         <!-- Top Bar -->
         <div class="pc-top-bar">
@@ -2647,6 +3361,26 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
           </div>
         </div>
 
+        <!-- Featured Episode -->
+        <div class="pc-section" id="featuredSection" style="display:block;">
+          <div class="pc-featured-wrap" id="featuredWrap" data-section="featured">
+            <div class="pc-section-header" style="margin-bottom:24px;">
+              <span class="pc-section-title">Featured Episode</span>
+            </div>
+            <div class="pc-featured-ep">
+              <div class="pc-featured-inner">
+                <div class="pc-featured-cover"><img src="podcast-logo.png" alt=""></div>
+                <div class="pc-featured-info">
+                  <h2 class="pc-featured-title" id="featuredTitle">Building Creative Communities Online</h2>
+                  <p class="pc-featured-desc" id="featuredDesc">How digital platforms are reshaping the way artists connect, collaborate, and grow their audiences in 2026.</p>
+                  <div class="pc-featured-meta" id="featuredMeta">May 29 &middot; 38 min</div>
+                  <button class="pc-featured-play" id="featuredPlayBtn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg> Play Episode</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Episode Grid -->
         <div class="pc-section">
           <div class="pc-ep-grid-wrap" id="gridWrap" data-section="grid">
@@ -2654,134 +3388,15 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
               <span class="pc-section-title">Latest Episodes</span>
               <a href="#" class="pc-section-link" id="viewAllLink">View all &rarr;</a>
             </div>
-            <div class="pc-grid">
-              <div class="pc-ep-card" data-ep="0">
-                <div class="pc-ep-cover">
-                  <div class="pc-ep-cover-overlay"></div>
-                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
-                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-                </div>
-                <div class="pc-ep-body">
-                  <div class="pc-ep-title">Building Creative Communities Online</div>
-                  <div class="pc-ep-excerpt">How digital platforms are reshaping the way artists connect, collaborate, and grow their audiences in 2026.</div>
-                  <div class="pc-ep-footer">
-                    <div class="pc-ep-date">May 29<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">38 min</span></div>
-                    <div class="pc-ep-actions">
-                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
-                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="pc-ep-card" data-ep="1">
-                <div class="pc-ep-cover">
-                  <div class="pc-ep-cover-overlay"></div>
-                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
-                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-                </div>
-                <div class="pc-ep-body">
-                  <div class="pc-ep-title">The Future of Independent Media</div>
-                  <div class="pc-ep-excerpt">An exploration of how indie creators are building sustainable media businesses outside traditional publishing models.</div>
-                  <div class="pc-ep-footer">
-                    <div class="pc-ep-date">May 22<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">51 min</span></div>
-                    <div class="pc-ep-actions">
-                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
-                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="pc-ep-card" data-ep="2">
-                <div class="pc-ep-cover">
-                  <div class="pc-ep-cover-overlay"></div>
-                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
-                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-                </div>
-                <div class="pc-ep-body">
-                  <div class="pc-ep-title">Design Thinking in Everyday Life</div>
-                  <div class="pc-ep-excerpt">A practical guide to applying design thinking principles to daily challenges — from cooking to career decisions.</div>
-                  <div class="pc-ep-footer">
-                    <div class="pc-ep-date">May 15<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">41 min</span></div>
-                    <div class="pc-ep-actions">
-                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
-                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="pc-ep-card" data-ep="3">
-                <div class="pc-ep-cover">
-                  <div class="pc-ep-cover-overlay"></div>
-                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
-                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-                </div>
-                <div class="pc-ep-body">
-                  <div class="pc-ep-title">Mastering Remote Interviews: Tips from Pros</div>
-                  <div class="pc-ep-excerpt">Equipment, preparation, and techniques to record studio-quality interviews from anywhere in the world.</div>
-                  <div class="pc-ep-footer">
-                    <div class="pc-ep-date">May 8<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">44 min</span></div>
-                    <div class="pc-ep-actions">
-                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
-                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="pc-ep-card" data-ep="4">
-                <div class="pc-ep-cover">
-                  <div class="pc-ep-cover-overlay"></div>
-                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
-                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-                </div>
-                <div class="pc-ep-body">
-                  <div class="pc-ep-title">The Business of Podcasting: Sponsorships 101</div>
-                  <div class="pc-ep-excerpt">How to attract, pitch, and retain sponsors for your podcast — from CPM rates to long-term partnerships.</div>
-                  <div class="pc-ep-footer">
-                    <div class="pc-ep-date">May 1<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">36 min</span></div>
-                    <div class="pc-ep-actions">
-                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
-                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="pc-ep-card" data-ep="5">
-                <div class="pc-ep-cover">
-                  <div class="pc-ep-cover-overlay"></div>
-                  <img class="pc-ep-cover-img" src="podcast-logo.png" alt="">
-                  <button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-                </div>
-                <div class="pc-ep-body">
-                  <div class="pc-ep-title">Audio Editing for Beginners: A Complete Walkthrough</div>
-                  <div class="pc-ep-excerpt">Step-by-step guidance on editing your podcast episodes — cutting, leveling, noise removal, and mastering export.</div>
-                  <div class="pc-ep-footer">
-                    <div class="pc-ep-date">Apr 24<span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">47 min</span></div>
-                    <div class="pc-ep-actions">
-                      <button class="pc-ep-action-btn" title="Share">&#8599;</button>
-                      <button class="pc-ep-action-btn" title="Bookmark">&#9733;</button>
-                    </div>
-                  </div>
-                </div>
-              </div>            </div>
+            <div class="pc-grid" id="episodeLayoutContainer"></div>
+            <div class="pc-explore-wrap">
+              <button class="pc-explore-btn" id="exploreBtn" onclick="var el=document.getElementById('viewAllLink');if(el)el.click();">Explore Episodes &rarr;</button>
+            </div>
           </div>
         </div>
 
         <!-- Custom Sections Container (dynamic) -->
         <div id="customSectionsAnchor"></div>
-
-        <!-- Newsletter -->
-        <div class="pc-section">
-          <div class="pc-newsletter-wrap" id="newsletterWrap" data-section="newsletter">
-            <div class="pc-newsletter">
-              <div class="pc-newsletter-title">Stay Inspired</div>
-              <p class="pc-newsletter-desc">Get weekly insights from the world of creativity, delivered every Tuesday.</p>
-              <div class="pc-newsletter-form">
-                <input type="email" placeholder="your@email.com">
-                <button type="submit">Subscribe</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Footer -->
         <div class="pc-footer">
@@ -2821,80 +3436,26 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
           <div class="pc-episodes-page" style="padding:48px 100px 60px;">
             <div class="pc-episodes-header" style="margin-bottom:24px;">
               <h1 class="pc-episodes-title" style="font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:var(--p-text);font-family:var(--p-font-heading);margin-bottom:8px;">All Episodes</h1>
-              <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
                 <p class="pc-episodes-subtitle" style="font-size:14px;color:var(--p-text-secondary);font-family:var(--p-font-body);">6 episodes</p>
-                <div class="ep-sort-bar" style="display:flex;gap:4px;">
-                  <button class="ep-sort-btn active" data-sort="newest" style="height:30px;padding:0 12px;border:1px solid var(--p-border);border-radius:6px;background:var(--p-card);color:var(--p-text);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--p-font-ui);transition:background .15s,border-color .15s;">Newest First</button>
-                  <button class="ep-sort-btn" data-sort="oldest" style="height:30px;padding:0 12px;border:1px solid var(--p-border);border-radius:6px;background:transparent;color:var(--p-text-secondary);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--p-font-ui);transition:background .15s,border-color .15s;">Oldest First</button>
-                </div>
               </div>
             </div>
-            <div class="pc-episodes-list">
-              <div class="pc-episode-row">
-                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
-                <div class="pc-episode-row-info">
-                  <div class="pc-episode-row-meta">Episode 6 &middot; Jun 5, 2026</div>
-                  <div class="pc-episode-row-title">Finding Your Voice: The Art of Storytelling</div>
-                  <div class="pc-episode-row-desc">How to craft compelling narratives that resonate with listeners, featuring insights from award-winning storytellers and narrative designers.</div>
-                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">45 min</span><span class="pc-episode-row-action">Play Episode</span></div>
-                </div>
-                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-              </div>
-              <div class="pc-episode-row">
-                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
-                <div class="pc-episode-row-info">
-                  <div class="pc-episode-row-meta">Episode 5 &middot; May 29, 2026</div>
-                  <div class="pc-episode-row-title">Building Creative Communities Online</div>
-                  <div class="pc-episode-row-desc">How digital platforms are reshaping the way artists connect, collaborate, and grow their audiences in 2026.</div>
-                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">38 min</span><span class="pc-episode-row-action">Play Episode</span></div>
-                </div>
-                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-              </div>
-              <div class="pc-episode-row">
-                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
-                <div class="pc-episode-row-info">
-                  <div class="pc-episode-row-meta">Episode 4 &middot; May 22, 2026</div>
-                  <div class="pc-episode-row-title">The Future of Independent Media</div>
-                  <div class="pc-episode-row-desc">An exploration of how indie creators are building sustainable media businesses outside traditional publishing models.</div>
-                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">51 min</span><span class="pc-episode-row-action">Play Episode</span></div>
-                </div>
-                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-              </div>
-              <div class="pc-episode-row">
-                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
-                <div class="pc-episode-row-info">
-                  <div class="pc-episode-row-meta">Episode 3 &middot; May 15, 2026</div>
-                  <div class="pc-episode-row-title">Design Thinking in Everyday Life</div>
-                  <div class="pc-episode-row-desc">A practical guide to applying design thinking principles to daily challenges from cooking to career decisions.</div>
-                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">41 min</span><span class="pc-episode-row-action">Play Episode</span></div>
-                </div>
-                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-              </div>
-              <div class="pc-episode-row">
-                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
-                <div class="pc-episode-row-info">
-                  <div class="pc-episode-row-meta">Episode 2 &middot; May 8, 2026</div>
-                  <div class="pc-episode-row-title">Mastering Remote Interviews: Tips from Pros</div>
-                  <div class="pc-episode-row-desc">Equipment, preparation, and techniques to record studio-quality interviews from anywhere in the world.</div>
-                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">44 min</span><span class="pc-episode-row-action">Play Episode</span></div>
-                </div>
-                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-              </div>
-              <div class="pc-episode-row">
-                <div class="pc-episode-row-cover"><img src="podcast-logo.png" alt=""></div>
-                <div class="pc-episode-row-info">
-                  <div class="pc-episode-row-meta">Episode 1 &middot; May 1, 2026</div>
-                  <div class="pc-episode-row-title">The Business of Podcasting: Sponsorships 101</div>
-                  <div class="pc-episode-row-desc">How to attract, pitch, and retain sponsors for your podcast from CPM rates to long-term partnerships.</div>
-                  <div class="pc-episode-row-footer"><span class="pc-episode-row-dur">36 min</span><span class="pc-episode-row-action">Play Episode</span></div>
-                </div>
-                <button class="pc-episode-row-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>
-              </div>
+            <div class="pc-episodes-list" id="allEpisodesContainer">
+              <!-- All episodes rendered by setEpisodeLayout() -->
             </div>
           </div>
         </div>
 
       </div>
+
+      <!-- Cookie Notice (sticky at bottom) -->
+      <div class="pc-cookie-notice" id="cookieNotice">
+        <div class="pc-cookie-notice-text" id="cookieNoticeText">
+          <p>This website uses cookies to ensure you get the best experience on our website.</p>
+        </div>
+        <button class="pc-cookie-notice-btn" onclick="this.parentElement.classList.add('hidden')">Got it!</button>
+      </div>
+
     </div>
   </main>
 
@@ -2902,63 +3463,50 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
 
 <script>
   // ════════════════════════════════════════════
-  // ACCENT COLOR (PLAY BUTTON COLOR)
+  // ACCENT / BANNER / BANNER TEXT COLORS
   // ════════════════════════════════════════════
   const previewContent = document.getElementById('previewContent');
-  const colorPreview = document.getElementById('colorPreview');
-  const colorHex = document.getElementById('colorHexValue');
-  const colorPresets = document.querySelectorAll('.color-preset:not(.color-preset-custom)');
-  const colorReset = document.getElementById('colorResetBtn');
-  const defaultColor = '#3b82f6';
-  const customColorBtn = document.getElementById('customColorBtn');
-  const customColorPanel = document.getElementById('customColorPanel');
-  const customColorPicker = document.getElementById('customColorPicker');
-  const customHexInput = document.getElementById('customHexInput');
-  const customColorApply = document.getElementById('customColorApply');
+  const colorPreviewCircle = document.getElementById('colorPreview');
+  const bannerColorPreviewCircle = document.getElementById('bannerColorPreview');
+  const bannerTextColorPreviewCircle = document.getElementById('bannerTextColorPreview');
 
   function setAccentColor(hex) {
     previewContent.style.setProperty('--p-accent', hex);
-    colorPreview.style.background = hex;
-    colorHex.textContent = hex;
-    colorPresets.forEach(p => p.classList.toggle('active', p.dataset.color === hex));
-    customColorBtn.classList.toggle('active', false);
+    colorPreviewCircle.style.background = hex;
+    colorPreviewCircle.dataset.color = hex;
+    _setDirty();
   }
 
-  colorPresets.forEach(btn => {
-    btn.addEventListener('click', () => setAccentColor(btn.dataset.color));
-  });
-
-  colorReset.addEventListener('click', () => setAccentColor(defaultColor));
-
-  // Custom color panel toggle
-  customColorBtn.addEventListener('click', () => {
-    customColorPanel.classList.toggle('open');
-  });
-
-  // Sync color picker ↔ hex input
-  customColorPicker.addEventListener('input', () => {
-    customHexInput.value = customColorPicker.value;
-  });
-
-  customHexInput.addEventListener('input', () => {
-    const val = customHexInput.value.trim();
-    if (/^#[0-9a-fA-F]{6}$/.test(val)) {
-      customColorPicker.value = val;
-    }
-  });
-
-  // Apply custom color
-  function applyCustomColor() {
-    const val = customHexInput.value.trim();
-    if (/^#[0-9a-fA-F]{6}$/.test(val)) {
-      setAccentColor(val);
-      customColorPanel.classList.remove('open');
-    }
+  function setBannerColor(hex) {
+    previewContent.style.setProperty('--p-banner-bg', hex);
+    bannerColorPreviewCircle.style.background = hex;
+    bannerColorPreviewCircle.dataset.color = hex;
+    _setDirty();
   }
 
-  customColorApply.addEventListener('click', applyCustomColor);
-  customHexInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') applyCustomColor();
+  function setBannerTextColor(hex) {
+    previewContent.style.setProperty('--p-banner-text', hex);
+    bannerTextColorPreviewCircle.style.background = hex;
+    bannerTextColorPreviewCircle.dataset.color = hex;
+    _setDirty();
+  }
+
+  colorPreviewCircle.addEventListener('click', function() {
+    _openColorPicker(this, 'Brand color', this.dataset.color || '#FF0000', function(color) {
+      setAccentColor(color);
+    });
+  });
+
+  bannerColorPreviewCircle.addEventListener('click', function() {
+    _openColorPicker(this, 'Header background', this.dataset.color || '#0080FF', function(color) {
+      setBannerColor(color);
+    });
+  });
+
+  bannerTextColorPreviewCircle.addEventListener('click', function() {
+    _openColorPicker(this, 'Header text color', this.dataset.color || '#111111', function(color) {
+      setBannerTextColor(color);
+    });
   });
 
   // ════════════════════════════════════════════
@@ -2975,6 +3523,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
       } else {
         previewContent.classList.remove('dark');
       }
+      _setDirty();
     });
   });
 
@@ -2997,7 +3546,44 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
       previewContent.style.setProperty('--p-font-body', font.body);
       previewContent.style.setProperty('--p-font-ui', font.ui);
     }
+    _setDirty();
   });
+
+  // ════════════════════════════════════════════
+  // COOKIE NOTICE
+  // ════════════════════════════════════════════
+  function toggleCookieNotice(show) {
+    var el = document.getElementById('cookieNotice');
+    var box = document.getElementById('cookieEditorBox');
+    if (el) el.classList.toggle('hidden', !show);
+    if (box) box.style.display = show ? 'block' : 'none';
+    _setDirty();
+  }
+
+  function updateCookieNoticeText() {
+    var editor = document.getElementById('cookieEditorContent');
+    var text = document.getElementById('cookieNoticeText');
+    if (editor && text) {
+      text.innerHTML = editor.innerHTML;
+    }
+  }
+
+  // Initial sync
+  setTimeout(function() {
+    updateCookieNoticeText();
+  }, 100);
+
+  // MENU NAVIGATION
+  function showMenuView(view) {
+    document.getElementById('menuMainView').style.display = 'none';
+    document.getElementById('menuView-' + view).style.display = 'block';
+  }
+
+  function showMenuMain() {
+    var views = document.querySelectorAll('.menu-view');
+    for (var i = 0; i < views.length; i++) views[i].style.display = 'none';
+    document.getElementById('menuMainView').style.display = 'block';
+  }
 
   // NAVIGATION
 var navItems = [];
@@ -3045,11 +3631,21 @@ function renderNav() {
       row2Html += '<select class="nav-item-type" data-idx="' + i + '">';
       row2Html += '<option value="link"' + (item.linkType === 'link' ? ' selected' : '') + '>Custom Link</option>';
       row2Html += '<option value="page"' + (item.linkType === 'page' ? ' selected' : '') + '>Podbean Page</option>';
+      row2Html += '<option value="seasons"' + (item.linkType === 'seasons' ? ' selected' : '') + '>Seasons</option>';
       row2Html += '</select>';
 
       if (item.linkType === 'link') {
         row2Html += '<input type="text" class="nav-item-input" data-idx="' + i + '" value="' + item.link + '" placeholder="https://">';
         row2Html += '<select class="nav-item-select hidden" data-idx="' + i + '"></select>';
+      } else if (item.linkType === 'seasons') {
+        row2Html += '<input type="text" class="nav-item-input hidden" data-idx="' + i + '" value="' + item.link + '">';
+        row2Html += '<select class="nav-item-select" data-idx="' + i + '">';
+        row2Html += '<option value="all">All Seasons</option>';
+        for (var s = 1; s <= 3; s++) {
+          var sel = item.pageId === 'season-' + s ? ' selected' : '';
+          row2Html += '<option value="season-' + s + '"' + sel + '>Season ' + s + '</option>';
+        }
+        row2Html += '</select>';
       } else {
         row2Html += '<input type="text" class="nav-item-input hidden" data-idx="' + i + '" value="' + item.link + '">';
         row2Html += '<select class="nav-item-select" data-idx="' + i + '">';
@@ -3116,18 +3712,23 @@ function renderNav() {
     });
   }
 
-  // Bind page select
+  // Bind page / seasons select
   var pageSelects = navList.querySelectorAll('.nav-item-select');
   for (var i = 0; i < pageSelects.length; i++) {
     pageSelects[i].addEventListener('change', function() {
       var idx = parseInt(this.dataset.idx);
       if (idx >= 0 && idx < navItems.length) {
         navItems[idx].pageId = this.value;
-        var page = null;
-        for (var p = 0; p < podbeanPages.length; p++) {
-          if (podbeanPages[p].id === this.value) { page = podbeanPages[p]; break; }
+        var linkType = navItems[idx].linkType;
+        if (linkType === 'seasons' && this.value) {
+          navItems[idx].link = this.value === 'all' ? '/seasons' : '/seasons/' + this.value.replace('season-', '');
+        } else if (linkType === 'page') {
+          var page = null;
+          for (var p = 0; p < podbeanPages.length; p++) {
+            if (podbeanPages[p].id === this.value) { page = podbeanPages[p]; break; }
+          }
+          navItems[idx].link = page ? '/page/' + page.id : '';
         }
-        navItems[idx].link = page ? '/page/' + page.id : '';
         updatePreviewNav();
       }
     });
@@ -3148,6 +3749,8 @@ function renderNav() {
 
   // Bind drag events on the navList
   setupNavDrag();
+
+  _setDirty();
 }
 
 function updatePreviewNav() {
@@ -3162,8 +3765,7 @@ function updatePreviewNav() {
     nav.appendChild(a);
   }
   // Search icon + bar container
-  var cb = document.getElementById('navSearchToggle');
-  var showSearch = !cb || cb.checked;
+  var showSearch = true;
   var span = document.createElement('span');
   span.className = 'pc-nav-search' + (showSearch ? '' : ' hidden');
   span.textContent = '🔍';
@@ -3221,26 +3823,6 @@ function updatePreviewNav() {
       if (e.key === 'Escape') cancelBtn.click();
     });
   }
-}
-
-// Search toggle binding
-var searchCb = document.getElementById('navSearchToggle');
-if (searchCb) {
-  searchCb.addEventListener('change', function() {
-    var icon = document.querySelector('.pc-nav-search');
-    if (icon) {
-      icon.classList.toggle('hidden', !this.checked);
-      // Also hide search bar if open
-      if (!this.checked) {
-        var bar = document.querySelector('.pc-search-bar');
-        if (bar) bar.classList.add('hidden');
-        icon.dataset.open = 'false';
-        icon.style.visibility = '';
-        var links = document.querySelectorAll('.pc-nav a');
-        for (var i = 0; i < links.length; i++) links[i].style.visibility = '';
-      }
-    }
-  });
 }
 
 // Drag-and-drop for nav items
@@ -3304,8 +3886,11 @@ addNavBtn.addEventListener('click', function() {
 // Initial render
 renderNav();
 
-
-  // PAGE NAVIGATION (Home / Episodes)
+// CSS editor change tracking
+const _cssEditor = document.querySelector('.css-editor-textarea');
+if (_cssEditor) {
+  _cssEditor.addEventListener('input', _setDirty);
+}
   var homeSections = document.getElementById('previewContent').querySelectorAll('.pc-top-bar, .pc-nav, .pc-hero-wrap, .pc-hero-off-indicator, .pc-section, .pc-footer');
   var episodesPage = document.getElementById('episodesPage');
 
@@ -3434,51 +4019,6 @@ renderNav();
     }
   }
 
-  // Sort episodes (newest / oldest)
-  function parseEpDate(dateStr) {
-    var months = {'Jan':0,'Feb':1,'Mar':2,'Apr':3,'May':4,'Jun':5,'Jul':6,'Aug':7,'Sep':8,'Oct':9,'Nov':10,'Dec':11};
-    var parts = dateStr.replace(',','').split(' ');
-    if (parts.length >= 3) {
-      var m = months[parts[0]];
-      var d = parseInt(parts[1]);
-      var y = parseInt(parts[2]);
-      if (m !== undefined && !isNaN(d) && !isNaN(y)) return new Date(y, m, d);
-    }
-    return new Date(0);
-  }
-
-  var sortBtns = document.querySelectorAll('.ep-sort-btn');
-  for (var si = 0; si < sortBtns.length; si++) {
-    sortBtns[si].addEventListener('click', function() {
-      var list = document.querySelector('.pc-episodes-list');
-      if (!list) return;
-      var rows = Array.from(list.querySelectorAll('.pc-episode-row'));
-      var sortVal = this.dataset.sort;
-
-      // Update button states
-      sortBtns.forEach(function(b) {
-        b.style.background = 'transparent';
-        b.style.color = 'var(--p-text-secondary)';
-        b.classList.remove('active');
-      });
-      this.style.background = 'var(--p-card)';
-      this.style.color = 'var(--p-text)';
-      this.classList.add('active');
-
-      // Sort rows
-      rows.sort(function(a, b) {
-        var dateA = a.querySelector('.pc-episode-row-meta');
-        var dateB = b.querySelector('.pc-episode-row-meta');
-        var timeA = dateA ? parseEpDate(dateA.textContent.replace('Episode ','').split('·')[1].trim()) : new Date(0);
-        var timeB = dateB ? parseEpDate(dateB.textContent.replace('Episode ','').split('·')[1].trim()) : new Date(0);
-        return sortVal === 'newest' ? timeB - timeA : timeA - timeB;
-      });
-
-      // Reorder DOM
-      for (var r = 0; r < rows.length; r++) list.appendChild(rows[r]);
-    });
-  }
-
   // Episodes page play buttons
   if (episodesPage) {
     episodesPage.addEventListener('click', function(e) {
@@ -3513,8 +4053,6 @@ renderNav();
     var items = document.querySelectorAll('.social-link-item');
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
-      var cb = item.querySelector('.social-link-cb');
-      if (!cb || !cb.checked) continue;
       var input = item.querySelector('.social-link-input');
       if (!input) continue;
       var url = input.value.trim();
@@ -3528,34 +4066,374 @@ renderNav();
 
   var socialInputs = document.querySelectorAll('.social-link-input');
   for (var i = 0; i < socialInputs.length; i++) {
-    socialInputs[i].addEventListener('input', renderSocialIcons);
-  }
-
-  var socialCbs = document.querySelectorAll('.social-link-cb');
-  for (var i = 0; i < socialCbs.length; i++) {
-    socialCbs[i].addEventListener('change', renderSocialIcons);
+    socialInputs[i].addEventListener('input', function() {
+      renderSocialIcons();
+      _setDirty();
+    });
   }
 
   renderSocialIcons();
 
+  // Rich text editor helper
+  function execCmd(cmd, val) {
+    document.execCommand(cmd, false, val || null);
+    // Trigger input event on the active editor
+    var sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      var el = sel.anchorNode;
+      if (el) {
+        var editor = el.closest ? el.closest('._inp-rich') : null;
+        if (editor) {
+          var evt = new Event('input', { bubbles: true });
+          editor.dispatchEvent(evt);
+        }
+      }
+    }
+  }
+
   // SECTIONS
   var sectionMap = {
-    'listen': { id: 'listenWrap', off: 'listen-off' },
+    'featured': { id: 'featuredWrap', off: 'featured-off' },
     'grid': { id: 'gridWrap', off: 'grid-off' },
-    'newsletter': { id: 'newsletterWrap', off: 'newsletter-off' },
   };
+
+  // ════════════════════════════════════════════
+  // EPISODE LAYOUT (GRID / LIST)
+  // ════════════════════════════════════════════
+  var episodeData = [
+    { title: 'Finding Your Voice: The Art of Storytelling', desc: 'How to craft compelling narratives that resonate with listeners, featuring insights from award-winning storytellers and narrative designers.', date: 'Jun 5, 2026', dur: '45 min', likes: 52, downloads: 710 },
+    { title: 'Building Creative Communities Online', desc: 'How digital platforms are reshaping the way artists connect, collaborate, and grow their audiences in 2026.', date: 'May 29, 2026', dur: '38 min', likes: 48, downloads: 620 },
+    { title: 'The Future of Independent Media', desc: 'An exploration of how indie creators are building sustainable media businesses outside traditional publishing models.', date: 'May 22, 2026', dur: '51 min', likes: 62, downloads: 830 },
+    { title: 'Design Thinking in Everyday Life', desc: 'A practical guide to applying design thinking principles to daily challenges — from cooking to career decisions.', date: 'May 15, 2026', dur: '41 min', likes: 35, downloads: 410 },
+    { title: 'Mastering Remote Interviews: Tips from Pros', desc: 'Equipment, preparation, and techniques to record studio-quality interviews from anywhere in the world.', date: 'May 8, 2026', dur: '44 min', likes: 28, downloads: 390 },
+    { title: 'The Business of Podcasting: Sponsorships 101', desc: 'How to attract, pitch, and retain sponsors for your podcast — from CPM rates to long-term partnerships.', date: 'May 1, 2026', dur: '36 min', likes: 42, downloads: 510 },
+    { title: 'Audio Editing for Beginners: A Complete Walkthrough', desc: 'Step-by-step guidance on editing your podcast episodes — cutting, leveling, noise removal, and mastering export.', date: 'Apr 24, 2026', dur: '47 min', likes: 31, downloads: 340 }
+  ];
+
+  var svgLike = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+  var svgDownload = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+  var svgShare = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+
+  function _renderAllEpisodes(layout) {
+    var container = document.getElementById('allEpisodesContainer');
+    if (!container) return;
+    var total = episodeData.length;
+    var epLabel = total + (total > 1 ? ' episodes' : ' episode');
+    var subtitle = document.querySelector('.pc-episodes-subtitle');
+    if (subtitle) subtitle.textContent = epLabel;
+
+    if (layout === 'grid') {
+      container.className = 'pc-episodes-list pc-grid';
+      var html = '';
+      for (var i = 0; i < total; i++) {
+        var ep = episodeData[i];
+        var epNum = total - i;
+        html +=
+          '<div class="pc-ep-card" data-ep="' + i + '">' +
+            '<div class="pc-ep-cover">' +
+              '<div class="pc-ep-cover-overlay"></div>' +
+              '<img class="pc-ep-cover-img" src="podcast-logo.png" alt="">' +
+              '<button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
+            '</div>' +
+            '<div class="pc-ep-body">' +
+              '<div style="font-size:11px;color:var(--p-text-secondary);margin-bottom:4px;font-family:var(--p-font-body);">' + ep.date + '</div>' +
+              '<div class="pc-ep-title">' + _esc(ep.title) + '</div>' +
+              '<div class="pc-ep-excerpt">' + _esc(ep.desc) + '</div>' +
+              '<div class="pc-ep-footer">' +
+                '<div class="pc-ep-date"><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
+                '<div class="pc-ep-actions">' +
+                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
+                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
+                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
+                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
+                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      }
+      container.innerHTML = html;
+    } else {
+      container.className = 'pc-episodes-list';
+      var html = '';
+      for (var i = 0; i < total; i++) {
+        var ep = episodeData[i];
+        var epNum = total - i;
+        html +=
+          '<div class="pc-ep-list-item">' +
+            '<div class="pc-ep-list-cover"><img src="podcast-logo.png" alt=""></div>' +
+            '<div class="pc-ep-list-info">' +
+              '<div class="pc-ep-list-title">' + _esc(ep.title) + '</div>' +
+              '<div class="pc-ep-list-desc">' + _esc(ep.desc) + '</div>' +
+              '<div class="pc-ep-list-footer">' +
+                '<span class="pc-ep-list-date">' + ep.date + ' &middot; ' + ep.dur + '</span>' +
+                '<div class="pc-ep-actions">' +
+                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
+                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
+                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
+                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
+                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<button class="pc-ep-list-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
+          '</div>';
+      }
+      container.innerHTML = html;
+    }
+  }
+
+  function setEpisodeLayout(layout) {
+    // Homepage container
+    var container = document.getElementById('episodeLayoutContainer');
+    if (!container) return;
+
+    // Update toggle buttons
+    var btns = document.querySelectorAll('#epLayoutToggle .bg-option');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('active', btns[i].dataset.layout === layout);
+    }
+    _setDirty();
+
+    if (layout === 'grid') {
+      container.className = 'pc-grid';
+      container.innerHTML = '';
+      var maxEp = Math.min(6, episodeData.length);
+      for (var i = 0; i < maxEp; i++) {
+        var ep = episodeData[i];
+        container.innerHTML +=
+          '<div class="pc-ep-card" data-ep="' + i + '">' +
+            '<div class="pc-ep-cover">' +
+              '<div class="pc-ep-cover-overlay"></div>' +
+              '<img class="pc-ep-cover-img" src="podcast-logo.png" alt="">' +
+              '<button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
+            '</div>' +
+            '<div class="pc-ep-body">' +
+              '<div style="font-size:11px;color:var(--p-text-secondary);margin-bottom:4px;font-family:var(--p-font-body);">' + ep.date + '</div>' +
+              '<div class="pc-ep-title">' + _esc(ep.title) + '</div>' +
+              '<div class="pc-ep-excerpt">' + _esc(ep.desc) + '</div>' +
+              '<div class="pc-ep-footer">' +
+                '<div class="pc-ep-date"><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
+                '<div class="pc-ep-actions">' +
+                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
+                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
+                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
+                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
+                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      }
+    } else {
+      container.className = 'pc-ep-list';
+      container.innerHTML = '';
+      var maxEp = Math.min(2, episodeData.length);
+      for (var i = 0; i < maxEp; i++) {
+        var ep = episodeData[i];
+        container.innerHTML +=
+          '<div class="pc-ep-list-item">' +
+            '<div class="pc-ep-list-cover"><img src="podcast-logo.png" alt=""></div>' +
+            '<div class="pc-ep-list-info">' +
+              '<div class="pc-ep-list-title">' + _esc(ep.title) + '</div>' +
+              '<div class="pc-ep-list-desc">' + _esc(ep.desc) + '</div>' +
+              '<div class="pc-ep-list-footer">' +
+                '<span class="pc-ep-list-date">' + ep.date + ' &middot; ' + ep.dur + '</span>' +
+                '<div class="pc-ep-actions">' +
+                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
+                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
+                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
+                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
+                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<button class="pc-ep-list-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
+          '</div>';
+      }
+    }
+
+    // Also render All Episodes page
+    _renderAllEpisodes(layout);
+
+    // Re-bind play buttons
+    bindEpisodePlay();
+  }
+
+  function bindEpisodePlay() {
+    var playBtns = document.querySelectorAll('#episodeLayoutContainer .pc-ep-play-btn, #episodeLayoutContainer .pc-ep-list-play');
+    for (var i = 0; i < playBtns.length; i++) {
+      playBtns[i].addEventListener('click', function(e) {
+        e.stopPropagation();
+        var card = this.closest('.pc-ep-card');
+        var item = this.closest('.pc-ep-list-item');
+
+        if (card) {
+          // Toggle playing state for grid
+          var allCards = document.querySelectorAll('.pc-ep-card');
+          for (var j = 0; j < allCards.length; j++) allCards[j].classList.remove('playing');
+          allCards.forEach(function(c) {
+            var btn = c.querySelector('.pc-ep-play-btn');
+            if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>';
+          });
+          card.classList.add('playing');
+          this.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+        } else if (item) {
+          var title = item.querySelector('.pc-ep-list-title');
+          if (title) alert('Now playing: "' + title.textContent + '"');
+        }
+      });
+    }
+  }
+
+  // ════════════════════════════════════════════
+  // FEATURED EPISODE
+  // ════════════════════════════════════════════
+  var _featSelectedIdx = -1; // -1 = latest
+  var _featOpen = false;
+
+  function toggleFeatured(show) {
+    var wrap = document.getElementById('featuredWrap');
+    var opts = document.getElementById('featuredOptions');
+    if (wrap) wrap.classList.toggle('featured-off', !show);
+    if (opts) opts.style.display = show ? 'block' : 'none';
+    if (show) _updateFeaturedEpisode();
+  }
+
+  function _updateFeaturedEpisode() {
+    var idx = _featSelectedIdx < 0 ? 0 : _featSelectedIdx;
+    if (idx >= episodeData.length) idx = 0;
+    var ep = episodeData[idx];
+    document.getElementById('featuredTitle').textContent = ep.title;
+    document.getElementById('featuredDesc').textContent = ep.desc;
+    document.getElementById('featuredMeta').textContent = ep.date + ' · ' + ep.dur;
+  }
+
+  function _getFeaturedValue() {
+    return _featSelectedIdx < 0 ? 'latest' : String(_featSelectedIdx);
+  }
+
+  function _setFeaturedFromValue(val) {
+    if (val === 'latest') {
+      _featSelectedIdx = -1;
+      _featLabel.textContent = 'Latest episode';
+      _featLabel.className = '_feat-trigger-label _feat-default';
+      _featClearBtn.classList.remove('show');
+    } else {
+      var idx = parseInt(val);
+      if (!isNaN(idx) && idx >= 0 && idx < episodeData.length) {
+        _featSelectedIdx = idx;
+        _featLabel.textContent = episodeData[idx].title;
+        _featLabel.className = '_feat-trigger-label';
+        _featClearBtn.classList.add('show');
+      } else {
+        _featSelectedIdx = -1;
+        _featLabel.textContent = 'Latest episode';
+        _featLabel.className = '_feat-trigger-label _feat-default';
+        _featClearBtn.classList.remove('show');
+      }
+    }
+    _updateFeaturedEpisode();
+  }
+
+  function _toggleSuggestions(show) {
+    if (show === undefined) show = !_featOpen;
+    _featOpen = show;
+    if (show) {
+      _renderSuggestions(null);
+      _featTrigger.classList.add('open');
+    } else {
+      _featSuggestions.classList.remove('open');
+      _featTrigger.classList.remove('open');
+    }
+  }
+
+  function _renderSuggestions(filter) {
+    var html = '';
+    var maxEp = Math.min(2, episodeData.length);
+	      for (var i = 0; i < maxEp; i++) {
+      if (!filter || episodeData[i].title.toLowerCase().indexOf(filter) !== -1) {
+        var selected = (_featSelectedIdx === i);
+        html += '<div class="_feat-suggestion-item' + (selected ? ' highlight' : '') + '" data-idx="' + i + '">' +
+          (selected ? '✓ ' : '') + _esc(episodeData[i].title) + '</div>';
+      }
+    }
+    _featSuggestions.innerHTML = html || '<div style="padding:8px 10px;font-size:13px;color:#999;">No matches</div>';
+    _featSuggestions.classList.add('open');
+    _featOpen = true;
+    _featTrigger.classList.add('open');
+  }
+
+  var _featTrigger = document.getElementById('featTrigger');
+  var _featLabel = document.getElementById('featLabel');
+  var _featSuggestions = document.getElementById('featSuggestions');
+  var _featClearBtn = document.getElementById('featClearBtn');
+
+  var _featFilter = '';
+
+  _featTrigger.addEventListener('click', function(e) {
+    if (e.target.closest('._feat-clear-btn')) return;
+    if (_featOpen) {
+      _toggleSuggestions(false);
+    } else {
+      _featFilter = '';
+      _renderSuggestions(null);
+    }
+  });
+
+  // Keyboard filter: type to search when dropdown is open
+  _featTrigger.addEventListener('keydown', function(e) {
+    if (!_featOpen) return;
+    if (e.key === 'Escape') { _toggleSuggestions(false); return; }
+    if (e.key === 'Backspace') { _featFilter = _featFilter.slice(0, -1); _renderSuggestions(_featFilter || null); return; }
+    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+      _featFilter += e.key.toLowerCase();
+      _renderSuggestions(_featFilter);
+    }
+  });
+
+  // Focus/blur to close
+  _featTrigger.addEventListener('blur', function() {
+    setTimeout(function() {
+      if (!_featSuggestions.contains(document.activeElement)) {
+        _toggleSuggestions(false);
+      }
+    }, 200);
+  });
+
+  _featSuggestions.addEventListener('mousedown', function(e) {
+    var item = e.target.closest('._feat-suggestion-item');
+    if (!item) return;
+    e.preventDefault();
+    var idx = parseInt(item.dataset.idx);
+    _featSelectedIdx = idx;
+    _featLabel.textContent = episodeData[idx].title;
+    _featLabel.className = '_feat-trigger-label';
+    _featClearBtn.classList.add('show');
+    _toggleSuggestions(false);
+    _updateFeaturedEpisode();
+    _setDirty();
+  });
+
+  _featClearBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    _featSelectedIdx = -1;
+    _featLabel.textContent = 'Latest episode';
+    _featLabel.className = '_feat-trigger-label _feat-default';
+    _featClearBtn.classList.remove('show');
+    _toggleSuggestions(false);
+    _updateFeaturedEpisode();
+    _setDirty();
+  });
+
+  // Bind featured play button
+  document.getElementById('featuredPlayBtn').addEventListener('click', function() {
+    var title = document.getElementById('featuredTitle').textContent;
+    alert('Now playing: "' + title + '"');
+  });
 
   var _csId = 0;
   var _csList = [];
-
-  _csList.push({
-    id: 'cs_' + (_csId++),
-    title: 'About the Host',
-    content: 'Maya Rodriguez has been making podcasts for over ten years. She started her first show in a small closet with a borrowed microphone and never looked back. Today she hosts and produces The Creative Pulse, where she talks to artists, musicians, and designers from around the world about how they make their work and what drives them to keep creating.',
-    style: 'image-right',
-    visible: true,
-    image: null
-  });
 
   var _panel = document.getElementById('sectionToggles');
   var _preview = document.getElementById('previewContent');
@@ -3563,6 +4441,152 @@ renderNav();
 
   function _esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function _hexToRgb(hex) {
+    return {
+      r: parseInt(hex.slice(1,3), 16),
+      g: parseInt(hex.slice(3,5), 16),
+      b: parseInt(hex.slice(5,7), 16)
+    };
+  }
+
+  function _rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(function(x) {
+      var h = Math.max(0, Math.min(255, Math.round(x))).toString(16);
+      return h.length === 1 ? '0' + h : h;
+    }).join('').toUpperCase();
+  }
+
+  function _openColorPicker(targetEl, title, currentColor, onConfirm) {
+    var overlay = document.createElement('div');
+    overlay.className = '_cp-overlay';
+
+    var hex = currentColor || '#000000';
+    if (hex.indexOf('#') !== 0) hex = '#' + hex;
+    if (hex.length < 7) {
+      hex = hex.length === 4
+        ? '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3]
+        : '#000000';
+    }
+
+    var rgb = _hexToRgb(hex);
+
+    overlay.innerHTML =
+      '<div class="_cp-popup">' +
+        '<div class="_cp-title">' + title + '</div>' +
+        '<div class="_cp-body">' +
+          '<div class="_cp-swatch-row">' +
+            '<div class="_cp-swatch" style="background:' + hex + '"></div>' +
+            '<div class="_cp-native-wrap"><input type="color" class="_cp-native-picker" value="' + hex + '"></div>' +
+          '</div>' +
+          '<div class="_cp-row">' +
+            '<label>Hex</label>' +
+            '<input type="text" class="_cp-hex-input" value="' + hex.toUpperCase() + '">' +
+          '</div>' +
+          '<div class="_cp-row">' +
+            '<label>R</label><input type="number" class="_cp-rgb-input _cp-r" min="0" max="255" value="' + rgb.r + '">' +
+            '<label>G</label><input type="number" class="_cp-rgb-input _cp-g" min="0" max="255" value="' + rgb.g + '">' +
+            '<label>B</label><input type="number" class="_cp-rgb-input _cp-b" min="0" max="255" value="' + rgb.b + '">' +
+          '</div>' +
+        '</div>' +
+        '<div class="_cp-actions">' +
+          '<button class="_cp-cancel">Cancel</button>' +
+          '<button class="_cp-ok">OK</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+
+    // Position popup near the target element
+    var popup = overlay.querySelector('._cp-popup');
+    var targetRect = targetEl.getBoundingClientRect();
+    var popupWidth = 260;
+    var popupHeight = popup.offsetHeight || 320;
+
+    var left = targetRect.left + targetRect.width + 8;
+    // Flip left if popup would go off right edge
+    if (left + popupWidth > window.innerWidth - 8) {
+      left = targetRect.left - popupWidth - 8;
+    }
+
+    var top = targetRect.top;
+    // If popup would go off bottom, position above target
+    if (top + popupHeight > window.innerHeight - 8) {
+      top = window.innerHeight - popupHeight - 8;
+    }
+
+    popup.style.left = Math.max(8, left) + 'px';
+    popup.style.top = Math.max(8, top) + 'px';
+    var swatch = overlay.querySelector('._cp-swatch');
+    var nativePicker = overlay.querySelector('._cp-native-picker');
+    var hexInput = overlay.querySelector('._cp-hex-input');
+    var rInput = overlay.querySelector('._cp-r');
+    var gInput = overlay.querySelector('._cp-g');
+    var bInput = overlay.querySelector('._cp-b');
+    var cancelBtn = overlay.querySelector('._cp-cancel');
+    var okBtn = overlay.querySelector('._cp-ok');
+
+    var initialHex = hex;
+
+    function _updateFromHex(h) {
+      h = h.trim();
+      if (h.indexOf('#') !== 0) h = '#' + h;
+      if (/^#[0-9a-fA-F]{6}$/.test(h)) {
+        swatch.style.background = h;
+        nativePicker.value = h;
+        var c = _hexToRgb(h);
+        rInput.value = c.r;
+        gInput.value = c.g;
+        bInput.value = c.b;
+        hexInput.value = h.toUpperCase();
+      }
+    }
+
+    function _updateFromRgb() {
+      var r = parseInt(rInput.value) || 0;
+      var g = parseInt(gInput.value) || 0;
+      var b = parseInt(bInput.value) || 0;
+      var h = _rgbToHex(r, g, b);
+      swatch.style.background = h;
+      nativePicker.value = h;
+      hexInput.value = h;
+    }
+
+    nativePicker.addEventListener('input', function() {
+      _updateFromHex(this.value);
+    });
+
+    hexInput.addEventListener('input', function() {
+      var val = this.value.trim();
+      if (/^#?[0-9a-fA-F]{6}$/.test(val)) {
+        if (val.indexOf('#') !== 0) val = '#' + val;
+        _updateFromHex(val);
+      }
+    });
+
+    rInput.addEventListener('input', _updateFromRgb);
+    gInput.addEventListener('input', _updateFromRgb);
+    bInput.addEventListener('input', _updateFromRgb);
+
+    cancelBtn.addEventListener('click', function() {
+      document.body.removeChild(overlay);
+    });
+
+    okBtn.addEventListener('click', function() {
+      var color = hexInput.value.trim();
+      if (color.indexOf('#') !== 0) color = '#' + color;
+      onConfirm(/^#[0-9a-fA-F]{6}$/.test(color) ? color : initialHex);
+      document.body.removeChild(overlay);
+    });
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        document.body.removeChild(overlay);
+      }
+    });
+
+    setTimeout(function() { hexInput.select(); }, 50);
   }
 
   function _rebuild() {
@@ -3577,16 +4601,9 @@ renderNav();
     // Find where to insert in panel
     var anchor = document.getElementById('addCustomSectionArea');
 
-    // Find newsletter section in preview
-    var nls = document.getElementById('newsletterWrap');
-    var nlsSection = null;
-    if (nls) {
-      var p = nls.parentNode;
-      while (p) {
-        if (p.classList && p.classList.contains('pc-section')) { nlsSection = p; break; }
-        p = p.parentNode;
-      }
-    }
+    // Find footer section in preview
+    var nls = document.querySelector('.pc-footer');
+    var nlsSection = nls;
 
     // Build each custom section
     for (var j = 0; j < _csList.length; j++) {
@@ -3600,13 +4617,9 @@ renderNav();
       tog.innerHTML =
         '<div class="cs-toggle-row1">' +
           '<span class="section-toggle-drag">\u22ee\u22ee</span>' +
-          '<span class="section-toggle-icon">\u270f</span>' +
           '<span class="section-toggle-label">' + _esc(cs.title) + '</span>' +
-        '</div>' +
-        '<div class="cs-toggle-row2">' +
-          '<button class="_edit-btn" data-cs-id="' + cs.id + '">\u270e Edit</button>' +
-          '<button class="_rm-btn" data-cs-id="' + cs.id + '">\u2715 Remove</button>' +
-          '<label class="toggle-switch"><input type="checkbox" class="_cs-cb" data-cs-id="' + cs.id + '"' + (cs.visible ? ' checked' : '') + '><span class="toggle-slider"></span></label>' +
+          '<button class="_edit-icon" data-cs-id="' + cs.id + '" title="Edit">\u270e</button>' +
+          '<button class="_rm-icon" data-cs-id="' + cs.id + '" title="Remove">\u2715</button>' +
         '</div>';
       if (anchor) _panel.insertBefore(tog, anchor);
 
@@ -3626,13 +4639,39 @@ renderNav();
             '<option value="image-left"' + (cs.style === 'image-left' ? ' selected' : '') + '>Image Left</option>' +
             '<option value="image-right"' + (cs.style === 'image-right' ? ' selected' : '') + '>Image Right</option>' +
           '</select></div></div>' +
-          '<div class="cs-edit-field"><label>Title</label><input type="text" class="_inp-title" value="' + _esc(cs.title) + '" placeholder="Section title"></div>' +
-          '<div class="cs-edit-field"><label>Content</label><textarea class="_inp-content" placeholder="Write your section content here..." rows="3">' + _esc(cs.content) + '</textarea></div>' +
           '<div class="cs-edit-field cs-edit-image-field" style="' + (hasImage ? '' : 'display:none;') + '"><label>Image</label><div class="cs-edit-image-row">' +
             '<div class="cs-edit-image-preview">' + imgPrev + '</div>' +
             '<button class="_up-btn" data-cs-id="' + cs.id + '">' + upText + '<input type="file" accept="image/*"></button>' +
             rmImg +
           '</div></div>' +
+          '<div class="cs-edit-field"><label>Content</label><div class="cookie-editor-box">' +
+            '<div class="cookie-editor-toolbar">' +
+              '<button onclick="event.preventDefault(); execCmd(\'bold\')" title="Bold"><b>B</b></button>' +
+              '<button onclick="event.preventDefault(); execCmd(\'italic\')" title="Italic"><i>I</i></button>' +
+              '<button onclick="event.preventDefault(); execCmd(\'underline\')" title="Underline"><u>U</u></button>' +
+              '<span class="sep"></span>' +
+              '<button onclick="event.preventDefault(); execCmd(\'insertUnorderedList\')" title="Bullet list">&#8226;</button>' +
+              '<button onclick="event.preventDefault(); execCmd(\'insertOrderedList\')" title="Numbered list">#</button>' +
+              '<span class="sep"></span>' +
+              '<input type="color" onchange="event.preventDefault(); execCmd(\'foreColor\', this.value)" title="Font color">' +
+            '<div class="cookie-editor-content _inp-rich" contenteditable="true" data-cs-id="' + cs.id + '">' +
+              '<h2>' + _esc(cs.title) + '</h2>' +
+              '<p>' + _esc(cs.content) + '</p>' +
+            '</div>' +
+          '</div></div>' +
+          '</div></div>' +
+          '<div class="cs-edit-field" style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">' +
+            '<label style="margin-bottom:0;white-space:nowrap;">Background color</label>' +
+            '<div class="_bg-row" style="display:flex;align-items:center;gap:6px;flex-shrink:0;" data-active="' + (cs.bgColor ? 'true' : 'false') + '">' +
+              '<div class="_inp-bgcolor _cs-color-circle" style="background:' + (cs.bgColor || '#f5f5f5') + '" data-color="' + (cs.bgColor || '#f5f5f5') + '"></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="cs-edit-field" style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">' +
+            '<label style="margin-bottom:0;white-space:nowrap;">Font color</label>' +
+            '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
+              '<div class="_inp-fontcolor _cs-color-circle" style="background:' + (cs.fontColor || '#111111') + '" data-color="' + (cs.fontColor || '#111111') + '"></div>' +
+            '</div>' +
+          '</div>' +
           '<div class="cs-edit-actions"><button class="_edit-cancel">Cancel</button><button class="_edit-save">Save</button></div>' +
         '</div>';
       if (anchor) _panel.insertBefore(form, anchor);
@@ -3643,14 +4682,20 @@ renderNav();
       sec.className = 'pc-section cs-dynamic-preview';
       sec.dataset.csId = cs.id;
       sec.style.display = cs.visible ? '' : 'none';
+      var safeTitle = _esc(cs.title);
+      var bgStyle = cs.bgColor ? 'background:' + cs.bgColor + ';' : '';
+      var fcStyle = cs.fontColor ? 'color:' + cs.fontColor + ';' : '';
       sec.innerHTML =
-        '<div class="cs-card style-' + cs.style + '">' +
+        '<div class="cs-card style-' + cs.style + '" style="' + bgStyle + '">' +
           '<div class="cs-avatar">' + imgHtml + '</div>' +
           '<div class="cs-info">' +
-            '<div class="cs-title">' + _esc(cs.title) + '</div>' +
-            '<div class="cs-content">' + _esc(cs.content) + '</div>' +
+            '<div class="cs-title"' + (fcStyle ? ' style="' + fcStyle + '"' : '') + '>' + safeTitle + '</div>' +
+            '<div class="cs-content"' + (fcStyle ? ' style="' + fcStyle + '"' : '') + '></div>' +
           '</div>' +
         '</div>';
+      // Set content as innerHTML to preserve rich text formatting
+      var contentEl = sec.querySelector('.cs-content');
+      if (contentEl) contentEl.innerHTML = cs.content || '&nbsp;';
       if (nlsSection) {
         _preview.insertBefore(sec, nlsSection);
       } else {
@@ -3658,24 +4703,8 @@ renderNav();
       }
     }
 
-    // Bind checkbox toggles
-    var cbs = _panel.querySelectorAll('._cs-cb');
-    for (var i = 0; i < cbs.length; i++) {
-      cbs[i].addEventListener('change', function() {
-        var id = this.dataset.csId;
-        for (var k = 0; k < _csList.length; k++) {
-          if (_csList[k].id === id) {
-            _csList[k].visible = this.checked;
-            var el = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
-            if (el) el.style.display = this.checked ? '' : 'none';
-            break;
-          }
-        }
-      });
-    }
-
     // Bind edit buttons
-    var ebts = _panel.querySelectorAll('._edit-btn');
+    var ebts = _panel.querySelectorAll('._edit-icon');
     for (var i = 0; i < ebts.length; i++) {
       ebts[i].addEventListener('click', function(e) {
         e.stopPropagation();
@@ -3711,7 +4740,7 @@ renderNav();
     }
 
     // Bind remove buttons
-    var rbts = _panel.querySelectorAll('._rm-btn');
+    var rbts = _panel.querySelectorAll('._rm-icon');
     for (var i = 0; i < rbts.length; i++) {
       rbts[i].addEventListener('click', function(e) {
         e.stopPropagation();
@@ -3723,36 +4752,30 @@ renderNav();
       });
     }
 
-    // Bind real-time title & content preview
-    var tit = _panel.querySelectorAll('._inp-title');
-    for (var i = 0; i < tit.length; i++) {
-      tit[i].addEventListener('input', function() {
+    // Bind real-time preview from rich editor
+    var richs = _panel.querySelectorAll('._inp-rich');
+    for (var i = 0; i < richs.length; i++) {
+      richs[i].addEventListener('input', function() {
         var f = this.closest('.cs-edit-form');
         var id = f.dataset.csId;
-        var newVal = this.value.trim() || 'Untitled';
-        // Update preview title
+        var html = this.innerHTML;
+        // Extract first h2 as title
+        var h2Match = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+        var title = h2Match ? h2Match[1].replace(/<[^>]*>/g, '').trim() : 'Untitled';
+        // Update preview
         var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
         if (prev) {
           var titleEl = prev.querySelector('.cs-title');
-          if (titleEl) titleEl.textContent = newVal;
+          if (titleEl) titleEl.textContent = title;
+          var contentEl = prev.querySelector('.cs-content');
+          if (contentEl) {
+            var bodyHtml = html.replace(/<h2[^>]*>[\s\S]*?<\/h2>/i, '').trim();
+            contentEl.innerHTML = bodyHtml || '&nbsp;';
+          }
         }
         // Update toggle label
         var labelEl = _panel.querySelector('.cs-toggle[data-cs-id="' + id + '"] .section-toggle-label');
-        if (labelEl) labelEl.textContent = newVal;
-      });
-    }
-
-    var cin = _panel.querySelectorAll('._inp-content');
-    for (var i = 0; i < cin.length; i++) {
-      cin[i].addEventListener('input', function() {
-        var f = this.closest('.cs-edit-form');
-        var id = f.dataset.csId;
-        var newVal = this.value.trim() || '&nbsp;';
-        var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
-        if (prev) {
-          var contentEl = prev.querySelector('.cs-content');
-          if (contentEl) contentEl.textContent = this.value;
-        }
+        if (labelEl) labelEl.textContent = title;
       });
     }
 
@@ -3765,12 +4788,20 @@ renderNav();
         for (var k = 0; k < _csList.length; k++) {
           if (_csList[k].id === id) {
             var cs = _csList[k];
-            var ti = f.querySelector('._inp-title');
-            var ci = f.querySelector('._inp-content');
+            var rich = f.querySelector('._inp-rich');
             var si = f.querySelector('._inp-style');
-            if (ti) cs.title = ti.value.trim() || cs.title;
-            if (ci) cs.content = ci.value.trim() || cs.content;
+            if (rich) {
+              var html = rich.innerHTML;
+              var h2Match = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+              cs.title = h2Match ? h2Match[1].replace(/<[^>]*>/g, '').trim() : 'Untitled';
+              cs.content = html.replace(/<h2[^>]*>[\s\S]*?<\/h2>/i, '').trim();
+            }
             if (si) cs.style = si.value;
+            var bgInput = f.querySelector('._inp-bgcolor');
+            var bgRow = f.querySelector('._bg-row');
+            if (bgInput) cs.bgColor = (bgRow && bgRow.dataset.active === 'true') ? (bgInput.dataset.color || null) : null;
+            var fcInput = f.querySelector('._inp-fontcolor');
+            if (fcInput) cs.fontColor = fcInput.dataset.color || null;
             _rebuild();
             break;
           }
@@ -3816,17 +4847,69 @@ renderNav();
         }
       });
     }
+
+    // Bind background color picker - open custom picker on click
+    var bgCircles = _panel.querySelectorAll('._inp-bgcolor');
+    for (var i = 0; i < bgCircles.length; i++) {
+      bgCircles[i].addEventListener('click', function() {
+        var f = this.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        var currentColor = this.dataset.color || '#f5f5f5';
+        var self = this;
+        _openColorPicker(this, 'Background color', currentColor, function(color) {
+          self.dataset.color = color;
+          self.style.background = color;
+          var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
+          if (prev) {
+            var card = prev.querySelector('.cs-card');
+            if (card) card.style.background = color;
+          }
+          var row = f.querySelector('._bg-row');
+          if (row) row.dataset.active = 'true';
+        });
+      });
+    }
+
+    // Helper: apply font color to title & content in preview
+    function _applyFc(prev, color) {
+      if (!prev) return;
+      var title = prev.querySelector('.cs-title');
+      var content = prev.querySelector('.cs-content');
+      if (title) title.style.color = color || '';
+      if (content) content.style.color = color || '';
+    }
+
+    // Bind font color picker - open custom picker on click
+    var fcCircles = _panel.querySelectorAll('._inp-fontcolor');
+    for (var i = 0; i < fcCircles.length; i++) {
+      fcCircles[i].addEventListener('click', function() {
+        var f = this.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        var currentColor = this.dataset.color || '#111111';
+        var self = this;
+        _openColorPicker(this, 'Font color', currentColor, function(color) {
+          self.dataset.color = color;
+          self.style.background = color;
+          var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
+          if (prev) _applyFc(prev, color);
+        });
+      });
+    }
+
+    _setDirty();
   }
 
   // Add button
   _addBtn.addEventListener('click', function() {
     _csList.push({
       id: 'cs_' + (_csId++),
-      title: 'Custom Section ' + (_csList.length + 1),
+      title: 'Custom section ' + (_csList.length + 1),
       content: 'Write something about your podcast, your guests, or your mission.',
       style: 'text',
       visible: true,
-      image: null
+      image: null,
+      bgColor: null,
+      fontColor: null
     });
     _rebuild();
   });
@@ -3841,6 +4924,7 @@ renderNav();
         var el = document.getElementById(m.id);
         if (el) el.classList.toggle(m.off, !this.checked);
       }
+      _setDirty();
     });
   }
 
@@ -3954,45 +5038,8 @@ renderNav();
     }
   }
 
-  const epCards = document.querySelectorAll('.pc-ep-card');
-
-  function setAllPaused() {
-    epCards.forEach(c => {
-      c.classList.remove('playing');
-      const btn = c.querySelector('.pc-ep-play-btn');
-      if (btn) btn.innerHTML = playIcon;
-    });
-  }
-
-  epCards.forEach(card => {
-    const playBtn = card.querySelector('.pc-ep-play-btn');
-    if (playBtn) {
-      playBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (card.classList.contains('playing')) {
-          card.classList.remove('playing');
-          playBtn.innerHTML = playIcon;
-        } else {
-          setAllPaused();
-          card.classList.add('playing');
-          playBtn.innerHTML = pauseIcon;
-        }
-      });
-    }
-
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('.pc-ep-action-btn')) return;
-      const btn = card.querySelector('.pc-ep-play-btn');
-      if (card.classList.contains('playing')) {
-        card.classList.remove('playing');
-        if (btn) btn.innerHTML = playIcon;
-      } else {
-        setAllPaused();
-        card.classList.add('playing');
-        if (btn) btn.innerHTML = pauseIcon;
-      }
-    });
-  });
+  // Initialize episode grid on page load
+  setEpisodeLayout('grid');
 
   // Top Bar Share & Follow
   var topShareSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
@@ -4028,6 +5075,170 @@ renderNav();
         this.innerHTML = topFollowSvg + ' Follow';
       }
     });
+  }
+
+  // ════════════════════════════════════════════
+  // CHANGE TRACKING – Dirty flag, snapshot, cancel
+  // ════════════════════════════════════════════
+  var _snapshot = {};
+  var _dirty = false;
+
+  function _setDirty() {
+    if (_dirty) return;
+    _dirty = true;
+    document.querySelector('.topbar-save-btn').classList.remove('disabled');
+  }
+
+  function _clearDirty() {
+    _dirty = false;
+    document.querySelector('.topbar-save-btn').classList.add('disabled');
+  }
+
+  function viewSite() {
+    var frame = document.querySelector('.preview-area');
+    if (!frame) return;
+
+    // Collect all styles from the page
+    var styles = '';
+    var styleTags = document.querySelectorAll('style');
+    for (var i = 0; i < styleTags.length; i++) {
+      styles += styleTags[i].textContent + '\n';
+    }
+
+    // Get Google Fonts link
+    var fontsLink = document.querySelector('link[href*="fonts.googleapis"]');
+    var fontHref = fontsLink ? fontsLink.getAttribute('href') : '';
+
+    // Clone the entire preview-area and get its HTML
+    var clone = frame.cloneNode(true);
+    clone.style.maxWidth = '1100px';
+    clone.style.width = '100%';
+    clone.style.margin = '0 auto';
+    clone.style.boxSizing = 'border-box';
+    clone.style.flex = 'none';
+    var areaHtml = clone.outerHTML;
+
+    // Build standalone HTML
+    var doc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">' +
+      (fontHref ? '<link href="' + fontHref + '" rel="stylesheet">' : '') +
+      '<style>' + styles + '</style>' +
+      '<style>body { margin: 0; min-height: 100vh; background: #e8e8ec; }</style>' +
+      '</head><body>' + areaHtml + '</body></html>';
+
+    var w = window.open('', '_blank');
+    if (w) {
+      w.document.write(doc);
+      w.document.close();
+    }
+  }
+
+  function _takeSnapshot() {
+    _snapshot = {
+      mode: previewContent.classList.contains('dark') ? 'dark' : 'light',
+      accent: previewContent.style.getPropertyValue('--p-accent').trim() || '#FF0000',
+      bannerBg: previewContent.style.getPropertyValue('--p-banner-bg').trim() || '#0080FF',
+      bannerText: previewContent.style.getPropertyValue('--p-banner-text').trim() || '#111111',
+      font: fontSelect.value,
+      featuredToggle: document.getElementById('featuredToggle').checked,
+      featuredEpisode: _getFeaturedValue(),
+      epLayout: document.querySelector('#epLayoutToggle .bg-option.active')?.dataset.layout || 'grid',
+      customSections: JSON.parse(JSON.stringify(_csList)),
+      socialLinks: Array.from(document.querySelectorAll('.social-link-input')).map(function(inp) { return inp.value; }),
+      cookieToggle: document.getElementById('cookieToggle').checked,
+      cookieContent: document.getElementById('cookieEditorContent').innerHTML,
+      navItems: JSON.parse(JSON.stringify(navItems)),
+      cssEditor: document.querySelector('.css-editor-textarea')?.value || ''
+    };
+    _clearDirty();
+  }
+
+  _takeSnapshot(); // initial snapshot – button starts disabled
+  toggleFeatured(false); // featured episode defaults to off
+
+  // Save changes – update snapshot so new baseline
+  function saveChanges() {
+    var btn = document.querySelector('.topbar-save-btn');
+    var originalHtml = btn.innerHTML;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Saved!';
+    btn.style.background = '#2e7d32';
+    btn.classList.remove('disabled');
+    setTimeout(function() {
+      btn.innerHTML = originalHtml;
+      btn.style.background = '';
+      _takeSnapshot();
+    }, 1500);
+  }
+
+  // Cancel – restore initial snapshot
+  function cancelChanges() {
+    if (!confirm('Cancel all changes? Unsaved edits will be lost.')) return;
+    cancelChangesImpl();
+  }
+
+  function cancelChangesImpl() {
+    var s = _snapshot;
+
+    // Mode
+    if (s.mode === 'dark') { previewContent.classList.add('dark'); } else { previewContent.classList.remove('dark'); }
+    bgOptions.forEach(function(o) { o.classList.toggle('active', o.dataset.bg === s.mode); });
+
+    // Colors
+    previewContent.style.setProperty('--p-accent', s.accent);
+    document.getElementById('colorPreview').style.background = s.accent;
+    document.getElementById('colorPreview').dataset.color = s.accent;
+
+    previewContent.style.setProperty('--p-banner-bg', s.bannerBg);
+    document.getElementById('bannerColorPreview').style.background = s.bannerBg;
+    document.getElementById('bannerColorPreview').dataset.color = s.bannerBg;
+
+    previewContent.style.setProperty('--p-banner-text', s.bannerText);
+    document.getElementById('bannerTextColorPreview').style.background = s.bannerText;
+    document.getElementById('bannerTextColorPreview').dataset.color = s.bannerText;
+
+    // Font
+    fontSelect.value = s.font;
+    var font = fontMap[fontSelect.value];
+    if (font) {
+      previewContent.style.setProperty('--p-font-heading', font.heading);
+      previewContent.style.setProperty('--p-font-body', font.body);
+      previewContent.style.setProperty('--p-font-ui', font.ui);
+    }
+
+    // Featured
+    document.getElementById('featuredToggle').checked = s.featuredToggle;
+    toggleFeatured(s.featuredToggle);
+    _setFeaturedFromValue(s.featuredEpisode);
+
+    // Episode layout
+    setEpisodeLayout(s.epLayout);
+
+    // Custom sections
+    _csList = JSON.parse(JSON.stringify(s.customSections));
+    _rebuild();
+
+    // Social links
+    var socialInps = document.querySelectorAll('.social-link-input');
+    for (var i = 0; i < socialInps.length; i++) {
+      socialInps[i].value = s.socialLinks[i] || '';
+    }
+    renderSocialIcons();
+
+    // Cookie
+    document.getElementById('cookieToggle').checked = s.cookieToggle;
+    toggleCookieNotice(s.cookieToggle);
+    document.getElementById('cookieEditorContent').innerHTML = s.cookieContent;
+    updateCookieNoticeText();
+
+    // Nav
+    navItems = JSON.parse(JSON.stringify(s.navItems));
+    renderNav();
+
+    // CSS editor
+    var cssEd = document.querySelector('.css-editor-textarea');
+    if (cssEd) cssEd.value = s.cssEditor;
+
+    // Reset snapshot to match
+    _takeSnapshot();
   }
 </script>
 
