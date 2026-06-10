@@ -134,27 +134,6 @@ body {
   color: #d92b3b;
 }
 
-.topbar-view-site {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 7px 16px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  background: #fff;
-  color: #555;
-  font-size: 13px;
-  font-weight: 500;
-  font-family: inherit;
-  text-decoration: none;
-  cursor: pointer;
-  transition: border-color .15s, color .15s;
-}
-.topbar-view-site:hover {
-  border-color: #111;
-  color: #111;
-}
-.topbar-view-site svg { flex-shrink: 0; }
 
 .topbar-sep {
   width: 1px;
@@ -3052,10 +3031,6 @@ body {
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
       Save
     </button>
-    <a class="topbar-view-site" href="javascript:void(0)" onclick="viewSite()">
-      View site
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    </a>
   </div>
 </header>
 
@@ -5092,44 +5067,6 @@ if (_cssEditor) {
   function _clearDirty() {
     _dirty = false;
     document.querySelector('.topbar-save-btn').classList.add('disabled');
-  }
-
-  function viewSite() {
-    var frame = document.querySelector('.preview-area');
-    if (!frame) return;
-
-    // Collect all styles from the page
-    var styles = '';
-    var styleTags = document.querySelectorAll('style');
-    for (var i = 0; i < styleTags.length; i++) {
-      styles += styleTags[i].textContent + '\n';
-    }
-
-    // Get Google Fonts link
-    var fontsLink = document.querySelector('link[href*="fonts.googleapis"]');
-    var fontHref = fontsLink ? fontsLink.getAttribute('href') : '';
-
-    // Clone the entire preview-area and get its HTML
-    var clone = frame.cloneNode(true);
-    clone.style.maxWidth = '1100px';
-    clone.style.width = '100%';
-    clone.style.margin = '0 auto';
-    clone.style.boxSizing = 'border-box';
-    clone.style.flex = 'none';
-    var areaHtml = clone.outerHTML;
-
-    // Build standalone HTML
-    var doc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">' +
-      (fontHref ? '<link href="' + fontHref + '" rel="stylesheet">' : '') +
-      '<style>' + styles + '</style>' +
-      '<style>body { margin: 0; min-height: 100vh; background: #e8e8ec; }</style>' +
-      '</head><body>' + areaHtml + '</body></html>';
-
-    var w = window.open('', '_blank');
-    if (w) {
-      w.document.write(doc);
-      w.document.close();
-    }
   }
 
   function _takeSnapshot() {
