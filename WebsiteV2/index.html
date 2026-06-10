@@ -430,7 +430,7 @@ body {
   --p-card: #ffffff;
   --p-text: #1a1a1a;
   --p-text-secondary: #888888;
-  --p-accent: #0080FF;
+  --p-accent: #FF0000;
   --p-accent-soft: #eff6ff;
   --p-nav-bg: #ffffff;
   --p-nav-text: #1a1a1a;
@@ -3136,7 +3136,7 @@ body {
         <div class="panel-section" style="margin-bottom:18px;">
           <div style="display:flex;align-items:center;justify-content:space-between;">
             <div class="panel-label" style="margin-bottom:0;">Brand color</div>
-            <div class="color-swatch-circle" id="colorPreview" style="background:#0080FF;" data-color="#0080FF"></div>
+            <div class="color-swatch-circle" id="colorPreview" style="background:#FF0000;" data-color="#FF0000"></div>
           </div>
         </div>
 
@@ -3293,7 +3293,7 @@ body {
       </div>
 
       <!-- Preview Content -->
-      <div class="preview-content" data-mode="minimal" id="previewContent" style="--p-accent:#0080FF;">
+      <div class="preview-content" data-mode="minimal" id="previewContent" style="--p-accent:#FF0000;">
 
         <!-- Top Bar -->
         <div class="pc-top-bar">
@@ -3492,7 +3492,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
   }
 
   colorPreviewCircle.addEventListener('click', function() {
-    _openColorPicker(this, 'Brand color', this.dataset.color || '#0080FF', function(color) {
+    _openColorPicker(this, 'Brand color', this.dataset.color || '#FF0000', function(color) {
       setAccentColor(color);
     });
   });
@@ -5135,7 +5135,7 @@ if (_cssEditor) {
   function _takeSnapshot() {
     _snapshot = {
       mode: previewContent.classList.contains('dark') ? 'dark' : 'light',
-      accent: previewContent.style.getPropertyValue('--p-accent').trim() || '#0080FF',
+      accent: previewContent.style.getPropertyValue('--p-accent').trim() || '#FF0000',
       bannerBg: previewContent.style.getPropertyValue('--p-banner-bg').trim() || '#0080FF',
       bannerText: previewContent.style.getPropertyValue('--p-banner-text').trim() || '#111111',
       font: fontSelect.value,
