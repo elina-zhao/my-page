@@ -3569,7 +3569,6 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
             <div class="pc-episodes-header" style="margin-bottom:24px;">
               <h1 class="pc-episodes-title" style="font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:var(--p-text);font-family:var(--p-font-heading);margin-bottom:8px;">All Episodes</h1>
               <div>
-                <p class="pc-episodes-subtitle" style="font-size:14px;color:var(--p-text-secondary);font-family:var(--p-font-body);">6 episodes</p>
               </div>
             </div>
             <div class="pc-episodes-list" id="allEpisodesContainer">
@@ -4475,9 +4474,7 @@ if (_cssEditor) {
     var container = document.getElementById('allEpisodesContainer');
     if (!container) return;
     var total = episodeData.length;
-    var epLabel = total + (total > 1 ? ' episodes' : ' episode');
-    var subtitle = document.querySelector('.pc-episodes-subtitle');
-    if (subtitle) subtitle.textContent = epLabel;
+    // Removed episode count display
 
     if (layout === 'grid') {
       container.className = 'pc-episodes-list pc-grid';
