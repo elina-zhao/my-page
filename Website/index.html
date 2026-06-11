@@ -1380,6 +1380,8 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
   box-sizing: border-box;
 }
 .cs-card:last-child { margin-bottom: 0; }
+.cs-dynamic-preview[data-has-bg="true"] .cs-card,
+.preview-content.dark .cs-dynamic-preview[data-has-bg="true"] .cs-card { background: transparent !important; }
 
 .cs-card.style-text {
   flex-direction: column;
@@ -5151,10 +5153,17 @@ if (_cssEditor) {
       sec.dataset.csId = cs.id;
       sec.style.display = cs.visible ? '' : 'none';
       var safeTitle = _esc(cs.title);
-      var bgStyle = cs.bgColor ? 'background:' + cs.bgColor + ';' : '';
+      var hasBg = cs.bgColor ? true : false;
       var fcStyle = cs.fontColor ? 'color:' + cs.fontColor + ';' : '';
+      if (hasBg) {
+        sec.style.background = cs.bgColor;
+        sec.dataset.hasBg = 'true';
+      }
+      var cardStyle = 'border-radius:' + (hasBg ? '0' : 'var(--p-radius-lg)') + ';';
+      // When outer has background, make card transparent so outer bg shows through
+      if (hasBg) cardStyle += 'background:transparent;margin-bottom:0;';
       sec.innerHTML =
-        '<div class="cs-card style-' + cs.style + '" style="' + bgStyle + '">' +
+        '<div class="cs-card style-' + cs.style + '" style="' + cardStyle + '">' +
           '<div class="cs-avatar">' + imgHtml + '</div>' +
           '<div class="cs-info">' +
             '<div class="cs-title"' + (fcStyle ? ' style="' + fcStyle + '"' : '') + '>' + safeTitle + '</div>' +
@@ -5346,8 +5355,14 @@ if (_cssEditor) {
           self.style.background = color;
           var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
           if (prev) {
+            prev.style.background = color;
+            prev.dataset.hasBg = 'true';
             var card = prev.querySelector('.cs-card');
-            if (card) card.style.background = color;
+            if (card) {
+              card.style.background = 'transparent';
+              card.style.borderRadius = '0';
+              card.style.marginBottom = '0';
+            }
           }
           var row = f.querySelector('._bg-row');
           if (row) row.dataset.active = 'true';
