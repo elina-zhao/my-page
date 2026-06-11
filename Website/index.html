@@ -4493,18 +4493,10 @@ if (_cssEditor) {
               '<button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
             '</div>' +
             '<div class="pc-ep-body">' +
-              '<div style="font-size:11px;color:var(--p-text-secondary);margin-bottom:4px;font-family:var(--p-font-body);">' + ep.date + '</div>' +
               '<div class="pc-ep-title">' + _esc(ep.title) + '</div>' +
               '<div class="pc-ep-excerpt">' + _esc(ep.desc) + '</div>' +
               '<div class="pc-ep-footer">' +
-                '<div class="pc-ep-date"><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
-                '<div class="pc-ep-actions">' +
-                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
-                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
-                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
-                '</div>' +
+                '<div class="pc-ep-date"><span>' + ep.date + '</span><span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -4524,13 +4516,6 @@ if (_cssEditor) {
               '<div class="pc-ep-list-desc">' + _esc(ep.desc) + '</div>' +
               '<div class="pc-ep-list-footer">' +
                 '<span class="pc-ep-list-date">' + ep.date + ' &middot; ' + ep.dur + '</span>' +
-                '<div class="pc-ep-actions">' +
-                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
-                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
-                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
-                '</div>' +
               '</div>' +
             '</div>' +
             '<button class="pc-ep-list-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
@@ -4566,18 +4551,10 @@ if (_cssEditor) {
               '<button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
             '</div>' +
             '<div class="pc-ep-body">' +
-              '<div style="font-size:11px;color:var(--p-text-secondary);margin-bottom:4px;font-family:var(--p-font-body);">' + ep.date + '</div>' +
               '<div class="pc-ep-title">' + _esc(ep.title) + '</div>' +
               '<div class="pc-ep-excerpt">' + _esc(ep.desc) + '</div>' +
               '<div class="pc-ep-footer">' +
-                '<div class="pc-ep-date"><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
-                '<div class="pc-ep-actions">' +
-                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
-                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
-                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
-                '</div>' +
+                '<div class="pc-ep-date"><span>' + ep.date + '</span><span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -4596,13 +4573,6 @@ if (_cssEditor) {
               '<div class="pc-ep-list-desc">' + _esc(ep.desc) + '</div>' +
               '<div class="pc-ep-list-footer">' +
                 '<span class="pc-ep-list-date">' + ep.date + ' &middot; ' + ep.dur + '</span>' +
-                '<div class="pc-ep-actions">' +
-                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
-                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
-                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
-                '</div>' +
               '</div>' +
             '</div>' +
             '<button class="pc-ep-list-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
