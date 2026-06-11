@@ -3632,6 +3632,14 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
               <!-- All episodes rendered by setEpisodeLayout() -->
             </div>
           </div>
+          <!-- Episodes Page Footer -->
+          <div class="pc-footer" style="padding:40px 100px 32px;border-top:1px solid var(--p-border,#e5e5e5);">
+            <div class="pc-footer-social" id="episodesFooterSocialIcons"></div>
+            <div class="pc-footer-copy">
+              <div>&copy; 2026 The Creative Pulse: Stories, Strategy &amp; Inspiration. All rights reserved.</div>
+              <div style="margin-top:4px;font-size:12px;">Podcast Powered By <a href="https://www.podbean.com/" target="_blank" style="color:inherit;text-decoration:underline;">Podbean</a></div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -4392,7 +4400,7 @@ if (_cssEditor) {
 
   function renderSocialIcons() {
     var container = document.getElementById('footerSocialIcons');
-    if (!container) return;
+    var container2 = document.getElementById('episodesFooterSocialIcons');
     var html = '';
     var items = document.querySelectorAll('.social-link-item');
     for (var i = 0; i < items.length; i++) {
@@ -4405,7 +4413,8 @@ if (_cssEditor) {
       if (!info || !url || url === 'https://' || url === 'https://www.') continue;
       html += '<a href="' + url + '" target="_blank" rel="noopener" style="background:' + info.color + ';">' + info.icon + '</a>';
     }
-    container.innerHTML = html;
+    if (container) container.innerHTML = html;
+    if (container2) container2.innerHTML = html;
   }
 
   function scrollPreviewToFooter() {
