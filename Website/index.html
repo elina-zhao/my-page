@@ -2358,13 +2358,13 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
 }
 
 .settings-note a {
-  color: #3b82f6;
-  text-decoration: none;
-  font-weight: 500;
+  color: inherit;
+  text-decoration: underline;
+  transition: color .15s;
 }
 
 .settings-note a:hover {
-  text-decoration: underline;
+  color: #111;
 }
 
 /* Footer */
@@ -3421,7 +3421,7 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
         <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
         <div class="panel-label">CSS editor</div>
         <textarea class="css-editor-textarea" placeholder="Add custom CSS to style your podcast website..."></textarea>
-        <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.6;">Custom CSS will be applied to your live podcast website. Use with caution. <a href="#" style="color:#111;text-decoration:underline;">Read more</a></p>
+        <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.6;">Custom CSS will be applied to your live podcast website. Use with caution. <a href="#" style="color:inherit;text-decoration:underline;transition:color .15s;" onmouseover="this.style.color='#333'" onmouseout="this.style.color='inherit'">Read more</a></p>
       </div>
 
       <!-- ═══ HOME SECTIONS ═══ -->
