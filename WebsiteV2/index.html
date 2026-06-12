@@ -719,6 +719,59 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
 .hero-desc-modal-close:hover { color: #333; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* Custom confirm dialog */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  animation: fadeIn .15s ease;
+}
+.confirm-box {
+  background: #fff;
+  border-radius: 14px;
+  padding: 28px 32px 20px;
+  max-width: 380px;
+  width: 90%;
+  box-shadow: 0 12px 48px rgba(0,0,0,.2);
+  text-align: center;
+}
+.confirm-msg {
+  font-size: 15px;
+  color: #1a1a1a;
+  line-height: 1.5;
+  margin-bottom: 24px;
+  font-family: inherit;
+}
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.confirm-btn {
+  padding: 9px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s;
+}
+.confirm-btn-cancel {
+  background: #f0f0f0;
+  color: #555;
+}
+.confirm-btn-cancel:hover { background: #e5e5e5; }
+.confirm-btn-ok {
+  background: #111;
+  color: #fff;
+}
+.confirm-btn-ok:hover { background: #333; }
+
 /* Sections common */
 .pc-section {
   padding: 0 100px 60px;
@@ -797,15 +850,15 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
   padding: 12px 32px;
   border: none;
   border-radius: 100px;
-  background: var(--p-accent);
-  color: #fff;
+  background: color-mix(in srgb, var(--p-accent) 5%, transparent);
+  color: var(--p-accent);
   font-size: 14px;
   font-weight: 600;
   font-family: var(--p-font-ui);
   cursor: pointer;
-  transition: filter .15s, transform .15s;
+  transition: background .15s, transform .15s;
 }
-.pc-explore-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.pc-explore-btn:hover { background: color-mix(in srgb, var(--p-accent) 12%, transparent); transform: translateY(-1px); }
 
 /* Featured Episode */
 .pc-featured-wrap {
@@ -1380,6 +1433,8 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
   box-sizing: border-box;
 }
 .cs-card:last-child { margin-bottom: 0; }
+.cs-dynamic-preview[data-has-bg="true"] .cs-card,
+.preview-content.dark .cs-dynamic-preview[data-has-bg="true"] .cs-card { background: transparent !important; }
 
 .cs-card.style-text {
   flex-direction: column;
@@ -2303,13 +2358,13 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
 }
 
 .settings-note a {
-  color: #3b82f6;
-  text-decoration: none;
-  font-weight: 500;
+  color: inherit;
+  text-decoration: underline;
+  transition: color .15s;
 }
 
 .settings-note a:hover {
-  text-decoration: underline;
+  color: #111;
 }
 
 /* Footer */
@@ -2457,6 +2512,7 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
 .cs-edit-form .cookie-editor-content {
   max-height: none;
   resize: vertical;
+  min-height: 240px;
 }
 .cookie-editor-content:focus {
   box-shadow: inset 0 0 0 1px #3b82f6;
@@ -3102,7 +3158,7 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
 
 .css-editor-textarea {
   width: 100%;
-  min-height: 200px;
+  min-height: 50vh;
   padding: 12px;
   border: 1px solid #e5e5e5;
   border-radius: 8px;
@@ -3365,7 +3421,7 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
         <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
         <div class="panel-label">CSS editor</div>
         <textarea class="css-editor-textarea" placeholder="Add custom CSS to style your podcast website..."></textarea>
-        <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.6;">Custom CSS will be applied to your live podcast website. Use with caution. <a href="#" style="color:#111;text-decoration:underline;">Read more</a></p>
+        <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.6;">Custom CSS will be applied to your live podcast website. Use with caution. <a href="#" style="color:inherit;text-decoration:underline;transition:color .15s;" onmouseover="this.style.color='#333'" onmouseout="this.style.color='inherit'">Read more</a></p>
       </div>
 
       <!-- ═══ HOME SECTIONS ═══ -->
@@ -3484,7 +3540,7 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
                 <div class="pc-hero-desc" id="heroDescription">A weekly podcast exploring the intersection of creativity, culture, and technology — where art meets innovation and ideas come to life. Each episode features in-depth conversations with artists, musicians, writers, designers, filmmakers, and creative entrepreneurs who are shaping the cultural landscape in profound and unexpected ways. From emerging voices breaking new ground to established pioneers redefining their fields, every story offers a unique window into the creative process.
 
 Join us as we explore topics like overcoming creative blocks, building sustainable creative careers, the impact of AI on artistic expression, finding your authentic voice, collaborating across disciplines, and much more. Whether you are a seasoned creative professional looking for fresh inspiration or just starting your journey and seeking guidance, this podcast delivers actionable insights, honest conversations, and a healthy dose of motivation to help you pursue your creative passions with confidence and purpose.</div>
-                <button class="pc-hero-desc-toggle hidden" id="heroDescToggle" onclick="toggleHeroDesc()">Read more ↓</button>
+                <button class="pc-hero-desc-toggle hidden" id="heroDescToggle" onclick="toggleHeroDesc()">Show more ↓</button>
               </div>
             </div>
           </div>
@@ -3547,7 +3603,10 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
         <!-- Footer -->
         <div class="pc-footer">
           <div class="pc-footer-social" id="footerSocialIcons"></div>
-          <div class="pc-footer-copy">&copy; 2026 The Creative Pulse. Hosted by Podbean.</div>
+          <div class="pc-footer-copy">
+            <div>&copy; 2026 The Creative Pulse: Stories, Strategy &amp; Inspiration. All rights reserved.</div>
+            <div style="margin-top:4px;font-size:12px;">Podcast Powered By <a href="https://www.podbean.com/" target="_blank" style="color:inherit;text-decoration:underline;">Podbean</a></div>
+          </div>
         </div>
 
         <!-- Episodes Page View (hidden by default) -->
@@ -3567,11 +3626,18 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
             <div class="pc-episodes-header" style="margin-bottom:24px;">
               <h1 class="pc-episodes-title" style="font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:var(--p-text);font-family:var(--p-font-heading);margin-bottom:8px;">All Episodes</h1>
               <div>
-                <p class="pc-episodes-subtitle" style="font-size:14px;color:var(--p-text-secondary);font-family:var(--p-font-body);">6 episodes</p>
               </div>
             </div>
             <div class="pc-episodes-list" id="allEpisodesContainer">
               <!-- All episodes rendered by setEpisodeLayout() -->
+            </div>
+          </div>
+          <!-- Episodes Page Footer -->
+          <div class="pc-footer" style="padding:40px 100px 32px;border-top:1px solid var(--p-border,#e5e5e5);">
+            <div class="pc-footer-social" id="episodesFooterSocialIcons"></div>
+            <div class="pc-footer-copy">
+              <div>&copy; 2026 The Creative Pulse: Stories, Strategy &amp; Inspiration. All rights reserved.</div>
+              <div style="margin-top:4px;font-size:12px;">Podcast Powered By <a href="https://www.podbean.com/" target="_blank" style="color:inherit;text-decoration:underline;">Podbean</a></div>
             </div>
           </div>
         </div>
@@ -3800,7 +3866,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
 var navItems = [];
 var defaultNavs = [
   { name: 'Home', link: '/', type: 'fixed' },
-  { name: 'Subscribe', link: '#subscribe', type: 'custom', linkType: 'page', pageId: 'subscribe' },
+  { name: 'Subscribe', link: '#subscribe', type: 'custom', linkType: 'subscribe', pageId: '' },
 ];
 
 // Podbean pages (simulated - in real app would come from API)
@@ -3846,33 +3912,30 @@ function renderNav() {
     if (!isFixed) {
       // Type select
       editFormHtml += '<div class="nav-edit-row"><span class="nav-edit-label">Type</span><select class="nav-item-type" data-idx="' + i + '">';
-      editFormHtml += '<option value="link"' + (item.linkType === 'link' ? ' selected' : '') + '>Custom Link</option>';
-      editFormHtml += '<option value="page"' + (item.linkType === 'page' ? ' selected' : '') + '>Podbean Page</option>';
-      editFormHtml += '<option value="seasons"' + (item.linkType === 'seasons' ? ' selected' : '') + '>Seasons</option>';
       editFormHtml += '<option value="episodes"' + (item.linkType === 'episodes' ? ' selected' : '') + '>Episodes</option>';
+      editFormHtml += '<option value="seasons"' + (item.linkType === 'seasons' ? ' selected' : '') + '>Seasons</option>';
+      editFormHtml += '<option value="subscribe"' + (item.linkType === 'subscribe' ? ' selected' : '') + '>Subscribe</option>';
+      editFormHtml += '<option value="page"' + (item.linkType === 'page' ? ' selected' : '') + '>Pages</option>';
+      editFormHtml += '<option value="link"' + (item.linkType === 'link' ? ' selected' : '') + '>Custom link</option>';
       editFormHtml += '</select></div>';
 
       // Link / page / seasons / episodes input
-      editFormHtml += '<div class="nav-edit-row"><span class="nav-edit-label">Link</span>';
       if (item.linkType === 'link') {
+        editFormHtml += '<div class="nav-edit-row"><span class="nav-edit-label">Link</span>';
         editFormHtml += '<input type="text" class="nav-item-input" data-idx="' + i + '" value="' + _esc(item.link) + '" placeholder="https://">';
         editFormHtml += '<select class="nav-item-select hidden" data-idx="' + i + '"></select>';
-      } else if (item.linkType === 'seasons') {
-        editFormHtml += '<input type="text" class="nav-item-input" data-idx="' + i + '" value="Seasons" readonly style="background:#f5f5f5;cursor:default;color:#666;flex:1;height:28px;padding:0 8px;border:1px solid #e5e5e5;border-radius:5px;font-size:13px;outline:none;">';
-        editFormHtml += '<select class="nav-item-select hidden" data-idx="' + i + '"></select>';
-      } else if (item.linkType === 'episodes') {
-        editFormHtml += '<input type="text" class="nav-item-input" data-idx="' + i + '" value="All episodes" readonly style="background:#f5f5f5;cursor:default;color:#666;flex:1;height:28px;padding:0 8px;border:1px solid #e5e5e5;border-radius:5px;font-size:13px;outline:none;">';
-        editFormHtml += '<select class="nav-item-select hidden" data-idx="' + i + '"></select>';
-      } else {
+        editFormHtml += '</div>';
+      } else if (item.linkType === 'page') {
+        editFormHtml += '<div class="nav-edit-row"><span class="nav-edit-label">Page</span>';
         editFormHtml += '<input type="text" class="nav-item-input hidden" data-idx="' + i + '" value="' + _esc(item.link) + '">';
         editFormHtml += '<select class="nav-item-select" data-idx="' + i + '">';
         editFormHtml += '<option value="">Select a page...</option>';
-        for (var p = 0; p < podbeanPages.length; p++) {
-          editFormHtml += '<option value="' + podbeanPages[p].id + '"' + (item.pageId === podbeanPages[p].id ? ' selected' : '') + '>' + _esc(podbeanPages[p].title) + '</option>';
-        }
+        // pages removed - no simulated data
         editFormHtml += '</select>';
+        editFormHtml += '</div>';
+        editFormHtml += '<div style="font-size:12px;color:#888;margin-top:6px;padding-left:50px;text-decoration:underline;cursor:pointer;transition:color .15s;" onmouseover="this.style.color=\'#111\'" onmouseout="this.style.color=\'#888\'">Learn how to create a page.</div>';
       }
-      editFormHtml += '</div>';
+      // seasons, episodes, subscribe: no Link row shown
     } else {
       // Fixed item \u2014 no link input (Home cannot change link)
     }
@@ -3958,6 +4021,9 @@ function renderNav() {
       } else if (this.value === 'episodes') {
         navItems[idx].pageId = '';
         navItems[idx].link = '/episodes';
+      } else if (this.value === 'subscribe') {
+        navItems[idx].pageId = '';
+        navItems[idx].link = '#subscribe';
       } else if (this.value === 'link') {
         navItems[idx].pageId = '';
         navItems[idx].link = 'https://';
@@ -4023,8 +4089,11 @@ function renderNav() {
       var idx = parseInt(this.dataset.idx);
       if (idx < 0 || idx >= navItems.length) return;
       if (navItems[idx].type === 'fixed') return;
-      navItems.splice(idx, 1);
-      renderNav();
+      showConfirm('Are you sure you want to delete this navigation item?', function(ok) {
+        if (!ok) return;
+        navItems.splice(idx, 1);
+        renderNav();
+      });
     });
   }
 
@@ -4331,7 +4400,7 @@ if (_cssEditor) {
 
   function renderSocialIcons() {
     var container = document.getElementById('footerSocialIcons');
-    if (!container) return;
+    var container2 = document.getElementById('episodesFooterSocialIcons');
     var html = '';
     var items = document.querySelectorAll('.social-link-item');
     for (var i = 0; i < items.length; i++) {
@@ -4344,7 +4413,8 @@ if (_cssEditor) {
       if (!info || !url || url === 'https://' || url === 'https://www.') continue;
       html += '<a href="' + url + '" target="_blank" rel="noopener" style="background:' + info.color + ';">' + info.icon + '</a>';
     }
-    container.innerHTML = html;
+    if (container) container.innerHTML = html;
+    if (container2) container2.innerHTML = html;
   }
 
   function scrollPreviewToFooter() {
@@ -4473,9 +4543,7 @@ if (_cssEditor) {
     var container = document.getElementById('allEpisodesContainer');
     if (!container) return;
     var total = episodeData.length;
-    var epLabel = total + (total > 1 ? ' episodes' : ' episode');
-    var subtitle = document.querySelector('.pc-episodes-subtitle');
-    if (subtitle) subtitle.textContent = epLabel;
+    // Removed episode count display
 
     if (layout === 'grid') {
       container.className = 'pc-episodes-list pc-grid';
@@ -4491,18 +4559,10 @@ if (_cssEditor) {
               '<button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
             '</div>' +
             '<div class="pc-ep-body">' +
-              '<div style="font-size:11px;color:var(--p-text-secondary);margin-bottom:4px;font-family:var(--p-font-body);">' + ep.date + '</div>' +
               '<div class="pc-ep-title">' + _esc(ep.title) + '</div>' +
               '<div class="pc-ep-excerpt">' + _esc(ep.desc) + '</div>' +
               '<div class="pc-ep-footer">' +
-                '<div class="pc-ep-date"><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
-                '<div class="pc-ep-actions">' +
-                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
-                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
-                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
-                '</div>' +
+                '<div class="pc-ep-date"><span>' + ep.date + '</span><span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -4522,13 +4582,6 @@ if (_cssEditor) {
               '<div class="pc-ep-list-desc">' + _esc(ep.desc) + '</div>' +
               '<div class="pc-ep-list-footer">' +
                 '<span class="pc-ep-list-date">' + ep.date + ' &middot; ' + ep.dur + '</span>' +
-                '<div class="pc-ep-actions">' +
-                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
-                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
-                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
-                '</div>' +
               '</div>' +
             '</div>' +
             '<button class="pc-ep-list-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
@@ -4564,18 +4617,10 @@ if (_cssEditor) {
               '<button class="pc-ep-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
             '</div>' +
             '<div class="pc-ep-body">' +
-              '<div style="font-size:11px;color:var(--p-text-secondary);margin-bottom:4px;font-family:var(--p-font-body);">' + ep.date + '</div>' +
               '<div class="pc-ep-title">' + _esc(ep.title) + '</div>' +
               '<div class="pc-ep-excerpt">' + _esc(ep.desc) + '</div>' +
               '<div class="pc-ep-footer">' +
-                '<div class="pc-ep-date"><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
-                '<div class="pc-ep-actions">' +
-                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
-                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
-                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
-                '</div>' +
+                '<div class="pc-ep-date"><span>' + ep.date + '</span><span class="pc-ep-date-sep"></span><span class="pc-ep-date-dur">' + ep.dur + '</span></div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -4594,13 +4639,6 @@ if (_cssEditor) {
               '<div class="pc-ep-list-desc">' + _esc(ep.desc) + '</div>' +
               '<div class="pc-ep-list-footer">' +
                 '<span class="pc-ep-list-date">' + ep.date + ' &middot; ' + ep.dur + '</span>' +
-                '<div class="pc-ep-actions">' +
-                  '<button class="pc-ep-action-btn" title="Like">' + svgLike + '</button>' +
-                  '<span class="pc-ep-action-count">' + ep.likes + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Download">' + svgDownload + '</button>' +
-                  '<span class="pc-ep-action-count">' + (ep.downloads > 999 ? Math.round(ep.downloads/1000) + 'K' : ep.downloads) + '</span>' +
-                  '<button class="pc-ep-action-btn" title="Share">' + svgShare + '</button>' +
-                '</div>' +
               '</div>' +
             '</div>' +
             '<button class="pc-ep-list-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg></button>' +
@@ -5031,6 +5069,26 @@ if (_cssEditor) {
     setTimeout(function() { hexInput.select(); }, 50);
   }
 
+  function showConfirm(msg, callback) {
+    var overlay = document.createElement('div');
+    overlay.className = 'confirm-overlay';
+    overlay.innerHTML =
+      '<div class="confirm-box">' +
+        '<div class="confirm-msg">' + msg + '</div>' +
+        '<div class="confirm-actions">' +
+          '<button class="confirm-btn confirm-btn-cancel">Cancel</button>' +
+          '<button class="confirm-btn confirm-btn-ok">OK</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    function close() { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }
+    overlay.querySelector('.confirm-btn-cancel').addEventListener('click', function() { close(); if (callback) callback(false); });
+    overlay.querySelector('.confirm-btn-ok').addEventListener('click', function() { close(); if (callback) callback(true); });
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) { close(); if (callback) callback(false); } });
+    document.addEventListener('keydown', function _k(e) { if (e.key === 'Escape') { close(); if (callback) callback(false); document.removeEventListener('keydown', _k); } });
+  }
+
   function _rebuild() {
     // Remove old CS elements from panel
     var olds = _panel.querySelectorAll('.cs-dynamic');
@@ -5151,10 +5209,17 @@ if (_cssEditor) {
       sec.dataset.csId = cs.id;
       sec.style.display = cs.visible ? '' : 'none';
       var safeTitle = _esc(cs.title);
-      var bgStyle = cs.bgColor ? 'background:' + cs.bgColor + ';' : '';
+      var hasBg = cs.bgColor ? true : false;
       var fcStyle = cs.fontColor ? 'color:' + cs.fontColor + ';' : '';
+      if (hasBg) {
+        sec.style.background = cs.bgColor;
+        sec.dataset.hasBg = 'true';
+      }
+      var cardStyle = 'border-radius:' + (hasBg ? '0' : 'var(--p-radius-lg)') + ';';
+      // When outer has background, make card transparent so outer bg shows through
+      if (hasBg) cardStyle += 'background:transparent;margin-bottom:0;';
       sec.innerHTML =
-        '<div class="cs-card style-' + cs.style + '" style="' + bgStyle + '">' +
+        '<div class="cs-card style-' + cs.style + '" style="' + cardStyle + '">' +
           '<div class="cs-avatar">' + imgHtml + '</div>' +
           '<div class="cs-info">' +
             '<div class="cs-title"' + (fcStyle ? ' style="' + fcStyle + '"' : '') + '>' + safeTitle + '</div>' +
@@ -5232,16 +5297,21 @@ if (_cssEditor) {
       });
     }
 
+
+
     // Bind remove buttons
     var rbts = _panel.querySelectorAll('._rm-icon');
     for (var i = 0; i < rbts.length; i++) {
       rbts[i].addEventListener('click', function(e) {
         e.stopPropagation();
         var id = this.dataset.csId;
-        for (var k = 0; k < _csList.length; k++) {
-          if (_csList[k].id === id) { _csList.splice(k, 1); break; }
-        }
-        _rebuild();
+        showConfirm('Are you sure you want to delete this custom section?', function(ok) {
+          if (!ok) return;
+          for (var k = 0; k < _csList.length; k++) {
+            if (_csList[k].id === id) { _csList.splice(k, 1); break; }
+          }
+          _rebuild();
+        });
       });
     }
 
@@ -5346,8 +5416,14 @@ if (_cssEditor) {
           self.style.background = color;
           var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
           if (prev) {
+            prev.style.background = color;
+            prev.dataset.hasBg = 'true';
             var card = prev.querySelector('.cs-card');
-            if (card) card.style.background = color;
+            if (card) {
+              card.style.background = 'transparent';
+              card.style.borderRadius = '0';
+              card.style.marginBottom = '0';
+            }
           }
           var row = f.querySelector('._bg-row');
           if (row) row.dataset.active = 'true';
@@ -5600,8 +5676,10 @@ if (_cssEditor) {
 
   // Cancel – restore initial snapshot
   function cancelChanges() {
-    if (!confirm('Cancel all changes? Unsaved edits will be lost.')) return;
-    cancelChangesImpl();
+    showConfirm('Cancel all changes? Unsaved edits will be lost.', function(ok) {
+      if (!ok) return;
+      cancelChangesImpl();
+    });
   }
 
   function cancelChangesImpl() {
