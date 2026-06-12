@@ -157,7 +157,7 @@ body {
   flex: 3;
   min-width: 0;
   background: #fff;
-  border-right: 1px solid #e5e5e5;
+  border-left: 1px solid #e5e5e5;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -1095,18 +1095,19 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
 .pc-listen-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 14px;
+  row-gap: 22px;
 }
 
 .pc-listen-item {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 18px;
+  padding: 12px 20px;
   border-radius: 30px;
   background: var(--p-card);
   text-decoration: none;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--p-text);
   transition: background .2s, box-shadow .2s;
@@ -1119,7 +1120,7 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
 }
 
 .pc-listen-item img {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   border-radius: 6px;
   flex-shrink: 0;
 }
@@ -3184,7 +3185,7 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
 
 @media (max-width: 820px) {
   .main { flex-direction: column; }
-  .panel { width: 100%; min-width: 0; max-height: 45vh; border-right: none; border-bottom: 1px solid #e5e5e5; }
+  .panel { width: 100%; min-width: 0; max-height: 45vh; border-left: none; border-top: 1px solid #e5e5e5; }
   .preview-area { padding: 12px; }
   .preview-content { --p-hero-layout: column; --p-hero-align: center; }
   .pc-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -3216,8 +3217,8 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
   .pc-ep-title { font-size: 14px; }
   .pc-ep-body { padding: 14px 16px 16px; }
   .pc-listen { padding: 0; }
-  .pc-listen-item { padding: 8px 14px; font-size: 12px; }
-  .pc-listen-item img { width: 18px; height: 18px; }
+  .pc-listen-item { padding: 10px 16px; font-size: 13px; }
+  .pc-listen-item img { width: 20px; height: 20px; }
 }
 </style>
 </head>
@@ -3245,7 +3246,163 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
 <!-- ═══════════════ MAIN LAYOUT ═══════════════ -->
 <div class="main">
 
-  <!-- ─── LEFT PANEL ─── -->
+  <!-- ─── PREVIEW AREA ─── (left side) -->
+  <main class="preview-area">
+    <div class="preview-frame">
+      <div class="preview-frame-top">
+        <div class="pf-dot" style="background:#ff5f57;"></div>
+        <div class="pf-dot" style="background:#febc2e;"></div>
+        <div class="pf-dot" style="background:#28c840;"></div>
+        <span style="margin-left:12px;font-size:11px;color:#999;">thecreativepulse.podbean.com</span>
+      </div>
+
+      <!-- Preview Content -->
+      <div class="preview-content" data-mode="minimal" id="previewContent" style="--p-accent:#FF0000;">
+
+        <!-- Nav -->
+        <nav class="pc-nav">
+          <a href="#" class="active">Home</a>
+          <a href="#">Episodes</a>
+          <a href="#">About</a>
+          <a href="#">Subscribe</a>
+        </nav>
+
+        <!-- Hero Off Indicator (visible when hero is toggled off) -->
+        <div class="pc-hero-off-indicator" id="heroOffIndicator">
+          <span class="pc-hero-off-line"></span>
+          <span class="pc-hero-off-badge">Hero hidden</span>
+          <span class="pc-hero-off-line"></span>
+        </div>
+
+        <!-- Hero -->
+        <div class="pc-hero-wrap" id="heroWrap" data-section="hero">
+          <div class="pc-hero">
+            <div class="pc-hero-cover"><img src="podcast-logo.png" alt="Podcast"></div>
+            <div class="pc-hero-content">
+              <h1 class="pc-hero-title">The Creative Pulse: Stories, Strategy &amp; Inspiration</h1>
+              <div class="pc-hero-desc-wrap">
+                <div class="pc-hero-desc" id="heroDescription">A weekly podcast exploring the intersection of creativity, culture, and technology — where art meets innovation and ideas come to life. Each episode features in-depth conversations with artists, musicians, writers, designers, filmmakers, and creative entrepreneurs who are shaping the cultural landscape in profound and unexpected ways. From emerging voices breaking new ground to established pioneers redefining their fields, every story offers a unique window into the creative process.
+
+Join us as we explore topics like overcoming creative blocks, building sustainable creative careers, the impact of AI on artistic expression, finding your authentic voice, collaborating across disciplines, and much more. Whether you are a seasoned creative professional looking for fresh inspiration or just starting your journey and seeking guidance, this podcast delivers actionable insights, honest conversations, and a healthy dose of motivation to help you pursue your creative passions with confidence and purpose.</div>
+                <button class="pc-hero-desc-toggle hidden" id="heroDescToggle" onclick="toggleHeroDesc()">Show more ↓</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Listen On -->
+        <div class="pc-section">
+          <div class="pc-listen-wrap" id="listenWrap" data-section="listen">
+            <div class="pc-listen">
+              <div class="pc-listen-title">Podcast available on</div>
+              <div class="pc-listen-grid">
+                <a href="#" class="pc-listen-item"><img src="listen on logos/apple-podcast.png" alt="Apple Podcasts"> Apple Podcasts</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/spotify.png" alt="Spotify"> Spotify</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/AmazonMusic.png" alt="Amazon Music"> Amazon Music</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/BoomPlay.png" alt="BoomPlay"> BoomPlay</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/iHeartRadio.png" alt="iHeartRadio"> iHeartRadio</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/podbean-app.png" alt="Podbean App"> Podbean App</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/PlayerFM.png" alt="Player FM"> Player FM</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/ListenNotes.png" alt="Listen Notes"> Listen Notes</a>
+                <a href="#" class="pc-listen-item"><img src="listen on logos/Podchaser.webp" alt="Podchaser"> Podchaser</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Featured Episode -->
+        <div class="pc-section" id="featuredSection" style="display:block;">
+          <div class="pc-featured-wrap" id="featuredWrap" data-section="featured">
+            <div class="pc-section-header" style="margin-bottom:24px;">
+              <span class="pc-section-title">Featured Episode</span>
+            </div>
+            <div class="pc-featured-ep">
+              <div class="pc-featured-inner">
+                <div class="pc-featured-cover"><img src="podcast-logo.png" alt=""></div>
+                <div class="pc-featured-info">
+                  <h2 class="pc-featured-title" id="featuredTitle">Building Creative Communities Online</h2>
+                  <p class="pc-featured-desc" id="featuredDesc">How digital platforms are reshaping the way artists connect, collaborate, and grow their audiences in 2026.</p>
+                  <div class="pc-featured-meta" id="featuredMeta">May 29 &middot; 38 min</div>
+                  <button class="pc-featured-play" id="featuredPlayBtn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg> Play Episode</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Episode Grid -->
+        <div class="pc-section">
+          <div class="pc-ep-grid-wrap" id="gridWrap" data-section="grid">
+            <div class="pc-section-header">
+              <span class="pc-section-title">Latest Episodes</span>
+              <a href="#" class="pc-section-link" id="viewAllLink">View all &rarr;</a>
+            </div>
+            <div class="pc-grid" id="episodeLayoutContainer"></div>
+            <div class="pc-explore-wrap">
+              <button class="pc-explore-btn" id="exploreBtn" onclick="var el=document.getElementById('viewAllLink');if(el)el.click();">Explore Episodes &rarr;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Sections Container (dynamic) -->
+        <div id="customSectionsAnchor"></div>
+
+        <!-- Footer -->
+        <div class="pc-footer">
+          <div class="pc-footer-social" id="footerSocialIcons"></div>
+          <div class="pc-footer-copy">
+            <div>&copy; 2026 The Creative Pulse: Stories, Strategy &amp; Inspiration. All rights reserved.</div>
+            <div style="margin-top:4px;font-size:12px;">Podcast Powered By <a href="https://www.podbean.com/" target="_blank" style="color:inherit;text-decoration:underline;">Podbean</a></div>
+          </div>
+        </div>
+
+        <!-- Episodes Page View (hidden by default) -->
+        <div id="episodesPage" style="display:none;">
+          <nav class="pc-nav" id="episodesPageNav">
+            <a href="#">Home</a>
+            <a href="#" class="active">Episodes</a>
+            <a href="#">Subscribe</a>
+            <span class="pc-nav-search" title="Search">&#128269;</span>
+            <div class="pc-search-bar hidden">
+              <input type="text" class="_search-input" placeholder="Search episodes..." autofocus>
+              <button class="pc-search-btn">Search</button>
+              <button class="pc-search-cancel">Cancel</button>
+            </div>
+          </nav>
+          <div class="pc-episodes-page" style="padding:48px 100px 60px;">
+            <div class="pc-episodes-header" style="margin-bottom:24px;">
+              <h1 class="pc-episodes-title" style="font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:var(--p-text);font-family:var(--p-font-heading);margin-bottom:8px;">All Episodes</h1>
+              <div>
+              </div>
+            </div>
+            <div class="pc-episodes-list" id="allEpisodesContainer">
+              <!-- All episodes rendered by setEpisodeLayout() -->
+            </div>
+          </div>
+          <!-- Episodes Page Footer -->
+          <div class="pc-footer" style="padding:40px 100px 32px;border-top:1px solid var(--p-border,#e5e5e5);">
+            <div class="pc-footer-social" id="episodesFooterSocialIcons"></div>
+            <div class="pc-footer-copy">
+              <div>&copy; 2026 The Creative Pulse: Stories, Strategy &amp; Inspiration. All rights reserved.</div>
+              <div style="margin-top:4px;font-size:12px;">Podcast Powered By <a href="https://www.podbean.com/" target="_blank" style="color:inherit;text-decoration:underline;">Podbean</a></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Cookie Notice (sticky at bottom) -->
+      <div class="pc-cookie-notice" id="cookieNotice">
+        <div class="pc-cookie-notice-text" id="cookieNoticeText">
+          <p>This website uses cookies to ensure you get the best experience on our website.</p>
+        </div>
+        <button class="pc-cookie-notice-btn" onclick="this.parentElement.classList.add('hidden')">Got it!</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ─── LEFT PANEL ─── (right side) -->
   <aside class="panel" id="leftPanel">
     <div class="panel-inner">
 
@@ -3500,163 +3657,6 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
 
     </div>
   </aside>
-
-  <!-- ─── PREVIEW AREA ─── -->
-  <main class="preview-area">
-    <div class="preview-frame">
-      <div class="preview-frame-top">
-        <div class="pf-dot" style="background:#ff5f57;"></div>
-        <div class="pf-dot" style="background:#febc2e;"></div>
-        <div class="pf-dot" style="background:#28c840;"></div>
-        <span style="margin-left:12px;font-size:11px;color:#999;">thecreativepulse.podbean.com</span>
-      </div>
-
-      <!-- Preview Content -->
-      <div class="preview-content" data-mode="minimal" id="previewContent" style="--p-accent:#FF0000;">
-
-
-        <!-- Nav -->
-        <nav class="pc-nav">
-          <a href="#" class="active">Home</a>
-          <a href="#">Episodes</a>
-          <a href="#">About</a>
-          <a href="#">Subscribe</a>
-        </nav>
-
-        <!-- Hero Off Indicator (visible when hero is toggled off) -->
-        <div class="pc-hero-off-indicator" id="heroOffIndicator">
-          <span class="pc-hero-off-line"></span>
-          <span class="pc-hero-off-badge">Hero hidden</span>
-          <span class="pc-hero-off-line"></span>
-        </div>
-
-        <!-- Hero -->
-        <div class="pc-hero-wrap" id="heroWrap" data-section="hero">
-          <div class="pc-hero">
-            <div class="pc-hero-cover"><img src="podcast-logo.png" alt="Podcast"></div>
-            <div class="pc-hero-content">
-              <h1 class="pc-hero-title">The Creative Pulse: Stories, Strategy &amp; Inspiration</h1>
-              <div class="pc-hero-desc-wrap">
-                <div class="pc-hero-desc" id="heroDescription">A weekly podcast exploring the intersection of creativity, culture, and technology — where art meets innovation and ideas come to life. Each episode features in-depth conversations with artists, musicians, writers, designers, filmmakers, and creative entrepreneurs who are shaping the cultural landscape in profound and unexpected ways. From emerging voices breaking new ground to established pioneers redefining their fields, every story offers a unique window into the creative process.
-
-Join us as we explore topics like overcoming creative blocks, building sustainable creative careers, the impact of AI on artistic expression, finding your authentic voice, collaborating across disciplines, and much more. Whether you are a seasoned creative professional looking for fresh inspiration or just starting your journey and seeking guidance, this podcast delivers actionable insights, honest conversations, and a healthy dose of motivation to help you pursue your creative passions with confidence and purpose.</div>
-                <button class="pc-hero-desc-toggle hidden" id="heroDescToggle" onclick="toggleHeroDesc()">Show more ↓</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Listen On -->
-        <div class="pc-section">
-          <div class="pc-listen-wrap" id="listenWrap" data-section="listen">
-            <div class="pc-listen">
-              <div class="pc-listen-title">Podcast available on</div>
-              <div class="pc-listen-grid">
-                <a href="#" class="pc-listen-item"><img src="listen on logos/apple-podcast.png" alt="Apple Podcasts"> Apple Podcasts</a>
-                <a href="#" class="pc-listen-item"><img src="listen on logos/spotify.png" alt="Spotify"> Spotify</a>
-                <a href="#" class="pc-listen-item"><img src="listen on logos/AmazonMusic.png" alt="Amazon Music"> Amazon Music</a>
-                <a href="#" class="pc-listen-item"><img src="listen on logos/BoomPlay.png" alt="BoomPlay"> BoomPlay</a>
-                <a href="#" class="pc-listen-item"><img src="listen on logos/iHeartRadio.png" alt="iHeartRadio"> iHeartRadio</a>
-                <a href="#" class="pc-listen-item"><img src="listen on logos/podbean-app.png" alt="Podbean App"> Podbean App</a>
-                <a href="#" class="pc-listen-item"><img src="listen on logos/PlayerFM.png" alt="Player FM"> Player FM</a>
-                <a href="#" class="pc-listen-item"><img src="listen on logos/ListenNotes.png" alt="Listen Notes"> Listen Notes</a>
-                <a href="#" class="pc-listen-item"><img src="listen on logos/Podchaser.webp" alt="Podchaser"> Podchaser</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Featured Episode -->
-        <div class="pc-section" id="featuredSection" style="display:block;">
-          <div class="pc-featured-wrap" id="featuredWrap" data-section="featured">
-            <div class="pc-section-header" style="margin-bottom:24px;">
-              <span class="pc-section-title">Featured Episode</span>
-            </div>
-            <div class="pc-featured-ep">
-              <div class="pc-featured-inner">
-                <div class="pc-featured-cover"><img src="podcast-logo.png" alt=""></div>
-                <div class="pc-featured-info">
-                  <h2 class="pc-featured-title" id="featuredTitle">Building Creative Communities Online</h2>
-                  <p class="pc-featured-desc" id="featuredDesc">How digital platforms are reshaping the way artists connect, collaborate, and grow their audiences in 2026.</p>
-                  <div class="pc-featured-meta" id="featuredMeta">May 29 &middot; 38 min</div>
-                  <button class="pc-featured-play" id="featuredPlayBtn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg> Play Episode</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Episode Grid -->
-        <div class="pc-section">
-          <div class="pc-ep-grid-wrap" id="gridWrap" data-section="grid">
-            <div class="pc-section-header">
-              <span class="pc-section-title">Latest Episodes</span>
-              <a href="#" class="pc-section-link" id="viewAllLink">View all &rarr;</a>
-            </div>
-            <div class="pc-grid" id="episodeLayoutContainer"></div>
-            <div class="pc-explore-wrap">
-              <button class="pc-explore-btn" id="exploreBtn" onclick="var el=document.getElementById('viewAllLink');if(el)el.click();">Explore Episodes &rarr;</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Custom Sections Container (dynamic) -->
-        <div id="customSectionsAnchor"></div>
-
-        <!-- Footer -->
-        <div class="pc-footer">
-          <div class="pc-footer-social" id="footerSocialIcons"></div>
-          <div class="pc-footer-copy">
-            <div>&copy; 2026 The Creative Pulse: Stories, Strategy &amp; Inspiration. All rights reserved.</div>
-            <div style="margin-top:4px;font-size:12px;">Podcast Powered By <a href="https://www.podbean.com/" target="_blank" style="color:inherit;text-decoration:underline;">Podbean</a></div>
-          </div>
-        </div>
-
-        <!-- Episodes Page View (hidden by default) -->
-        <div id="episodesPage" style="display:none;">
-          <nav class="pc-nav" id="episodesPageNav">
-            <a href="#">Home</a>
-            <a href="#" class="active">Episodes</a>
-            <a href="#">Subscribe</a>
-            <span class="pc-nav-search" title="Search">&#128269;</span>
-            <div class="pc-search-bar hidden">
-              <input type="text" class="_search-input" placeholder="Search episodes..." autofocus>
-              <button class="pc-search-btn">Search</button>
-              <button class="pc-search-cancel">Cancel</button>
-            </div>
-          </nav>
-          <div class="pc-episodes-page" style="padding:48px 100px 60px;">
-            <div class="pc-episodes-header" style="margin-bottom:24px;">
-              <h1 class="pc-episodes-title" style="font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:var(--p-text);font-family:var(--p-font-heading);margin-bottom:8px;">All Episodes</h1>
-              <div>
-              </div>
-            </div>
-            <div class="pc-episodes-list" id="allEpisodesContainer">
-              <!-- All episodes rendered by setEpisodeLayout() -->
-            </div>
-          </div>
-          <!-- Episodes Page Footer -->
-          <div class="pc-footer" style="padding:40px 100px 32px;border-top:1px solid var(--p-border,#e5e5e5);">
-            <div class="pc-footer-social" id="episodesFooterSocialIcons"></div>
-            <div class="pc-footer-copy">
-              <div>&copy; 2026 The Creative Pulse: Stories, Strategy &amp; Inspiration. All rights reserved.</div>
-              <div style="margin-top:4px;font-size:12px;">Podcast Powered By <a href="https://www.podbean.com/" target="_blank" style="color:inherit;text-decoration:underline;">Podbean</a></div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Cookie Notice (sticky at bottom) -->
-      <div class="pc-cookie-notice" id="cookieNotice">
-        <div class="pc-cookie-notice-text" id="cookieNoticeText">
-          <p>This website uses cookies to ensure you get the best experience on our website.</p>
-        </div>
-        <button class="pc-cookie-notice-btn" onclick="this.parentElement.classList.add('hidden')">Got it!</button>
-      </div>
-
-    </div>
-  </main>
 
 </div>
 
