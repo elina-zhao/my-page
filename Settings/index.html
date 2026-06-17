@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Podcast Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a9a6c;
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-secondary: #64748b;
+      --text-tertiary: #94a3b8;
+      --border: #e2e8f0;
+      --radius-sm: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ==============================
+           TOPBAR (fixed, full width)
+           ============================== */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+    }
+
+    .topbar .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .topbar .menu-toggle:hover { background: #f1f5f9; }
+
+    .topbar .logo-icon { display: flex; align-items: center; }
+    .topbar .logo-icon svg {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .topbar .brand-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .topbar .external-link {
+      display: inline-flex;
+      color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .topbar .external-link:hover { color: var(--text-secondary); }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar-actions .btn-new-episode {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .topbar-actions .btn-new-episode:hover { background: #334155; }
+
+    .topbar-actions .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 7px;
+      color: var(--text-secondary);
+      border-radius: 6px;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+    }
+    .topbar-actions .icon-btn:hover { background: #f1f5f9; }
+
+    .topbar-actions .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--text);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ==============================
+           SIDEBAR (fixed, below topbar)
+           ============================== */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 64px;
+      bottom: 0;
+      width: 230px;
+      background: #fff;
+      z-index: 100;
+      border-right: 1px solid var(--border);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      padding-top: 12px;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      color: rgb(102, 102, 102);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 50px;
+      transition: all 0.15s;
+    }
+    .sidebar-nav a:hover { background: #f1f5f9; }
+
+    .sidebar-nav a .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-nav a .nav-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--text-tertiary);
+      transition: stroke 0.15s;
+    }
+    .sidebar-nav a:hover .nav-icon svg { stroke: var(--text); }
+
+    .sidebar-nav a.active {
+      background: #f1f5f9;
+      color: #1e2939;
+      font-weight: 500;
+    }
+    .sidebar-nav a.active .nav-icon svg { stroke: #1e2939; }
+
+    .sidebar-nav .sub-menu {
+      padding-left: 34px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .sidebar-nav .sub-menu a {
+      font-size: 14px;
+      padding: 7px 14px;
+      border-radius: 50px;
+      color: rgb(102, 102, 102);
+    }
+    .sidebar-nav .sub-menu a.active {
+      background: #f1f5f9;
+      color: #1e2939;
+      font-weight: 500;
+    }
+
+    /* ==============================
+           OVERLAY (mobile only)
+           ============================== */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.3);
+      z-index: 99;
+    }
+
+    /* ==============================
+           MAIN CONTENT AREA
+           ============================== */
+    .main-panel {
+      margin-left: 230px;
+      margin-top: 64px;
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .content {
+      padding: 32px 48px;
+      flex: 1;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .page-heading-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      margin: 0 0 24px;
+      line-height: 1.5;
+    }
+
+    /* ---- Tabs (Podcast Basic) ---- */
+    .pb-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0;
+      border-bottom: 1px solid #eee;
+    }
+    .pb-tab {
+      padding: 12px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #999;
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      margin-right: 28px;
+      transition: color 0.15s;
+    }
+    .pb-tab:hover { color: var(--text); }
+    .pb-tab.active { color: var(--text); }
+    .pb-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--text);
+    }
+
+    /* ---- Tab Panels ---- */
+    .pb-panel {
+      display: none;
+      padding-top: 28px;
+    }
+    .pb-panel.active { display: block; }
+
+    /* ---- Info Row (matching reference) ---- */
+    .pb-card {
+      background: #fff;
+      padding: 0;
+    }
+    .pb-panel { width: 100%; }
+
+    .info-row {
+      border-bottom: 1px solid #eee;
+      padding: 28px 0;
+    }
+    .pb-card .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .account-info-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .info-content-item {
+      margin-bottom: 24px;
+    }
+    .info-content-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .cc-item-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .cc-item-label .required {
+      color: #ef4444;
+    }
+
+    .pb-input {
+      width: 100%;
+      padding: 8px 0;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text);
+      background: transparent;
+      outline: none;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .pb-input:focus {
+      border-bottom-color: var(--text);
+    }
+
+    .pb-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 100px;
+      box-sizing: border-box;
+    }
+    .pb-textarea:focus {
+      border-color: var(--text);
+    }
+
+    .tips {
+      display: block;
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    /* Rich editor */
+    .pb-editor {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .pb-editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+      background: #fafbfc;
+    }
+    .pb-editor-toolbar .tb-group {
+      display: flex;
+      gap: 1px;
+      padding: 0 4px;
+      border-right: 1px solid var(--border);
+    }
+    .pb-editor-toolbar .tb-group:last-child { border-right: none; }
+    .pb-editor-toolbar .tb-btn {
+      width: 28px; height: 26px;
+      display: flex;
+      align-items: center; justify-content: center;
+      border: none; background: transparent;
+      border-radius: 4px; cursor: pointer;
+      color: #94a3b8; font-size: 13px;
+    }
+    .pb-editor-toolbar .tb-btn:hover { background: #e2e8f0; color: #475569; }
+    .pb-editor-body {
+      min-height: 120px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      outline: none;
+    }
+    .pb-editor-body p { margin: 0; }
+
+    /* VS (select) */
+    .pb-vs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text);
+      gap: 8px;
+    }
+    .pb-vs:hover { border-bottom-color: #cbd5e1; }
+    .pb-vs.placeholder span { color: #999; }
+    .pb-vs svg { flex-shrink: 0; color: #999; }
+
+    /* Category */
+    .pb-cat-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .pb-cat-select { flex: 1; min-width: 130px; }
+    .pb-cat-add {
+      height: 32px;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #999;
+      flex-shrink: 0;
+      padding: 0 8px;
+    }
+    .pb-cat-add:hover { border-bottom-color: var(--text); color: var(--text); }
+
+    .pb-note {
+      font-size: 12px;
+      color: #999;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .pb-note a { color: var(--text); text-decoration: underline; }
+
+    /* Logo */
+    .pb-logo-row {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .pb-logo-preview {
+      width: 200px;
+      height: 200px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f8fafc;
+      flex-shrink: 0;
+    }
+    .pb-logo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .pb-logo-controls {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .pb-upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fafbfc;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      width: fit-content;
+      transition: all 0.15s;
+    }
+    .pb-upload-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+
+    /* Logo hints inline like reference subtitle text */
+    .pb-logo-hints {
+      font-size: 12px;
+      color: #999;
+      line-height: 1.5;
+    }
+    .pb-logo-hints a { color: var(--text); }
+
+    /* Country row */
+    .pb-country-row {
+      display: flex;
+      gap: 16px;
+    }
+    .pb-country-row .pb-vs-wrap { flex: 1; }
+    .pb-vs-wrap { width: 100%; }
+
+    /* URL */
+    .pb-url-wrap {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+    }
+    .pb-url-wrap:focus-within { border-bottom-color: var(--text); }
+    .pb-url-prefix, .pb-url-suffix {
+      padding: 8px 0;
+      font-size: 13px;
+      color: #999;
+      white-space: nowrap;
+    }
+    .pb-url-prefix { padding-right: 4px; }
+    .pb-url-suffix { padding-left: 4px; }
+    .pb-url-input {
+      flex: 1;
+      padding: 8px 0;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: var(--text);
+      font-family: inherit;
+      background: transparent;
+    }
+
+    /* Radio */
+    .pb-radio-group {
+      display: flex;
+      gap: 28px;
+    }
+    .pb-radio {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .pb-radio input { display: none; }
+    .pb-radio-dot {
+      width: 16px; height: 16px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 50%;
+      position: relative;
+    }
+    .pb-radio.checked .pb-radio-dot { border-color: var(--text); }
+    .pb-radio.checked .pb-radio-dot::after {
+      content: '';
+      position: absolute;
+      top: 2.5px; left: 2.5px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--text);
+    }
+
+    /* Sticky bottom save bar */
+    .pb-save-bar {
+      display: none;
+      position: sticky;
+      bottom: 0;
+      width: 100%;
+      height: 111px;
+      border-top: 1px solid #eee;
+      background: #fff;
+      z-index: 50;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+    }
+    .pb-save-bar.is-visible { display: flex; align-items: center; }
+    .pb-save-bar-inner {
+      width: 100%;
+      padding: 0 24px 0 48px;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    .pb-save-bar .cancel-btn {
+      width: 102px;
+      height: 50px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pb-save-bar .cancel-btn:hover { background: #f1f5f9; }
+    .pb-save-bar .save-btn {
+      width: 102px;
+      height: 50px;
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .pb-save-bar .save-btn:hover { background: #334155; }
+
+    /* Multi-select country */
+    .pb-vs-wrap.multi .pb-vs span { color: #999; }
+
+    /* Radio hover */
+    .pb-radio:hover .pb-radio-dot { border-color: var(--text); }
+
+    /* Toggle row — label left, switch right */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .toggle-row .cc-item-label {
+      margin-bottom: 0;
+    }
+
+    /* Switch / Toggle */
+    .pb-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .pb-switch input { display: none; }
+    .pb-switch-track {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: #d1d5db;
+      border-radius: 12px;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .pb-switch.checked .pb-switch-track { background: var(--text); }
+    .pb-switch-thumb {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .pb-switch.checked .pb-switch-thumb { transform: translateX(20px); }
+
+    /* Collapsible */
+    .pb-collapse {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+    .pb-collapse-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      background: #fafbfc;
+      user-select: none;
+    }
+    .pb-collapse-header h5 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pb-collapse-header .collapse-icon {
+      transition: transform 0.2s;
+      color: #999;
+    }
+    .pb-collapse.open .collapse-icon { transform: rotate(180deg); }
+    .pb-collapse-body {
+      display: none;
+      padding: 20px;
+      border-top: 1px solid #eee;
+    }
+    .pb-collapse.open .pb-collapse-body { display: block; }
+
+    /* Help icon */
+    .pb-help-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #64748b;
+      font-size: 11px;
+      font-style: normal;
+      cursor: help;
+      flex-shrink: 0;
+    }
+
+    /* Feed URL display */
+    .pb-feed-url {
+      font-size: 14px;
+      color: var(--text);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .pb-feed-url:hover { text-decoration: underline; }
+
+    /* Warning helper text */
+    .pb-warning {
+      display: block;
+      font-size: 12px;
+      color: #b45309;
+      margin-top: 6px;
+      line-height: 1.5;
+      background: #fffbeb;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+
+    /* Page switch */
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    /* Mobile sidebar */
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.show { display: block; }
+
+    /* Feed URL box */
+    .feed-url-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .feed-url-text {
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-all;
+      flex: 1;
+    }
+    .feed-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .feed-copy-btn:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: var(--text);
+    }
+
+    /* Feed site link */
+    .feed-site-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .feed-site-link:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    /* Number input compact */
+    .number-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .number-input-wrap .pb-input {
+      flex: 1;
+    }
+    .number-input-hint {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* Toggle row compact */
+    .toggle-row-compact {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .toggle-row-compact .cc-item-label {
+      margin-bottom: 2px;
+    }
+    .toggle-desc {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .toggle-row-compact .pb-switch {
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    /* Warning icon */
+    .pb-warning svg {
+      vertical-align: middle;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.show { display: block; }
+      .topbar .menu-toggle { display: flex; }
+      .main-panel { margin-left: 0; }
+      .content { padding: 24px; }
+      .pb-logo-row { flex-direction: column; }
+      .pb-cat-row { flex-wrap: wrap; }
+      .pb-country-row { flex-direction: column; }
+      .pb-country-row .pb-vs-wrap { max-width: 100%; }
+      .pb-radio-group { flex-direction: column; gap: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      .content { padding: 16px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ===== TOPBAR ===== -->
+  <header class="topbar">
+    <button class="menu-toggle" onclick="toggleSidebar()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="logo-icon">
+        <svg viewBox="0 0 34 34" fill="none">
+          <rect width="34" height="34" rx="8" fill="#1e293b"/>
+          <path d="M17 7a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0v-4a5 5 0 0 0-5-5z" fill="#fff"/>
+          <path d="M22 16v1a5 5 0 0 1-10 0v-1" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="17" y1="23" x2="17" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="13" y1="27" x2="21" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-text">Brand Name</span>
+      <a href="#" target="_blank" class="external-link" title="View Site">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </a>
+    </div>
+
+    <div class="topbar-actions">
+      <button class="btn-new-episode">+ New Item</button>
+      <button class="icon-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </button>
+      <div class="avatar">EZ</div>
+    </div>
+  </header>
+
+  <!-- ===== SIDEBAR OVERLAY ===== -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#" data-page="onboarding">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </span>
+        Onboarding
+      </a>
+      <a href="#" data-page="dashboard">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </span>
+        Dashboard
+      </a>
+      <a href="#" data-page="statistics">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </span>
+        Statistics
+      </a>
+      <div class="sub-menu">
+        <a href="#">Overview</a>
+        <a href="#">Episode</a>
+      </div>
+      <a href="#" class="active" data-page="settings">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </span>
+        Settings
+      </a>
+      <div class="sub-menu">
+        <a href="#" class="active" data-page="podcast-basic">Podcast Basic</a>
+        <a href="#" data-page="feed">Feed</a>
+        <a href="#" data-page="plugin">Plugin</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-panel">
+    <div class="content">
+      <!-- ===== Page: Podcast Basic ===== -->
+      <div class="page-section active" id="page-podcast-basic">
+        <div class="page-heading-title">Podcast Basic</div>
+        <p class="page-subtitle">Configure your podcast basic settings here.</p>
+
+        <!-- Tabs -->
+        <div class="pb-tabs">
+          <button class="pb-tab active" data-pb-tab="basic">Basic Information</button>
+          <button class="pb-tab" data-pb-tab="metadata">Ownership &amp; Localization</button>
+          <button class="pb-tab" data-pb-tab="publication">Publication Settings</button>
+        </div>
+
+        <!-- Tab: Basic Information -->
+        <div class="pb-panel active" id="pb-basic">
+          <div class="pb-card">
+            <div class="info-row">
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Title <span class="required">*</span></span>
+                <input type="text" class="pb-input" placeholder="Make a clear, concise name for your title" value="My Awesome Podcast" />
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Brief Description <span class="required">*</span></span>
+                <div class="pb-editor">
+                  <div class="pb-editor-toolbar">
+                    <div class="tb-group">
+                      <button class="tb-btn" title="Undo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h7c3.6 0 6 2 6.5 5S15 20 13 20"/><path d="M3 10l4-4M3 10l4 4"/></svg></button>
+                      <button class="tb-btn" title="Redo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10h-7c-3.6 0-6 2-6.5 5S9 20 11 20"/><path d="M21 10l-4-4M21 10l-4 4"/></svg></button>
+                    </div>
+                    <div class="tb-group">
+                      <button class="tb-btn active" title="Bold"><strong>B</strong></button>
+                      <button class="tb-btn" title="Italic"><em>I</em></button>
+                      <button class="tb-btn" title="Underline"><u>U</u></button>
+                    </div>
+                    <div class="tb-group">
+                      <button class="tb-btn" title="Link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="pb-editor-body" contenteditable="true">
+                    <p>Welcome to My Awesome Podcast! We discuss technology, design, and the future of digital media.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Category <span class="required">*</span></span>
+                <div class="pb-cat-row">
+                  <div class="pb-cat-select">
+                    <div class="pb-vs"><span>Arts</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                  </div>
+                  <button class="pb-cat-add">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </button>
+                </div>
+                <div class="pb-note">Apple Podcasts only recognizes the first category and subcategory.</div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Logo <span class="required">*</span></span>
+                <div class="pb-logo-row">
+                  <div class="pb-logo-preview">
+                    <img src="https://pbcdn1.podbean.org/img/podbean-logo/podbean_81.jpg?v=5d2999" alt="Podcast Logo" />
+                  </div>
+                  <div class="pb-logo-controls">
+                    <div class="pb-vs" style="max-width:200px;"><span>Podbean Default v4</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                    <button class="pb-upload-btn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                      Upload image
+                    </button>
+                    <div class="pb-logo-hints">Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork. <a href="#">Details</a></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Ownership & Localization -->
+        <div class="pb-panel" id="pb-metadata">
+          <div class="pb-card">
+            <div class="info-row">
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Author / Owner</span>
+                <input type="text" class="pb-input" placeholder="Enter author or owner name" value="John Doe" />
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Copyright</span>
+                <input type="text" class="pb-input" placeholder="Copyright 2026 All rights reserved." value="Copyright 2026 My Awesome Podcast. All rights reserved." />
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Language</span>
+                <div class="pb-vs"><span>English [en]</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Country of Origin</span>
+                <div class="pb-country-row">
+                  <div class="pb-vs-wrap">
+                    <div class="pb-vs"><span>Global</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                  </div>
+                  <div class="pb-vs-wrap multi">
+                    <div class="pb-vs placeholder"><span>Specific countries</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Timezone</span>
+                <div class="pb-vs"><span>(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                <span class="tips">Current time: Jun 16, 2026, 10:21 AM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Publication Settings -->
+        <div class="pb-panel" id="pb-publication">
+          <div class="pb-card">
+            <div class="info-row">
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Website</span>
+                <div class="pb-url-wrap">
+                  <span class="pb-url-prefix">https://</span>
+                  <input type="text" class="pb-url-input" value="myawesomepodcast" />
+                  <span class="pb-url-suffix">.podbean.org</span>
+                </div>
+                <div class="pb-note">Changing site URL also changes your feed URL. <a href="#">Learn more</a></div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Type</span>
+                <div class="pb-radio-group">
+                  <label class="pb-radio checked">
+                    <input type="radio" name="podcastType" value="episodic" checked />
+                    <span class="pb-radio-dot"></span>
+                    <span>Episodic</span>
+                  </label>
+                  <label class="pb-radio">
+                    <input type="radio" name="podcastType" value="serial" />
+                    <span class="pb-radio-dot"></span>
+                    <span>Serial</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Episode Download Link</span>
+                <div class="pb-vs"><span>Show</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Podbean Branding</span>
+                <div class="pb-vs"><span>Show</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Site Top Bar</span>
+                <div class="pb-vs"><span>Show</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Page: Feed ===== -->
+      <div class="page-section" id="page-feed">
+        <div class="page-heading-title">Feed</div>
+        <p class="page-subtitle">Manage your podcast feed and Apple Podcasts settings.</p>
+
+        <!-- Tabs -->
+        <div class="pb-tabs">
+          <button class="pb-tab active" data-feed-tab="info">Feed Info</button>
+          <button class="pb-tab" data-feed-tab="redirect">Redirect</button>
+        </div>
+
+        <!-- Tab: Feed Info -->
+        <div class="pb-panel active" id="feed-info">
+          <div class="pb-card">
+            <div class="info-row">
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Feed URL <i class="pb-help-icon">?</i></span>
+                <div class="feed-url-box">
+                  <span class="feed-url-text">https://feed.podbean.org/elinazplus/feed.xml</span>
+                  <button class="feed-copy-btn" onclick="navigator.clipboard.writeText('https://feed.podbean.org/elinazplus/feed.xml')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Website <i class="pb-help-icon">?</i></span>
+                <div class="pb-url-wrap">
+                  <span class="pb-url-prefix">https://</span>
+                  <input type="text" class="pb-url-input" value="elinazplus.podbean.org" />
+                </div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Content Explicit <i class="pb-help-icon">?</i></span>
+                <div class="pb-vs"><span>Clean / False</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Ownership Verification Email <i class="pb-help-icon">?</i></span>
+                <div class="toggle-row-compact">
+                  <div>
+                    <p class="toggle-desc">Add an email address to your RSS feed so podcast directories can verify your podcast.</p>
+                  </div>
+                  <span class="pb-switch">
+                    <input type="checkbox" data-toggle="ownership-email-input" />
+                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
+                  </span>
+                </div>
+                <input type="email" class="pb-input" id="ownership-email-input" placeholder="Enter verification email" style="display:none;margin-top:12px;" />
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Episode Number Limit <i class="pb-help-icon">?</i></span>
+                <input type="number" class="pb-input" min="1" max="1999" value="1999" />
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Redirect -->
+        <div class="pb-panel" id="feed-redirect">
+          <div class="pb-card">
+            <div class="info-row">
+              <div class="info-content-item">
+                <span class="cc-item-label">Redirect to a New Feed <i class="pb-help-icon">?</i></span>
+                <input type="text" class="pb-input" placeholder="https://" />
+                <span class="pb-warning">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                  Warning! This will redirect your Podcast feed permanently. Only input a new feed here if you are ready to move your podcast to a new feed.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- Global Sticky save bar -->
+      <div class="pb-save-bar">
+        <div class="pb-save-bar-inner">
+          <button type="button" class="cancel-btn"> Cancel </button>
+          <button type="button" class="save-btn"> Save </button>
+        </div>
+      </div>
+    </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('show');
+    }
+
+    // Sidebar page navigation
+    document.querySelectorAll('.sidebar-nav > a[data-page]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var page = this.getAttribute('data-page');
+
+        document.querySelectorAll('.sidebar-nav a').forEach(function(a) { a.classList.remove('active'); });
+        this.classList.add('active');
+
+        switchPage(page);
+      });
+    });
+
+    document.querySelectorAll('.sidebar-nav .sub-menu a[data-page]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var page = this.getAttribute('data-page');
+
+        document.querySelectorAll('.sidebar-nav a, .sidebar-nav .sub-menu a').forEach(function(a) { a.classList.remove('active'); });
+        this.classList.add('active');
+        var parent = this.closest('.sub-menu');
+        var parentLink = parent.previousElementSibling;
+        if (parentLink) parentLink.classList.add('active');
+
+        switchPage(page);
+      });
+    });
+
+    function switchPage(page) {
+      document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
+      var target = document.getElementById('page-' + page);
+      if (!target) return;
+      target.classList.add('active');
+
+      // Reset to first tab when entering a page
+      var firstTab = target.querySelector('.pb-tab');
+      var firstPanel = target.querySelector('.pb-panel');
+      if (firstTab && firstPanel) {
+        target.querySelectorAll('.pb-tab').forEach(function(t) { t.classList.remove('active'); });
+        target.querySelectorAll('.pb-panel').forEach(function(p) { p.classList.remove('active'); });
+        firstTab.classList.add('active');
+        firstPanel.classList.add('active');
+      }
+    }
+
+    // Podcast Basic Tabs
+    document.querySelectorAll('.pb-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var tabId = this.getAttribute('data-pb-tab');
+        document.querySelectorAll('.pb-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.pb-panel').forEach(function(p) { p.classList.remove('active'); });
+        this.classList.add('active');
+        document.getElementById('pb-' + tabId).classList.add('active');
+      });
+    });
+
+    // Feed Tabs
+    document.querySelectorAll('.pb-tab[data-feed-tab]').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var tabId = this.getAttribute('data-feed-tab');
+        document.querySelectorAll('.pb-tab[data-feed-tab]').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('#page-feed .pb-panel').forEach(function(p) { p.classList.remove('active'); });
+        this.classList.add('active');
+        document.getElementById('feed-' + tabId).classList.add('active');
+      });
+    });
+
+    // Toggle collapsible
+    function toggleCollapse(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.toggle('open');
+    }
+
+    // Switch toggle click
+    document.querySelectorAll('.pb-switch').forEach(function(s) {
+      s.addEventListener('click', function() {
+        var input = this.querySelector('input');
+        if (input) {
+          input.checked = !input.checked;
+          this.classList.toggle('checked');
+
+          // Show/hide linked input by data-toggle
+          var targetId = input.getAttribute('data-toggle');
+          if (targetId) {
+            var target = document.getElementById(targetId);
+            if (target) {
+              target.style.display = input.checked ? 'block' : 'none';
+            }
+          }
+        }
+      });
+    });
+
+    // Show save bar on form changes
+    (function() {
+      var saveBar = document.querySelector('.pb-save-bar');
+      if (!saveBar) return;
+
+      function showSaveBar() {
+        saveBar.classList.add('is-visible');
+      }
+
+      var inputs = document.querySelectorAll('.pb-input, .pb-url-input, .pb-vs, .pb-textarea');
+      inputs.forEach(function(input) {
+        input.addEventListener('input', showSaveBar);
+        input.addEventListener('change', showSaveBar);
+      });
+
+      var editors = document.querySelectorAll('.pb-editor-body');
+      editors.forEach(function(editor) {
+        editor.addEventListener('input', showSaveBar);
+      });
+
+      var radios = document.querySelectorAll('.pb-radio input');
+      radios.forEach(function(radio) {
+        radio.addEventListener('change', showSaveBar);
+      });
+
+      var switches = document.querySelectorAll('.pb-switch input');
+      switches.forEach(function(s) {
+        s.addEventListener('change', showSaveBar);
+      });
+
+      var cancelBtn = saveBar.querySelector('.cancel-btn');
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+          saveBar.classList.remove('is-visible');
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
