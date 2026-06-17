@@ -325,55 +325,62 @@
   .nav-parent:hover { background: #f8fafc; color: #1e293b; border-radius: 50px; }
   .nav-parent.expanded .nav-arrow { transform: rotate(180deg); }
 
-  /* ── New Episode Modal ──────────────────── */
+  /* ── New Episode Modal (full page) ──────────── */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,.5); align-items: center; justify-content: center;
-    padding: 40px;
+    background: #fff;
+    overflow-y: auto;
   }
-  .modal-overlay.show { display: flex; }
+  .modal-overlay.show { display: block; }
   .modal-box {
-    background: #fff; border-radius: 5px;
-    display: flex; max-width: 930px; width: 100%; height: 767px;
-    box-shadow: 0 16px 64px rgba(0,0,0,.15);
+    background: #fff;
+    display: flex; max-width: 1100px; width: 100%;
+    margin: 0 auto;
+    min-height: calc(100vh - 57px);
     position: relative;
   }
-  .modal-close {
-    position: absolute; top: 16px; right: 16px; z-index: 10;
-    width: 32px; height: 32px; border-radius: 50%;
-    border: none; background: #f1f5f9; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; color: #64748b; transition: all .15s;
-  }
-  .modal-close:hover { background: #e2e8f0; color: #1e293b; }
   .modal-left {
-    flex: 1; padding: 40px 48px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; border-radius: 5px 0 0 5px; overflow: hidden;
+    flex: 1; padding: 60px 56px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; overflow-y: auto;
   }
-  .modal-divider { width: 1px; background: var(--border); flex-shrink: 0; }
   .modal-right {
-    width: 380px; flex-shrink: 0; padding: 32px 24px;
+    width: 360px; flex-shrink: 0; padding: 48px 28px 32px;
     display: flex; flex-direction: column;
-    background: #fff; border-radius: 0 5px 5px 0;
-    min-height: 0;
   }
+  .modal-topbar {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center;
+    height: 67px; padding: 0 24px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-back-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px;
+    background: #fff; cursor: pointer;
+    font-size: 14px; font-family: inherit; color: var(--text-secondary);
+    transition: all .15s; text-decoration: none;
+  }
+  .modal-back-btn:hover { background: #f8fafc; border-color: #cbd5e1; color: var(--text); }
   .upload-zone {
-    width: 100%; max-width: 400px;
-    border: 3px dashed #94a3b8; border-radius: 16px;
-    padding: 56px 32px; text-align: center;
+    width: 100%; max-width: 600px; height: 420px;
+    border: 3px dashed #cbd5e1; border-radius: 20px;
+    padding: 72px 48px; text-align: center;
     transition: border-color .2s, background .2s;
     cursor: pointer; background: #f8fafc;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
   .upload-zone:hover { border-color: var(--primary); background: #f0fdf6; }
   .upload-zone.drag-over { border-color: var(--primary); background: #ecfdf5; }
   .upload-icon {
-    width: 64px; height: 64px; border-radius: 50%;
+    width: 72px; height: 72px; border-radius: 50%;
     background: #e2e8f0; display: flex; align-items: center; justify-content: center;
     margin: 0 auto 20px;
   }
-  .upload-title { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-  .upload-hint { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+  .upload-icon svg { width: 28px; height: 28px; }
+  .upload-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+  .upload-hint { font-size: 14px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.5; }
   .upload-formats { font-size: 12px; color: var(--text-tertiary); margin-top: 8px; }
   .upload-skip {
     margin-top: 16px; font-size: 14px; color: var(--text-secondary); cursor: pointer;
@@ -529,6 +536,7 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 24px;
     background: #fff;
+    border-bottom: 1px solid var(--border);
   }
   .episode-details-overlay .ed-topbar-left {
     display: flex; align-items: center; gap: 12px;
@@ -589,55 +597,7 @@
   }
   .ed-publish-dropdown-item:hover { background: #f8fafc; }
 
-  /* ── Category Sidebar Layout ──────────── */
-  .ed-layout {
-    display: flex;
-    justify-content: center;
-    min-height: calc(100vh - 57px);
-    padding-left: 220px;
-  }
-  .ed-sidebar {
-    position: fixed; top: 57px; left: 0;
-    width: 220px;
-    padding: 32px 0;
-    height: calc(100vh - 57px);
-    box-sizing: border-box;
-    overflow-y: auto;
-    background: #fff;
-    z-index: 15;
-  }
-  .ed-sidebar-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 20px; margin: 0 12px 2px; border-radius: 8px;
-    font-size: 14px; font-weight: 500; color: var(--text-secondary);
-    cursor: pointer; transition: all .12s; border: none; background: none;
-    width: calc(100% - 24px); font-family: inherit; text-align: left;
-  }
-  .ed-sidebar-item:hover { color: var(--text); }
-  .ed-sidebar-item.active {
-    color: var(--text); font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-  .ed-sidebar-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-  .ed-content {
-    flex: 1; min-width: 0; max-width: 786px;
-    padding: 32px 48px 80px;
-    margin-left: -220px;
-  }
-  .ed-content-section {
-    scroll-margin-top: 72px;
-    margin-bottom: 48px;
-  }
-  .ed-content-section:last-child { margin-bottom: 0; }
-  .ed-content-section .ed-category-title {
-    font-size: 20px; font-weight: 700; color: var(--text);
-    margin-bottom: 6px;
-  }
-  .ed-content-section .ed-category-desc {
-    font-size: 14px; color: var(--text-secondary);
-    margin-bottom: 32px;
-  }
+  /* ── Category Sidebar Layout (V1) — removed ── */
   .ed-field-group { margin-bottom: 24px; }
   .ed-field-group:last-child { margin-bottom: 0; }
   .episode-details-overlay .ed-field-label {
@@ -662,10 +622,7 @@
     font-size: 15px; color: var(--text);
   }
   .ed-file-row svg { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; }
-  .ed-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .ed-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  .ed-select {
-    width: 100%; padding: 12px 16px;
+  .ed-select { width: 100%; padding: 12px 16px;
     border: 1px solid var(--border); border-radius: 8px;
     font-size: 15px; font-family: inherit; color: var(--text);
     outline: none; background: #fff; cursor: pointer; box-sizing: border-box;
@@ -674,33 +631,7 @@
     background-repeat: no-repeat; background-position: right 12px center;
   }
   .ed-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,154,108,.1); }
-  .ed-logo-upload {
-    width: 120px; height: 120px;
-    border: 2px dashed var(--border); border-radius: 12px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; gap: 6px; color: var(--text-secondary);
-    transition: all .15s; font-size: 13px;
-  }
-  .ed-logo-upload:hover { border-color: var(--primary); background: #f8fafc; color: var(--primary); }
-  .ed-logo-upload svg { width: 28px; height: 28px; }
-  .ed-logo-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-    margin-bottom: 8px;
-  }
-  .ed-logo-card {
-    position: relative; aspect-ratio: 1; border-radius: 10px;
-    border: 2px solid var(--border); cursor: pointer;
-    overflow: hidden; transition: all .15s;
-  }
-  .ed-logo-card:hover { border-color: var(--primary); }
-  .ed-logo-card.selected { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,154,108,.25); }
-  .ed-logo-card::after {
-    display: none; content: ''; position: absolute; top: 6px; right: 6px;
-    width: 20px; height: 20px; border-radius: 50%; background: var(--primary);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: center; background-size: 12px;
-  }
-  .ed-logo-card.selected::after { display: block; }
+  /* (episode logo removed with V1) */
   .ed-social-icons { display: flex; gap: 12px; flex-wrap: wrap; }
   .ed-social-icon {
     width: 44px; height: 44px; border-radius: 10px;
@@ -759,41 +690,55 @@
   }
   .ed-rte-editor ul, .ed-rte-editor ol { padding-left: 24px; margin: 6px 0; }
 
-  /* ── Responsive tweaks for details modal ── */
-  @media (max-width:1024px) {
-    .ed-layout { padding-left: 0; flex-direction: column; }
-    .ed-sidebar { position: static; width: 100%; height: auto; padding: 16px 0; display: flex; flex-wrap: wrap; gap: 4px; }
-    .ed-sidebar-item { width: auto; }
-    .ed-content { margin-left: 0; padding: 24px; }
-  }
   @media (max-width:768px) {
-    .ed-row-2 { grid-template-columns: 1fr; }
-    .ed-row-3 { grid-template-columns: 1fr; }
-    .ed-logo-grid { grid-template-columns: repeat(2, 1fr); }
     .episode-details-overlay .ed-topbar-title { position: static; transform: none; }
     .episode-details-overlay .ed-topbar { flex-wrap: wrap; gap: 8px; }
   }
 
-  /* ── V2 Layout ────────────────────────── */
-  .ed-version-toggle {
-    position: absolute; left: 50%; transform: translateX(calc(-50% + 200px));
-    display: flex; gap: 2px;
-    background: #f1f5f9; border-radius: 8px; padding: 3px;
+  /* ── Confirm Modal (centered overlay) ──── */
+  .confirm-overlay {
+    display: none; position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,.3);
+    align-items: center; justify-content: center;
   }
-  .ed-version-toggle .ed-ver-btn {
-    padding: 4px 16px; border: none; border-radius: 6px;
-    font-size: 12px; font-weight: 600; font-family: inherit;
-    cursor: pointer; transition: all .15s;
-    background: transparent; color: #64748b;
+  .confirm-overlay.show { display: flex; }
+  .confirm-dialog {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.18);
+    max-width: 420px; width: 90%; padding: 32px;
+    text-align: center;
   }
-  .ed-version-toggle .ed-ver-btn.active {
-    background: #fff; color: #1e293b; box-shadow: 0 1px 3px rgba(0,0,0,.12);
+  .confirm-dialog .confirm-title {
+    font-size: 18px; font-weight: 700; color: #1e293b;
+    margin-bottom: 8px;
   }
-  .ed-version-toggle .ed-ver-btn:hover:not(.active) { color: #1e293b; }
+  .confirm-dialog .confirm-desc {
+    font-size: 14px; color: #64748b;
+    margin-bottom: 24px; line-height: 1.5;
+  }
+  .confirm-dialog .confirm-actions {
+    display: flex; gap: 12px; justify-content: center;
+  }
+  .confirm-dialog .confirm-btn {
+    padding: 10px 24px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    cursor: pointer; border: none; transition: all .15s;
+  }
+  .confirm-dialog .confirm-btn-secondary {
+    background: #f1f5f9; color: #1e293b;
+  }
+  .confirm-dialog .confirm-btn-secondary:hover { background: #e2e8f0; }
+  .confirm-dialog .confirm-btn-danger {
+    background: #fee2e2; color: #b91c1c;
+  }
+  .confirm-dialog .confirm-btn-danger:hover { background: #fecaca; }
+  .confirm-dialog .confirm-btn-primary {
+    background: #1e293b; color: #fff;
+  }
+  .confirm-dialog .confirm-btn-primary:hover { background: #334155; }
 
-  /* V2 layout */
-  .ed-layout-v2 { display: none; }
-  .ed-layout-v2.show { display: block; }
+  /* ── V2 Layout (full-height publish page) ── */
+  .ed-layout-v2 { display: block; }
   .ed-v2 {
     max-width: 960px; margin: 0 auto;
     padding: 32px 40px 80px;
@@ -919,11 +864,10 @@
   <button class="menu-toggle" onclick="toggleSidebar()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <div class="logo-icon">
-      <svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="8" fill="#1e293b"/><path d="M17 7a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0v-4a5 5 0 0 0-5-5z" fill="#fff"/><path d="M22 16v1a5 5 0 0 1-10 0v-1" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="17" y1="23" x2="17" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="13" y1="27" x2="21" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
-    </div>
-    <span style="font-size:15px;font-weight:600;color:var(--text);">Podcasting Smarter</span> <a href="#" style="display:inline-flex;color:#94a3b8;text-decoration:none;margin-left:2px;" title="View Site"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <img src="Podbeanicon.png" style="width:32px;height:32px;border-radius:6px;flex-shrink:0;">
+    <span style="font-size:15px;font-weight:600;color:var(--text);">Podcasting Smarter</span>
+    <a href="#" style="display:inline-flex;color:#94a3b8;text-decoration:none;margin-left:2px;" title="View Site"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
   </div>
   <div class="topbar-actions">
     <button class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
@@ -934,16 +878,68 @@
 <div class="app">
   <aside class="sidebar">
     <nav class="sidebar-nav">
-      <div class="nav-parent expanded" data-first="episodelist" onclick="toggleSubMenu(this)">
+      <!-- Dashboard -->
+      <a href="#" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/PodcastDashboard/';">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span> Dashboard
+      </a>
+
+      <!-- Episodes -->
+      <div class="nav-parent expanded" onclick="toggleSubMenu(this);event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Episodes/';">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></span> Episodes
         <span class="nav-arrow" style="margin-left:auto;transition:transform .2s;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
-      <a href="#" class="sub active" data-page="episodelist"><span class="nav-icon"></span> Episode List</a>
+      <a href="#" class="sub active" data-page="episodelist" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Episodes/';"><span class="nav-icon"></span> Episode List</a>
+
+      <!-- Distribution -->
+      <div class="nav-parent" onclick="toggleSubMenu(this);event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Distribution/';">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span> Distribution
+        <span class="nav-arrow" style="margin-left:auto;transition:transform .2s;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Distribution/';"><span class="nav-icon"></span> Podcast Apps</a>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Distribution/';"><span class="nav-icon"></span> Social Share</a>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Distribution/';"><span class="nav-icon"></span> Podcast Website</a>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Distribution/';"><span class="nav-icon"></span> Embed Player</a>
+
+      <!-- Statistics -->
+      <div class="nav-parent" onclick="toggleSubMenu(this);event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Stats/';">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Statistics
+        <span class="nav-arrow" style="margin-left:auto;transition:transform .2s;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Stats/';"><span class="nav-icon"></span> Overview</a>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Stats/';"><span class="nav-icon"></span> Episodes</a>
+
+      <!-- Settings -->
+      <div class="nav-parent" onclick="toggleSubMenu(this);event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Settings/';">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Settings
+        <span class="nav-arrow" style="margin-left:auto;transition:transform .2s;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Settings/';"><span class="nav-icon"></span> Podcast info</a>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Settings/';"><span class="nav-icon"></span> Feed</a>
+      <a href="#" class="sub" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Settings/';"><span class="nav-icon"></span> Plugins</a>
     </nav>
   </aside>
 
   <div class="main">
     <div class="content">
+
+      <!-- ═══════════ Dashboard (placeholder) ═══════════ -->
+      <div id="page-dashboard" class="page-content" style="display:none;">
+        <div class="dash-header">
+          <div class="dash-title">Dashboard</div>
+        </div>
+        <div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Dashboard content coming soon.</div>
+      </div>
+
+      <!-- ═══════════ Page Placeholders (hidden by default) ═══════════ -->
+      <div id="page-podcastapps" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Podcast Apps</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Podcast Apps content coming soon.</div></div>
+      <div id="page-socialshare" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Social Share</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Social Share content coming soon.</div></div>
+      <div id="page-podcastwebsite" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Podcast Website</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Podcast Website content coming soon.</div></div>
+      <div id="page-embedplayer" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Embed Player</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Embed Player content coming soon.</div></div>
+      <div id="page-overview" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Statistics Overview</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Statistics Overview content coming soon.</div></div>
+      <div id="page-statsepisodes" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Statistics Episodes</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Statistics Episodes content coming soon.</div></div>
+      <div id="page-podcastinfo" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Podcast Info</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Podcast Info content coming soon.</div></div>
+      <div id="page-feed" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Feed</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Feed content coming soon.</div></div>
+      <div id="page-plugins" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Plugins</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Plugins content coming soon.</div></div>
 
       <!-- ═══════════ Episode List ═══════════ -->
       <div id="page-episodelist" class="page-content">
@@ -1152,8 +1148,14 @@
 
 <!-- ═══════════ New Episode Modal ═══════════ -->
 <div class="modal-overlay" id="newEpisodeModal">
+  <div class="modal-topbar">
+    <button class="modal-back-btn" onclick="closeNewEpisodeModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <span style="position:absolute;left:50%;transform:translateX(-50%);font-size:16px;font-weight:600;color:var(--text);">Upload media file</span>
+  </div>
   <div class="modal-box">
-    <button class="modal-close" onclick="closeNewEpisodeModal()">&times;</button>
 
     <!-- ── Step 1: Upload ───────────────────── -->
     <div class="modal-step" id="modalStep1">
@@ -1169,7 +1171,6 @@
         <input type="file" id="fileInput" style="display:none;" accept="audio/*,video/*" onchange="handleFileSelect(event)">
         <a href="#" class="upload-skip" onclick="openEpisodeDetailsModal();return false;">Skip for now →</a>
       </div>
-      <div class="modal-divider"></div>
       <div class="modal-right" id="modalRight">
         <div class="modal-ai-heading">AI Enhance</div>
         <div class="credits-badge"><span class="credits-dot"></span> Remaining Credits: <strong class="credits-number"><span class="credits-tooltip-trigger">2,800</span><span class="credits-tooltip"><span class="credits-tooltip-arrow"></span><div class="credits-tooltip-content">You have <strong>2,800</strong> out of 2,800 credits left.<br>This equals roughly:</div><div class="credits-tooltip-list"><span class="credits-tooltip-item">280 minutes of AI Audio Optimization</span><span class="credits-tooltip-or">OR</span><span class="credits-tooltip-item">560 minutes of AI Content Assistant</span></div><div class="credits-tooltip-footer"><span><a href="https://www.podbean.org/podcast-ai#AI-Content-Assistant" target="_blank">AI Content Assistant</a> — 300 credits/hour</span><span><a href="https://www.podbean.org/podcast-ai#AI-Audio-Optimization" target="_blank">AI Audio Optimization</a> — 600 credits/hour</span></div></span></strong></div>
@@ -1291,7 +1292,6 @@
           <button class="btn-primary-dark" onclick="publishEpisode()" style="width:100%;padding:12px 0;font-size:15px;">Publish Episode</button>
         </div>
       </div>
-      <div class="modal-divider"></div>
       <div class="modal-right">
         <div class="modal-ai-title">Podbean AI</div>
         <div class="modal-ai-subtitle" style="margin-bottom:20px;">AI settings for this episode</div>
@@ -1326,10 +1326,6 @@
       </button>
     </div>
     <span class="ed-topbar-title">Publish Episode</span>
-    <div class="ed-version-toggle">
-      <button class="ed-ver-btn active" onclick="switchEpVersion('v1', this)">V1</button>
-      <button class="ed-ver-btn" onclick="switchEpVersion('v2', this)">V2</button>
-    </div>
     <div class="ed-topbar-right">
       <button class="ed-save-draft" onclick="saveAsDraft()">Save as Draft</button>
       <div class="ed-publish-wrap">
@@ -1345,227 +1341,6 @@
       </div>
     </div>
   </div>
-  <div class="ed-layout">
-    <div class="ed-sidebar">
-      <button class="ed-sidebar-item active" onclick="switchEdPanel('details',this)">
-        Episode Info
-      </button>
-      <button class="ed-sidebar-item" onclick="switchEdPanel('distribution',this)">
-        Social Sharing
-      </button>
-      <button class="ed-sidebar-item" onclick="switchEdPanel('chapters',this)">
-        Chapter Markers
-      </button>
-      <button class="ed-sidebar-item" onclick="switchEdPanel('transcripts',this)">
-        Transcripts
-      </button>
-      <button class="ed-sidebar-item" onclick="switchEdPanel('more',this)">
-        More Options
-      </button>
-    </div>
-    <div class="ed-content">
-
-      <!-- ═══ Episode Info ═══ -->
-      <div class="ed-content-section" id="edSection-details">
-        <div class="ed-category-title">Episode Info</div>
-        <div class="ed-category-desc">File name, title, and description for your episode</div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">File Name</div>
-          <div class="ed-file-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            <span id="edFileName">episode-audio.mp3</span>
-          </div>
-        </div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Title</div>
-          <input type="text" class="ed-input" id="edEpisodeTitle" placeholder="Enter episode title">
-        </div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Description</div>
-          <div class="ed-rte-toolbar">
-            <button type="button" class="rte-btn" onclick="rteCmd('bold')" title="Bold"><strong>B</strong></button>
-            <button type="button" class="rte-btn" onclick="rteCmd('italic')" title="Italic"><em>I</em></button>
-            <button type="button" class="rte-btn" onclick="rteCmd('underline')" title="Underline"><u>U</u></button>
-            <span class="rte-sep"></span>
-            <button type="button" class="rte-btn" onclick="rteCmd('insertUnorderedList')" title="Bullet List">&#8226;&#8213;</button>
-            <button type="button" class="rte-btn" onclick="rteCmd('insertOrderedList')" title="Numbered List">1&#8213;</button>
-            <span class="rte-sep"></span>
-            <button type="button" class="rte-btn" onclick="rteInsertLink()" title="Insert Link">&#128279;</button>
-          </div>
-          <div class="ed-rte-editor" id="edEpisodeDesc" contenteditable="true" data-placeholder="One or more sentences describing your episode to potential listeners."></div>
-        </div>
-      <div class="ed-field-group" style="margin-top:32px;padding-top:32px;border-top:1px solid #e2e8f0;">
-          <div class="ed-field-label">Episode Logo</div>
-          <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border);">
-            <span class="ed-logo-tab active" data-tab="upload" onclick="switchLogoTab('upload')" style="padding:8px 16px;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;border-bottom:2px solid var(--text);transition:all .12s;">Upload</span>
-            <span class="ed-logo-tab" data-tab="library" onclick="switchLogoTab('library')" style="padding:8px 16px;font-size:14px;font-weight:500;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;">Choose from Library</span>
-          </div>
-
-          <div class="ed-logo-panel" id="edLogoUploadPanel">
-            <div class="ed-field-group">
-              <div style="display:flex;align-items:flex-start;gap:24px;">
-                <div class="ed-logo-upload" onclick="document.getElementById('edLogoInput').click()">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                  <span>Upload</span>
-                </div>
-                <div class="ed-field-hint" style="margin-top:0;padding-top:8px;">Between 1400 and 2048 pixels square (jpg or png).</div>
-              </div>
-              <input type="file" id="edLogoInput" style="display:none" accept="image/jpeg,image/png">
-            </div>
-          </div>
-
-          <div class="ed-logo-panel" id="edLogoLibraryPanel" style="display:none;">
-            <div class="ed-logo-grid" id="edLogoGrid">
-              <div class="ed-logo-card selected" onclick="selectLibraryLogo(this)">
-                <div style="width:100%;height:100%;background:#e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;">Logo 1</div>
-              </div>
-              <div class="ed-logo-card" onclick="selectLibraryLogo(this)">
-                <div style="width:100%;height:100%;background:#e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;">Logo 2</div>
-              </div>
-              <div class="ed-logo-card" onclick="selectLibraryLogo(this)">
-                <div style="width:100%;height:100%;background:#e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;">Logo 3</div>
-              </div>
-              <div class="ed-logo-card" onclick="selectLibraryLogo(this)">
-                <div style="width:100%;height:100%;background:#e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;">Logo 4</div>
-              </div>
-              <div class="ed-logo-card" onclick="selectLibraryLogo(this)">
-                <div style="width:100%;height:100%;background:#e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;">Logo 5</div>
-              </div>
-              <div class="ed-logo-card" onclick="selectLibraryLogo(this)">
-                <div style="width:100%;height:100%;background:#e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;">Logo 6</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      <!-- ═══ Social Sharing ═══ -->
-      <div class="ed-content-section" id="edSection-distribution">
-        <div class="ed-category-title">Social Sharing</div>
-        <div class="ed-category-desc">Auto-share episode to social media after publishing</div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Social Share</div>
-          <div class="ed-social-icons">
-            <div class="ed-social-icon active" onclick="this.classList.toggle('active')" title="Facebook">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            </div>
-            <div class="ed-social-icon active" onclick="this.classList.toggle('active')" title="X (Twitter)">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            </div>
-            <div class="ed-social-icon active" onclick="this.classList.toggle('active')" title="LinkedIn">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            </div>
-            <div class="ed-social-icon" onclick="this.classList.toggle('active')" title="YouTube">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </div>
-            <div class="ed-social-icon" onclick="this.classList.toggle('active')" title="WordPress">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm0 21.6c-5.301 0-9.6-4.299-9.6-9.6S6.699 2.4 12 2.4s9.6 4.299 9.6 9.6-4.299 9.6-9.6 9.6zM6 8.4h1.2v1.2H6V8.4zm10.8 0h1.2v1.2h-1.2V8.4zm-7.2 8.4c.6-1.2 1.8-2.4 3.6-3 0 0 0 .6-.6 1.2s-1.2 1.8-1.8 3h3c.6 0 1.2-.6 1.2-1.2s-.6-1.2-1.2-1.2c-1.2 0-2.4-1.2-2.4-2.4s1.2-2.4 2.4-2.4c.6 0 1.2.6 1.2 1.2h1.2c0-1.2-1.2-2.4-2.4-2.4s-2.4 1.2-2.4 2.4c0 .6.6 1.2 1.2 1.8-1.2.6-2.4 1.8-2.4 3 0 .6.6 1.2 1.2 1.2h2.4z"/></svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Podbean Episode Link</div>
-          <div class="ed-link-display">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            <span>https://yourpodcast.podbean.com/e/episode-link</span>
-          </div>
-          <div class="ed-field-hint">This link will be automatically generated after publishing.</div>
-        </div>
-      </div>
-
-      <!-- ═══ Chapter Markers ═══ -->
-      <div class="ed-content-section" id="edSection-chapters">
-        <div class="ed-category-title">Chapter Markers</div>
-        <div class="ed-category-desc">Add chapter markers to help listeners navigate your episode</div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Episode Chapter Markers</div>
-          <textarea class="ed-textarea-summary" id="edChapters" placeholder="Add chapter markers in format: 00:00 - Introduction&#10;05:30 - Topic 1&#10;15:00 - Guest Interview" style="min-height:140px;"></textarea>
-          <div class="ed-field-hint">One chapter per line. Format: timestamp - title</div>
-        </div>
-      </div>
-
-      <!-- ═══ Transcripts ═══ -->
-      <div class="ed-content-section" id="edSection-transcripts">
-        <div class="ed-category-title">Transcripts</div>
-        <div class="ed-category-desc">Add episode transcript for better accessibility and SEO</div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Episode Transcripts</div>
-          <textarea class="ed-textarea-summary" id="edTranscript" placeholder="Paste or write your episode transcript here..." style="min-height:200px;"></textarea>
-          <div class="ed-field-hint">Supports plain text and formatted transcripts.</div>
-        </div>
-      </div>
-
-      <!-- ═══ More Options ═══ -->
-      <div class="ed-content-section" id="edSection-more">
-        <div class="ed-category-title">More Options</div>
-        <div class="ed-category-desc">Summary, duration, and author information</div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Summary</div>
-          <textarea class="ed-textarea-summary" id="edSummary" placeholder="One or more sentences summarize this episode on Apple Podcasts. Usually, you can leave it empty to use the episode description excerpt."></textarea>
-        </div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Duration</div>
-          <input type="text" class="ed-input" id="edDuration" placeholder="e.g. 00:32:15">
-        </div>
-
-        <div class="ed-field-group">
-          <div class="ed-field-label">Author</div>
-          <input type="text" class="ed-input" id="edAuthor" placeholder="Enter author name" style="max-width:400px;">
-        </div>
-      </div>
-
-      <div class="ed-content-section">
-        <div class="ed-category-title">Classification</div>
-        <div class="ed-category-desc">Season, episode number, type, and content rating</div>
-
-        <div class="ed-row-2">
-          <div class="ed-field-group">
-            <div class="ed-field-label">Season NO.</div>
-            <select class="ed-select" id="edSeason">
-              <option value="">Select season</option>
-              <option value="1">Season 1</option>
-              <option value="2">Season 2</option>
-              <option value="3">Season 3</option>
-              <option value="4">Season 4</option>
-              <option value="5">Season 5</option>
-            </select>
-          </div>
-          <div class="ed-field-group">
-            <div class="ed-field-label">Episode NO.</div>
-            <input type="text" class="ed-input" id="edEpisodeNo" placeholder="e.g. 12">
-          </div>
-        </div>
-
-        <div style="display:flex;gap:16px;">
-          <div class="ed-field-group" style="flex:1;">
-            <div class="ed-field-label">Episode Type</div>
-            <select class="ed-select" id="edEpisodeType">
-              <option value="full">Full</option>
-              <option value="trailer">Trailer</option>
-              <option value="bonus">Bonus</option>
-            </select>
-          </div>
-          <div class="ed-field-group" style="flex:1;">
-            <div class="ed-field-label">Content</div>
-            <select class="ed-select" id="edContent">
-              <option value="clean">Clean</option>
-              <option value="explicit">Explicit</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
 
   <!-- ═══════════ V2: Publish Episode ═══════════ -->
   <div class="ed-layout-v2" id="edLayoutV2">
@@ -1873,32 +1648,19 @@
       <div class="ed-v2-panel" id="v2-more">
         <div class="ed-v2-card">
           <div class="ed-v2-card-title">More Options</div>
-          <div class="ed-v2-card-desc">Duration, author, classification, and tags</div>
+          <div class="ed-v2-card-desc">Duration, author, and classification</div>
 
-          <div class="ed-v2-grid-2">
-            <div class="ed-v2-field">
-              <div class="ed-v2-label">Duration</div>
-              <input type="text" class="ed-v2-input" id="v2Duration" placeholder="e.g. 00:32:15">
-            </div>
-            <div class="ed-v2-field">
-              <div class="ed-v2-label">Author</div>
-              <input type="text" class="ed-v2-input" id="v2Author" placeholder="Enter author name">
-            </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Duration</div>
+            <input type="text" class="ed-v2-input" id="v2Duration" placeholder="e.g. 00:32:15">
           </div>
           <div class="ed-v2-field">
-            <div class="ed-v2-label">Podbean Episode Link</div>
-            <div class="ed-v2-link-display">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              <span>https://yourpodcast.podbean.com/e/episode-link</span>
-            </div>
-            <div class="ed-v2-hint">Auto-generated after publishing.</div>
+            <div class="ed-v2-label">Author</div>
+            <input type="text" class="ed-v2-input" id="v2Author" placeholder="Enter author name">
           </div>
 
           <!-- Classification fields merged from Classification tab -->
-          <div style="height:1px;background:#e2e8f0;margin:24px 0;"></div>
           <div style="margin-bottom:22px;">
-            <div style="font-size:18px;font-weight:700;color:#1e293b;margin-bottom:20px;">Classification</div>
-            <div style="font-size:14px;color:#64748b;margin-bottom:20px;">Season, episode number, type, and content rating</div>
             <div class="ed-v2-grid-2">
               <div class="ed-v2-field">
                 <div class="ed-v2-label">Season NO.</div>
@@ -1917,22 +1679,20 @@
               </div>
             </div>
 
-            <div class="ed-v2-grid-2">
-              <div class="ed-v2-field">
-                <div class="ed-v2-label">Episode Type</div>
-                <select class="ed-v2-select" id="v2EpisodeType">
-                  <option value="full">Full</option>
-                  <option value="trailer">Trailer</option>
-                  <option value="bonus">Bonus</option>
-                </select>
-              </div>
-              <div class="ed-v2-field">
-                <div class="ed-v2-label">Content Explicit</div>
-                <select class="ed-v2-select" id="v2Content">
-                  <option value="clean">Clean</option>
-                  <option value="explicit">Explicit</option>
-                </select>
-              </div>
+            <div class="ed-v2-field">
+              <div class="ed-v2-label">Episode Type</div>
+              <select class="ed-v2-select" id="v2EpisodeType">
+                <option value="full">Full</option>
+                <option value="trailer">Trailer</option>
+                <option value="bonus">Bonus</option>
+              </select>
+            </div>
+            <div class="ed-v2-field">
+              <div class="ed-v2-label">Content Explicit</div>
+              <select class="ed-v2-select" id="v2Content">
+                <option value="clean">Clean</option>
+                <option value="explicit">Explicit</option>
+              </select>
             </div>
           </div>
           <!-- Tags section -->
@@ -1954,6 +1714,18 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ Unsaved Changes Confirm Modal ═══════════ -->
+<div class="confirm-overlay" id="confirmModal">
+  <div class="confirm-dialog">
+    <div class="confirm-title">Unsaved Changes</div>
+    <div class="confirm-desc">You have unsaved changes. Are you sure you want to leave?</div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-primary" onclick="leavePage()">Leave</button>
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeConfirmModal()">Stay</button>
     </div>
   </div>
 </div>
@@ -2093,12 +1865,24 @@
   }
 
   function expandParent(page) {
-    var parentMap = { 'episodelist': 0 };
+    var parentMap = {
+      'dashboard': -1,
+      'episodelist': 0,
+      'podcastapps': 1,
+      'socialshare': 1,
+      'podcastwebsite': 1,
+      'embedplayer': 1,
+      'overview': 2,
+      'statsepisodes': 2,
+      'podcastinfo': 3,
+      'feed': 3,
+      'plugins': 3
+    };
     var parents = document.querySelectorAll('.nav-parent');
     document.querySelectorAll('.nav-parent').forEach(function(p) { p.classList.remove('expanded'); });
     document.querySelectorAll('.sidebar-nav a.sub').forEach(function(s) { s.style.display = 'none'; });
     var idx = parentMap[page];
-    if (idx !== undefined && parents[idx]) {
+    if (idx !== undefined && idx >= 0 && parents[idx]) {
       parents[idx].classList.add('expanded');
       var next = parents[idx].nextElementSibling;
       while (next && next.classList.contains('sub')) {
@@ -2598,18 +2382,6 @@
     }
     document.getElementById('edEpisodeDesc').focus();
   }
-  function switchLogoTab(tab) {
-    document.querySelectorAll('.ed-logo-tab').forEach(function(t) {
-      t.style.color = (t.dataset.tab === tab) ? 'var(--text)' : 'var(--text-secondary)';
-      t.style.borderBottomColor = (t.dataset.tab === tab) ? 'var(--text)' : 'transparent';
-    });
-    document.getElementById('edLogoUploadPanel').style.display = (tab === 'upload') ? '' : 'none';
-    document.getElementById('edLogoLibraryPanel').style.display = (tab === 'library') ? '' : 'none';
-  }
-  function selectLibraryLogo(el) {
-    document.querySelectorAll('.ed-logo-card').forEach(function(c) { c.classList.remove('selected'); });
-    el.classList.add('selected');
-  }
   function togglePublishDropdown(e) {
     e.stopPropagation();
     var dd = document.getElementById('publishDropdown');
@@ -2628,33 +2400,6 @@
       dd.classList.remove('show');
     }
   });
-  function switchEdPanel(name, btn) {
-    document.querySelectorAll('.ed-sidebar-item').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-    var section = document.getElementById('edSection-' + name);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-  function initEdScrollSpy() {
-    var modal = document.getElementById('episodeDetailsModal');
-    var sections = document.querySelectorAll('.ed-content-section');
-    var items = document.querySelectorAll('.ed-sidebar-item');
-    var sectionNames = ['details', 'logo', 'classification', 'distribution', 'chapters', 'transcripts', 'more'];
-    modal.addEventListener('scroll', function() {
-      var scrollPos = modal.scrollTop + 80;
-      var activeIdx = 0;
-      sections.forEach(function(sec, i) {
-        if (sec.offsetTop <= scrollPos) {
-          activeIdx = i;
-        }
-      });
-      items.forEach(function(item, i) {
-        if (i === activeIdx) item.classList.add('active');
-        else item.classList.remove('active');
-      });
-    });
-  }
   function openEpisodeDetailsModal() {
     closeNewEpisodeModal();
     document.getElementById('episodeDetailsModal').classList.add('show');
@@ -2663,12 +2408,18 @@
     if (fileName && detailsFile) {
       detailsFile.textContent = fileName.textContent;
     }
-    initEdScrollSpy();
   }
   function closeEpisodeDetailsModal() {
     document.getElementById('episodeDetailsModal').classList.remove('show');
   }
   function backFromDetailsModal() {
+    document.getElementById('confirmModal').classList.add('show');
+  }
+  function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('show');
+  }
+  function leavePage() {
+    closeConfirmModal();
     closeEpisodeDetailsModal();
     openNewEpisodeModal();
   }
@@ -2784,52 +2535,7 @@
       if (dd) dd.style.display = 'none';
     }
   });
-  // ── V1 / V2 version switching ──
-  function switchEpVersion(ver, btn) {
-    document.querySelectorAll('.ed-ver-btn').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-    var v1Layout = document.querySelector('.ed-layout');
-    var v2Layout = document.getElementById('edLayoutV2');
-    if (!v1Layout || !v2Layout) return;
-    if (ver === 'v1') {
-      v1Layout.style.display = '';
-      v2Layout.classList.remove('show');
-    } else {
-      v1Layout.style.display = 'none';
-      v2Layout.classList.add('show');
-      syncV1ToV2();
-    }
-  }
-
-  function syncV1ToV2() {
-    var el;
-    el = document.getElementById('v2EpisodeTitle');
-    if (el) el.value = safeVal('edEpisodeTitle');
-    el = document.getElementById('v2EpisodeDesc');
-    if (el) el.innerHTML = safeVal('edEpisodeDesc');
-    el = document.getElementById('v2FileName');
-    if (el) el.textContent = safeText('edFileName');
-    el = document.getElementById('v2Season');
-    if (el) { var v = safeVal('edSeason'); if (v) el.value = v; }
-    el = document.getElementById('v2EpisodeNo');
-    if (el) { var v = safeVal('edEpisodeNo'); if (v) el.value = v; }
-    el = document.getElementById('v2EpisodeType');
-    if (el) { var v = safeVal('edEpisodeType'); if (v) el.value = v; }
-    el = document.getElementById('v2Content');
-    if (el) { var v = safeVal('edContent'); if (v) el.value = v; }
-    el = document.getElementById('v2Summary');
-    if (el) { var v = safeVal('edSummary'); if (v) el.value = v; }
-    el = document.getElementById('v2Duration');
-    if (el) { var v = safeVal('edDuration'); if (v) el.value = v; }
-    el = document.getElementById('v2Author');
-    if (el) { var v = safeVal('edAuthor'); if (v) el.value = v; }
-    el = document.getElementById('v2Chapters');
-    if (el) { var v = safeVal('edChapters'); if (v) el.value = v; }
-    el = document.getElementById('v2Transcript');
-    if (el) { var v = safeVal('edTranscript'); if (v) el.value = v; }
-  }
-  function safeVal(id) { var e = document.getElementById(id); return e ? e.value : ''; }
-  function safeText(id) { var e = document.getElementById(id); return e ? e.textContent : ''; }
+  // V1/V2 sync removed — V2 is the only version
 
   // ── V2 Tab switching ──
   function switchV2Tab(tabId, btn) {
@@ -3186,6 +2892,7 @@
 
   // Initialize page
   buildRows();
+  navigate('episodelist');
 </script>
 
 </body>
