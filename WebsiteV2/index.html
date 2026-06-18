@@ -3605,16 +3605,22 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
                 </div>
                 <div id="featuredOptions" style="width:100%;">
                   <div class="_feat-picker _feat-disabled" id="featPicker">
-                    <select class="_feat-mode-select" id="featModeSelect">
-                      <option value="latest">Latest episode</option>
-                      <option value="pick">Pick an episode</option>
-                    </select>
+                    <div class="nav-edit-row" style="margin-bottom:6px;">
+                      <span class="nav-edit-label">Type</span>
+                      <select class="_feat-mode-select" id="featModeSelect">
+                        <option value="latest">Latest episode</option>
+                        <option value="pick">Pick an episode</option>
+                      </select>
+                    </div>
                     <div class="_feat-search-wrap" id="featSearchWrap">
-                      <div class="_feat-search-trigger" id="featSearchTrigger" tabindex="0">
-                        <span class="_feat-search-label" id="featSearchLabel">Select an episode...</span>
+                      <div class="nav-edit-row">
+                        <span class="nav-edit-label">Episode</span>
+                        <div class="_feat-search-trigger" id="featSearchTrigger" tabindex="0">
+                          <span class="_feat-search-label" id="featSearchLabel">Select an episode...</span>
                         <svg class="_feat-search-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                       </div>
-                      <div class="_feat-search-dropdown" id="featSearchDropdown">
+                    </div>
+                    <div class="_feat-search-dropdown" id="featSearchDropdown">
                         <div class="_feat-search-input-wrap">
                           <input type="text" class="_feat-search-input" id="featSearchInput" placeholder="Search episodes...">
                         </div>
