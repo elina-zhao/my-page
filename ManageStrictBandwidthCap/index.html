@@ -550,7 +550,7 @@
 
     /* Per-channel list */
 
-    .channel-cap-list { list-style: none; padding: 0; margin: 0; max-height: 400px; overflow-y: auto; }
+    .channel-cap-list { list-style: none; padding: 0; margin: 0; }
     .channel-cap-list li {
       display: flex;
       align-items: center;
@@ -638,6 +638,20 @@
       gap: 8px;
     }
     .channel-cap-list li:last-child { border-bottom: none; }
+
+    /* MoM change indicator */
+    .ch-bw-change {
+      position: relative;
+      display: inline-block;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 2px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .ch-bw-change.up { color: #f44336; }
+    .ch-bw-change.down { color: #20d398; }
 
 
 
@@ -1325,7 +1339,10 @@
             <div class="ch-info"><div class="ch-avatar"><img src="podbean_81.jpg" alt="ch"></div><span class="ch-name">PB network</span></div>
             <div class="ch-bw-wrap">
               <div class="ch-bw-bar"><div class="ch-bw-fill med" style="width:28.3%"></div></div>
-              <div class="ch-bw-text"><span class="ch-bw-used">867.4 MB</span> <span class="ch-bw-pct med">28.3%</span></div>
+              <div class="ch-bw-text">
+                <span class="ch-bw-used">867.4 MB / 3 TB</span>
+                <span class="ch-bw-change up" data-tt="Jun 1 – Jun 21|May 1 – May 21|+9.8%">(+9.8%)</span>
+              </div>
             </div>
           </li>
           <li>
@@ -1336,7 +1353,10 @@
             <div class="ch-info"><div class="ch-avatar"><img src="podbean_81.jpg" alt="ch"></div><span class="ch-name">The lavenderldowngradetest10's Podcast</span></div>
             <div class="ch-bw-wrap">
               <div class="ch-bw-bar"><div class="ch-bw-fill med" style="width:14.7%"></div></div>
-              <div class="ch-bw-text"><span class="ch-bw-used">452.3 MB</span> <span class="ch-bw-pct med">14.7%</span></div>
+              <div class="ch-bw-text">
+                <span class="ch-bw-used">452.3 MB / 3 TB</span>
+                <span class="ch-bw-change down" data-tt="Jun 1 – Jun 21|May 1 – May 21|-5.9%">(-5.9%)</span>
+              </div>
             </div>
           </li>
           <li>
@@ -1347,7 +1367,10 @@
             <div class="ch-info"><div class="ch-avatar"><img src="podbean_81.jpg" alt="ch"></div><span class="ch-name">The pbnetwork2's Podcast</span></div>
             <div class="ch-bw-wrap">
               <div class="ch-bw-bar"><div class="ch-bw-fill low" style="width:2.1%"></div></div>
-              <div class="ch-bw-text"><span class="ch-bw-used">64.5 MB</span> <span class="ch-bw-pct low">2.1%</span></div>
+              <div class="ch-bw-text">
+                <span class="ch-bw-used">64.5 MB / 3 TB</span>
+                <span class="ch-bw-change up" data-tt="Jun 1 – Jun 21|May 1 – May 21|+17.3%">(+17.3%)</span>
+              </div>
             </div>
           </li>
           <li>
@@ -1358,7 +1381,10 @@
             <div class="ch-info"><div class="ch-avatar"><img src="podbean_81.jpg" alt="ch"></div><span class="ch-name">The channellist02022's Podcast</span></div>
             <div class="ch-bw-wrap">
               <div class="ch-bw-bar"><div class="ch-bw-fill low" style="width:1.2%"></div></div>
-              <div class="ch-bw-text"><span class="ch-bw-used">36.8 MB</span> <span class="ch-bw-pct low">1.2%</span></div>
+              <div class="ch-bw-text">
+                <span class="ch-bw-used">36.8 MB / 3 TB</span>
+                <span class="ch-bw-change down" data-tt="Jun 1 – Jun 21|May 1 – May 21|-8.0%">(-8.0%)</span>
+              </div>
             </div>
           </li>
           <li>
@@ -1369,7 +1395,10 @@
             <div class="ch-info"><div class="ch-avatar"><img src="podbean_81.jpg" alt="ch"></div><span class="ch-name">The channel420b's Podcast</span></div>
             <div class="ch-bw-wrap">
               <div class="ch-bw-bar"><div class="ch-bw-fill low" style="width:0.8%"></div></div>
-              <div class="ch-bw-text"><span class="ch-bw-used">24.6 MB</span> <span class="ch-bw-pct low">0.8%</span></div>
+              <div class="ch-bw-text">
+                <span class="ch-bw-used">24.6 MB / 3 TB</span>
+                <span class="ch-bw-change up" data-tt="Jun 1 – Jun 21|May 1 – May 21|+11.8%">(+11.8%)</span>
+              </div>
             </div>
           </li>
           <li>
@@ -1380,7 +1409,10 @@
             <div class="ch-info"><div class="ch-avatar"><img src="podbean_81.jpg" alt="ch"></div><span class="ch-name">The test202503141's Podcast</span></div>
             <div class="ch-bw-wrap">
               <div class="ch-bw-bar"><div class="ch-bw-fill low" style="width:0.5%"></div></div>
-              <div class="ch-bw-text"><span class="ch-bw-used">15.1 MB</span> <span class="ch-bw-pct low">0.5%</span></div>
+              <div class="ch-bw-text">
+                <span class="ch-bw-used">15.1 MB / 3 TB</span>
+                <span class="ch-bw-change down" data-tt="Jun 1 – Jun 21|May 1 – May 21|-16.1%">(-16.1%)</span>
+              </div>
             </div>
           </li>
           <li>
@@ -1391,7 +1423,10 @@
             <div class="ch-info"><div class="ch-avatar"><img src="podbean_81.jpg" alt="ch"></div><span class="ch-name">The channel420a's Podcast</span></div>
             <div class="ch-bw-wrap">
               <div class="ch-bw-bar"><div class="ch-bw-fill low" style="width:0.3%"></div></div>
-              <div class="ch-bw-text"><span class="ch-bw-used">9.2 MB</span> <span class="ch-bw-pct low">0.3%</span></div>
+              <div class="ch-bw-text">
+                <span class="ch-bw-used">9.2 MB / 3 TB</span>
+                <span class="ch-bw-change down" data-tt="Jun 1 – Jun 21|May 1 – May 21|-8.0%">(-8.0%)</span>
+              </div>
             </div>
           </li>
         </ul>
@@ -1541,6 +1576,58 @@
     var styleSheet = document.createElement('style');
     styleSheet.textContent = '@keyframes fadeSlideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }';
     document.head.appendChild(styleSheet);
+
+    /* ===== Tooltip for bandwidth change percentage (fixed-position, never clipped) ===== */
+    (function() {
+      var tip = null;
+
+      function showTip(el) {
+        var raw = el.getAttribute('data-tt');
+        if (!raw) return;
+        var lines = raw.split('|');
+
+        if (!tip) {
+          tip = document.createElement('div');
+          tip.className = 'bw-tooltip';
+          tip.style.cssText =
+            'position:fixed;z-index:10000;background:#1a1a2e;color:#fff;' +
+            'padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.8;' +
+            'white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,0.25);' +
+            'pointer-events:none;';
+          document.body.appendChild(tip);
+        }
+
+        tip.innerHTML = lines[0] + '  VS  ' + lines[1] + '<div>' + lines[2] + '</div>';
+
+        tip.style.display = 'block';
+
+        /* Position below the element, centered */
+        var er = el.getBoundingClientRect();
+        tip.style.left = '0px';
+        tip.style.top = '0px';
+        tip.style.transform = 'none';
+
+        var tr = tip.getBoundingClientRect();
+        var left = er.left + er.width / 2 - tr.width / 2;
+        var top = er.bottom + 8;
+
+        /* Keep within viewport */
+        if (left + tr.width > window.innerWidth - 16) left = window.innerWidth - tr.width - 16;
+        if (left < 16) left = 16;
+
+        tip.style.left = left + 'px';
+        tip.style.top = top + 'px';
+      }
+
+      function hideTip() {
+        if (tip) { tip.style.display = 'none'; }
+      }
+
+      document.querySelectorAll('.ch-bw-change').forEach(function(el) {
+        el.addEventListener('mouseenter', function() { showTip(this); });
+        el.addEventListener('mouseleave', hideTip);
+      });
+    })();
   </script>
 </body>
 </html>
