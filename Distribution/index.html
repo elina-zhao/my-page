@@ -1428,25 +1428,25 @@
     .website-tab-content { display: none; }
     .website-tab-content.active { display: block; text-align: left; }
 
-    /* Website Theme Showcase */
+    /* Website Theme Showcase — Single row (Vertex, primary) */
     .theme-showcase {
       display: flex;
       gap: 40px;
       align-items: flex-start;
     }
     .theme-showcase-preview {
-      flex: 9;
+      flex: 8;
       min-width: 0;
     }
     .theme-showcase-preview img {
-      width: 100%;
+      width: 95%;
       border-radius: 14px;
       border: 1px solid var(--border);
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       display: block;
     }
     .theme-showcase-detail {
-      flex: 3;
+      flex: 4;
       min-width: 0;
       padding-top: 8px;
     }
@@ -1487,26 +1487,270 @@
       cursor: default;
     }
 
-    /* URL Settings */
-    .url-section-box {
+    .theme-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 48px 0;
+    }
+
+    /* Alternative templates — Two-column card grid */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: stretch;
+    }
+    .theme-card {
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface);
+      transition: box-shadow 0.25s, border-color 0.25s;
     }
-    .url-section-box + .url-section-box {
-      margin-top: 20px;
+    .theme-card:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      border-color: #cbd5e1;
     }
-    .url-current-head {
+    .theme-card-img-wrap {
+      position: relative;
+      overflow: hidden;
+      line-height: 0;
+    }
+    .theme-card-img-wrap img {
+      width: 100%;
+      display: block;
+    }
+    .theme-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .theme-card:hover .theme-card-overlay {
+      opacity: 1;
+    }
+    .theme-card-overlay-info {
+      text-align: center;
+      padding: 0 24px;
+    }
+    .theme-card-overlay-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 18px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .theme-card-overlay-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.92);
+      line-height: 1.6;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.25);
+    }
+    .theme-card-activate-btn {
+      background: #fff;
+      color: #1e293b;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .theme-card-activate-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .theme-card-info {
+      padding: 18px 22px 22px;
+    }
+    .theme-card-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .theme-card-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .theme-card-actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
+      gap: 16px;
+      margin-top: 16px;
     }
-    .url-current-label {
+    .theme-card-actions .theme-card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 9px 24px;
+      border-radius: 50px;
       font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .theme-card-actions .theme-card-btn:hover {
+      background: #334155;
+    }
+    .theme-card-actions .theme-card-link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .theme-card-actions .theme-card-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Placeholder card for coming soon */
+    .theme-card-placeholder {
+      border: 2px dashed var(--border);
+      border-radius: 14px;
+      background: #fafbfc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .theme-card-placeholder .placeholder-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+    .theme-card-placeholder .placeholder-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .theme-card-placeholder .placeholder-desc {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+      max-width: 280px;
+    }
+
+    /* URL 选项垂直板块 — 互斥 radio，标题和内容在一起 */
+    .url-option-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      margin-top: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .url-option-box:hover {
+      border-color: #cbd5e1;
+    }
+    .url-option-box.active {
+      border-color: var(--text);
+      box-shadow: 0 0 0 1px var(--text);
+    }
+    .url-option-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 18px 24px;
+    }
+    .url-option-box.active .url-option-header {
+      padding-bottom: 12px;
+    }
+    .url-option-label {
+      font-size: 15px;
       font-weight: 600;
       color: var(--text);
     }
+    /* 未选中的板块先不展示输入内容 */
+    .url-option-box:not(.active) .url-option-body {
+      display: none;
+    }
+    .url-option-body {
+      padding: 14px 24px 22px;
+    }
+    .url-type-badge + .url-type-badge { margin-left: 4px; }
+    .connected-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      background: #ecfdf5;
+      padding: 2px 10px;
+      border-radius: 50px;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    .url-section-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 24px;
+      background: var(--surface);
+    }
+    .url-section-box + .url-option-box {
+      margin-top: 16px;
+    }
+    .url-option-box + .url-option-box {
+      margin-top: 8px;
+    }
+
+    /* ── Confirm Modal (centered overlay) ──── */
+    .confirm-overlay {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,.3);
+      align-items: center; justify-content: center;
+    }
+    .confirm-overlay.show { display: flex; }
+    .confirm-dialog {
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.18);
+      max-width: 420px; width: 90%; padding: 32px;
+      text-align: center;
+    }
+    .confirm-dialog .confirm-title {
+      font-size: 18px; font-weight: 700; color: #1e293b;
+      margin-bottom: 8px;
+    }
+    .confirm-dialog .confirm-desc {
+      font-size: 14px; color: #64748b;
+      margin-bottom: 24px; line-height: 1.5;
+    }
+    .confirm-dialog .confirm-actions {
+      display: flex; gap: 12px; justify-content: center;
+    }
+    .confirm-dialog .confirm-btn {
+      padding: 10px 24px; border-radius: 8px;
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; border: none; transition: all .15s;
+    }
+    .confirm-dialog .confirm-btn-secondary {
+      background: #f1f5f9; color: #1e293b;
+    }
+    .confirm-dialog .confirm-btn-secondary:hover { background: #e2e8f0; }
+    .confirm-dialog .confirm-btn-primary {
+      background: #1e293b; color: #fff;
+    }
+    .confirm-dialog .confirm-btn-primary:hover { background: #334155; }
+    .confirm-dialog .confirm-btn-danger {
+      background: #dc2626; color: #fff;
+    }
+    .confirm-dialog .confirm-btn-danger:hover { background: #b91c1c; }
+
     .url-current-visit {
       font-size: 13px;
       color: var(--primary);
@@ -1514,18 +1758,6 @@
       font-weight: 500;
     }
     .url-current-visit:hover { text-decoration: underline; }
-    .url-domain-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .url-domain-desc {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
     .url-input-row {
       display: flex;
       gap: 10px;
@@ -1544,25 +1776,6 @@
       transition: border-color 0.15s;
     }
     .url-input-row input:focus { border-color: var(--text); }
-    .url-input-row .url-btn {
-      padding: 10px 24px;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: inherit;
-      border: none;
-      cursor: pointer;
-      background: var(--text);
-      color: #fff;
-      transition: background 0.15s;
-      white-space: nowrap;
-    }
-    .url-input-row .url-btn:hover { background: #334155; }
-    .url-input-row .url-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-    .url-input-row .url-btn:disabled:hover { background: var(--text); }
     .url-ssl-note {
       display: flex;
       align-items: center;
@@ -1745,6 +1958,114 @@
       justify-content: flex-end;
       margin-top: 20px;
     }
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #e2e8f0;
+      border-radius: 24px;
+      transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--text);
+    }
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(18px);
+    }
+
+    /* Unified Save Bar — fixed at bottom, matches content width */
+    .pb-save-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 230px;
+      right: 0;
+      z-index: 999;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+      animation: fadeUp 0.25s ease;
+    }
+    .pb-save-bar.is-visible {
+      display: block;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .pb-save-bar-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 111px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .pb-save-bar .save-btn {
+      padding: 0;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+      width: 102px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+    }
+    .pb-save-bar .save-btn:hover { background: #334155; }
+    .pb-save-bar .cancel-btn {
+      padding: 0;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+      width: 102px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+    }
+    .pb-save-bar .cancel-btn:hover { background: #f1f5f9; }
+    /* Push main content up so fixed bar doesn't overlap it */
+    body.has-save-bar .main-panel {
+      padding-bottom: 111px;
+    }
+
     .sp-reset-btn {
       padding: 10px 28px;
       border-radius: 50px;
@@ -1857,8 +2178,8 @@
       <div class="sub-menu">
         <a href="#" class="active" onclick="switchSubPage(event, 'podcast-apps')">Podcast Apps</a>
         <a href="#" onclick="switchSubPage(event, 'social-share')">Social Share</a>
-        <a href="#" onclick="switchSubPage(event, 'podcast-website')">Podcast Website</a>
-        <a href="#" onclick="switchSubPage(event, 'embeddable-player')">Embeddable Player</a>
+        <a href="#" onclick="switchSubPage(event, 'podcast-website')">Website & Pages</a>
+        <a href="#" onclick="switchSubPage(event, 'embeddable-player')">Embed Player</a>
       </div>
     </nav>
   </aside>
@@ -2040,17 +2361,18 @@
 
       <!-- Podcast Website page -->
       <div class="page hidden" id="page-podcast-website">
-        <h1>Podcast Website</h1>
+        <h1>Website & Pages</h1>
         <p style="color:var(--text-secondary);margin-top:8px;margin-bottom:24px;">Manage your podcast website settings.</p>
 
         <div class="website-tabs">
-          <button class="website-tab active" data-website-tab="theme" onclick="switchWebsiteTab('theme')">Website Theme</button>
+          <button class="website-tab active" data-website-tab="theme" onclick="switchWebsiteTab('theme')">Theme Templates</button>
           <button class="website-tab" data-website-tab="url" onclick="switchWebsiteTab('url')">Website URL</button>
           <button class="website-tab" data-website-tab="pages" onclick="switchWebsiteTab('pages')">Pages</button>
         </div>
 
         <!-- Tab: Website Theme -->
         <div class="website-tab-content active" id="websiteTab-theme">
+          <!-- Vertex: primary template (original layout) -->
           <div class="theme-showcase">
             <div class="theme-showcase-preview">
               <img src="showcasetheme.png" alt="Vertex theme preview">
@@ -2058,7 +2380,42 @@
             <div class="theme-showcase-detail">
               <div class="theme-showcase-name">Vertex</div>
               <div class="theme-showcase-desc">A clean, modern website theme designed to showcase your podcast brand, highlight your latest episodes, and help listeners connect with your content across platforms.</div>
-              <button class="theme-showcase-btn" onclick="alert('Customize theme settings')">Customize</button>
+              <div style="display:flex;align-items:center;gap:16px;">
+                <button class="theme-showcase-btn" onclick="alert('Customize theme settings')">Customize</button>
+                <a href="#" onclick="visitWebsite();return false;" style="font-size:14px;font-weight:600;color:var(--primary);text-decoration:none;">Visit Website ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="theme-divider"></div>
+
+          <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:20px;">Alternative Templates</div>
+
+          <!-- Alternative templates: two-column grid -->
+          <div class="theme-grid">
+            <!-- Harmony: real template with hover Activate -->
+            <div class="theme-card">
+              <div class="theme-card-img-wrap">
+                <img src="newtheme.png" alt="Harmony theme preview">
+                <div class="theme-card-overlay">
+                  <div class="theme-card-overlay-info">
+                    <div class="theme-card-overlay-name">Harmony</div>
+                    <div class="theme-card-overlay-desc">A warm, story-driven theme built for narrative and interview podcasts. Features larger hero imagery and an emphasis on visual storytelling to create a deeper connection with your audience.</div>
+                  </div>
+                  <button class="theme-card-activate-btn" onclick="alert('Harmony theme activated')">Activate</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Placeholder: coming soon (no Activate) -->
+            <div class="theme-card-placeholder">
+              <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <div class="placeholder-title">More designs coming soon</div>
+              <div class="placeholder-desc">We're working on new themes to give your podcast website a fresh look. Stay tuned for updates.</div>
             </div>
           </div>
         </div>
@@ -2066,33 +2423,49 @@
         <!-- Tab: Website URL -->
         <div class="website-tab-content" id="websiteTab-url">
           <div class="url-section">
-            <!-- Podbean URL -->
-            <div class="url-section-box">
-              <div class="url-current-head">
-                <div class="url-current-label">Podbean Website URL <span style="display:inline-block;font-size:11px;font-weight:600;color:var(--primary);background:#ecfdf5;padding:2px 10px;border-radius:50px;vertical-align:middle;margin-left:8px;">In use</span></div>
-                <a href="#" class="url-current-visit" onclick="alert('Opening your podcast website')">Visit Website ↗</a>
+            <!-- Podcast Website Link (always visible) -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+              <div>
+                <div style="font-size:18px;font-weight:600;color:var(--text);">Podcast Website URL</div>
+                <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Personalize your Podbean podcast website URL or connect your own domain.</div>
               </div>
-              <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">Free podcast URL provided by Podbean. Changing this URL will also change your podcast feed URL. <a href="#" style="color:inherit;text-decoration:underline;font-weight:500;" onclick="alert('Learn more about Podbean website URLs')">Learn more</a></div>
-              <div class="url-input-row">
-                <div style="display:flex;align-items:center;flex:1;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;">
-                  <input type="text" id="podbeanUrlPrefix" value="https://your-podcast" style="flex:1;padding:10px 14px;border:none;font-size:14px;font-family:inherit;color:var(--text);outline:none;background:transparent;">
-                  <span style="padding:10px 14px 10px 0;font-size:14px;color:var(--text-tertiary);white-space:nowrap;user-select:none;">.podbean.com</span>
+              <a href="#" class="url-current-visit" onclick="visitWebsite()" style="font-size:14px;font-weight:600;color:var(--primary);text-decoration:none;">Visit Website ↗</a>
+            </div>
+
+            <!-- Podcast Website URL 板块 -->
+            <div class="url-option-box active" id="urlOptPodbean" onclick="selectUrlType('podbean')">
+              <div class="url-option-header">
+                <span class="url-option-label">Podcast Website URL</span>
+              </div>
+              <div class="url-option-body">
+                <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">This is your free podcast website URL provided by Podbean. Changing this URL will also change your podcast feed URL. <a href="#" style="color:inherit;text-decoration:underline;font-weight:500;" onclick="alert('Learn more about Podbean website URLs');event.stopPropagation();">Learn more</a></div>
+                <div class="url-input-row">
+                  <div style="display:flex;align-items:center;flex:1;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;">
+                    <input type="text" id="podbeanUrlPrefix" value="https://your-podcast" style="flex:1;padding:10px 14px;border:none;font-size:14px;font-family:inherit;color:var(--text);outline:none;background:transparent;" oninput="markDirty()" onclick="event.stopPropagation()">
+                    <span style="padding:10px 14px 10px 0;font-size:14px;color:var(--text-tertiary);white-space:nowrap;user-select:none;">.podbean.com</span>
+                  </div>
                 </div>
-                <button class="url-btn" onclick="var p=document.getElementById('podbeanUrlPrefix').value.trim();if(p){alert('Podbean URL updated to: '+p+'.podbean.com')}">Save</button>
               </div>
             </div>
 
-            <!-- Own Domain -->
-            <div class="url-section-box">
-              <div class="url-domain-title">Own Domain</div>
-              <div class="url-domain-desc">Connect your own domain to give your podcast website a professional, branded URL. <a href="#" style="color:inherit;text-decoration:underline;font-weight:500;cursor:pointer;" onclick="document.getElementById('domainHelpSection').style.display=document.getElementById('domainHelpSection').style.display==='none'?'':'none'">How to set up</a></div>
-              <div class="url-input-row">
-                <input type="text" id="ownDomainInput" placeholder="e.g. podcast.yourdomain.com" value="" oninput="document.getElementById('ownDomainSaveBtn').disabled=!this.value.trim()">
-                <button class="url-btn" id="ownDomainSaveBtn" onclick="alert('Own domain saved')" disabled>Save</button>
+            <!-- Own Domain 板块 -->
+            <div class="url-option-box" id="urlOptDomain" onclick="selectUrlType('domain')">
+              <div class="url-option-header">
+                <span class="url-option-label">Own Domain</span>
+                <span class="connected-badge" id="domainConnectedBadge" style="display:none;">Connected</span>
               </div>
-              <div class="url-ssl-note">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                SSL certificate will be automatically provisioned for your domain.
+              <div class="url-option-body">
+                <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">Connect your own domain to give your podcast website a professional, branded URL. <a href="#" style="color:var(--text-secondary);text-decoration:underline;font-weight:500;" onclick="document.getElementById('domainHelpSection').style.display=document.getElementById('domainHelpSection').style.display==='none'?'':'none';return false;">How to set up</a></div>
+                <div class="url-input-row">
+                  <input type="text" id="ownDomainInput" placeholder="e.g. podcast.yourdomain.com" value="" oninput="markDirty()" onclick="event.stopPropagation()">
+                </div>
+                <div class="url-ssl-note">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  SSL certificate will be automatically provisioned for your domain.
+                </div>
+                <div id="domainDisconnectRow" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+                  <a href="#" style="font-size:13px;font-weight:500;color:#dc2626;text-decoration:none;" onclick="disconnectOwnDomain();return false;">Disconnect domain</a>
+                </div>
               </div>
             </div>
 
@@ -2124,14 +2497,25 @@
               </div>
             </div>
           </div>
+
+          <!-- Unified Save Bar — fixed at bottom -->
+          <div class="pb-save-bar" id="urlSaveBar">
+            <div class="pb-save-bar-inner">
+              <button type="button" class="cancel-btn" onclick="discardUrlChanges()">Cancel</button>
+              <button type="button" class="save-btn" onclick="saveUrlChanges()">Save</button>
+            </div>
+          </div>
         </div>
 
         <!-- Tab: Pages -->
         <div class="website-tab-content" id="websiteTab-pages">
           <div class="tab-panel active" id="panel-pages">
             <div class="pages-header" id="pagesHeaderBar">
-              <h2 class="tab-panel-heading" style="margin-bottom:0;">Pages</h2>
-              <button class="pages-new-btn" id="newPageBtn" onclick="document.getElementById('pageListView').style.display='none';document.getElementById('pageCreateView').style.display=''">+ New Page</button>
+              <div>
+                <h2 class="tab-panel-heading" style="margin-bottom:0;">Pages</h2>
+                <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Create pages for your bio, contact info, etc., and add them to your website's top navigation while customizing your website.</div>
+              </div>
+              <button class="pages-new-btn" id="newPageBtn" style="flex-shrink:0;" onclick="document.getElementById('pageListView').style.display='none';document.getElementById('pageCreateView').style.display=''">+ New Page</button>
             </div>
             <!-- Page List View -->
             <div id="pageListView">
@@ -2211,7 +2595,7 @@
 
       <!-- Embeddable Player page -->
       <div class="page hidden" id="page-embeddable-player">
-        <h1>Embeddable Player</h1>
+        <h1>Embed Player</h1>
         <p style="color:var(--text-secondary);margin-top:8px;margin-bottom:24px;">Embed a multi-episode player on your site. Customize the look and feel to match your brand. <a href="#" style="color:var(--primary);text-decoration:none;">Learn more</a></p>
         <div class="ep-layout">
           <div class="ep-preview-panel">
@@ -2787,6 +3171,112 @@
         closeAppleModal();
       }
     });
+    // ===== URL Type: mutually exclusive =====
+    var activeUrlType = 'podbean'; // 'podbean' or 'domain'
+    var domainSaved = false;
+    var domainValue = ''; // persisted domain name
+
+    function selectUrlType(type) {
+      if (type === activeUrlType) return;
+
+      // Switching away from domain — silently discard unsaved input, but keep saved domain
+      if (activeUrlType === 'domain') {
+        document.getElementById('ownDomainInput').value = '';
+      }
+
+      // Switching away from podbean — discard unsaved changes
+      if (activeUrlType === 'podbean') {
+        document.getElementById('podbeanUrlPrefix').value = 'https://your-podcast';
+      }
+
+      activeUrlType = type;
+
+      // Update radio card UI
+      document.getElementById('urlOptPodbean').classList.toggle('active', type === 'podbean');
+      document.getElementById('urlOptDomain').classList.toggle('active', type === 'domain');
+
+      markDirty();
+    }
+
+    // ===== Unified URL Save =====
+    function markDirty() {
+      var hasChanges = false;
+
+      if (activeUrlType === 'podbean') {
+        var podbeanUrl = document.getElementById('podbeanUrlPrefix').value.trim();
+        if (podbeanUrl !== 'https://your-podcast') hasChanges = true;
+      } else {
+        var domain = document.getElementById('ownDomainInput').value.trim();
+        if (domain !== domainValue) hasChanges = true;
+      }
+
+      var bar = document.getElementById('urlSaveBar');
+      if (hasChanges) {
+        bar.classList.add('is-visible');
+        document.body.classList.add('has-save-bar');
+      } else {
+        bar.classList.remove('is-visible');
+        document.body.classList.remove('has-save-bar');
+      }
+    }
+
+    function saveUrlChanges() {
+      if (activeUrlType === 'podbean') {
+        var podbeanUrl = document.getElementById('podbeanUrlPrefix').value.trim();
+        var msg = 'Settings saved!\n\nPodbean URL: ' + podbeanUrl + '.podbean.com';
+        alert(msg);
+      } else {
+        var domain = document.getElementById('ownDomainInput').value.trim();
+        if (!domain) { alert('Please enter a domain name.'); return; }
+        domainSaved = true;
+        domainValue = domain;
+        document.getElementById('domainConnectedBadge').style.display = '';
+        document.getElementById('domainDisconnectRow').style.display = '';
+
+        var msg = 'Settings saved!\n\nCustom Domain: ' + domain;
+        alert(msg);
+      }
+
+      document.getElementById('urlSaveBar').classList.remove('is-visible');
+      document.body.classList.remove('has-save-bar');
+    }
+
+    function discardUrlChanges() {
+      if (activeUrlType === 'podbean') {
+        document.getElementById('podbeanUrlPrefix').value = 'https://your-podcast';
+      } else {
+        document.getElementById('ownDomainInput').value = domainValue || '';
+      }
+      document.getElementById('urlSaveBar').classList.remove('is-visible');
+      document.body.classList.remove('has-save-bar');
+    }
+
+    function visitWebsite() {
+      if (activeUrlType === 'domain' && domainSaved && domainValue) {
+        window.open('https://' + domainValue, '_blank');
+      } else {
+        alert('Opening your podcast website');
+      }
+    }
+
+    function disconnectOwnDomain() {
+      document.getElementById('confirmDisconnectModal').classList.add('show');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirmDisconnectModal').classList.remove('show');
+    }
+
+    function confirmDisconnectDomain() {
+      closeConfirmModal();
+      domainSaved = false;
+      domainValue = '';
+      document.getElementById('ownDomainInput').value = '';
+      document.getElementById('domainConnectedBadge').style.display = 'none';
+      document.getElementById('domainDisconnectRow').style.display = 'none';
+      markDirty();
+    }
+
     // ===== Podcast Website: Tab switching =====
     function switchWebsiteTab(tab) {
       var tabs = document.querySelectorAll('.website-tab');
@@ -2818,6 +3308,18 @@
       }
     }
   </script>
+
+  <!-- Confirm Disconnect Modal -->
+  <div class="confirm-overlay" id="confirmDisconnectModal">
+    <div class="confirm-dialog">
+      <div class="confirm-title">Disconnect Domain</div>
+      <div class="confirm-desc">Are you sure you want to disconnect your own domain?</div>
+      <div class="confirm-actions">
+        <button class="confirm-btn confirm-btn-danger" onclick="confirmDisconnectDomain()">Disconnect</button>
+        <button class="confirm-btn confirm-btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
