@@ -269,6 +269,15 @@
       border-radius: 12px;
       padding: 0 24px 12px;
     }
+    #pageEditorContainer .page {
+      padding: 28px 60px 36px;
+    }
+    #pageEditorContainer .page-create-form {
+      max-width: none;
+    }
+    #pageEditorContainer .editor-field {
+      margin-bottom: 28px;
+    }
     .page.hidden {
       display: none;
     }
@@ -1429,6 +1438,9 @@
     }
     .website-tab-content { display: none; }
     .website-tab-content.active { display: block; text-align: left; }
+    #websiteTab-url {
+      padding: 0 20px;
+    }
 
     /* Website Theme Showcase — Single row (Vertex, primary) */
     .theme-showcase {
@@ -1710,9 +1722,11 @@
       font-size: 16px;
       font-weight: 600;
       color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .url-option-arrow {
-      margin-left: auto;
       transition: transform 0.2s;
       color: var(--text-secondary);
     }
@@ -1743,6 +1757,32 @@
       border-radius: 14px;
       padding: 18px 24px;
       background: var(--surface);
+    }
+
+    /* ── Page Order edit icon ──── */
+    .page-order-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .page-order-wrap .order-val {
+      font-size: 14px;
+      color: var(--text);
+    }
+    .page-order-edit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      padding: 2px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+    .page-order-edit:hover {
+      color: var(--text);
     }
 
     /* ── Confirm Modal (centered overlay) ──── */
@@ -1881,6 +1921,20 @@
     }
     .pages-table tbody tr:last-child td { border-bottom: none; }
     .pages-table tbody tr:hover { background: #fafbfc; }
+    .pages-table tbody tr { cursor: pointer; }
+    .pages-table .page-title-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pages-table .page-title-wrap .page-eye {
+      display: none;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+    .pages-table tbody tr:hover .page-eye {
+      display: inline-flex;
+    }
     .pages-table input[type="checkbox"] {
       width: 16px;
       height: 16px;
@@ -1993,6 +2047,9 @@
       gap: 12px;
       justify-content: flex-end;
       margin-top: 20px;
+    }
+    #pageEditorContainer .page-create-actions {
+      justify-content: center;
     }
     /* Toggle Switch */
     .toggle-switch {
@@ -2167,8 +2224,8 @@
   <div class="main-panel">
     <div class="page-toolbar">
     <div class="page-toolbar-left">
-      <div class="page-toolbar-title">Podcast Website</div>
-      <div class="page-toolbar-desc">Manage your podcast website settings.</div>
+      <div class="page-toolbar-title" id="pageToolbarTitle">Podcast Website</div>
+      <div class="page-toolbar-desc" id="pageToolbarDesc">Manage your podcast website settings.</div>
     </div>
     <div class="page-toolbar-right">
       <button class="btn-new-episode">+ New Episode</button>
@@ -2261,8 +2318,7 @@
             <!-- Podcast Website URL 板块 -->
             <div class="url-option-box active" id="urlOptPodbean" onclick="toggleUrlSection('podbean')">
               <div class="url-option-header">
-                <span class="url-option-label">Built-in Domain</span>
-                <svg class="url-option-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <span class="url-option-label">Built-in Domain <svg class="url-option-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
               </div>
               <div class="url-option-body">
                 <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">This is your built-in Podbean domain. Your podcast website can always be accessed from this domain and it never expires. Changing this URL will also change your podcast feed URL. <a href="#" style="color:inherit;text-decoration:underline;font-weight:500;" onclick="alert('Learn more about Podbean website URLs');event.stopPropagation();">Learn more</a></div>
@@ -2278,10 +2334,8 @@
             <!-- Own Domain 板块 -->
             <div class="url-option-box" id="urlOptDomain" onclick="toggleUrlSection('domain')">
               <div class="url-option-header">
-                <span class="url-option-label">Use a domain I own</span>
-                <span style="font-size:14px;color:var(--text-tertiary);font-weight:400;">(optional)</span>
+                <span class="url-option-label">Use a domain I own <span style="font-size:14px;color:var(--text-tertiary);font-weight:400;">(optional)</span> <svg class="url-option-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                 <span class="connected-badge" id="domainConnectedBadge" style="display:none;">Connected</span>
-                <svg class="url-option-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </div>
               <div class="url-option-body">
                 <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;margin-bottom:16px;">Connect your own domain to give your podcast website a professional, branded URL.</div>
@@ -2321,7 +2375,7 @@
           </div>
 
           <!-- Save Button at bottom -->
-          <div style="text-align:center;padding:62px 0 8px;">
+          <div style="text-align:center;padding:62px 0 30px;">
             <button onclick="saveUrlChanges()" style="background:#1e293b;color:#fff;border:none;width:160px;height:44px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Save</button>
           </div>
 
@@ -2337,7 +2391,7 @@
                 <button class="pages-sub-tab" onclick="switchPagesTab('list', this)">V2</button>
               </div>
             </div>
-            <button class="pages-new-btn" id="newPageBtn" style="flex-shrink:0;" onclick="document.getElementById('pageListView').style.display='none';document.getElementById('pageCreateView').style.display=''">+ New Page</button>
+            <button class="pages-new-btn" id="newPageBtn" style="flex-shrink:0;" onclick="showPageEditor(true)">+ New Page</button>
           </div>
 
           <!-- Empty Template View -->
@@ -2363,22 +2417,25 @@
                 <thead>
                   <tr>
                     <th style="width:44px;"><input type="checkbox" onclick="document.querySelectorAll('.page-row-check').forEach(c=>c.checked=this.checked)"></th>
-                    <th>Page</th>
-                    <th>User</th>
-                    <th>↓ When</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Page Order</th>
+                    <th>When</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><input type="checkbox" class="page-row-check"></td>
-                    <td>Untitled Page - 2026-05-29 02:50:25</td>
+                  <tr onclick="editPage(this)">
+                    <td><input type="checkbox" class="page-row-check" onclick="event.stopPropagation()"></td>
+                    <td><span class="page-title-wrap"><span>Untitled Page - 2026-05-29 02:50:25</span><span class="page-eye"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></span></td>
                     <td>MyAuthor</td>
+                    <td><span class="page-order-wrap"><span class="order-val">1</span><button class="page-order-edit" onclick="event.stopPropagation();openPageOrderModal(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="M15 5l4 4"/></svg></button></span></td>
                     <td>May 29, 2026</td>
                   </tr>
-                  <tr>
-                    <td><input type="checkbox" class="page-row-check"></td>
-                    <td>Untitled Page - 2026-05-29 02:49:42</td>
+                  <tr onclick="editPage(this)">
+                    <td><input type="checkbox" class="page-row-check" onclick="event.stopPropagation()"></td>
+                    <td><span class="page-title-wrap"><span>Untitled Page - 2026-05-29 02:49:42</span><span class="page-eye"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></span></td>
                     <td>MyAuthor</td>
+                    <td><span class="page-order-wrap"><span class="order-val">2</span><button class="page-order-edit" onclick="event.stopPropagation();openPageOrderModal(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="M15 5l4 4"/></svg></button></span></td>
                     <td>May 29, 2026</td>
                   </tr>
                 </tbody>
@@ -2392,48 +2449,54 @@
                 </div>
               </div>
             </div>
-            <!-- Create Page View -->
-            <div id="pageCreateView" style="display:none;">
-              <div class="page-create-form">
-                <div class="editor-field">
-                  <label>Title</label>
-                  <input type="text" class="sp-text-input" placeholder="Enter page title">
-                </div>
-                <div class="editor-field">
-                  <label>Description</label>
-                  <div class="sp-editor-box">
-                    <div class="sp-editor-header">
-                      <select><option>Paragraph</option><option>Heading 1</option><option>Heading 2</option></select>
-                      <select><option>System Font</option><option>Inter</option><option>Roboto</option><option>Georgia</option></select>
-                      <select><option>14pt</option><option>12pt</option><option>18pt</option><option>24pt</option></select>
-                    </div>
-                    <div class="sp-editor-format">
-                      <span style="cursor:pointer;font-weight:700;">B</span>
-                      <span style="cursor:pointer;font-style:italic;">I</span>
-                      <span style="cursor:pointer;text-decoration:underline;">U</span>
-                      <span style="cursor:pointer;color:#ccc;">|</span>
-                      <span style="cursor:pointer;">≡</span>
-                      <span style="cursor:pointer;">≡</span>
-                      <span style="cursor:pointer;color:#ccc;">|</span>
-                      <span style="cursor:pointer;">&lt;/&gt;</span>
-                      <span style="cursor:pointer;">🔗</span>
-                    </div>
-                    <div class="sp-editor-preview" contenteditable="true" style="text-align:left;min-height:200px;">
-                      <p style="color:var(--text-tertiary);">Write your page description here...</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="page-create-actions">
-                  <button class="sp-reset-btn" onclick="document.getElementById('pageCreateView').style.display='none';document.getElementById('pageListView').style.display=''">Cancel</button>
-                  <button class="sp-done-btn" onclick="alert('Page published')">Publish</button>
-                </div>
-              </div>
-            </div>
           </div>      <!-- /panel-pages -->
           </div>     <!-- /pagesListView -->
         </div>      <!-- /websiteTab-pages -->
       </div>        <!-- /page-podcast-website -->
 
+      <!-- Page Editor (standalone, replaces .page when active) -->
+      <div id="pageEditorContainer" style="display:none;">
+        <div class="page" style="margin:0;">
+          <div class="page-create-form">
+            <div class="editor-field" style="display:flex;align-items:flex-start;gap:24px;">
+              <label style="font-size:14px;font-weight:600;color:var(--text);width:120px;flex-shrink:0;padding-top:8px;text-align:right;">Title</label>
+              <div style="flex:1;">
+                <input type="text" style="width:100%;border:none;border-bottom:2px solid var(--border);padding:8px 0;font-size:20px;font-weight:700;font-family:inherit;color:var(--text);outline:none;background:transparent;" onfocus="this.style.borderBottom='2px solid #1e293b'" onblur="this.style.borderBottom='2px solid #e2e8f0'">
+              </div>
+            </div>
+            <div class="editor-field" style="display:flex;align-items:flex-start;gap:24px;">
+              <label style="font-size:14px;font-weight:600;color:var(--text);width:120px;flex-shrink:0;padding-top:8px;text-align:right;">Description</label>
+              <div style="flex:1;">
+                <div class="sp-editor-box">
+                <div class="sp-editor-header">
+                  <select><option>Paragraph</option><option>Heading 1</option><option>Heading 2</option></select>
+                  <select><option>System Font</option><option>Inter</option><option>Roboto</option><option>Georgia</option></select>
+                  <select><option>14pt</option><option>12pt</option><option>18pt</option><option>24pt</option></select>
+                </div>
+                <div class="sp-editor-format">
+                  <span style="cursor:pointer;font-weight:700;">B</span>
+                  <span style="cursor:pointer;font-style:italic;">I</span>
+                  <span style="cursor:pointer;text-decoration:underline;">U</span>
+                  <span style="cursor:pointer;color:#ccc;">|</span>
+                  <span style="cursor:pointer;">≡</span>
+                  <span style="cursor:pointer;">≡</span>
+                  <span style="cursor:pointer;color:#ccc;">|</span>
+                  <span style="cursor:pointer;">&lt;/&gt;</span>
+                  <span style="cursor:pointer;">🔗</span>
+                </div>
+                <div class="sp-editor-preview" contenteditable="true" style="text-align:left;min-height:320px;">
+                  <p style="color:var(--text-tertiary);">Write your page description here...</p>
+                </div>
+              </div>
+              </div>    <!-- /flex:1 -->
+            </div>
+            <div class="page-create-actions">
+              <button class="sp-reset-btn" onclick="hidePageEditor()">Cancel</button>
+              <button class="sp-done-btn" onclick="savePage()">Publish</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>          <!-- /pageContent -->
 
     <!-- ===== FOOTER ===== -->
@@ -2590,7 +2653,86 @@
         if (footer) footer.appendChild(badge);
       }
     }
+
+    // ===== Page Editor toolbar toggle =====
+    function showPageEditor(isNew) {
+      // Hide the podcast website page container, show editor
+      document.getElementById('page-podcast-website').style.display = 'none';
+      document.getElementById('pageEditorContainer').style.display = '';
+      document.getElementById('pageToolbarTitle').textContent = isNew ? 'Publish Page' : 'Edit Page';
+      document.getElementById('pageToolbarDesc').innerHTML = '<a href="#" onclick="hidePageEditor();return false;" style="color:var(--text-secondary);text-decoration:none;font-weight:500;">&lt; Pages</a>';
+      var titleInput = document.querySelector('#pageEditorContainer .sp-text-input');
+      if (titleInput) {
+        if (isNew) {
+          titleInput.value = '';
+          var editor = document.querySelector('#pageEditorContainer .sp-editor-preview');
+          if (editor) editor.innerHTML = '<p style="color:var(--text-tertiary);">Write your page description here...</p>';
+        }
+      }
+    }
+
+    function hidePageEditor() {
+      document.getElementById('page-podcast-website').style.display = '';
+      document.getElementById('pageEditorContainer').style.display = 'none';
+      document.getElementById('pageToolbarTitle').textContent = 'Podcast Website';
+      document.getElementById('pageToolbarDesc').textContent = 'Manage your podcast website settings.';
+    }
+
+    function savePage() {
+      alert('Page published');
+      hidePageEditor();
+    }
+
+    // ===== Edit Page / eye icon =====
+    function editPage(row) {
+      var title = row.querySelector('.page-title-wrap span:first-child').textContent;
+      var titleInput = document.querySelector('#pageEditorContainer .sp-text-input');
+      if (titleInput) titleInput.value = title;
+      showPageEditor(false);
+    }
+
+    // ===== Page Order modal =====
+    var currentPageOrderRow = null;
+
+    function openPageOrderModal(btn) {
+      currentPageOrderRow = btn.closest('tr');
+      var currentVal = currentPageOrderRow.querySelector('.order-val').textContent;
+      document.getElementById('pageOrderInput').value = currentVal;
+      document.getElementById('pageOrderModal').classList.add('show');
+    }
+
+    function closePageOrderModal() {
+      document.getElementById('pageOrderModal').classList.remove('show');
+      currentPageOrderRow = null;
+    }
+
+    function confirmPageOrder() {
+      var input = document.getElementById('pageOrderInput');
+      var val = input.value.trim();
+      if (val === '' || isNaN(val) || parseInt(val) < 1) {
+        alert('Please enter a valid page order number.');
+        return;
+      }
+      if (currentPageOrderRow) {
+        currentPageOrderRow.querySelector('.order-val').textContent = val;
+      }
+      closePageOrderModal();
+    }
   </script>
+
+  <!-- Page Order Modal -->
+  <div class="confirm-overlay" id="pageOrderModal">
+    <div class="confirm-dialog">
+      <div class="confirm-title">Update Page Order</div>
+      <div style="margin:20px 0;">
+        <input type="number" id="pageOrderInput" min="1" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;" placeholder="Enter page order number">
+      </div>
+      <div class="confirm-actions">
+        <button class="confirm-btn confirm-btn-primary" onclick="confirmPageOrder()">OK</button>
+        <button class="confirm-btn confirm-btn-secondary" onclick="closePageOrderModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Confirm Disconnect Modal -->
   <div class="confirm-overlay" id="confirmDisconnectModal">
