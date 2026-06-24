@@ -1,0 +1,2608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Layout Template - Topbar + Sidebar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a9a6c;
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-secondary: #64748b;
+      --text-tertiary: #94a3b8;
+      --border: #e2e8f0;
+      --radius-sm: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ==============================
+           TOPBAR (fixed, full width)
+           ============================== */
+    .topbar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 6px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+    .topbar-btn:hover { background: #f1f5f9; }
+
+    .page-toolbar {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      background: rgb(238, 240, 241);
+      margin-top: 14px;
+    }
+    .page-toolbar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .page-toolbar-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .page-toolbar-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.2;
+    }
+    .page-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .page-toolbar-right .btn-new-episode {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .page-toolbar-right .btn-new-episode:hover { background: #334155; }
+    .page-toolbar-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+      margin: 0 20px;
+    }
+    .page-toolbar-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #3c4858;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+      cursor: pointer;
+    }
+    .page-toolbar-link:hover {
+      background: #f1f5f9;
+      color: var(--text);
+    }
+    .page-toolbar-link svg {
+      flex-shrink: 0;
+    }
+    .page-toolbar-link:last-child svg:last-child {
+      margin-left: 2px;
+    }
+
+    /* ==============================
+           SIDEBAR (fixed, below topbar)
+           ============================== */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 230px;
+      background: #0f0f0f;
+      z-index: 100;
+      border-right: 1px solid #2a2a2a;
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      padding-top: 12px;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 10px;
+      transition: all 0.15s;
+    }
+    .sidebar-nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+    .sidebar-nav a[data-page="onboarding"] {
+      font-size: 14px;
+    }
+    .sidebar-nav a[data-page="onboarding"] .nav-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sidebar-nav a .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-nav a .nav-icon svg, .sidebar-nav a .nav-icon img {
+      width: 18px;
+      height: 18px;
+      stroke: rgba(255,255,255,0.45);
+      transition: stroke 0.15s;
+    }
+    .sidebar-nav a:hover .nav-icon svg { stroke: #fff; }
+
+    .sidebar-nav a.active {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-weight: 500;
+    }
+    .sidebar-nav a.active .nav-icon svg { stroke: #fff; }
+
+    .sidebar-nav .sub-menu {
+      padding-left: 34px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .sidebar-nav .sub-menu a {
+      font-size: 14px;
+      padding: 7px 14px;
+      border-radius: 50px;
+      color: rgba(255,255,255,0.55);
+    }
+    .sidebar-nav .sub-menu a.active {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* ==============================
+           OVERLAY (mobile only)
+           ============================== */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.3);
+      z-index: 99;
+    }
+
+    /* ==============================
+           MAIN CONTENT AREA
+           ============================== */
+    .main-panel {
+      margin-left: 230px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: rgb(238, 240, 241);
+    }
+
+    .content {
+      padding: 28px 32px 32px;
+      flex: 1;
+    }
+    .content h1 {
+      font-size: 32px;
+      margin-top: 0;
+    }
+
+    /* ==============================
+           RESPONSIVE
+           ============================== */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        top: 0;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.show { display: block; }
+      .main-panel { margin-left: 0; }
+      .content { padding: 24px; }
+
+    }
+
+    @media (max-width: 480px) {
+      .content { padding: 16px; }
+    }
+
+    /* ==============================
+           PAGE NAVIGATION
+           ============================== */
+    .page {
+      background: #fff;
+      border-radius: 12px;
+      padding: 0 24px 12px;
+    }
+    .page.hidden {
+      display: none;
+    }
+
+    /* ==============================
+           SOCIAL SHARE — GRID CARDS
+           ============================== */
+    .platform-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 1160px;
+    }
+    .platform-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 22px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      min-height: 91.9px;
+    }
+    .platform-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+      border-color: #cbd5e1;
+    }
+    .platform-card:has(.btn-connect.connected) {
+      border-color: #bbf7d0;
+      background: #fafefc;
+    }
+    .platform-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+    .platform-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+    .platform-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .platform-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    .platform-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+    }
+    .btn-connect,
+    .btn-edit {
+      padding: 7px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-connect {
+      background: var(--text);
+      color: #fff;
+      border: none;
+    }
+    .btn-connect:hover {
+      background: #334155;
+    }
+    .btn-connect.connected {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-connect.connected:hover {
+      background: #fef2f2;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+    .btn-edit {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-edit:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    @media (max-width: 720px) {
+      .platform-list {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+      }
+    }
+
+    /* ==============================
+           PODCAST APPS
+           ============================== */
+    .pa-trust {
+      margin-bottom: 48px;
+    }
+    .pa-trust-label {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+    }
+    .pa-trust-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px 48px;
+      align-items: center;
+    }
+    .pa-trust-grid img {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+
+    .pa-banner {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 40px 32px;
+      max-width: 900px;
+      position: relative;
+      overflow: hidden;
+    }
+    .pa-banner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), #38bdf8);
+      pointer-events: none;
+    }
+    .pa-banner-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+      max-width: 520px;
+    }
+    .pa-banner-body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0 0 24px;
+      max-width: 480px;
+    }
+    .pa-banner-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 11px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .pa-banner-btn:hover {
+      background: #334155;
+      transform: translateY(-1px);
+    }
+    .pa-banner-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .pa-checklist {
+      max-width: 700px;
+      padding-top: 8px;
+    }
+    .pa-checklist-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .pa-checklist-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .pa-checklist-count {
+      font-size: 14px;
+      color: var(--text-tertiary);
+    }
+    .pa-steps {
+      display: flex;
+      flex-direction: column;
+    }
+    .pa-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pa-step:last-child {
+      border-bottom: none;
+    }
+    .pa-step-num {
+      width: 28px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .pa-step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-tertiary);
+    }
+    .pa-step-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .pa-step-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .pa-step-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .pa-step-action {
+      flex-shrink: 0;
+    }
+    .pa-step-action .btn {
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 7px 22px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .pa-step-action .btn:hover {
+      background: #334155;
+    }
+    .pa-step-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #ecfdf5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pa-step-check svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--primary);
+    }
+
+    @media (max-width: 800px) {
+      .pa-hero {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .pa-hero-stats {
+        gap: 28px;
+      }
+      .pa-trust-grid {
+        gap: 24px 32px;
+      }
+      .pa-trust-grid img {
+        height: 28px;
+      }
+      .pa-banner {
+        padding: 32px 28px;
+      }
+      .pa-banner-meta {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+    }
+
+    /* ==============================
+           PODCAST APPS — DISTRIBUTION CARDS
+           ============================== */
+    .pa-dist-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 1160px;
+    }
+    .pa-dist-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      min-height: 76px;
+    }
+    .pa-dist-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+      border-color: #cbd5e1;
+    }
+    .pa-dist-card.submitted {
+      border-color: var(--border);
+      background: var(--surface);
+    }
+    .pa-dist-card {
+      align-items: flex-start;
+    }
+    .pa-dist-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+    .pa-dist-card-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .pa-dist-card-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+    }
+    .pa-dist-card-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .pa-dist-card-info .btn-connect.connected:hover {
+      background: #f1f5f9;
+      color: var(--text-secondary);
+      border-color: #cbd5e1;
+    }
+    .pa-dist-card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .pa-dist-card-tag {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      background: #ecfdf5;
+      padding: 2px 8px;
+      border-radius: 4px;
+      line-height: 1.4;
+    }
+    .pa-dist-card-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 28px;
+    }
+    .pa-dist-status {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .pa-dist-status.submitted {
+      color: var(--primary);
+    }
+    @media (max-width: 720px) {
+      .pa-dist-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==============================
+           APPLE SUBMIT MODAL
+           ============================== */
+    .apple-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 999;
+      overflow-y: auto;
+    }
+    .apple-modal-overlay.show {
+      display: block;
+    }
+    .apple-modal {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 36px 36px;
+      position: relative;
+    }
+    .apple-modal-close {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      background: #f1f5f9;
+      border: none;
+      font-size: 22px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      z-index: 10;
+      transition: background 0.15s;
+    }
+    .apple-modal-close:hover { background: #e2e8f0; }
+    .apple-modal h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 4px;
+    }
+    .apple-modal .modal-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0 0 24px;
+    }
+    .apple-modal .already-link {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .apple-modal .already-link a {
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .apple-modal .micro-headline {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: normal;
+      color: var(--text-secondary);
+      margin: 24px 0 12px;
+    }
+    .apple-modal .setup-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .apple-modal .setup-text {
+      font-size: 14px;
+      color: var(--text);
+    }
+    .apple-modal .sc-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .apple-modal .sc-btn:hover {
+      background: #f1f5f9;
+    }
+    .apple-modal .sel-underline {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 4px 0;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: transparent;
+      cursor: pointer;
+      outline: none;
+      width: 220px;
+    }
+    .apple-modal .sel-underline:focus {
+      border-color: var(--text);
+    }
+    .apple-modal .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+    .apple-modal .check-row input[type="checkbox"] {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--text);
+      flex-shrink: 0;
+    }
+    .apple-modal .check-row span {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .apple-modal .check-row .terms-inline {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .apple-modal .btn-agree-all {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      padding: 8px 0 8px 30px;
+    }
+    .apple-modal .submit-footer {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+    }
+    .apple-modal .btn-big {
+      padding: 11px 32px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .apple-modal .btn-big.black {
+      background: var(--text);
+      color: #fff;
+    }
+    .apple-modal .btn-big.black:hover {
+      background: #334155;
+    }
+    .apple-modal .btn-big.black:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .apple-modal .btn-big.black:disabled:hover {
+      background: var(--text);
+    }
+
+    .apple-modal .acc-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .apple-modal .acc-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.15s;
+    }
+    .apple-modal .acc-header.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .apple-modal .acc-item.locked .acc-body {
+      display: none !important;
+    }
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .apple-modal .acc-arrow {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+      color: var(--text-tertiary);
+    }
+    .apple-modal .acc-item.open .acc-arrow {
+      transform: rotate(90deg);
+    }
+    .apple-modal .acc-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text);
+    }
+    .apple-modal .acc-body {
+      display: none;
+      padding: 0 0 16px 26px;
+    }
+    .apple-modal .acc-item.open .acc-body {
+      display: block;
+    }
+    .apple-modal .acc-body p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .apple-modal .acc-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .apple-modal .acc-step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .apple-modal .acc-step span {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .apple-modal .acc-step a {
+      color: var(--primary);
+    }
+    .apple-modal .btn.black {
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .apple-modal .btn.black:hover {
+      background: #334155;
+    }
+    .apple-modal .locked-overlay {
+      text-align: center;
+      padding: 24px 0;
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    /* Apple Modal Tabs */
+    .apple-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .apple-tab {
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: inherit;
+    }
+    .apple-tab:hover {
+      color: var(--text-secondary);
+    }
+    .apple-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--text);
+      font-weight: 600;
+    }
+    .apple-tab.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .apple-tab.locked:hover {
+      color: var(--text-tertiary);
+    }
+    .apple-tab-content {
+      display: none;
+    }
+    .apple-tab-content.active {
+      display: block;
+    }
+    .apple-tab-lock-msg {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-tertiary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .apple-tab-lock-msg svg {
+      display: block;
+      margin: 0 auto 16px;
+      width: 40px;
+      height: 40px;
+      stroke: var(--text-tertiary);
+    }
+
+    /* ==============================
+           OAUTH CONNECT MODAL
+           ============================== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.show {
+      display: flex;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      width: 420px;
+      max-width: 90vw;
+      padding: 36px 32px 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      text-align: center;
+      position: relative;
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      line-height: 1;
+    }
+    .modal-close:hover { background: #f1f5f9; }
+    .modal-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .modal-icon-wrap svg {
+      width: 28px;
+      height: 28px;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .modal-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .modal-permissions {
+      text-align: left;
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+    .modal-permissions-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .modal-permission-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text);
+      padding: 4px 0;
+    }
+    .modal-permission-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+    .modal-permission-item .perm-check {
+      color: var(--primary);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .modal-btn {
+      padding: 10px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .modal-btn-primary {
+      background: var(--text);
+      color: #fff;
+    }
+    .modal-btn-primary:hover {
+      background: #334155;
+    }
+    .modal-btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .modal-btn-secondary:hover {
+      background: #f1f5f9;
+    }
+
+    /* Success state inside modal */
+    .modal-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0 8px;
+    }
+    .modal-success.show {
+      display: flex;
+    }
+    .modal-success-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #ecfdf5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .modal-success-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--primary);
+    }
+    .modal-success-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .modal-success-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ==============================
+           EMBEDDABLE PLAYER
+           ============================== */
+    .ep-layout {
+      display: flex;
+      gap: 48px;
+      align-items: flex-start;
+      margin-right: 0;
+    }
+    .ep-preview-panel {
+      width: 700px;
+      flex-shrink: 0;
+    }
+    .ep-preview-panel img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+      display: block;
+    }
+    .ep-section-header {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .ep-right-panel {
+      flex: 1;
+      min-width: 0;
+    }
+    .ep-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .ep-embed-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .ep-embed-box textarea {
+      width: 100%;
+      height: 90px;
+      border: none;
+      background: transparent;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      resize: none;
+      outline: none;
+    }
+    .ep-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .ep-copy-btn:hover {
+      background: #334155;
+    }
+
+    .ep-control-group {
+      margin-top: 22px;
+    }
+    .ep-cg-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .ep-control-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 38px;
+    }
+    .ep-control-group select:focus {
+      border-color: var(--primary);
+    }
+
+    .ep-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0 0;
+    }
+    .ep-toggle {
+      margin-top: 0;
+      padding: 16px 0 4px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      transition: color 0.15s;
+    }
+    .ep-toggle:hover {
+      color: var(--primary);
+    }
+    .ep-toggle span {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      transition: transform 0.2s;
+    }
+    .ep-settings-panel {
+      margin-top: 16px;
+      padding-top: 4px;
+    }
+    .ep-settings-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 24px;
+    }
+    .ep-settings-row > div {
+      flex: 0 0 calc(50% - 12px);
+      min-width: 0;
+    }
+    .ep-field-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .ep-swatch-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .ep-swatch {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-block;
+      transition: box-shadow 0.15s;
+    }
+    .ep-swatch.active {
+      box-shadow: 0 0 0 2px #fff, 0 0 0 2px var(--primary);
+    }
+    .ep-settings-panel select,
+    .ep-settings-panel input[type="text"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .ep-settings-panel select:focus,
+    .ep-settings-panel input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+    .ep-subsection {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .ep-subsection-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 1200px) {
+      .ep-preview-panel {
+        width: 100%;
+      }
+      .ep-layout {
+        flex-direction: column;
+      }
+      .ep-right-panel {
+        width: 100%;
+      }
+    }
+    /* ==============================
+       PODCAST WEBSITE
+       ============================== */
+    .website-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+      padding-top: 24px;
+    }
+    .website-tab {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: inherit;
+      margin-bottom: -1px;
+    }
+    .website-tab:hover { color: var(--text-secondary); }
+    .website-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--text);
+      font-weight: 600;
+    }
+    .website-tab-content { display: none; }
+    .website-tab-content.active { display: block; text-align: left; }
+
+    /* Website Theme Showcase — Single row (Vertex, primary) */
+    .theme-showcase {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+    }
+    .theme-showcase-preview {
+      flex: 8;
+      min-width: 0;
+    }
+    /* View toggle bar above preview */
+    .view-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 3px;
+      width: fit-content;
+      border: 1px solid var(--border);
+    }
+    .view-toggle button {
+      background: none;
+      border: none;
+      padding: 6px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-radius: 6px;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .view-toggle button.active {
+      background: #fff;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .view-toggle button:hover:not(.active) {
+      color: var(--text-secondary);
+    }
+    .preview-wrap {
+      height: 720px;
+      overflow-y: auto;
+      border-radius: 14px;
+    }
+    .preview-wrap img {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      display: block;
+    }
+    /* Mobile phone frame */
+    .preview-wrap.mobile-view {
+      max-width: 375px;
+      margin: 0 auto;
+      border-radius: 36px;
+      border: 3px solid #1e293b;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      height: 720px;
+      overflow-y: auto;
+      background: #fff;
+    }
+    .preview-wrap.mobile-view img {
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .theme-showcase-detail {
+      flex: 4;
+      min-width: 0;
+      padding-top: 8px;
+    }
+    .theme-showcase-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .theme-showcase-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .theme-showcase-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 11px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .theme-showcase-btn:hover {
+      background: #334155;
+    }
+    .theme-showcase-btn.current {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      cursor: default;
+    }
+
+    .theme-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 48px 0;
+    }
+
+    /* Alternative templates — Two-column card grid */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: stretch;
+    }
+    .theme-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface);
+      transition: box-shadow 0.25s, border-color 0.25s;
+    }
+    .theme-card:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      border-color: #cbd5e1;
+    }
+    .theme-card-img-wrap {
+      position: relative;
+      line-height: 0;
+      max-height: 420px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .theme-card-img-wrap img {
+      width: 100%;
+      display: block;
+    }
+    .theme-card-activate-btn {
+      background: #fff;
+      color: #1e293b;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .theme-card-activate-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    /* Theme card footer: name left, activate right */
+    .theme-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 16px;
+      border-top: 1px solid var(--border);
+    }
+    .theme-card-footer .theme-card-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+    }
+    .theme-card-footer .theme-card-activate-btn {
+      padding: 8px 20px;
+      font-size: 14px;
+      background: #1e293b;
+      color: #fff;
+      border-radius: 6px;
+    }
+    .theme-card-footer .theme-card-activate-btn:hover {
+      transform: none;
+      box-shadow: none;
+      opacity: 0.9;
+    }
+    .theme-card-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .theme-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .theme-card-actions .theme-card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 9px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .theme-card-actions .theme-card-btn:hover {
+      background: #334155;
+    }
+    .theme-card-actions .theme-card-link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .theme-card-actions .theme-card-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Placeholder card for coming soon */
+    .theme-card-placeholder {
+      border: 2px dashed var(--border);
+      border-radius: 14px;
+      background: #fafbfc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .theme-card-placeholder .placeholder-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+    .theme-card-placeholder .placeholder-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .theme-card-placeholder .placeholder-desc {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+      max-width: 280px;
+    }
+
+    /* URL 选项垂直板块 — 互斥 radio，标题和内容在一起 */
+    .url-option-box {
+      margin-top: 0;
+      cursor: pointer;
+    }
+    .url-option-box:hover .url-option-label {
+      opacity: 0.7;
+    }
+    .url-option-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 18px 0;
+    }
+    .url-option-box + .url-option-box {
+      border-top: 1px solid var(--border);
+      margin-top: 0;
+    }
+    .url-option-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .url-option-arrow {
+      margin-left: auto;
+      transition: transform 0.2s;
+      color: var(--text-secondary);
+    }
+    .url-option-box.active .url-option-arrow {
+      transform: rotate(180deg);
+    }
+    /* 未选中的板块先不展示输入内容 */
+    .url-option-box:not(.active) .url-option-body {
+      display: none;
+    }
+    .url-option-body {
+      padding: 0 0 22px;
+    }
+    .url-type-badge + .url-type-badge { margin-left: 4px; }
+    .connected-badge {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      background: #ecfdf5;
+      padding: 2px 10px;
+      border-radius: 50px;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    .url-section-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 24px;
+      background: var(--surface);
+    }
+
+    /* ── Confirm Modal (centered overlay) ──── */
+    .confirm-overlay {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,.3);
+      align-items: center; justify-content: center;
+    }
+    .confirm-overlay.show { display: flex; }
+    .confirm-dialog {
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.18);
+      max-width: 420px; width: 90%; padding: 32px;
+      text-align: center;
+    }
+    .confirm-dialog .confirm-title {
+      font-size: 18px; font-weight: 700; color: #1e293b;
+      margin-bottom: 8px;
+    }
+    .confirm-dialog .confirm-desc {
+      font-size: 14px; color: #64748b;
+      margin-bottom: 24px; line-height: 1.5;
+    }
+    .confirm-dialog .confirm-actions {
+      display: flex; gap: 12px; justify-content: center;
+    }
+    .confirm-dialog .confirm-btn {
+      padding: 10px 24px; border-radius: 8px;
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; border: none; transition: all .15s;
+    }
+    .confirm-dialog .confirm-btn-secondary {
+      background: #f1f5f9; color: #1e293b;
+    }
+    .confirm-dialog .confirm-btn-secondary:hover { background: #e2e8f0; }
+    .confirm-dialog .confirm-btn-primary {
+      background: #1e293b; color: #fff;
+    }
+    .confirm-dialog .confirm-btn-primary:hover { background: #334155; }
+    .confirm-dialog .confirm-btn-danger {
+      background: #dc2626; color: #fff;
+    }
+    .confirm-dialog .confirm-btn-danger:hover { background: #b91c1c; }
+
+    .url-current-visit {
+      font-size: 14px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .url-current-visit:hover { text-decoration: underline; }
+    .url-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .url-input-row input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      background: #fff;
+      transition: border-color 0.15s;
+    }
+    .url-input-row input:focus { border-color: var(--text); }
+    .url-ssl-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .url-ssl-note svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--primary);
+    }
+
+    /* Pages List */
+    /* ==============================
+       PAGES TABLE
+       ============================== */
+    .tab-panel-heading {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pages-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .pages-new-btn {
+      background: var(--text);
+      color: #fff;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .pages-new-btn:hover { background: #334155; }
+
+    .pages-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .pages-table th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+    .pages-table td {
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .pages-table tbody tr:last-child td { border-bottom: none; }
+    .pages-table tbody tr:hover { background: #fafbfc; }
+    .pages-table input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--text);
+      cursor: pointer;
+    }
+
+    .pages-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+    }
+    .pages-pagination { display: flex; gap: 6px; align-items: center; }
+    .pages-pagination span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .pages-pagination span.active {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+    .pages-pagination span.disabled {
+      color: var(--text-tertiary);
+      cursor: default;
+      opacity: 0.4;
+    }
+
+    /* Create Page Form */
+    .editor-field { margin-bottom: 20px; }
+    .editor-field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .sp-text-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    .sp-text-input:focus { border-color: var(--primary); }
+
+    .sp-editor-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .sp-editor-header {
+      display: flex;
+      gap: 6px;
+      padding: 8px 12px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .sp-editor-header select {
+      padding: 4px 8px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      font-family: inherit;
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+    }
+    .sp-editor-format {
+      display: flex;
+      gap: 6px;
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      align-items: center;
+      color: var(--text-secondary);
+    }
+    .sp-editor-preview {
+      padding: 16px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      outline: none;
+      min-height: 200px;
+    }
+
+    .page-create-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #e2e8f0;
+      border-radius: 24px;
+      transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--text);
+    }
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(18px);
+    }
+
+    .sp-reset-btn {
+      padding: 10px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .sp-reset-btn:hover { background: #f1f5f9; }
+    .sp-done-btn {
+      padding: 10px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .sp-done-btn:hover { background: #334155; }
+
+    /* Pages demo toggle — inline with header */
+    .pages-sub-tabs {
+      display: flex;
+      gap: 0;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 3px;
+      width: fit-content;
+      border: 1px solid var(--border);
+      margin-left: 16px;
+    }
+    .pages-sub-tab {
+      background: none;
+      border: none;
+      padding: 4px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-radius: 6px;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .pages-sub-tab:hover { color: var(--text-secondary); }
+    .pages-sub-tab.active {
+      background: #fff;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    /* Empty state */
+    .pages-empty-state {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .pages-empty-icon {
+      width: 64px;
+      height: 64px;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+    }
+    .pages-empty-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .pages-empty-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#" data-page="onboarding" style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="display:flex;align-items:center;gap:12px;overflow:hidden;flex:1;">
+          <span class="nav-icon">
+            <img src="pblogo.png" alt="Podcast logo" style="width:20px;height:20px;border-radius:4px;display:block;">
+          </span>
+          <span class="nav-text">Podcasting Smarter</span>
+        </span>
+        <span style="width:1px;height:16px;background:rgba(255,255,255,0.25);flex-shrink:0;"></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+          <rect x="3" y="3" width="18" height="18" rx="4" ry="4"></rect>
+        </svg>
+      </a>
+      <div style="height:1px;background:#2a2a2a;margin:8px 14px;"></div>
+      <a href="#" data-page="dashboard">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </span>
+        Dashboard
+      </a>
+      <a href="#" class="active" data-page="distribution">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </span>
+        Distribution
+      </a>
+      <div class="sub-menu">
+        <a href="#" onclick="switchSubPage(event, 'podcast-apps')">Podcast Apps</a>
+        <a href="#" onclick="switchSubPage(event, 'social-share')">Social Share</a>
+        <a href="#" class="active" onclick="switchSubPage(event, 'podcast-website')">Podcast Website</a>
+        <a href="#" onclick="switchSubPage(event, 'embeddable-player')">Embed Player</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-panel">
+    <div class="page-toolbar">
+    <div class="page-toolbar-left">
+      <div class="page-toolbar-title">Podcast Website</div>
+      <div class="page-toolbar-desc">Manage your podcast website settings.</div>
+    </div>
+    <div class="page-toolbar-right">
+      <button class="btn-new-episode">+ New Episode</button>
+      <div class="page-toolbar-divider"></div>
+      <a href="#" class="page-toolbar-link" title="Support">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>Support</span>
+      </a>
+      <a href="#" class="page-toolbar-link" title="Profile">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>PB network</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </a>
+    </div>
+    </div>
+    <div class="content" id="pageContent">
+      <!-- Podcast Website page -->
+      <div class="page" id="page-podcast-website">
+        <div class="website-tabs">
+          <button class="website-tab active" data-website-tab="theme" onclick="switchWebsiteTab('theme')">Theme Templates</button>
+          <button class="website-tab" data-website-tab="url" onclick="switchWebsiteTab('url')">Website URL</button>
+          <button class="website-tab" data-website-tab="pages" onclick="switchWebsiteTab('pages')">Pages</button>
+        </div>
+
+        <!-- Tab: Website Theme -->
+        <div class="website-tab-content active" id="websiteTab-theme">
+          <!-- Vertex: primary template (original layout) -->
+          <div class="theme-showcase">
+            <div class="theme-showcase-preview">
+              <div class="view-toggle">
+                <button class="active" onclick="switchPreviewView('web', this)">Web</button>
+                <button onclick="switchPreviewView('mobile', this)">Mobile</button>
+              </div>
+              <div class="preview-wrap" id="previewWrap">
+                <img src="screencapture-pbnetwork2-podbean-2026-06-24-15_39_02.png" alt="Vertex theme preview">
+              </div>
+            </div>
+            <div class="theme-showcase-detail">
+              <div class="theme-showcase-name">DoubleTree 1.0 <span style="font-weight:400;color:var(--text-secondary);font-size:18px;">by</span> <a href="http://www.podbean.com/" target="_blank" style="font-weight:400;color:var(--primary);text-decoration:none;font-size:18px;">Podbean</a></div>
+              <div class="theme-showcase-desc">Grab their attention with a bold text and visual intro that quickly helps potential listeners know what your podcast is about. Easy customization, lightning fast page loads, SEO optimizations, and responsive mobile experience.</div>
+              <div style="display:flex;align-items:center;gap:16px;">
+                <button class="theme-showcase-btn" onclick="alert('Customize theme settings')">Customize</button>
+                <a href="#" onclick="visitWebsite();return false;" style="font-size:14px;font-weight:600;color:var(--primary);text-decoration:none;">Visit Website ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="theme-divider"></div>
+
+          <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:20px;">Alternative Templates</div>
+
+          <!-- Alternative templates: two-column grid -->
+          <div class="theme-grid">
+            <!-- Vertex theme card -->
+            <div class="theme-card">
+              <div class="theme-card-img-wrap">
+                <img src="Night_Grid_Home.png" alt="Vertex theme preview">
+              </div>
+              <div class="theme-card-footer">
+                <span class="theme-card-name">Vertex</span>
+                <button class="theme-card-activate-btn" onclick="alert('Vertex theme activated')">Activate Now</button>
+              </div>
+            </div>
+
+            <!-- Placeholder: coming soon (no Activate) -->
+            <div class="theme-card-placeholder">
+              <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <div class="placeholder-title">More designs coming soon</div>
+              <div class="placeholder-desc">We're working on new themes to give your podcast website a fresh look. Stay tuned for updates.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Website URL -->
+        <div class="website-tab-content" id="websiteTab-url">
+          <div class="url-section">
+            <!-- Podcast Website URL 板块 -->
+            <div class="url-option-box active" id="urlOptPodbean" onclick="toggleUrlSection('podbean')">
+              <div class="url-option-header">
+                <span class="url-option-label">Built-in Domain</span>
+                <svg class="url-option-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+              <div class="url-option-body">
+                <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">This is your built-in Podbean domain. Your podcast website can always be accessed from this domain and it never expires. Changing this URL will also change your podcast feed URL. <a href="#" style="color:inherit;text-decoration:underline;font-weight:500;" onclick="alert('Learn more about Podbean website URLs');event.stopPropagation();">Learn more</a></div>
+                <div class="url-input-row">
+                  <div style="display:flex;align-items:center;flex:1;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;">
+                    <input type="text" id="podbeanUrlPrefix" value="https://your-podcast" style="flex:1;padding:10px 14px;border:none;font-size:14px;font-family:inherit;color:var(--text);outline:none;background:transparent;" oninput="markDirty()" onclick="event.stopPropagation()">
+                    <span style="padding:10px 14px 10px 0;font-size:14px;color:var(--text-tertiary);white-space:nowrap;user-select:none;">.podbean.com</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Own Domain 板块 -->
+            <div class="url-option-box" id="urlOptDomain" onclick="toggleUrlSection('domain')">
+              <div class="url-option-header">
+                <span class="url-option-label">Use a domain I own</span>
+                <span style="font-size:14px;color:var(--text-tertiary);font-weight:400;">(optional)</span>
+                <span class="connected-badge" id="domainConnectedBadge" style="display:none;">Connected</span>
+                <svg class="url-option-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+              <div class="url-option-body">
+                <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;margin-bottom:16px;">Connect your own domain to give your podcast website a professional, branded URL.</div>
+
+                <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;">You need to complete TWO steps to set your own domain.</div>
+
+                <div style="display:flex;flex-direction:column;gap:32px;margin-bottom:16px;margin-top:12px;">
+                  <div style="display:flex;align-items:flex-start;gap:10px;">
+                    <span style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--text-secondary);flex-shrink:0;">1</span>
+                    <div style="flex:1;">
+                      <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px;">Set CNAME DNS record</div>
+                      <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;">In your domain provider, set a CNAME record to map your own domain to <code style="background:#f1f5f9;padding:1px 6px;border-radius:3px;font-size:14px;">pbcdn2.podbean.com</code>. <a href="https://help.podbean.com/support/solutions/articles/25000004795-setting-my-own-domain-in-podbean" target="_blank" style="color:var(--text-secondary);font-weight:500;">Click here to visit the FAQ</a>.</div>
+                      <img src="CNAME_DNS_v3.png" alt="CNAME DNS record setup example" style="width:100%;max-width:780px;border:1px solid var(--border);border-radius:8px;margin-top:10px;display:block;">
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:10px;">
+                    <span style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--text-secondary);flex-shrink:0;">2</span>
+                    <div>
+                      <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px;">Fill in your own domain</div>
+                      <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Enter your domain below and click <strong>Save</strong>.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="url-input-row">
+                  <input type="text" id="ownDomainInput" placeholder="Example: myowndomain.com or www.myowndomain.com" value="" oninput="markDirty()" onclick="event.stopPropagation()">
+                </div>
+                <div class="url-ssl-note">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  SSL certificate will be automatically provisioned for your domain.
+                </div>
+                <div id="domainDisconnectRow" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+                  <a href="#" style="font-size:14px;font-weight:500;color:#dc2626;text-decoration:none;" onclick="disconnectOwnDomain();return false;">Disconnect domain</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Save Button at bottom -->
+          <div style="text-align:center;padding:62px 0 8px;">
+            <button onclick="saveUrlChanges()" style="background:#1e293b;color:#fff;border:none;width:160px;height:44px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Save</button>
+          </div>
+
+        </div>
+
+        <!-- Tab: Pages -->
+        <div class="website-tab-content" id="websiteTab-pages">
+          <!-- Header row: Pages title + V1/V2 toggle + New Page -->
+          <div class="pages-header" id="pagesHeaderBar" style="margin-bottom:0;">
+            <div style="display:flex;align-items:center;gap:0;">
+              <div class="pages-sub-tabs">
+                <button class="pages-sub-tab active" onclick="switchPagesTab('empty', this)">V1</button>
+                <button class="pages-sub-tab" onclick="switchPagesTab('list', this)">V2</button>
+              </div>
+            </div>
+            <button class="pages-new-btn" id="newPageBtn" style="flex-shrink:0;" onclick="document.getElementById('pageListView').style.display='none';document.getElementById('pageCreateView').style.display=''">+ New Page</button>
+          </div>
+
+          <!-- Empty Template View -->
+          <div id="pagesEmptyView">
+            <div class="pages-empty-state">
+              <svg class="pages-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+              <div class="pages-empty-title">No page content yet</div>
+              <div class="pages-empty-desc">Create pages for your bio, contact info, etc., and add them to your website's top navigation while customizing your website. <a href="#" onclick="alert('Learn more about pages');return false;" style="color:var(--text-secondary);font-weight:500;">Learn more</a>.</div>
+            </div>
+          </div>
+
+          <!-- Page List View -->
+          <div id="pagesListView" style="display:none;">
+            <div class="tab-panel active" id="panel-pages">
+            <!-- Page List View -->
+            <div id="pageListView">
+              <table class="pages-table">
+                <thead>
+                  <tr>
+                    <th style="width:44px;"><input type="checkbox" onclick="document.querySelectorAll('.page-row-check').forEach(c=>c.checked=this.checked)"></th>
+                    <th>Page</th>
+                    <th>User</th>
+                    <th>↓ When</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="checkbox" class="page-row-check"></td>
+                    <td>Untitled Page - 2026-05-29 02:50:25</td>
+                    <td>MyAuthor</td>
+                    <td>May 29, 2026</td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" class="page-row-check"></td>
+                    <td>Untitled Page - 2026-05-29 02:49:42</td>
+                    <td>MyAuthor</td>
+                    <td>May 29, 2026</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="pages-footer">
+                <span>Showing 1 to 2 of 2 entries</span>
+                <div class="pages-pagination">
+                  <span class="disabled">«</span>
+                  <span class="active">1</span>
+                  <span class="disabled">»</span>
+                </div>
+              </div>
+            </div>
+            <!-- Create Page View -->
+            <div id="pageCreateView" style="display:none;">
+              <div class="page-create-form">
+                <div class="editor-field">
+                  <label>Title</label>
+                  <input type="text" class="sp-text-input" placeholder="Enter page title">
+                </div>
+                <div class="editor-field">
+                  <label>Description</label>
+                  <div class="sp-editor-box">
+                    <div class="sp-editor-header">
+                      <select><option>Paragraph</option><option>Heading 1</option><option>Heading 2</option></select>
+                      <select><option>System Font</option><option>Inter</option><option>Roboto</option><option>Georgia</option></select>
+                      <select><option>14pt</option><option>12pt</option><option>18pt</option><option>24pt</option></select>
+                    </div>
+                    <div class="sp-editor-format">
+                      <span style="cursor:pointer;font-weight:700;">B</span>
+                      <span style="cursor:pointer;font-style:italic;">I</span>
+                      <span style="cursor:pointer;text-decoration:underline;">U</span>
+                      <span style="cursor:pointer;color:#ccc;">|</span>
+                      <span style="cursor:pointer;">≡</span>
+                      <span style="cursor:pointer;">≡</span>
+                      <span style="cursor:pointer;color:#ccc;">|</span>
+                      <span style="cursor:pointer;">&lt;/&gt;</span>
+                      <span style="cursor:pointer;">🔗</span>
+                    </div>
+                    <div class="sp-editor-preview" contenteditable="true" style="text-align:left;min-height:200px;">
+                      <p style="color:var(--text-tertiary);">Write your page description here...</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="page-create-actions">
+                  <button class="sp-reset-btn" onclick="document.getElementById('pageCreateView').style.display='none';document.getElementById('pageListView').style.display=''">Cancel</button>
+                  <button class="sp-done-btn" onclick="alert('Page published')">Publish</button>
+                </div>
+              </div>
+            </div>
+          </div>      <!-- /panel-pages -->
+          </div>     <!-- /pagesListView -->
+        </div>      <!-- /websiteTab-pages -->
+      </div>        <!-- /page-podcast-website -->
+
+    </div>          <!-- /pageContent -->
+
+    <!-- ===== FOOTER ===== -->
+    <div style="padding:16px 32px;display:flex;align-items:center;justify-content:space-between;font-size:14px;color:var(--text-secondary);border-top:1px solid var(--border);margin-top:auto;background:rgb(238,240,241);">
+      <a href="https://www.podbean.com/" target="_blank" style="color:var(--text-secondary);text-decoration:none;font-weight:500;">Podbean.com</a>
+      <span>Copyright &copy; Podbean.com 2026. All Rights Reserved.</span>
+    </div>
+  </div>            <!-- /main-panel -->
+
+  <script>
+    // ===== Sidebar toggle =====
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('show');
+    }
+
+    // ===== Page switching =====
+    function switchSubPage(e, pageId) {
+      e.preventDefault();
+      const subLinks = document.querySelectorAll('.sub-menu a');
+      subLinks.forEach(function(link) {
+        link.classList.remove('active');
+      });
+      e.currentTarget.classList.add('active');
+      var target = document.getElementById('page-' + pageId);
+      if (!target) return;
+      document.querySelectorAll('.page').forEach(function(p) {
+        p.classList.add('hidden');
+      });
+      target.classList.remove('hidden');
+    }
+
+    // ===== URL sections: independent toggle =====
+    var activeUrlType = 'podbean'; // 'podbean' or 'domain'
+    var domainSaved = false;
+    var domainValue = ''; // persisted domain name
+
+    function toggleUrlSection(type) {
+      activeUrlType = type;
+      var el = document.getElementById('urlOpt' + type.charAt(0).toUpperCase() + type.slice(1));
+      el.classList.toggle('active');
+    }
+
+    // ===== Unified URL Save =====
+    function markDirty() {
+      // content changed — handled by the Save button at the bottom
+    }
+
+    function saveUrlChanges() {
+      if (activeUrlType === 'podbean') {
+        var podbeanUrl = document.getElementById('podbeanUrlPrefix').value.trim();
+        var msg = 'Settings saved!\n\nPodbean URL: ' + podbeanUrl + '.podbean.com';
+        alert(msg);
+      } else {
+        var domain = document.getElementById('ownDomainInput').value.trim();
+        if (!domain) { alert('Please enter a domain name.'); return; }
+        domainSaved = true;
+        domainValue = domain;
+        document.getElementById('domainConnectedBadge').style.display = '';
+        document.getElementById('domainDisconnectRow').style.display = '';
+
+        var msg = 'Settings saved!\n\nCustom Domain: ' + domain;
+        alert(msg);
+      }
+
+    }
+
+    function discardUrlChanges() {
+      if (activeUrlType === 'podbean') {
+        document.getElementById('podbeanUrlPrefix').value = 'https://your-podcast';
+      } else {
+        document.getElementById('ownDomainInput').value = domainValue || '';
+      }
+    }
+
+    function visitWebsite() {
+      if (activeUrlType === 'domain' && domainSaved && domainValue) {
+        window.open('https://' + domainValue, '_blank');
+      } else {
+        alert('Opening your podcast website');
+      }
+    }
+
+    function disconnectOwnDomain() {
+      document.getElementById('confirmDisconnectModal').classList.add('show');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirmDisconnectModal').classList.remove('show');
+    }
+
+    function confirmDisconnectDomain() {
+      closeConfirmModal();
+      domainSaved = false;
+      domainValue = '';
+      document.getElementById('ownDomainInput').value = '';
+      document.getElementById('domainConnectedBadge').style.display = 'none';
+      document.getElementById('domainDisconnectRow').style.display = 'none';
+      markDirty();
+    }
+
+    // ===== Preview view toggle (Web / Mobile) =====
+    function switchPreviewView(view, btn) {
+      var wrap = document.getElementById('previewWrap');
+      var img = wrap.querySelector('img');
+      var buttons = btn.parentElement.querySelectorAll('button');
+      buttons.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (view === 'mobile') {
+        wrap.classList.add('mobile-view');
+        img.src = 'screencapture-pbnetwork2-podbean-2026-06-24-15_40_20.png';
+      } else {
+        wrap.classList.remove('mobile-view');
+        img.src = 'screencapture-pbnetwork2-podbean-2026-06-24-15_39_02.png';
+      }
+    }
+
+    // ===== Pages sub-tab switching (Empty Template / Page List) =====
+    function switchPagesTab(view, btn) {
+      var buttons = btn.parentElement.querySelectorAll('.pages-sub-tab');
+      buttons.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('pagesEmptyView').style.display = view === 'empty' ? '' : 'none';
+      document.getElementById('pagesListView').style.display = view === 'list' ? '' : 'none';
+    }
+
+    // ===== Podcast Website: Tab switching =====
+    function switchWebsiteTab(tab) {
+      var tabs = document.querySelectorAll('.website-tab');
+      var contents = document.querySelectorAll('.website-tab-content');
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      contents.forEach(function(c) { c.classList.remove('active'); });
+      document.querySelector('.website-tab[data-website-tab="' + tab + '"]').classList.add('active');
+      document.getElementById('websiteTab-' + tab).classList.add('active');
+    }
+
+    // ===== Podcast Website: Select theme =====
+    function selectTheme(el, theme) {
+      var cards = document.querySelectorAll('.theme-card');
+      cards.forEach(function(c) { c.classList.remove('active'); });
+      el.classList.add('active');
+      cards.forEach(function(c) {
+        var badge = c.querySelector('.theme-card-badge');
+        if (badge) badge.textContent = 'Select';
+      });
+      var activeBadge = el.querySelector('.theme-card-badge');
+      if (activeBadge) {
+        activeBadge.textContent = 'Current';
+      } else {
+        var footer = el.querySelector('.theme-card-footer');
+        var badge = document.createElement('span');
+        badge.className = 'theme-card-badge';
+        badge.textContent = 'Current';
+        if (footer) footer.appendChild(badge);
+      }
+    }
+  </script>
+
+  <!-- Confirm Disconnect Modal -->
+  <div class="confirm-overlay" id="confirmDisconnectModal">
+    <div class="confirm-dialog">
+      <div class="confirm-title">Disconnect Domain</div>
+      <div class="confirm-desc">Are you sure you want to disconnect your own domain?</div>
+      <div class="confirm-actions">
+        <button class="confirm-btn confirm-btn-danger" onclick="confirmDisconnectDomain()">Disconnect</button>
+        <button class="confirm-btn confirm-btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
