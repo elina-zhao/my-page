@@ -141,6 +141,177 @@ body {
   background: #e5e5e5;
 }
 
+/* ─── Device Toggle ─── */
+.device-toggle {
+  display: flex;
+  align-items: center;
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+.device-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  transition: all .15s;
+}
+.device-toggle-btn:hover { color: #555; }
+.device-toggle-btn.active {
+  background: #fff;
+  color: #111;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+.preview-frame { transition: max-width .35s ease; }
+.preview-frame.mobile {
+  max-width: 390px;
+  margin: 0 auto;
+}
+/* ── Mobile preview content styles ── */
+.preview-frame.mobile .pc-nav {
+  position: relative;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+/* On mobile, hide the links wrapper by default — show as dropdown when open */
+.preview-frame.mobile .pc-nav-links {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--p-banner-bg);
+  z-index: 100;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  border-top: 1px solid var(--p-nav-border);
+}
+.preview-frame.mobile .pc-nav-links a {
+  font-size: 14px;
+  padding: 12px 20px;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid var(--p-nav-border);
+  opacity: 1;
+}
+.preview-frame.mobile .pc-nav-links a:last-of-type { border-bottom: none; }
+.preview-frame.mobile .pc-nav-links a.active { font-weight: 700; }
+.preview-frame.mobile .pc-nav.open .pc-nav-links { display: flex; }
+/* Hamburger button */
+.pc-nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  gap: 5px;
+  padding: 6px;
+  flex-shrink: 0;
+  transition: opacity .15s;
+}
+.pc-nav-hamburger:hover { opacity: 0.7; }
+.pc-nav-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--p-banner-text);
+  border-radius: 2px;
+  transition: all .25s ease;
+  transform-origin: center;
+}
+.pc-nav-hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.pc-nav-hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.pc-nav-hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+.preview-frame.mobile .pc-nav-hamburger { display: flex; }
+.preview-frame.mobile .pc-nav-search {
+  margin-left: auto;
+  margin-right: 4px;
+  position: relative;
+  z-index: 2;
+}
+/* Mobile nav title */
+.pc-nav-mobile-title {
+  display: none;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--p-banner-text);
+  text-align: left;
+  padding-left: 8px;
+}
+.preview-frame.mobile .pc-nav-mobile-title { display: block; }
+.preview-frame.mobile .pc-hero { padding: 24px 20px 32px; gap: 24px; flex-direction: column; text-align: center; }
+.preview-frame.mobile .pc-hero-cover { width: 180px; height: 180px; }
+.preview-frame.mobile .pc-hero-title { font-size: 26px; margin-bottom: 16px; }
+.preview-frame.mobile .pc-hero-desc { font-size: 15px; }
+.preview-frame.mobile .pc-section { padding: 0 20px 32px; }
+.preview-frame.mobile .pc-listen-wrap { margin-top: 32px; }
+.preview-frame.mobile .pc-listen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; row-gap: 8px; }
+.preview-frame.mobile .pc-listen-item { padding: 10px 14px; font-size: 13px; gap: 8px; }
+.preview-frame.mobile .pc-listen-item img { width: 28px; height: 28px; }
+.preview-frame.mobile .pc-section-header { margin-bottom: 12px; }
+.preview-frame.mobile .pc-section-title { font-size: 20px; }
+.preview-frame.mobile .pc-featured-ep { padding: 24px; }
+.preview-frame.mobile .pc-featured-inner { flex-direction: column; text-align: center; gap: 20px; }
+.preview-frame.mobile .pc-featured-cover { width: 160px; height: 160px; }
+.preview-frame.mobile .pc-featured-title { font-size: 22px; }
+.preview-frame.mobile .pc-featured-desc { font-size: 15px; -webkit-line-clamp: 3; line-clamp: 3; }
+.preview-frame.mobile .pc-grid { grid-template-columns: 1fr; gap: 20px; }
+.preview-frame.mobile .pc-ep-card { max-width: 100%; }
+.preview-frame.mobile .pc-ep-play-btn { width: 60px; height: 60px; }
+.preview-frame.mobile .pc-ep-play-btn svg { width: 24px; height: 24px; }
+.preview-frame.mobile .pc-ep-body { padding: 12px 14px 14px; }
+.preview-frame.mobile .pc-ep-title { font-size: 14px; }
+.preview-frame.mobile .pc-ep-excerpt { font-size: 12px; -webkit-line-clamp: 2; line-clamp: 2; }
+.preview-frame.mobile .pc-explore-wrap { margin-top: 20px; }
+.preview-frame.mobile .pc-explore-btn { padding: 10px 24px; font-size: 13px; }
+.preview-frame.mobile .pc-footer { padding: 20px 20px; font-size: 13px; }
+.preview-frame.mobile .pc-footer-social { gap: 10px; }
+.preview-frame.mobile .pc-footer-social a { width: 32px; height: 32px; font-size: 12px; }
+.preview-frame.mobile .pc-footer-copy { font-size: 12px; }
+.preview-frame.mobile .pc-cookie-notice { flex-direction: column; text-align: center; padding: 12px 20px; gap: 10px; }
+.preview-frame.mobile .pc-cookie-notice-btn { width: 100%; }
+.preview-frame.mobile .pc-hero-off-indicator { padding: 10px 16px; }
+.preview-frame.mobile .pc-hero-off-badge { font-size: 11px; }
+/* Custom sections in mobile */
+.preview-frame.mobile .cs-card { padding: 24px; gap: 20px; min-height: auto; }
+.preview-frame.mobile .cs-card.style-image-left,
+.preview-frame.mobile .cs-card.style-image-right { flex-direction: column; text-align: center; }
+.preview-frame.mobile .cs-card.style-image-left .cs-avatar,
+.preview-frame.mobile .cs-card.style-image-right .cs-avatar { width: 160px; height: 160px; }
+.preview-frame.mobile .cs-title { font-size: 22px; }
+.preview-frame.mobile .cs-content { font-size: 15px; }
+/* Episodes page in mobile */
+.preview-frame.mobile .pc-episodes-page { padding: 24px 20px 32px !important; }
+.preview-frame.mobile .pc-episodes-title { font-size: 24px !important; }
+.preview-frame.mobile .pc-episode-row { gap: 14px; padding: 16px 0; }
+.preview-frame.mobile .pc-episode-row-cover { width: 60px; height: 60px; }
+.preview-frame.mobile .pc-episode-row-title { font-size: 15px; }
+.preview-frame.mobile .pc-episode-row-desc { font-size: 12px; -webkit-line-clamp: 1; line-clamp: 1; }
+.preview-frame.mobile .pc-episode-row-play { width: 36px; height: 36px; margin-top: 0; }
+.preview-frame.mobile .pc-episode-row-play svg { width: 14px; height: 14px; }
+.preview-frame.mobile .pc-section-link { font-size: 13px; }
+
 /* ══════════════════════════════════════════════════
    MAIN LAYOUT
    ══════════════════════════════════════════════════ */
@@ -588,6 +759,16 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
   background: var(--p-banner-bg);
   transition: background .4s ease;
 }
+
+/* Links wrapper – inline flex on desktop */
+.pc-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+/* Hamburger & mobile title hidden on desktop */
+.pc-nav-hamburger,
+.pc-nav-mobile-title { display: none; }
 
 .pc-nav a {
   text-decoration: none;
@@ -3240,6 +3421,14 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
       </div>
       Theme Editor
     </div>
+    <div class="device-toggle">
+      <button class="device-toggle-btn active" onclick="setDeviceMode('desktop')" title="Desktop view">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </button>
+      <button class="device-toggle-btn" onclick="setDeviceMode('mobile')" title="Mobile view">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </button>
+    </div>
   </div>
   <div class="topbar-right">
     <button class="topbar-cancel-btn" onclick="cancelChanges()">Cancel</button>
@@ -3366,9 +3555,13 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
         <!-- Episodes Page View (hidden by default) -->
         <div id="episodesPage" style="display:none;">
           <nav class="pc-nav" id="episodesPageNav">
-            <a href="#">Home</a>
-            <a href="#" class="active">Episodes</a>
-            <a href="#">Subscribe</a>
+            <button class="pc-nav-hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            <span class="pc-nav-mobile-title">Episodes</span>
+            <div class="pc-nav-links">
+              <a href="#">Home</a>
+              <a href="#" class="active">Episodes</a>
+              <a href="#">Subscribe</a>
+            </div>
             <span class="pc-nav-search" title="Search">&#128269;</span>
             <div class="pc-search-bar hidden">
               <input type="text" class="_search-input" placeholder="Search episodes..." autofocus>
@@ -4124,13 +4317,37 @@ function updatePreviewNav() {
   var nav = document.querySelector('.pc-nav');
   if (!nav) return;
   nav.innerHTML = '';
+
+  // Hamburger button (hidden on desktop)
+  var hb = document.createElement('button');
+  hb.className = 'pc-nav-hamburger';
+  hb.setAttribute('aria-label', 'Toggle menu');
+  hb.innerHTML = '<span></span><span></span><span></span>';
+  nav.appendChild(hb);
+
+  // Mobile title (hidden on desktop)
+  var mobTitle = document.createElement('span');
+  mobTitle.className = 'pc-nav-mobile-title';
+  mobTitle.textContent = navItems[0]?.name || 'Home';
+  nav.appendChild(mobTitle);
+
+  // Wrapper for links — inline flex on desktop, dropdown on mobile
+  var wrap = document.createElement('div');
+  wrap.className = 'pc-nav-links';
   for (var i = 0; i < navItems.length; i++) {
     var a = document.createElement('a');
     a.href = navItems[i].link || '#';
     a.textContent = navItems[i].name || 'Link';
     if (i === 0) a.className = 'active';
-    nav.appendChild(a);
+    // click → close mobile dropdown
+    a.addEventListener('click', function() {
+      nav.classList.remove('open');
+      hb.classList.remove('open');
+    });
+    wrap.appendChild(a);
   }
+  nav.appendChild(wrap);
+
   // Search icon + bar container
   var showSearch = true;
   var span = document.createElement('span');
@@ -4152,8 +4369,8 @@ function updatePreviewNav() {
   // Click search icon → show bar
   span.addEventListener('click', function() {
     if (span.dataset.open === 'true') return;
-    // Hide links, show bar
-    var links = nav.querySelectorAll('a');
+    // Hide links inside wrapper, show bar
+    var links = nav.querySelectorAll('.pc-nav-links a');
     for (var i = 0; i < links.length; i++) links[i].style.visibility = 'hidden';
     span.style.visibility = 'hidden';
     bar.classList.remove('hidden');
@@ -4168,7 +4385,7 @@ function updatePreviewNav() {
     bar.classList.add('hidden');
     span.dataset.open = 'false';
     span.style.visibility = '';
-    var links = nav.querySelectorAll('a');
+    var links = nav.querySelectorAll('.pc-nav-links a');
     for (var i = 0; i < links.length; i++) links[i].style.visibility = '';
   });
 
@@ -4190,6 +4407,21 @@ function updatePreviewNav() {
       if (e.key === 'Escape') cancelBtn.click();
     });
   }
+
+  // Hamburger toggle
+  hb.addEventListener('click', function(e) {
+    e.stopPropagation();
+    nav.classList.toggle('open');
+    hb.classList.toggle('open');
+  });
+
+  // Close mobile dropdown when clicking outside nav
+  document.addEventListener('click', function _closeMobileNav(e) {
+    if (!nav.contains(e.target) && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+      hb.classList.remove('open');
+    }
+  });
 }
 
 // Drag-and-drop for nav items
@@ -4351,7 +4583,7 @@ if (_cssEditor) {
       var epSearchBar = epNav.querySelector('.pc-search-bar');
       if (epSearchIcon && epSearchBar) {
         epSearchIcon.addEventListener('click', function() {
-          var links = epNav.querySelectorAll('a');
+          var links = epNav.querySelectorAll('.pc-nav-links a');
           for (var i = 0; i < links.length; i++) links[i].style.visibility = 'hidden';
           epSearchIcon.style.visibility = 'hidden';
           epSearchBar.classList.remove('hidden');
@@ -4363,7 +4595,7 @@ if (_cssEditor) {
           epCancelBtn.addEventListener('click', function() {
             epSearchBar.classList.add('hidden');
             epSearchIcon.style.visibility = '';
-            var links = epNav.querySelectorAll('a');
+            var links = epNav.querySelectorAll('.pc-nav-links a');
             for (var i = 0; i < links.length; i++) links[i].style.visibility = '';
           });
         }
@@ -4382,6 +4614,30 @@ if (_cssEditor) {
             if (e.key === 'Escape' && epCancelBtn) epCancelBtn.click();
           });
         }
+      }
+      // Hamburger toggle for episodes page nav
+      var epHb = epNav.querySelector('.pc-nav-hamburger');
+      if (epHb) {
+        epHb.addEventListener('click', function(e) {
+          e.stopPropagation();
+          epNav.classList.toggle('open');
+          epHb.classList.toggle('open');
+        });
+        // Click links → close
+        var epLinks = epNav.querySelectorAll('.pc-nav-links a');
+        for (var i = 0; i < epLinks.length; i++) {
+          epLinks[i].addEventListener('click', function() {
+            epNav.classList.remove('open');
+            epHb.classList.remove('open');
+          });
+        }
+        // Click outside → close
+        document.addEventListener('click', function _closeEp(e) {
+          if (!epNav.contains(e.target) && epNav.classList.contains('open')) {
+            epNav.classList.remove('open');
+            epHb.classList.remove('open');
+          }
+        });
       }
     }
   }
@@ -5776,6 +6032,22 @@ if (_cssEditor) {
 
     // Reset snapshot to match
     _takeSnapshot();
+  }
+
+  // Device toggle – desktop / mobile preview
+  function setDeviceMode(mode) {
+    var frame = document.querySelector('.preview-frame');
+    var btns = document.querySelectorAll('.device-toggle-btn');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    if (mode === 'mobile') {
+      frame.classList.add('mobile');
+      frame.classList.remove('desktop');
+      btns[1].classList.add('active');
+    } else {
+      frame.classList.add('desktop');
+      frame.classList.remove('mobile');
+      btns[0].classList.add('active');
+    }
   }
 </script>
 
