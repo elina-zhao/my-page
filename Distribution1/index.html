@@ -1703,9 +1703,8 @@
     /* URL 选项垂直板块 — 互斥 radio，标题和内容在一起 */
     .url-option-box {
       margin-top: 0;
-      cursor: pointer;
     }
-    .url-option-box:hover .url-option-label {
+    .url-option-header:hover .url-option-label {
       opacity: 0.7;
     }
     .url-option-header {
@@ -1713,6 +1712,7 @@
       align-items: center;
       gap: 6px;
       padding: 18px 0;
+      cursor: pointer;
     }
     .url-option-box + .url-option-box {
       border-top: 1px solid var(--border);
@@ -2316,11 +2316,11 @@
         <div class="website-tab-content" id="websiteTab-url">
           <div class="url-section">
             <!-- Podcast Website URL 板块 -->
-            <div class="url-option-box active" id="urlOptPodbean" onclick="toggleUrlSection('podbean')">
-              <div class="url-option-header">
+            <div class="url-option-box active" id="urlOptPodbean">
+              <div class="url-option-header" onclick="toggleUrlSection('podbean');event.stopPropagation();">
                 <span class="url-option-label">Built-in Domain <svg class="url-option-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
               </div>
-              <div class="url-option-body">
+              <div class="url-option-body" onclick="event.stopPropagation()">
                 <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">This is your built-in Podbean domain. Your podcast website can always be accessed from this domain and it never expires. Changing this URL will also change your podcast feed URL. <a href="#" style="color:inherit;text-decoration:underline;font-weight:500;" onclick="alert('Learn more about Podbean website URLs');event.stopPropagation();">Learn more</a></div>
                 <div class="url-input-row">
                   <div style="display:flex;align-items:center;flex:1;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;">
@@ -2332,12 +2332,12 @@
             </div>
 
             <!-- Own Domain 板块 -->
-            <div class="url-option-box" id="urlOptDomain" onclick="toggleUrlSection('domain')">
-              <div class="url-option-header">
+            <div class="url-option-box" id="urlOptDomain">
+              <div class="url-option-header" onclick="toggleUrlSection('domain');event.stopPropagation();">
                 <span class="url-option-label">Use a domain I own <span style="font-size:14px;color:var(--text-tertiary);font-weight:400;">(optional)</span> <svg class="url-option-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                 <span class="connected-badge" id="domainConnectedBadge" style="display:none;">Connected</span>
               </div>
-              <div class="url-option-body">
+              <div class="url-option-body" onclick="event.stopPropagation()">
                 <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;margin-bottom:16px;">Connect your own domain to give your podcast website a professional, branded URL.</div>
 
                 <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;">You need to complete TWO steps to set your own domain.</div>
