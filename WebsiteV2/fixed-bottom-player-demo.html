@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>固定底部播放器演示</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f4f4f6;
+  color: #111;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  padding-bottom: 0;
+  transition: padding-bottom .4s cubic-bezier(.4,0,.2,1);
+}
+body.has-player {
+  padding-bottom: 64px;
+}
+
+/* ═══════════════════════════════════════════
+   PAGE HEADER
+   ═══════════════════════════════════════════ */
+.page-header {
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 20px 32px;
+}
+.page-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+}
+.page-header p {
+  color: #666;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════
+   EPISODE LIST
+   ═══════════════════════════════════════════ */
+.episode-list {
+  max-width: 800px;
+  margin: 32px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.episode-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  transition: box-shadow .2s, transform .2s;
+}
+.episode-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  transform: translateY(-1px);
+}
+
+.episode-cover {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #e8e8ec;
+}
+
+.episode-info {
+  flex: 1;
+  min-width: 0;
+}
+.episode-title {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.episode-meta {
+  font-size: 13px;
+  color: #888;
+  margin-top: 2px;
+}
+.episode-desc {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.play-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform .15s, background .15s;
+}
+.play-btn:hover {
+  transform: scale(1.08);
+  background: #333;
+}
+.play-btn svg {
+  width: 18px;
+  height: 18px;
+  margin-left: 2px;
+}
+.play-btn.playing svg {
+  margin-left: 0;
+}
+
+/* ═══════════════════════════════════════════
+   FIXED BOTTOM PLAYER (horizontal row layout)
+   ═══════════════════════════════════════════ */
+.common-player {
+  position: fixed;
+  bottom: -80px;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #1a1a1a;
+  color: #fff;
+  transition: bottom .4s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 -4px 20px rgba(0,0,0,.25);
+  height: 64px;
+}
+.common-player.open {
+  bottom: 0;
+}
+
+/* ── Player inner (flex row) ── */
+.player-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  padding: 0 12px 0 16px;
+  position: relative;
+}
+
+/* Close button (far right) */
+.close-button {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,.5);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.close-button:hover { color: #fff; }
+.close-button svg { width: 14px; height: 14px; }
+
+/* 1. Podcast logo (cover) */
+.player-cover {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* 2. Episode title */
+.player-title {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  max-width: 160px;
+  min-width: 0;
+}
+
+/* 3. Next button */
+.next-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.next-btn:hover { color: #fff; }
+.next-btn svg { width: 18px; height: 18px; }
+
+/* 4. Main play/pause button */
+.main-play-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+.main-play-btn:hover { background: rgba(255,255,255,.25); }
+.main-play-btn svg { width: 16px; height: 16px; }
+.main-play-btn.playing svg.play-icon { display: none; }
+.main-play-btn:not(.playing) svg.pause-icon { display: none; }
+
+/* 5. Current time / 7. Remaining time */
+.time-display {
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: center;
+}
+
+/* 6. Progress bar */
+.progress-wrap {
+  flex: 1;
+  min-width: 80px;
+}
+.progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,.15);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: #fff;
+  border-radius: 2px;
+  width: 0%;
+  transition: width .1s linear;
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.progress-track:hover .progress-fill::after {
+  opacity: 1;
+}
+
+/* 8. Speed button */
+.speed-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.7);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: inherit;
+  transition: all .15s;
+  line-height: 1.4;
+}
+.speed-btn:hover {
+  border-color: rgba(255,255,255,.5);
+  color: #fff;
+}
+
+/* 9. Podcast Apps button */
+.action-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,.5);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.action-btn:hover { color: #fff; }
+.action-btn svg { width: 15px; height: 15px; }
+
+/* Divider between groups */
+.player-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255,255,255,.12);
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 820px) {
+  .player-title { max-width: 100px; }
+}
+@media (max-width: 640px) {
+  .common-player { height: 56px; }
+  .player-row { gap: 6px; padding: 0 8px; }
+  .player-cover { width: 32px; height: 32px; }
+  .player-title { max-width: 70px; font-size: 12px; }
+  .main-play-btn { width: 30px; height: 30px; }
+  .main-play-btn svg { width: 14px; height: 14px; }
+  .time-display { font-size: 10px; min-width: 28px; }
+  .progress-wrap { min-width: 40px; }
+  .speed-btn { font-size: 10px; padding: 1px 4px; }
+  .close-button svg { width: 12px; height: 12px; }
+  .next-btn svg { width: 15px; height: 15px; }
+  .action-btn svg { width: 13px; height: 13px; }
+  .player-divider { height: 18px; }
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATION: Now playing pulse
+   ═══════════════════════════════════════════ */
+@keyframes pulse-dot {
+  0%, 100% { opacity: .3; }
+  50% { opacity: 1; }
+}
+.now-playing-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 8px;
+}
+.now-playing-indicator span {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #111;
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+.now-playing-indicator span:nth-child(2) { animation-delay: .2s; }
+.now-playing-indicator span:nth-child(3) { animation-delay: .4s; }
+.episode-card.playing .episode-title {
+  color: #1a7f37;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .player-controls { padding-right: 80px; flex-wrap: wrap; gap: 8px; }
+  .player-episode { order: -1; width: 100%; }
+  .player-actions { right: 56px; }
+  .episode-list { padding: 0 12px; }
+  .episode-card { padding: 12px 14px; }
+  .episode-cover { width: 48px; height: 48px; }
+  body.has-player { padding-bottom: 56px; }
+}
+
+/* ═══════════════════════════════════════════
+   CONFIRM MODAL (Leave/Stay)
+   ═══════════════════════════════════════════ */
+.confirm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(0,0,0,.3);
+  align-items: center;
+  justify-content: center;
+}
+.confirm-overlay.show { display: flex; }
+.confirm-dialog {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0,0,0,.18);
+  max-width: 420px;
+  width: 90%;
+  padding: 32px;
+  text-align: center;
+}
+.confirm-dialog .confirm-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+.confirm-dialog .confirm-desc {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.confirm-dialog .confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.confirm-dialog .confirm-btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: all .15s;
+}
+.confirm-dialog .confirm-btn-secondary {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+.confirm-dialog .confirm-btn-secondary:hover { background: #e2e8f0; }
+.confirm-dialog .confirm-btn-primary {
+  background: #1e293b;
+  color: #fff;
+}
+.confirm-dialog .confirm-btn-primary:hover { background: #334155; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE HEADER ============ -->
+<header class="page-header">
+  <h1>Episodes</h1>
+  <p>Click the play button on any episode to open the fixed-bottom player</p>
+</header>
+
+<!-- ============ EPISODE LIST ============ -->
+<div class="episode-list" id="episodeList">
+  <!-- Episodes will be rendered by JS -->
+</div>
+
+<!-- ============ CONFIRM MODAL ============ -->
+<div class="confirm-overlay" id="confirmModal">
+  <div class="confirm-dialog">
+    <div class="confirm-title">Stop Playback?</div>
+    <div class="confirm-desc">Audio is currently playing. Do you want to stop and switch to a different episode?</div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-primary" onclick="confirmSwitchEpisode()">Leave</button>
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeConfirmModal()">Stay</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FIXED BOTTOM PLAYER (horizontal row) ============ -->
+<div class="common-player" id="fixedPlayer">
+  <div class="player-row">
+
+    <!-- 1. Podcast logo -->
+    <img class="player-cover" id="playerCover" src="" alt="">
+
+    <!-- 2. Episode title -->
+    <span class="player-title" id="playerTitle">No episode selected</span>
+
+    <!-- 3. Next button -->
+    <button class="next-btn" title="Next" onclick="nextEpisode()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.693 3.3 4 3.678 4 4.308v7.384c0 .63.692 1.01 1.233.697L11.5 8.753V12a.5.5 0 0 0 1 0V4z"/>
+      </svg>
+    </button>
+
+    <!-- 4. Play/Pause button -->
+    <button class="main-play-btn" id="mainPlayBtn" onclick="togglePlay()">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+
+    <!-- 5. Current time -->
+    <span class="time-display" id="currentTime">0:00</span>
+
+    <!-- 6. Progress bar -->
+    <div class="progress-wrap">
+      <div class="progress-track" id="progressTrack" onclick="seekProgress(event)">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- 7. Remaining time -->
+    <span class="time-display" id="remainingTime">-0:00</span>
+
+    <!-- Divider -->
+    <div class="player-divider"></div>
+
+    <!-- 8. Speed control -->
+    <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+
+    <!-- Divider -->
+    <div class="player-divider"></div>
+
+    <!-- 9. Podcast Apps -->
+    <button class="action-btn" title="Podcast Apps" onclick="alert('Podcast apps dialog would open here')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 1024 1024">
+        <path d="M329.143 768q0 45.714-32 77.714t-77.714 32-77.715-32-32-77.714 32-77.714 77.715-32 77.714 32 32 77.714z m292.571 70.286q1.143 16-9.714 27.428-10.286 12-26.857 12H508q-14.286 0-24.571-9.428T472 844.57q-12.571-130.857-105.429-223.714T142.857 515.43q-14.286-1.143-23.714-11.429t-9.429-24.571v-77.143q0-16.572 12-26.857 9.715-9.715 24.572-9.715h2.857q91.428 7.429 174.857 46T472 515.43q65.143 64.571 103.714 148t46 174.857z m292.572 1.143q1.143 15.428-10.286 26.857-10.286 11.428-26.286 11.428H796q-14.857 0-25.429-10T759.43 843.43Q752.57 720.57 701.714 610T569.43 418t-192-132.286T144 227.43q-14.286-0.572-24.286-11.143t-10-24.857v-81.715q0-16 11.429-26.285 10.286-10.286 25.143-10.286H148q149.714 7.428 286.571 68.571t243.143 168q106.857 106.286 168 243.143t68.572 286.572z"/>
+      </svg>
+    </button>
+
+    <!-- 10. Share -->
+    <button class="action-btn" title="Share" onclick="alert('Share dialog would open here')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
+      </svg>
+    </button>
+
+    <!-- Close button (far right) -->
+    <button class="close-button" title="Close Player" onclick="closePlayer()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+      </svg>
+    </button>
+
+  </div>
+</div>
+
+<!-- ============ SAMPLE AUDIO (silent, for demo) ============ -->
+<audio id="demoAudio" style="display:none"
+  src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
+  preload="auto"
+  crossorigin="anonymous">
+</audio>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const EPISODES = [
+  {
+    id: 'ep1',
+    title: 'The Future of AI in Everyday Life',
+    date: 'Thursday Jun 18, 2026',
+    desc: 'Exploring how artificial intelligence is reshaping our daily routines, from smart home assistants to personalized recommendations.',
+    cover: 'https://pbcdn1.podbean.com/imglogo/image-logo/20299536/podbean_79_300x300.jpg',
+    duration: 1852 // seconds
+  },
+  {
+    id: 'ep2',
+    title: 'Building Better Habits: A Scientific Approach',
+    date: 'Monday Jun 15, 2026',
+    desc: 'Neuroscience-backed strategies for forming lasting habits and breaking unwanted patterns in your personal and professional life.',
+    cover: 'https://pbcdn1.podbean.com/imglogo/image-logo/20299536/podbean_79_300x300.jpg',
+    duration: 1247
+  },
+  {
+    id: 'ep3',
+    title: 'Understanding Climate Tech Innovations in 2026',
+    date: 'Friday Jun 12, 2026',
+    desc: 'A deep dive into the latest breakthroughs in carbon capture, sustainable energy, and green technology shaping our planet\'s future.',
+    cover: 'https://pbcdn1.podbean.com/imglogo/image-logo/20299536/podbean_79_300x300.jpg',
+    duration: 2103
+  },
+  {
+    id: 'ep4',
+    title: 'Remote Work Revolution: Lessons from the Frontlines',
+    date: 'Tuesday Jun 9, 2026',
+    desc: 'Leaders from top distributed companies share what actually works for remote collaboration, culture-building, and productivity.',
+    cover: 'https://pbcdn1.podbean.com/imglogo/image-logo/20299536/podbean_79_300x300.jpg',
+    duration: 1578
+  },
+  {
+    id: 'ep5',
+    title: 'The Psychology of Money: Why We Spend the Way We Do',
+    date: 'Thursday Jun 4, 2026',
+    desc: 'Understanding the emotional and cognitive biases that drive our financial decisions, and how to make smarter money choices.',
+    cover: 'https://pbcdn1.podbean.com/imglogo/image-logo/20299536/podbean_79_300x300.jpg',
+    duration: 1934
+  },
+  {
+    id: 'ep6',
+    title: 'Designing for Accessibility: Best Practices and Real-World Examples',
+    date: 'Monday Jun 1, 2026',
+    desc: 'How inclusive design benefits everyone — practical tips for creating digital experiences that work for users of all abilities.',
+    cover: 'https://pbcdn1.podbean.com/imglogo/image-logo/20299536/podbean_79_300x300.jpg',
+    duration: 1432
+  }
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentEpisode = null;
+let currentIndex = -1;
+let isPlaying = false;
+
+// Simulated time tracking
+let simCurrentTime = 0;
+let simDuration = 0;
+let simInterval = null;
+
+// Pending episode switch (for confirm modal)
+let pendingEpisodeIndex = -1;
+
+// Speed
+const SPEEDS = [1, 1.25, 1.5, 2];
+let speedIndex = 0;
+
+// ══════════════════════════════════════════
+// DOM REFS
+// ══════════════════════════════════════════
+const player = document.getElementById('fixedPlayer');
+const mainPlayBtn = document.getElementById('mainPlayBtn');
+const playerCover = document.getElementById('playerCover');
+const playerTitle = document.getElementById('playerTitle');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const remainingTimeEl = document.getElementById('remainingTime');
+const speedBtn = document.getElementById('speedBtn');
+const episodeList = document.getElementById('episodeList');
+const body = document.body;
+const confirmModal = document.getElementById('confirmModal');
+
+// ══════════════════════════════════════════
+// RENDER EPISODE LIST
+// ══════════════════════════════════════════
+function renderEpisodes() {
+  episodeList.innerHTML = EPISODES.map((ep, i) => {
+    const playIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>';
+    return `
+      <div class="episode-card" data-index="${i}">
+        <img class="episode-cover" src="${ep.cover}" alt="${ep.title}" loading="lazy">
+        <div class="episode-info">
+          <div class="episode-title">${ep.title}</div>
+          <div class="episode-meta">${ep.date} · ${formatTime(ep.duration)}</div>
+          <div class="episode-desc">${ep.desc}</div>
+        </div>
+        <button class="play-btn" data-index="${i}" onclick="handlePlayClick(${i})">
+          ${playIcon}
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// PLAYER CONTROLS
+// ══════════════════════════════════════════
+function handlePlayClick(index) {
+  // If something is already playing and it's a different episode
+  if (isPlaying && currentIndex !== index) {
+    pendingEpisodeIndex = index;
+    confirmModal.classList.add('show');
+    return;
+  }
+
+  // If same episode, just toggle
+  if (currentIndex === index) {
+    togglePlay();
+    return;
+  }
+
+  // Otherwise, play the new episode
+  playEpisode(index);
+}
+
+function playEpisode(index) {
+  const ep = EPISODES[index];
+  currentEpisode = ep;
+  currentIndex = index;
+  simDuration = ep.duration;
+
+  // Update player UI — podcast logo stays as podcast-logo.png
+  playerCover.src = 'podcast-logo.png';
+  playerTitle.textContent = ep.title;
+
+  // Reset progress
+  simCurrentTime = 0;
+  updateProgress();
+
+  // Open player if not open
+  if (!player.classList.contains('open')) {
+    player.classList.add('open');
+    body.classList.add('has-player');
+  }
+
+  // Highlight active card
+  document.querySelectorAll('.episode-card').forEach((card, i) => {
+    card.classList.toggle('playing', i === index);
+  });
+  updatePlayButtons();
+
+  // Start playing
+  isPlaying = true;
+  mainPlayBtn.classList.add('playing');
+  updatePlayButtonIcon(index, true);
+
+  // Start sim timer
+  startSimTimer();
+
+  // Reset any minimized state
+  player.classList.remove('minimized');
+}
+
+function togglePlay() {
+  if (!currentEpisode) return;
+
+  isPlaying = !isPlaying;
+  mainPlayBtn.classList.toggle('playing', isPlaying);
+
+  if (currentIndex >= 0) {
+    updatePlayButtonIcon(currentIndex, isPlaying);
+  }
+
+  if (isPlaying) {
+    startSimTimer();
+  } else {
+    stopSimTimer();
+  }
+}
+
+function nextEpisode() {
+  if (currentIndex >= EPISODES.length - 1) return;
+  playEpisode(currentIndex + 1);
+}
+
+function updatePlayButtonIcon(index, playing) {
+  const cards = document.querySelectorAll('.episode-card');
+  const btn = cards[index]?.querySelector('.play-btn');
+  if (!btn) return;
+  if (playing) {
+    btn.classList.add('playing');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  } else {
+    btn.classList.remove('playing');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19"/></svg>';
+  }
+}
+
+function updatePlayButtons() {
+  document.querySelectorAll('.episode-card').forEach((card, i) => {
+    updatePlayButtonIcon(i, isPlaying && i === currentIndex);
+  });
+}
+
+// ══════════════════════════════════════════
+// PROGRESS
+// ══════════════════════════════════════════
+function updateProgress() {
+  const pct = simDuration > 0 ? (simCurrentTime / simDuration) * 100 : 0;
+  progressFill.style.width = Math.min(pct, 100) + '%';
+  currentTimeEl.textContent = formatTime(simCurrentTime);
+  const remaining = simDuration - simCurrentTime;
+  remainingTimeEl.textContent = '-' + formatTime(remaining);
+}
+
+function seekProgress(e) {
+  if (!currentEpisode) return;
+  const track = document.getElementById('progressTrack');
+  const rect = track.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  simCurrentTime = pct * simDuration;
+  updateProgress();
+}
+
+// ══════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════
+function startSimTimer() {
+  stopSimTimer();
+  simInterval = setInterval(() => {
+    if (!isPlaying) return;
+    simCurrentTime += 0.5;
+    if (simCurrentTime >= simDuration) {
+      simCurrentTime = simDuration;
+      updateProgress();
+      // Auto play next
+      stopSimTimer();
+      if (currentIndex < EPISODES.length - 1) {
+        playEpisode(currentIndex + 1);
+      } else {
+        isPlaying = false;
+        mainPlayBtn.classList.remove('playing');
+        updatePlayButtons();
+        updateProgress();
+      }
+      return;
+    }
+    updateProgress();
+  }, 500);
+}
+
+function stopSimTimer() {
+  if (simInterval) {
+    clearInterval(simInterval);
+    simInterval = null;
+  }
+}
+
+// ══════════════════════════════════════════
+// SPEED CONTROL
+// ══════════════════════════════════════════
+function cycleSpeed() {
+  speedIndex = (speedIndex + 1) % SPEEDS.length;
+  const speed = SPEEDS[speedIndex];
+  speedBtn.textContent = speed + 'x';
+}
+
+// ══════════════════════════════════════════
+// PLAYER VISIBILITY
+// ══════════════════════════════════════════
+function closePlayer() {
+  // Stop playback
+  isPlaying = false;
+  mainPlayBtn.classList.remove('playing');
+  stopSimTimer();
+
+  // Hide player
+  player.classList.remove('open');
+  body.classList.remove('has-player');
+
+  // Clear highlights
+  document.querySelectorAll('.episode-card').forEach(card => card.classList.remove('playing'));
+  updatePlayButtons();
+
+  // Reset state
+  currentEpisode = null;
+  currentIndex = -1;
+  simCurrentTime = 0;
+  simDuration = 0;
+  speedIndex = 0;
+  speedBtn.textContent = '1x';
+}
+
+// ══════════════════════════════════════════
+// CONFIRM MODAL
+// ══════════════════════════════════════════
+function confirmSwitchEpisode() {
+  closeConfirmModal();
+  if (pendingEpisodeIndex >= 0) {
+    playEpisode(pendingEpisodeIndex);
+    pendingEpisodeIndex = -1;
+  }
+}
+
+function closeConfirmModal() {
+  confirmModal.classList.remove('show');
+  pendingEpisodeIndex = -1;
+}
+
+// ══════════════════════════════════════════
+// UTILITIES
+// ══════════════════════════════════════════
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+// ══════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ══════════════════════════════════════════
+document.addEventListener('keydown', function(e) {
+  if (e.key === ' ' && currentEpisode) {
+    e.preventDefault();
+    togglePlay();
+  }
+  if (e.key === 'Escape') {
+    if (confirmModal.classList.contains('show')) {
+      closeConfirmModal();
+    } else if (player.classList.contains('open')) {
+      closePlayer();
+    }
+  }
+});
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+renderEpisodes();
+</script>
+</body>
+</html>
