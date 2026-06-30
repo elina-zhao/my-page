@@ -2965,33 +2965,24 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
   border-color: #999;
 }
 
-.reset-defaults-btn {
+.reset-defaults-link {
   display: block;
-  width: 100%;
-  margin-top: 18px;
-  padding: 10px 0;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  background: #fff;
-  color: #666;
+  margin-top: 16px;
+  color: #888;
   font-size: 13px;
   font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
-  transition: all .15s;
+  font-family: inherit;
+  transition: color .15s;
 }
-.reset-defaults-btn:hover {
-  border-color: #ccc;
-  background: #f8f8f8;
+.reset-defaults-link:hover {
   color: #333;
 }
-body.dark .reset-defaults-btn {
-  background: #1e1e1e;
-  border-color: #333;
-  color: #999;
+body.dark .reset-defaults-link {
+  color: #888;
 }
-body.dark .reset-defaults-btn:hover {
-  background: #2a2a2a;
-  border-color: #555;
+body.dark .reset-defaults-link:hover {
   color: #ddd;
 }
 
@@ -3893,7 +3884,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
           </div>
         </div>
 
-        <button class="reset-defaults-btn" onclick="resetToDefaults()">Reset to default</button>
+        <span class="reset-defaults-link" onclick="resetToDefaults()">Reset to default</span>
       </div>
 
       <!-- ═══ TOP NAVIGATION ═══ -->
