@@ -1869,25 +1869,31 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
   background: #fef0f0;
 }
 
-.cs-toggle-row1 ._edit-icon,
-.cs-toggle-row1 ._rm-icon {
-  width: 28px;
-  height: 28px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  background: #f7f7f7;
-  font-size: 15px;
+/* Chevron toggle for expand/collapse */
+.cs-toggle-chevron {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #888;
   cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background .15s, color .15s, border-color .15s;
-  padding: 0;
-  color: #777;
+  transition: transform .2s ease, background .15s, color .15s;
+  transform: rotate(90deg);
 }
-.cs-toggle-row1 ._edit-icon:hover { background: #eef4ff; color: #3b82f6; border-color: #3b82f6; }
-.cs-toggle-row1 ._rm-icon:hover { background: #fef0f0; color: #d92b3b; border-color: #d92b3b; }
+.cs-toggle-chevron:hover {
+  background: #e8e8e8;
+  color: #333;
+}
+.cs-toggle-chevron.open {
+  transform: rotate(-90deg);
+}
 
 .cs-toggle.cs-dynamic-wrap .section-toggle-label {
   font-size: 14px;
@@ -1944,7 +1950,7 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
   margin: 0 0 8px 0;
   border-radius: 0 0 10px 10px;
   background: #fafafa;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #f0f0f0;
   border-top: none;
 }
 
@@ -2154,6 +2160,44 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
 
 ._edit-save:hover { background: #333; }
 
+._edit-done-black {
+  height: 28px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 6px;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+._edit-done-black:hover { background: #333; }
+
+._rm-btn-inline {
+  height: 28px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #888;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  transition: background .15s, color .15s;
+}
+._rm-btn-inline:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
 
 /* Navigation Panel */
 .nav-list {
@@ -2328,20 +2372,23 @@ body.dark .section-toggle-edit-form .nav-item-name { background: #2a2a2a; border
 .nav-item-select.hidden { display: none; }
 
 .nav-item-done-btn {
-  padding: 4px 14px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background: #f8f8f8;
-  color: #555;
+  height: 28px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 6px;
+  background: #111;
+  color: #fff;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all .15s;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background .15s;
 }
 .nav-item-done-btn:hover {
-  background: #eee;
-  border-color: #ccc;
-  color: #333;
+  background: #333;
 }
 
 .nav-add-area {
@@ -3795,7 +3842,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
 
       <!-- ═══ COLOR AND FONT ═══ -->
       <div id="menuView-color-font" class="menu-view" style="display:none;">
-        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <button class="menu-back" onclick="showMenuMain()">&larr; CUSTOMIZATIONS</button>
         <div class="panel-label">Color and font</div>
 
         <div class="panel-section" style="margin-bottom:20px;">
@@ -3851,7 +3898,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
 
       <!-- ═══ TOP NAVIGATION ═══ -->
       <div id="menuView-navigation" class="menu-view" style="display:none;">
-        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <button class="menu-back" onclick="showMenuMain()">&larr; CUSTOMIZATIONS</button>
         <div class="panel-label">Top navigation</div>
         <div class="nav-list" id="navList"></div>
         <div class="nav-add-area">
@@ -3861,7 +3908,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
 
       <!-- ═══ FOOTER ═══ -->
       <div id="menuView-footer" class="menu-view" style="display:none;">
-        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <button class="menu-back" onclick="showMenuMain()">&larr; CUSTOMIZATIONS</button>
         <div class="panel-label">Footer</div>
 
         <div class="panel-section" style="margin-bottom:20px;">
@@ -3928,7 +3975,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
 
       <!-- ═══ CSS EDITOR ═══ -->
       <div id="menuView-css" class="menu-view" style="display:none;">
-        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <button class="menu-back" onclick="showMenuMain()">&larr; CUSTOMIZATIONS</button>
         <div class="panel-label">CSS editor</div>
         <textarea class="css-editor-textarea" placeholder="Add custom CSS to style your podcast website..."></textarea>
         <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.6;">Custom CSS will be applied to your live podcast website. Use with caution. <a href="#" style="color:inherit;text-decoration:underline;transition:color .15s;" onmouseover="this.style.color='#333'" onmouseout="this.style.color='inherit'">Read more</a></p>
@@ -3936,7 +3983,7 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
 
       <!-- ═══ HOME SECTIONS ═══ -->
       <div id="menuView-home-sections" class="menu-view" style="display:none;">
-        <button class="menu-back" onclick="showMenuMain()">&larr; Back</button>
+        <button class="menu-back" onclick="showMenuMain()">&larr; CUSTOMIZATIONS</button>
         <div class="panel-label">Homepage layout</div>
 
         <div class="section-list" id="sectionToggles">
@@ -4303,7 +4350,7 @@ function renderNav() {
     }
     editFormHtml += '<div style="display:flex;justify-content:flex-end;padding-top:4px;"><button class="nav-item-done-btn" data-idx="' + i + '">Done</button></div>';
 
-    var rmHtml = '<button class="nav-item-rm" data-idx="' + i + '">\u2715</button>';
+    var rmHtml = '<button class="nav-item-rm" data-idx="' + i + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>';
 
     var el = document.createElement('div');
     el.className = 'nav-item';
@@ -5191,6 +5238,11 @@ if (_cssEditor) {
     var wrap = document.getElementById('featuredWrap');
     if (wrap) wrap.classList.toggle('featured-off', !show);
     if (show) {
+      // Close all custom section edit forms
+      var forms = document.querySelectorAll('#sectionToggles .cs-edit-form');
+      for (var i = 0; i < forms.length; i++) forms[i].style.display = 'none';
+      var chs = document.querySelectorAll('._toggle-chevron');
+      for (var i = 0; i < chs.length; i++) chs[i].classList.remove('open');
       _updateFeaturedEpisode();
       featSectionEditForm.classList.remove('hidden');
       featSectionNameInput.value = _featSectionName;
@@ -5277,6 +5329,14 @@ if (_cssEditor) {
 
   featSectionEditBtn.addEventListener('click', function(e) {
     e.stopPropagation();
+    var opening = featSectionEditForm.classList.contains('hidden');
+    if (opening) {
+      // Close all custom section edit forms first
+      var forms = document.querySelectorAll('#sectionToggles .cs-edit-form');
+      for (var i = 0; i < forms.length; i++) forms[i].style.display = 'none';
+      var chs = document.querySelectorAll('._toggle-chevron');
+      for (var i = 0; i < chs.length; i++) chs[i].classList.remove('open');
+    }
     featSectionNameInput.value = _featSectionName;
     featSectionEditForm.classList.toggle('hidden');
     // Sync search-wrap visibility with current mode when form opens
@@ -5300,6 +5360,14 @@ if (_cssEditor) {
   // Allow Enter to confirm
   featSectionNameInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') featSectionDoneBtn.click();
+  });
+
+  // Real-time sync: update label in left panel and preview while typing
+  featSectionNameInput.addEventListener('input', function(e) {
+    var val = this.value.trim() || 'Featured episode';
+    featSectionLabel.textContent = val;
+    var previewTitle = document.querySelector('#featuredSection .pc-section-title');
+    if (previewTitle) previewTitle.textContent = val;
   });
 
   var _csId = 0;
@@ -5567,10 +5635,7 @@ if (_cssEditor) {
         '<div class="cs-toggle-row1">' +
           '<span class="section-toggle-drag">\u22ee\u22ee</span>' +
           '<span class="section-toggle-label">' + _esc(cs.title) + '</span>' +
-          '<div class="section-toggle-actions">' +
-            '<button class="_edit-icon" data-cs-id="' + cs.id + '" title="Edit">\u270e</button>' +
-            '<button class="_rm-icon" data-cs-id="' + cs.id + '" title="Remove">\u2715</button>' +
-          '</div>' +
+          '<button class="cs-toggle-chevron _toggle-chevron" data-cs-id="' + cs.id + '" title="Expand/Collapse">&gt;</button>' +
         '</div>';
       if (anchor) {
         var ref = _getInsertRef(cs.id);
@@ -5627,7 +5692,7 @@ if (_cssEditor) {
               '<div class="_inp-fontcolor _cs-color-circle" style="background:' + (cs.fontColor || '#111111') + '" data-color="' + (cs.fontColor || '#111111') + '"></div>' +
             '</div>' +
           '</div>' +
-          '<div class="cs-edit-actions"><button class="nav-item-done-btn _edit-done">Done</button></div>' +
+          '<div class="cs-edit-actions"><button class="_rm-btn-inline" data-cs-id="' + cs.id + '" title="Delete this section">Delete</button><button class="_edit-done-black _edit-done">Done</button></div>' +
         '</div>';
       if (anchor) {
         // Insert form right after its toggle element
@@ -5689,50 +5754,8 @@ if (_cssEditor) {
       else _preview.appendChild(sec);
     }
 
-    // Bind edit buttons
-    var ebts = _panel.querySelectorAll('._edit-icon');
-    for (var i = 0; i < ebts.length; i++) {
-      ebts[i].addEventListener('click', function(e) {
-        e.stopPropagation();
-        var id = this.dataset.csId;
-        var f = _panel.querySelector('.cs-edit-form[data-cs-id="' + id + '"]');
-        if (f) {
-          var wasHidden = f.style.display !== 'block';
-          f.style.display = wasHidden ? 'block' : 'none';
-          if (wasHidden) scrollPreviewToCustomSection(id);
-        }
-      });
-    }
-
-    // Bind style change → toggle image field & update preview immediately
-    var ss = _panel.querySelectorAll('._inp-style');
-    for (var i = 0; i < ss.length; i++) {
-      ss[i].addEventListener('change', function() {
-        var f = this.closest('.cs-edit-form');
-        var id = f.dataset.csId;
-        var newStyle = this.value;
-
-        // Toggle image field visibility
-        var imgField = f.querySelector('.cs-edit-image-field');
-        if (imgField) {
-          imgField.style.display = (newStyle === 'text') ? 'none' : '';
-        }
-
-        // Update preview style immediately
-        var prev = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"]');
-        if (prev) {
-          var card = prev.querySelector('.cs-card');
-          if (card) {
-            card.className = 'cs-card style-' + newStyle;
-          }
-        }
-      });
-    }
-
-
-
-    // Bind remove buttons
-    var rbts = _panel.querySelectorAll('._rm-icon');
+    // Bind remove buttons (in form footer)
+    var rbts = _panel.querySelectorAll('._rm-btn-inline');
     for (var i = 0; i < rbts.length; i++) {
       rbts[i].addEventListener('click', function(e) {
         e.stopPropagation();
@@ -5771,6 +5794,63 @@ if (_cssEditor) {
         // Update toggle label
         var labelEl = _panel.querySelector('.cs-toggle[data-cs-id="' + id + '"] .section-toggle-label');
         if (labelEl) labelEl.textContent = title;
+      });
+    }
+
+    // Helper: close all edit forms (featured + custom sections)
+    function _closeAllEditForms(excludeId) {
+      // Close featured edit form
+      var ff = document.getElementById('featSectionEditForm');
+      if (ff && !ff.classList.contains('hidden')) {
+        ff.classList.add('hidden');
+      }
+      // Close all custom section edit forms & reset their chevrons
+      var forms = _panel.querySelectorAll('.cs-edit-form');
+      for (var i = 0; i < forms.length; i++) {
+        if (forms[i].dataset.csId !== excludeId) {
+          forms[i].style.display = 'none';
+        }
+      }
+      var chs = _panel.querySelectorAll('._toggle-chevron');
+      for (var i = 0; i < chs.length; i++) {
+        if (chs[i].dataset.csId !== excludeId) {
+          chs[i].classList.remove('open');
+        }
+      }
+    }
+
+    // Helper: toggle edit form for a custom section & sync chevron
+    // Closes any other open edit form first
+    function _toggleEditForm(id) {
+      var f = _panel.querySelector('.cs-edit-form[data-cs-id="' + id + '"]');
+      var ch = _panel.querySelector('._toggle-chevron[data-cs-id="' + id + '"]');
+      if (!f) return;
+      var opening = f.style.display !== 'block';
+      // If opening, close all other forms first
+      if (opening) {
+        _closeAllEditForms(id);
+      }
+      f.style.display = opening ? 'block' : 'none';
+      if (ch) ch.classList.toggle('open', opening);
+      if (opening) scrollPreviewToCustomSection(id);
+    }
+
+    // Bind chevron click → toggle edit form
+    var chs = _panel.querySelectorAll('._toggle-chevron');
+    for (var i = 0; i < chs.length; i++) {
+      chs[i].addEventListener('click', function(e) {
+        e.stopPropagation();
+        _toggleEditForm(this.dataset.csId);
+      });
+    }
+
+    // Bind label click → toggle edit form
+    var _labels = _panel.querySelectorAll('.cs-dynamic-wrap .section-toggle-label');
+    for (var i = 0; i < _labels.length; i++) {
+      _labels[i].addEventListener('click', function(e) {
+        e.stopPropagation();
+        var tog = this.closest('.cs-dynamic-wrap');
+        _toggleEditForm(tog.dataset.csId);
       });
     }
 
