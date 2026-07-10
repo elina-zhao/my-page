@@ -138,7 +138,7 @@
       left: 0;
       top: 64px;
       bottom: 0;
-      width: 230px;
+      width: 255px;
       background: #fff;
       z-index: 100;
       border-right: 1px solid var(--border);
@@ -168,8 +168,20 @@
       font-weight: 500;
       border-radius: 50px;
       transition: all 0.15s;
+      cursor: pointer;
     }
     .sidebar-nav a:hover { background: #f1f5f9; }
+    .sidebar-nav a .menu-arrow {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      color: #bbb;
+      transition: transform 0.2s;
+    }
+    .sidebar-nav a .menu-arrow.open {
+      transform: rotate(180deg);
+    }
+    .sidebar-nav a.active .menu-arrow { color: #999; }
 
     .sidebar-nav a .nav-icon {
       width: 20px;
@@ -199,6 +211,16 @@
       display: flex;
       flex-direction: column;
       gap: 1px;
+      overflow: hidden;
+      max-height: 300px;
+      transition: max-height 0.25s ease, opacity 0.2s ease;
+      opacity: 1;
+    }
+    .sidebar-nav .sub-menu.collapsed {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
     }
     .sidebar-nav .sub-menu a {
       font-size: 14px;
@@ -227,7 +249,7 @@
            MAIN CONTENT AREA
            ============================== */
     .main-panel {
-      margin-left: 230px;
+      margin-left: 255px;
       margin-top: 64px;
       min-height: calc(100vh - 64px);
       display: flex;
@@ -236,7 +258,7 @@
     }
 
     .content {
-      padding: 32px 48px;
+      padding: 24px 48px;
       flex: 1;
       width: 100%;
       max-width: 960px;
@@ -255,7 +277,7 @@
       line-height: 1.5;
     }
 
-    /* ---- Tabs (Podcast Basic) ---- */
+    /* ---- Tabs (Podcast Info) ---- */
     .pb-tabs {
       display: flex;
       gap: 0;
@@ -324,7 +346,7 @@
 
     .cc-item-label {
       display: block;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
       color: var(--text);
       margin-bottom: 6px;
@@ -371,7 +393,8 @@
       display: block;
       font-size: 12px;
       color: #999;
-      margin-top: 4px;
+      margin-top: 6px;
+      line-height: 1.5;
     }
 
     /* Rich editor */
@@ -462,6 +485,13 @@
       line-height: 1.5;
     }
     .pb-note a { color: var(--text); text-decoration: underline; }
+    .pb-logo-hints {
+      font-size: 12px;
+      color: #999;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .pb-logo-hints a { color: var(--text); }
 
     /* Logo */
     .pb-logo-row {
@@ -496,7 +526,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       background: #fafbfc;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
       color: var(--text);
       cursor: pointer;
@@ -504,14 +534,6 @@
       transition: all 0.15s;
     }
     .pb-upload-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
-
-    /* Logo hints inline like reference subtitle text */
-    .pb-logo-hints {
-      font-size: 12px;
-      color: #999;
-      line-height: 1.5;
-    }
-    .pb-logo-hints a { color: var(--text); }
 
     /* Country row */
     .pb-country-row {
@@ -838,7 +860,7 @@
     }
     .toggle-desc {
       font-size: 12px;
-      color: var(--text-tertiary);
+      color: #999;
       margin: 0;
       line-height: 1.5;
     }
@@ -866,10 +888,250 @@
       .pb-country-row { flex-direction: column; }
       .pb-country-row .pb-vs-wrap { max-width: 100%; }
       .pb-radio-group { flex-direction: column; gap: 12px; }
+      .plugin-item { flex-wrap: wrap; }
+      .plugin-item-info { width: calc(100% - 64px); }
+      .plugin-item-actions { margin-left: 64px; }
     }
 
     @media (max-width: 480px) {
       .content { padding: 16px; }
+      .plugin-item-actions { flex-direction: column; width: 100%; }
+      .plugin-item-actions .plugin-action-btn { justify-content: center; }
+    }
+
+    /* Plugin Page */
+    .plugin-toolbar-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 16px;
+    }
+    .plugin-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 20px;
+    }
+    .plugin-get-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 22px;
+      background: #1e293b;
+      color: #fff;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.15s;
+      line-height: 1.4;
+    }
+    .plugin-get-btn:hover {
+      background: #334155;
+    }
+
+
+    /* Plugin Item Row */
+    .plugin-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 0;
+    }
+    .plugin-item + .plugin-item {
+      border-top: 1px solid var(--border);
+    }
+    .plugin-item-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .plugin-item-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    }
+    .plugin-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .plugin-item-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .plugin-item-desc {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .plugin-item-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .plugin-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .plugin-action-btn:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: var(--text);
+    }
+    .plugin-action-btn.delete {
+      color: #fca5a5;
+      border-color: #fecaca;
+    }
+    .plugin-action-btn.delete:hover {
+      color: #ef4444;
+      border-color: #fca5a5;
+      background: #fef2f2;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.4);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-dialog {
+      background: #fff;
+      border-radius: 12px;
+      width: 930px;
+      max-width: 90vw;
+      height: 780px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 0;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      padding: 4px;
+      border-radius: 4px;
+      display: flex;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-body {
+      padding: 20px 24px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-body .pb-editor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-body .pb-editor-body {
+      flex: 1;
+      min-height: 0;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .modal-footer .cancel-btn {
+      padding: 8px 20px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .modal-footer .cancel-btn:hover { background: #f1f5f9; }
+    .modal-footer .save-btn {
+      padding: 8px 20px;
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .modal-footer .save-btn:hover { background: #334155; }
+
+    /* Custom Select Dropdown */
+    .pb-custom-select {
+      position: relative;
+      width: 100%;
+    }
+    .pb-select-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      z-index: 100;
+      margin-top: 2px;
+      overflow: hidden;
+    }
+    .pb-select-dropdown.open {
+      display: block;
+    }
+    .pb-select-option {
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .pb-select-option:hover {
+      background: #f1f5f9;
+    }
+    .pb-select-option.selected {
+      background: #f8fafc;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .pb-select-option + .pb-select-option {
+      border-top: 1px solid #f1f5f9;
     }
 
   </style>
@@ -888,15 +1150,9 @@
 
     <div style="display:flex;align-items:center;gap:12px;">
       <div class="logo-icon">
-        <svg viewBox="0 0 34 34" fill="none">
-          <rect width="34" height="34" rx="8" fill="#1e293b"/>
-          <path d="M17 7a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0v-4a5 5 0 0 0-5-5z" fill="#fff"/>
-          <path d="M22 16v1a5 5 0 0 1-10 0v-1" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="17" y1="23" x2="17" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="13" y1="27" x2="21" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
+        <img src="Podbeanicon.png" alt="Podcasting Smarter" style="width:34px;height:34px;border-radius:8px;display:block;" />
       </div>
-      <span class="brand-text">Brand Name</span>
+      <span class="brand-text">Podcasting Smarter</span>
       <a href="#" target="_blank" class="external-link" title="View Site">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -924,15 +1180,6 @@
   <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar" id="sidebar">
     <nav class="sidebar-nav">
-      <a href="#" data-page="onboarding">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-        </span>
-        Onboarding
-      </a>
       <a href="#" data-page="dashboard">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -944,7 +1191,38 @@
         </span>
         Dashboard
       </a>
-      <a href="#" data-page="statistics">
+
+      <a href="#">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </span>
+        <span>Episodes</span>
+        <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <div class="sub-menu">
+        <a href="#" data-page="episode-list">Episode List</a>
+      </div>
+
+      <a href="#">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8.56 2.69 2.69 8.56M15.44 21.31l5.87-5.87M2.69 15.44l5.87 5.87M21.31 8.56l-5.87-5.87"></path>
+          </svg>
+        </span>
+        <span>Distribution</span>
+        <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <div class="sub-menu">
+        <a href="#" data-page="podcast-apps">Podcast Apps</a>
+        <a href="#" data-page="social-share">Social Share</a>
+        <a href="#" data-page="podcast-website">Podcast Website</a>
+        <a href="#" data-page="embed-player">Embed Player</a>
+      </div>
+
+      <a href="#">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="20" x2="18" y2="10"></line>
@@ -952,23 +1230,26 @@
             <line x1="6" y1="20" x2="6" y2="14"></line>
           </svg>
         </span>
-        Statistics
+        <span>Statistics</span>
+        <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
       </a>
       <div class="sub-menu">
-        <a href="#">Overview</a>
-        <a href="#">Episode</a>
+        <a href="#" data-page="stats-overview">Overview</a>
+        <a href="#" data-page="stats-episodes">Episodes</a>
       </div>
-      <a href="#" class="active" data-page="settings">
+
+      <a href="#" class="active">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
         </span>
-        Settings
+        <span>Settings</span>
+        <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
       </a>
       <div class="sub-menu">
-        <a href="#" class="active" data-page="podcast-basic">Podcast Basic</a>
+        <a href="#" class="active" data-page="podcast-basic">Podcast Info</a>
         <a href="#" data-page="feed">Feed</a>
         <a href="#" data-page="plugin">Plugin</a>
       </div>
@@ -978,16 +1259,16 @@
   <!-- ===== MAIN CONTENT ===== -->
   <div class="main-panel">
     <div class="content">
-      <!-- ===== Page: Podcast Basic ===== -->
+      <!-- ===== Page: Podcast Info ===== -->
       <div class="page-section active" id="page-podcast-basic">
-        <div class="page-heading-title">Podcast Basic</div>
-        <p class="page-subtitle">Configure your podcast basic settings here.</p>
+        <div class="page-heading-title">Podcast Info</div>
+        <p class="page-subtitle">Configure your podcast basic settings here. <a href="#" style="color:inherit;font-weight:500;">Learn more</a></p>
 
         <!-- Tabs -->
         <div class="pb-tabs">
-          <button class="pb-tab active" data-pb-tab="basic">Basic Information</button>
-          <button class="pb-tab" data-pb-tab="metadata">Ownership &amp; Localization</button>
-          <button class="pb-tab" data-pb-tab="publication">Publication Settings</button>
+          <button class="pb-tab active" data-pb-tab="basic">Basic</button>
+          <button class="pb-tab" data-pb-tab="metadata">Author &amp; Region</button>
+          <button class="pb-tab" data-pb-tab="publication">Content Classification</button>
         </div>
 
         <!-- Tab: Basic Information -->
@@ -1042,7 +1323,7 @@
                 <span class="cc-item-label">Podcast Logo <span class="required">*</span></span>
                 <div class="pb-logo-row">
                   <div class="pb-logo-preview">
-                    <img src="https://pbcdn1.podbean.org/img/podbean-logo/podbean_81.jpg?v=5d2999" alt="Podcast Logo" />
+                    <img src="podbean_81.jpg" alt="Podcast Logo" />
                   </div>
                   <div class="pb-logo-controls">
                     <div class="pb-vs" style="max-width:200px;"><span>Podbean Default v4</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
@@ -1064,7 +1345,7 @@
             <div class="info-row">
 
               <div class="info-content-item">
-                <span class="cc-item-label">Author / Owner</span>
+                <span class="cc-item-label">Author</span>
                 <input type="text" class="pb-input" placeholder="Enter author or owner name" value="John Doe" />
               </div>
 
@@ -1105,44 +1386,33 @@
             <div class="info-row">
 
               <div class="info-content-item">
-                <span class="cc-item-label">Podcast Website</span>
-                <div class="pb-url-wrap">
-                  <span class="pb-url-prefix">https://</span>
-                  <input type="text" class="pb-url-input" value="myawesomepodcast" />
-                  <span class="pb-url-suffix">.podbean.org</span>
-                </div>
-                <div class="pb-note">Changing site URL also changes your feed URL. <a href="#">Learn more</a></div>
-              </div>
-
-              <div class="info-content-item">
                 <span class="cc-item-label">Podcast Type</span>
-                <div class="pb-radio-group">
-                  <label class="pb-radio checked">
-                    <input type="radio" name="podcastType" value="episodic" checked />
-                    <span class="pb-radio-dot"></span>
+                <div class="pb-custom-select">
+                  <div class="pb-vs" data-select="podcast-type">
                     <span>Episodic</span>
-                  </label>
-                  <label class="pb-radio">
-                    <input type="radio" name="podcastType" value="serial" />
-                    <span class="pb-radio-dot"></span>
-                    <span>Serial</span>
-                  </label>
+                    <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                  </div>
+                  <div class="pb-select-dropdown" id="dropdown-podcast-type">
+                    <div class="pb-select-option selected" data-value="episodic">Episodic</div>
+                    <div class="pb-select-option" data-value="serial">Serial</div>
+                  </div>
                 </div>
+                <span class="tips">Choose how episodes are ordered on your podcast website and in your RSS feed.</span>
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Episode Download Link</span>
-                <div class="pb-vs"><span>Show</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
-              </div>
-
-              <div class="info-content-item">
-                <span class="cc-item-label">Podbean Branding</span>
-                <div class="pb-vs"><span>Show</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
-              </div>
-
-              <div class="info-content-item">
-                <span class="cc-item-label">Podcast Site Top Bar</span>
-                <div class="pb-vs"><span>Show</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                <span class="cc-item-label">Content Explicit</span>
+                <div class="pb-custom-select">
+                  <div class="pb-vs" data-select="content-explicit">
+                    <span>Clean / False</span>
+                    <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                  </div>
+                  <div class="pb-select-dropdown" id="dropdown-content-explicit">
+                    <div class="pb-select-option selected" data-value="clean">Clean / False</div>
+                    <div class="pb-select-option" data-value="explicit">Explicit / True</div>
+                  </div>
+                </div>
+                <span class="tips">Specify whether your podcast contains explicit content.</span>
               </div>
             </div>
 
@@ -1153,20 +1423,12 @@
       <!-- ===== Page: Feed ===== -->
       <div class="page-section" id="page-feed">
         <div class="page-heading-title">Feed</div>
-        <p class="page-subtitle">Manage your podcast feed and Apple Podcasts settings.</p>
+        <p class="page-subtitle">Manage your podcast feed and Apple Podcasts settings. <a href="#" style="color:inherit;">Learn more</a></p>
 
-        <!-- Tabs -->
-        <div class="pb-tabs">
-          <button class="pb-tab active" data-feed-tab="info">Feed Info</button>
-          <button class="pb-tab" data-feed-tab="redirect">Redirect</button>
-        </div>
-
-        <!-- Tab: Feed Info -->
-        <div class="pb-panel active" id="feed-info">
-          <div class="pb-card">
+        <div class="pb-card" style="margin-top:24px;">
             <div class="info-row">
               <div class="info-content-item">
-                <span class="cc-item-label">Podcast Feed URL <i class="pb-help-icon">?</i></span>
+                <span class="cc-item-label">Podcast Feed URL</span>
                 <div class="feed-url-box">
                   <span class="feed-url-text">https://feed.podbean.org/elinazplus/feed.xml</span>
                   <button class="feed-copy-btn" onclick="navigator.clipboard.writeText('https://feed.podbean.org/elinazplus/feed.xml')">
@@ -1177,20 +1439,7 @@
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Podcast Website <i class="pb-help-icon">?</i></span>
-                <div class="pb-url-wrap">
-                  <span class="pb-url-prefix">https://</span>
-                  <input type="text" class="pb-url-input" value="elinazplus.podbean.org" />
-                </div>
-              </div>
-
-              <div class="info-content-item">
-                <span class="cc-item-label">Content Explicit <i class="pb-help-icon">?</i></span>
-                <div class="pb-vs"><span>Clean / False</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
-              </div>
-
-              <div class="info-content-item">
-                <span class="cc-item-label">Ownership Verification Email <i class="pb-help-icon">?</i></span>
+                <span class="cc-item-label">Ownership Verification Email</span>
                 <div class="toggle-row-compact">
                   <div>
                     <p class="toggle-desc">Add an email address to your RSS feed so podcast directories can verify your podcast.</p>
@@ -1204,31 +1453,113 @@
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Episode Number Limit <i class="pb-help-icon">?</i></span>
+                <span class="cc-item-label">Episode Number Limit</span>
                 <input type="number" class="pb-input" min="1" max="1999" value="1999" />
+                <span class="tips">Limit the number of episodes included in your RSS feed.</span>
               </div>
 
+              <div class="info-content-item">
+                <span class="cc-item-label">Podcast Website</span>
+                <div class="pb-url-wrap">
+                  <span class="pb-url-prefix">https://</span>
+                  <input type="text" class="pb-url-input" value="elinazplus.podbean.org" />
+                </div>
+                <span class="tips">Use your own website URL to be displayed on Apple Podcasts instead of your Podbean website URL.</span>
+              </div>
+
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Redirect to a New Feed</span>
+                <div class="toggle-row-compact">
+                  <div>
+                    <p class="toggle-desc">Enable to redirect your podcast feed to a new URL.</p>
+                  </div>
+                  <span class="pb-switch">
+                    <input type="checkbox" data-toggle="redirect-feed-input" />
+                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
+                  </span>
+                </div>
+                <div id="redirect-feed-input" style="display:none;margin-top:12px;">
+                  <input type="text" class="pb-input" placeholder="https://" />
+                  <span class="pb-warning">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    Warning! This will redirect your Podcast feed permanently. Only input a new feed here if you are ready to move your podcast to a new feed.
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
+      </div>
+
+      <!-- ===== Page: Plugin ===== -->
+      <div class="page-section" id="page-plugin">
+        <div class="page-heading-title">Plugin</div>
+        <p class="page-subtitle">Manage your podcast plugins and integrations.</p>
+
+        <div class="plugin-toolbar-wrap">
+          <a href="https://apps.podbean.org" class="plugin-get-btn">Get more plugins</a>
         </div>
 
-        <!-- Tab: Redirect -->
-        <div class="pb-panel" id="feed-redirect">
-          <div class="pb-card">
-            <div class="info-row">
-              <div class="info-content-item">
-                <span class="cc-item-label">Redirect to a New Feed <i class="pb-help-icon">?</i></span>
-                <input type="text" class="pb-input" placeholder="https://" />
-                <span class="pb-warning">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                  Warning! This will redirect your Podcast feed permanently. Only input a new feed here if you are ready to move your podcast to a new feed.
-                </span>
-              </div>
+        <div class="plugin-card">
+          <div class="plugin-item">
+            <div class="plugin-item-icon">
+              <img src="EpisodeEndnote_heqcd.png" alt="Episode Endnote" style="width:48px;height:48px;border-radius:10px;object-fit:cover;" />
+            </div>
+            <div class="plugin-item-info">
+              <div class="plugin-item-name">Episode Endnote</div>
+              <p class="plugin-item-desc">Add a customizable endnote that appears at the end of your episode descriptions, ideal for including social media links, promotional details.</p>
+            </div>
+            <div class="plugin-item-actions">
+              <button class="plugin-action-btn" onclick="openEndnoteModal()" title="Edit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="plugin-action-btn delete" onclick="if(confirm('Delete this plugin?')){this.closest('.plugin-item').remove();}" title="Delete">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+      <!-- Modal: Edit Endnote -->
+      <div class="modal-overlay" id="endnoteModal">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <div class="modal-title">Edit Episode Endnote</div>
+            <button class="modal-close" onclick="closeEndnoteModal()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="pb-editor">
+              <div class="pb-editor-toolbar">
+                <div class="tb-group">
+                  <button class="tb-btn" title="Undo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h7c3.6 0 6 2 6.5 5S15 20 13 20"/><path d="M3 10l4-4M3 10l4 4"/></svg></button>
+                  <button class="tb-btn" title="Redo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10h-7c-3.6 0-6 2-6.5 5S9 20 11 20"/><path d="M21 10l-4-4M21 10l-4 4"/></svg></button>
+                </div>
+                <div class="tb-group">
+                  <button class="tb-btn" title="Bold"><strong>B</strong></button>
+                  <button class="tb-btn" title="Italic"><em>I</em></button>
+                  <button class="tb-btn" title="Underline"><u>U</u></button>
+                </div>
+                <div class="tb-group">
+                  <button class="tb-btn" title="Link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="pb-editor-body" contenteditable="true" id="endnoteEditor">
+                <p>Follow us on social media for updates!</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="cancel-btn" onclick="closeEndnoteModal()">Cancel</button>
+            <button class="save-btn" onclick="saveEndnote()">Save</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Global Sticky save bar -->
       <div class="pb-save-bar">
@@ -1245,7 +1576,7 @@
       document.getElementById('sidebarOverlay').classList.toggle('show');
     }
 
-    // Sidebar page navigation
+    // Sidebar: Dashboard (direct page switch)
     document.querySelectorAll('.sidebar-nav > a[data-page]').forEach(function(link) {
       link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -1258,6 +1589,20 @@
       });
     });
 
+    // Sidebar: parent items with sub-menus (toggle collapse)
+    document.querySelectorAll('.sidebar-nav > a').forEach(function(link) {
+      var sub = link.nextElementSibling;
+      if (!sub || !sub.classList.contains('sub-menu')) return;
+
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        sub.classList.toggle('collapsed');
+        var arrow = this.querySelector('.menu-arrow');
+        if (arrow) arrow.classList.toggle('open');
+      });
+    });
+
+    // Sidebar: sub-menu items (switch page)
     document.querySelectorAll('.sidebar-nav .sub-menu a[data-page]').forEach(function(link) {
       link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -1269,8 +1614,42 @@
         var parentLink = parent.previousElementSibling;
         if (parentLink) parentLink.classList.add('active');
 
+        // Ensure sub-menu is open
+        parent.classList.remove('collapsed');
+        var arrow = parentLink && parentLink.querySelector('.menu-arrow');
+        if (arrow) arrow.classList.add('open');
+
         switchPage(page);
       });
+    });
+
+    // Initialize sidebar collapsed state: collapse all sub-menus except the one with active item
+    document.querySelectorAll('.sidebar-nav .sub-menu').forEach(function(sub) {
+      var hasActive = sub.querySelector('.active');
+      var parentLink = sub.previousElementSibling;
+      if (!hasActive) {
+        sub.classList.add('collapsed');
+      } else {
+        var arrow = parentLink && parentLink.querySelector('.menu-arrow');
+        if (arrow) arrow.classList.add('open');
+      }
+    });
+
+    // Modal functions
+    function openEndnoteModal() {
+      document.getElementById('endnoteModal').classList.add('open');
+    }
+    function closeEndnoteModal() {
+      document.getElementById('endnoteModal').classList.remove('open');
+    }
+    function saveEndnote() {
+      closeEndnoteModal();
+      var saveBar = document.querySelector('.pb-save-bar');
+      if (saveBar) saveBar.classList.add('is-visible');
+    }
+    // Close modal when clicking overlay background
+    document.getElementById('endnoteModal').addEventListener('click', function(e) {
+      if (e.target === this) closeEndnoteModal();
     });
 
     function switchPage(page) {
@@ -1290,7 +1669,7 @@
       }
     }
 
-    // Podcast Basic Tabs
+    // Podcast Info Tabs
     document.querySelectorAll('.pb-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         var tabId = this.getAttribute('data-pb-tab');
@@ -1298,17 +1677,6 @@
         document.querySelectorAll('.pb-panel').forEach(function(p) { p.classList.remove('active'); });
         this.classList.add('active');
         document.getElementById('pb-' + tabId).classList.add('active');
-      });
-    });
-
-    // Feed Tabs
-    document.querySelectorAll('.pb-tab[data-feed-tab]').forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        var tabId = this.getAttribute('data-feed-tab');
-        document.querySelectorAll('.pb-tab[data-feed-tab]').forEach(function(t) { t.classList.remove('active'); });
-        document.querySelectorAll('#page-feed .pb-panel').forEach(function(p) { p.classList.remove('active'); });
-        this.classList.add('active');
-        document.getElementById('feed-' + tabId).classList.add('active');
       });
     });
 
@@ -1375,6 +1743,52 @@
         });
       }
     })();
+
+    // Custom Select Dropdowns
+    document.addEventListener('click', function(e) {
+      // Close all dropdowns when clicking outside
+      var isSelectTrigger = e.target.closest && e.target.closest('.pb-vs[data-select]');
+      if (!isSelectTrigger) {
+        document.querySelectorAll('.pb-select-dropdown.open').forEach(function(d) {
+          d.classList.remove('open');
+        });
+      }
+    });
+
+    document.querySelectorAll('.pb-vs[data-select]').forEach(function(trigger) {
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var selectId = this.getAttribute('data-select');
+        var dropdownId = 'dropdown-' + selectId;
+        var dropdown = document.getElementById(dropdownId);
+        if (!dropdown) return;
+
+        // Close other dropdowns
+        document.querySelectorAll('.pb-select-dropdown.open').forEach(function(d) {
+          if (d.id !== dropdownId) d.classList.remove('open');
+        });
+
+        dropdown.classList.toggle('open');
+      });
+    });
+
+    document.querySelectorAll('.pb-select-option').forEach(function(option) {
+      option.addEventListener('click', function() {
+        var dropdown = this.closest('.pb-select-dropdown');
+        var trigger = dropdown && document.querySelector('.pb-vs[data-select="' + dropdown.id.replace('dropdown-', '') + '"]');
+        if (trigger) {
+          var label = trigger.querySelector('span');
+          if (label) label.textContent = this.textContent;
+        }
+        dropdown.querySelectorAll('.pb-select-option').forEach(function(o) { o.classList.remove('selected'); });
+        this.classList.add('selected');
+        dropdown.classList.remove('open');
+
+        // Show save bar
+        var saveBar = document.querySelector('.pb-save-bar');
+        if (saveBar) saveBar.classList.add('is-visible');
+      });
+    });
   </script>
 
 </body>
