@@ -828,7 +828,7 @@
   }
   .ed-v2-social-icon:hover { border-color: #1a9a6c; color: #1a9a6c; background: #f0f9f4; }
   .ed-v2-social-icon.active { border-color: #1a9a6c; color: #1a9a6c; background: #f0f9f4; }
-  .ed-v2-hint { font-size: 12px; color: #94a3b8; margin-top: 4px; line-height: 1.5; }
+  .ed-v2-hint { font-size: 13px; color: #94a3b8; margin-top: 4px; line-height: 1.5; }
   .ed-v2-link-display {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 14px; background: #f8fafc;
@@ -1149,9 +1149,8 @@
 <!-- ═══════════ New Episode Modal ═══════════ -->
 <div class="modal-overlay" id="newEpisodeModal">
   <div class="modal-topbar">
-    <button class="modal-back-btn" onclick="closeNewEpisodeModal()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      Back
+    <button class="modal-back-btn" onclick="closeNewEpisodeModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
+        Cancel
     </button>
     <span style="position:absolute;left:50%;transform:translateX(-50%);font-size:16px;font-weight:600;color:var(--text);">Upload media file</span>
   </div>
@@ -1320,23 +1319,23 @@
 <div class="episode-details-overlay" id="episodeDetailsModal">
   <div class="ed-topbar">
     <div class="ed-topbar-left">
-      <button class="ed-back-btn" onclick="backFromDetailsModal()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-        Back
+      <button class="ed-back-btn" onclick="closeEpisodeDetailsModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
+        Cancel
       </button>
     </div>
     <span class="ed-topbar-title">Publish Episode</span>
     <div class="ed-topbar-right">
       <button class="ed-save-draft" onclick="saveAsDraft()">Save as Draft</button>
       <div class="ed-publish-wrap">
-        <button class="ed-topbar-publish" onclick="publishEpisode()">
-          Publish
+        <button class="ed-topbar-publish" onclick="publishPublish()">
+          <span id="publishBtnLabel">Publish Now</span>
+          <span style="width:1px;height:20px;background:rgba(255,255,255,.25);flex-shrink:0;"></span>
           <span class="ed-publish-arrow" onclick="event.stopPropagation();togglePublishDropdown(event)">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
           </span>
         </button>
         <div class="ed-publish-dropdown" id="publishDropdown">
-          <button class="ed-publish-dropdown-item" onclick="schedulePublish()">Schedule Publish</button>
+          <button class="ed-publish-dropdown-item" onclick="togglePublishMode()">Schedule Publish</button>
         </div>
       </div>
     </div>
@@ -1367,6 +1366,8 @@
               <div class="ed-v2-file-row">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 <span id="v2FileName">episode-audio.mp3</span>
+                <span style="margin-left:auto;font-size:13px;color:#1a9a6c;font-weight:500;cursor:pointer;flex-shrink:0;" onclick="document.getElementById('v2FileInput').click()" onmouseover="this.style.color='#14805a'" onmouseout="this.style.color='#1a9a6c'">Change</span>
+                <input type="file" id="v2FileInput" style="display:none" onchange="if(this.files.length>0)document.getElementById('v2FileName').textContent=this.files[0].name;">
               </div>
             </div>
 
@@ -1394,12 +1395,11 @@
           <!-- Right: Logo + Social -->
           <div class="ep-info-right">
             <!-- Logo -->
-            <div class="ep-right-section-title">Artwork</div>
             <div>
               <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
                 <!-- Logo preview -->
-                <div style="width:100%;aspect-ratio:1;border-radius:12px;background:#e2e8f0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:10px;border:1px solid #e2e8f0;">
-                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <div style="width:100%;aspect-ratio:1;border-radius:12px;background:#e2e8f0;overflow:hidden;border:1px solid #e2e8f0;">
+                  <img src="podbean_81.jpg" alt="Artwork" style="width:100%;height:100%;object-fit:cover;display:block;">
                 </div>
                 <!-- Upload button with dropdown -->
                 <div style="position:relative;width:100%;">
@@ -1440,10 +1440,7 @@
             <!-- Social -->
             <div>
               <div style="font-size:16px;font-weight:600;color:#1e293b;margin-bottom:4px;">Social Sharing</div>
-              <div style="font-size:13px;color:#64748b;margin-bottom:16px;">Auto-share after publishing</div>
-
-              <div class="ed-v2-field">
-                <div class="ed-v2-label">Social Share</div>
+              <div style="font-size:13px;color:#64748b;margin-bottom:16px;">Auto-share after publishing — click icons to enable or disable.</div>
                 <div class="ed-v2-social-icons">
                   <div class="ed-v2-social-icon active" onclick="this.classList.toggle('active')" title="Facebook">
                     <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -1517,7 +1514,7 @@
             </div>
           </div>
         </div>
-      </div>      <!-- ── Panel: Chapter Markers ── -->
+      <!-- ── Panel: Chapter Markers ── -->
       <div class="ed-v2-panel" id="v2-chapters">
         <div class="ed-v2-card">
           <div class="ed-v2-card-title">Chapter Markers</div>
@@ -1648,18 +1645,9 @@
       <div class="ed-v2-panel" id="v2-more">
         <div class="ed-v2-card">
           <div class="ed-v2-card-title">More Options</div>
-          <div class="ed-v2-card-desc">Duration, author, and classification</div>
+          <div class="ed-v2-card-desc">Season, episode type, author, duration, and RSS settings</div>
 
-          <div class="ed-v2-field">
-            <div class="ed-v2-label">Duration</div>
-            <input type="text" class="ed-v2-input" id="v2Duration" placeholder="e.g. 00:32:15">
-          </div>
-          <div class="ed-v2-field">
-            <div class="ed-v2-label">Author</div>
-            <input type="text" class="ed-v2-input" id="v2Author" placeholder="Enter author name">
-          </div>
-
-          <!-- Classification fields merged from Classification tab -->
+          <!-- Season NO. + Episode NO. (side by side) -->
           <div style="margin-bottom:22px;">
             <div class="ed-v2-grid-2">
               <div class="ed-v2-field">
@@ -1678,22 +1666,35 @@
                 <input type="text" class="ed-v2-input" id="v2EpisodeNo" placeholder="e.g. 12">
               </div>
             </div>
+          </div>
 
-            <div class="ed-v2-field">
-              <div class="ed-v2-label">Episode Type</div>
-              <select class="ed-v2-select" id="v2EpisodeType">
-                <option value="full">Full</option>
-                <option value="trailer">Trailer</option>
-                <option value="bonus">Bonus</option>
-              </select>
-            </div>
-            <div class="ed-v2-field">
-              <div class="ed-v2-label">Content Explicit</div>
-              <select class="ed-v2-select" id="v2Content">
-                <option value="clean">Clean</option>
-                <option value="explicit">Explicit</option>
-              </select>
-            </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Episode Type</div>
+            <select class="ed-v2-select" id="v2EpisodeType">
+              <option value="full">Full</option>
+              <option value="trailer">Trailer</option>
+              <option value="bonus">Bonus</option>
+            </select>
+          </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Content Explicit</div>
+            <select class="ed-v2-select" id="v2Content">
+              <option value="clean">Clean</option>
+              <option value="explicit">Explicit</option>
+            </select>
+          </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Author</div>
+            <input type="text" class="ed-v2-input" id="v2Author" placeholder="Enter author name">
+          </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Duration</div>
+            <input type="text" class="ed-v2-input" id="v2Duration" placeholder="e.g. 00:32:15">
+          </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Episode link in RSS feed</div>
+            <input type="text" class="ed-v2-input" id="v2RssLink" placeholder="Leave this field blank to use the default Podbean episode URL.">
+            <div class="ed-v2-hint">Use a link to your own website instead of the default Podbean episode link.</div>
           </div>
           <!-- Tags section -->
           <div style="height:1px;background:#e2e8f0;margin:24px 0;"></div>
@@ -1714,6 +1715,26 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ Schedule Publish Datepicker ═══════════ -->
+<div class="confirm-overlay" id="scheduleModal">
+  <div class="confirm-dialog" style="text-align:left;">
+    <div class="confirm-title" style="text-align:center;">Schedule Publish</div>
+    <div class="confirm-desc" style="text-align:center;">Choose the date and time to publish this episode.</div>
+    <div style="margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:6px;">Date</div>
+      <input type="date" id="scheduleDate" style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;font-family:inherit;color:#1e293b;outline:none;background:#fff;box-sizing:border-box;">
+    </div>
+    <div style="margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:6px;">Time</div>
+      <input type="time" id="scheduleTime" style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;font-family:inherit;color:#1e293b;outline:none;background:#fff;box-sizing:border-box;">
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeScheduleModal()">Cancel</button>
+      <button class="confirm-btn confirm-btn-primary" onclick="confirmSchedule()">Schedule</button>
     </div>
   </div>
 </div>
@@ -2387,12 +2408,52 @@
     var dd = document.getElementById('publishDropdown');
     dd.classList.toggle('show');
   }
-  function schedulePublish() {
-    document.getElementById('publishDropdown').classList.remove('show');
-    var date = prompt('Enter scheduled publish date and time (e.g. 2026-06-10 09:00):');
-    if (date && date.trim()) {
-      alert('Episode scheduled for ' + date.trim());
+  var publishMode = 'publish'; // 'publish' or 'schedule'
+  function togglePublishMode() {
+    var label = document.getElementById('publishBtnLabel');
+    var ddItem = document.querySelector('#publishDropdown .ed-publish-dropdown-item');
+    if (publishMode === 'publish') {
+      publishMode = 'schedule';
+      label.textContent = 'Schedule Publish';
+      ddItem.textContent = 'Publish Now';
+      document.getElementById('publishDropdown').classList.remove('show');
+      openScheduleModal();
+    } else {
+      publishMode = 'publish';
+      label.textContent = 'Publish Now';
+      ddItem.textContent = 'Schedule Publish';
+      document.getElementById('publishDropdown').classList.remove('show');
     }
+  }
+  function publishPublish() {
+    if (publishMode === 'publish') {
+      alert('Episode published!');
+      closeEpisodeDetailsModal();
+    } else {
+      openScheduleModal();
+    }
+  }
+  function openScheduleModal() {
+    var now = new Date();
+    var y = now.getFullYear();
+    var m = String(now.getMonth() + 1).padStart(2, '0');
+    var d = String(now.getDate()).padStart(2, '0');
+    var h = String(now.getHours()).padStart(2, '0');
+    var min = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('scheduleDate').value = y + '-' + m + '-' + d;
+    document.getElementById('scheduleTime').value = h + ':' + min;
+    document.getElementById('scheduleModal').classList.add('show');
+  }
+  function closeScheduleModal() {
+    document.getElementById('scheduleModal').classList.remove('show');
+  }
+  function confirmSchedule() {
+    var date = document.getElementById('scheduleDate').value;
+    var time = document.getElementById('scheduleTime').value;
+    if (!date || !time) { alert('Please select date and time.'); return; }
+    closeScheduleModal();
+    alert('Episode scheduled for ' + date + ' ' + time);
+    closeEpisodeDetailsModal();
   }
   document.addEventListener('click', function(e) {
     var dd = document.getElementById('publishDropdown');
@@ -2427,10 +2488,6 @@
     alert('Episode saved as draft!');
     closeEpisodeDetailsModal();
   }
-  function publishEpisode() {
-    alert('Episode published!');
-    closeEpisodeDetailsModal();
-  }
 
   // Wire up New Episode buttons
   document.querySelectorAll('.btn-create').forEach(function(btn) {
@@ -2440,10 +2497,6 @@
     });
   });
 
-  // Click outside modal to close
-  document.getElementById('newEpisodeModal').addEventListener('click', function(e) {
-    if (e.target === this) closeNewEpisodeModal();
-  });
   document.getElementById('episodeDetailsModal').addEventListener('click', function(e) {
     if (e.target === this) closeEpisodeDetailsModal();
   });
