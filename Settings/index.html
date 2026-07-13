@@ -1134,6 +1134,97 @@
       border-top: 1px solid #f1f5f9;
     }
 
+    /* Unsaved Changes Modal */
+    .modal-confirm {
+      background: #fff;
+      border-radius: 12px;
+      width: 420px;
+      max-width: 90vw;
+      padding: 40px 32px 32px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    .modal-confirm-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .modal-confirm-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .modal-confirm-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .modal-confirm .btn-stay {
+      width: 102px;
+      height: 50px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .modal-confirm .btn-stay:hover { background: #f1f5f9; }
+    .modal-confirm .btn-leave {
+      width: 102px;
+      height: 50px;
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .modal-confirm .btn-leave:hover { background: #334155; }
+
+
+    /* ==============================
+       Error states & Toast
+       ============================== */
+    .pb-field-error {
+      color: #dc2626;
+      font-size: 13px;
+      margin-top: 4px;
+      line-height: 1.4;
+      display: none;
+    }
+    .pb-field-error.is-visible { display: block; }
+    .pb-input.is-error { border-bottom-color: #dc2626; }
+    .pb-editor.is-error .pb-editor-body { border-bottom: 2px solid #dc2626; }
+    .pb-tab.has-error { color: #dc2626; }
+    .pb-tab.has-error::after { content: ' ⚠'; }
+    .pb-toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e293b;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      z-index: 300;
+    }
+    .pb-toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
   </style>
 </head>
 <body>
@@ -1279,6 +1370,7 @@
               <div class="info-content-item">
                 <span class="cc-item-label">Podcast Title <span class="required">*</span></span>
                 <input type="text" class="pb-input" placeholder="Make a clear, concise name for your title" value="My Awesome Podcast" />
+                <div class="pb-field-error"></div>
               </div>
 
               <div class="info-content-item">
@@ -1304,6 +1396,7 @@
                     <p>Welcome to My Awesome Podcast! We discuss technology, design, and the future of digital media.</p>
                   </div>
                 </div>
+                <div class="pb-field-error"></div>
               </div>
 
               <div class="info-content-item">
@@ -1317,6 +1410,7 @@
                   </button>
                 </div>
                 <div class="pb-note">Apple Podcasts only recognizes the first category and subcategory.</div>
+                <div class="pb-field-error"></div>
               </div>
 
               <div class="info-content-item">
@@ -1361,12 +1455,22 @@
 
               <div class="info-content-item">
                 <span class="cc-item-label">Country of Origin</span>
-                <div class="pb-country-row">
-                  <div class="pb-vs-wrap">
-                    <div class="pb-vs"><span>Global</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                <span class="tips">Defines the intended market/territory where the podcast is relevant to the consumer.</span>
+                <div style="margin-top:8px;">
+                  <div class="pb-custom-select">
+                    <div class="pb-vs" data-select="country-mode">
+                      <span>Global</span>
+                      <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </div>
+                    <div class="pb-select-dropdown" id="dropdown-country-mode">
+                      <div class="pb-select-option selected" data-value="global">Global</div>
+                      <div class="pb-select-option" data-value="specific">Specific countries</div>
+                    </div>
                   </div>
-                  <div class="pb-vs-wrap multi">
-                    <div class="pb-vs placeholder"><span>Specific countries</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                  <div id="countryList" style="display:none;margin-top:12px;">
+                    <div class="pb-vs-wrap multi">
+                      <div class="pb-vs placeholder"><span>Select countries</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1418,6 +1522,12 @@
 
           </div>
         </div>
+      <div class="pb-save-bar">
+        <div class="pb-save-bar-inner">
+          <button type="button" class="cancel-btn"> Cancel </button>
+          <button type="button" class="save-btn" id="podcastInfoSaveBtn"> Save </button>
+        </div>
+      </div>
       </div>
 
       <!-- ===== Page: Feed ===== -->
@@ -1440,30 +1550,22 @@
 
               <div class="info-content-item">
                 <span class="cc-item-label">Ownership Verification Email</span>
-                <div class="toggle-row-compact">
-                  <div>
-                    <p class="toggle-desc">Add an email address to your RSS feed so podcast directories can verify your podcast.</p>
-                  </div>
-                  <span class="pb-switch">
-                    <input type="checkbox" data-toggle="ownership-email-input" />
-                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
-                  </span>
-                </div>
-                <input type="email" class="pb-input" id="ownership-email-input" placeholder="Enter verification email" style="display:none;margin-top:12px;" />
+                <p class="toggle-desc" style="margin-bottom:8px;">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</p>
+                <input type="email" class="pb-input" placeholder="Enter verification email" />
+                <div class="pb-field-error"></div>
               </div>
 
               <div class="info-content-item">
                 <span class="cc-item-label">Episode Number Limit</span>
-                <input type="number" class="pb-input" min="1" max="1999" value="1999" />
+                <input type="number" class="pb-input" min="1" max="1999" value="100" />
+                <div class="pb-field-error"></div>
                 <span class="tips">Limit the number of episodes included in your RSS feed.</span>
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Podcast Website</span>
-                <div class="pb-url-wrap">
-                  <span class="pb-url-prefix">https://</span>
-                  <input type="text" class="pb-url-input" value="elinazplus.podbean.org" />
-                </div>
+                <span class="cc-item-label">Feed Website URL</span>
+                <input type="text" class="pb-input" placeholder="https://elinazplus.podbean.org" value="https://elinazplus.podbean.org" />
+                <div class="pb-field-error"></div>
                 <span class="tips">Use your own website URL to be displayed on Apple Podcasts instead of your Podbean website URL.</span>
               </div>
 
@@ -1472,7 +1574,7 @@
                 <span class="cc-item-label">Redirect to a New Feed</span>
                 <div class="toggle-row-compact">
                   <div>
-                    <p class="toggle-desc">Enable to redirect your podcast feed to a new URL.</p>
+                    <p class="toggle-desc">Only enter your new podcast feed URL when you're ready to move away from Podbean.</p>
                   </div>
                   <span class="pb-switch">
                     <input type="checkbox" data-toggle="redirect-feed-input" />
@@ -1481,14 +1583,21 @@
                 </div>
                 <div id="redirect-feed-input" style="display:none;margin-top:12px;">
                   <input type="text" class="pb-input" placeholder="https://" />
+                  <div class="pb-field-error"></div>
                   <span class="pb-warning">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    Warning! This will redirect your Podcast feed permanently. Only input a new feed here if you are ready to move your podcast to a new feed.
+                    Warning! Your Podbean feed will be redirected to the new feed URL immediately. Only enter your new podcast feed URL when you're ready to move away from Podbean.
                   </span>
                 </div>
               </div>
             </div>
           </div>
+      <div class="pb-save-bar">
+        <div class="pb-save-bar-inner">
+          <button type="button" class="cancel-btn"> Cancel </button>
+          <button type="button" class="save-btn" id="feedSaveBtn"> Save </button>
+        </div>
+      </div>
       </div>
 
       <!-- ===== Page: Plugin ===== -->
@@ -1497,27 +1606,11 @@
         <p class="page-subtitle">Manage your podcast plugins and integrations.</p>
 
         <div class="plugin-toolbar-wrap">
-          <a href="https://apps.podbean.org" class="plugin-get-btn">Get more plugins</a>
+          <a href="https://apps.podbean.com" class="plugin-get-btn">Get more plugins</a>
         </div>
 
-        <div class="plugin-card">
-          <div class="plugin-item">
-            <div class="plugin-item-icon">
-              <img src="EpisodeEndnote_heqcd.png" alt="Episode Endnote" style="width:48px;height:48px;border-radius:10px;object-fit:cover;" />
-            </div>
-            <div class="plugin-item-info">
-              <div class="plugin-item-name">Episode Endnote</div>
-              <p class="plugin-item-desc">Add a customizable endnote that appears at the end of your episode descriptions, ideal for including social media links, promotional details.</p>
-            </div>
-            <div class="plugin-item-actions">
-              <button class="plugin-action-btn" onclick="openEndnoteModal()" title="Edit">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              </button>
-              <button class="plugin-action-btn delete" onclick="if(confirm('Delete this plugin?')){this.closest('.plugin-item').remove();}" title="Delete">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-              </button>
-            </div>
-          </div>
+        <div class="plugin-empty" style="text-align:center;padding:60px 20px;color:var(--text-tertiary);font-size:14px;line-height:1.6;">
+          Take your podcast to the next level by adding popular plugins and services.
         </div>
       </div>
     </div>
@@ -1561,16 +1654,100 @@
         </div>
       </div>
 
-      <!-- Global Sticky save bar -->
-      <div class="pb-save-bar">
-        <div class="pb-save-bar-inner">
-          <button type="button" class="cancel-btn"> Cancel </button>
-          <button type="button" class="save-btn"> Save </button>
+      <!-- Unsaved Changes Modal -->
+      <div class="modal-overlay" id="unsavedModal">
+        <div class="modal-confirm">
+          <div class="modal-confirm-title">Unsaved Changes</div>
+          <p class="modal-confirm-desc">You have unsaved changes. Do you want to leave without saving?</p>
+          <div class="modal-confirm-actions">
+            <button class="btn-stay" id="unsavedStay">Stay</button>
+            <button class="btn-leave" id="unsavedLeave">Leave</button>
+          </div>
         </div>
       </div>
+
+      
+      <!-- Toast notification -->
+      <div class="pb-toast" id="saveToast">Saved successfully</div>
     </div>
 
   <script>
+    // Unsaved changes tracking
+    var unsavedChanges = false;
+    var pendingNav = null;
+    var savedState = null;
+
+    function captureState() {
+      savedState = {
+        inputs: [],
+        urlInputs: [],
+        editors: [],
+        selects: [],
+        switches: [],
+        radios: []
+      };
+      document.querySelectorAll('.pb-input').forEach(function(el) {
+        savedState.inputs.push({ el: el, val: el.value });
+      });
+      document.querySelectorAll('.pb-url-input').forEach(function(el) {
+        savedState.urlInputs.push({ el: el, val: el.value });
+      });
+      document.querySelectorAll('.pb-editor-body').forEach(function(el) {
+        savedState.editors.push({ el: el, html: el.innerHTML });
+      });
+      document.querySelectorAll('.pb-vs[data-select]').forEach(function(el) {
+        var label = el.querySelector('span');
+        savedState.selects.push({ el: el, label: label ? label.textContent : '' });
+      });
+      document.querySelectorAll('.pb-switch input[type="checkbox"]').forEach(function(el) {
+        savedState.switches.push({ el: el, checked: el.checked });
+      });
+      document.querySelectorAll('.pb-radio input').forEach(function(el) {
+        savedState.radios.push({ el: el, checked: el.checked });
+      });
+    }
+
+    function restoreState() {
+      if (!savedState) return;
+      savedState.inputs.forEach(function(item) { item.el.value = item.val; });
+      savedState.urlInputs.forEach(function(item) { item.el.value = item.val; });
+      savedState.editors.forEach(function(item) { item.el.innerHTML = item.html; });
+      savedState.selects.forEach(function(item) {
+        var label = item.el.querySelector('span');
+        if (label) label.textContent = item.label;
+      });
+      savedState.switches.forEach(function(item) {
+        item.el.checked = item.checked;
+        var sw = item.el.closest('.pb-switch');
+        if (sw) sw.classList.toggle('checked', item.checked);
+        var targetId = item.el.getAttribute('data-toggle');
+        if (targetId) {
+          var target = document.getElementById(targetId);
+          if (target) target.style.display = item.checked ? 'block' : 'none';
+        }
+      });
+      savedState.radios.forEach(function(item) {
+        item.el.checked = item.checked;
+        var rd = item.el.closest('.pb-radio');
+        if (rd) rd.classList.toggle('checked', item.checked);
+      });
+    }
+
+    // Capture initial state after page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', captureState);
+    } else {
+      captureState();
+    }
+
+    function markUnsaved() {
+      unsavedChanges = true;
+    }
+
+    function clearUnsaved() {
+      unsavedChanges = false;
+    }
+
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
       document.getElementById('sidebarOverlay').classList.toggle('show');
@@ -1582,6 +1759,16 @@
         e.preventDefault();
         var page = this.getAttribute('data-page');
 
+        if (unsavedChanges) {
+          pendingNav = function() {
+            document.querySelectorAll('.sidebar-nav a').forEach(function(a) { a.classList.remove('active'); });
+            link.classList.add('active');
+            switchPage(page);
+          };
+          document.getElementById('unsavedModal').classList.add('open');
+          return;
+        }
+
         document.querySelectorAll('.sidebar-nav a').forEach(function(a) { a.classList.remove('active'); });
         this.classList.add('active');
 
@@ -1589,13 +1776,57 @@
       });
     });
 
-    // Sidebar: parent items with sub-menus (toggle collapse)
+    // Sidebar: parent items with sub-menus
     document.querySelectorAll('.sidebar-nav > a').forEach(function(link) {
       var sub = link.nextElementSibling;
       if (!sub || !sub.classList.contains('sub-menu')) return;
 
       link.addEventListener('click', function(e) {
         e.preventDefault();
+
+        // Special behavior for Settings:
+        // If clicking Settings from another page -> expand & navigate to Podcast Info
+        // If already on a Settings page -> just toggle collapse, keep page content
+        var isSettings = link.textContent.trim().includes('Settings');
+        if (isSettings) {
+          var settingsHasActive = sub.querySelector('a.active') !== null;
+
+          if (!settingsHasActive) {
+            // Coming from another page: expand Settings, activate Podcast Info
+            if (unsavedChanges) {
+              pendingNav = function() {
+                document.querySelectorAll('.sidebar-nav a, .sidebar-nav .sub-menu a').forEach(function(a) { a.classList.remove('active'); });
+                sub.classList.remove('collapsed');
+                var arrow = link.querySelector('.menu-arrow');
+                if (arrow) arrow.classList.add('open');
+                link.classList.add('active');
+                var target = sub.querySelector('[data-page="podcast-basic"]');
+                if (target) {
+                  target.classList.add('active');
+                  switchPage('podcast-basic');
+                }
+              };
+              document.getElementById('unsavedModal').classList.add('open');
+              return;
+            }
+
+            document.querySelectorAll('.sidebar-nav a, .sidebar-nav .sub-menu a').forEach(function(a) { a.classList.remove('active'); });
+
+            sub.classList.remove('collapsed');
+            var arrow = link.querySelector('.menu-arrow');
+            if (arrow) arrow.classList.add('open');
+
+            link.classList.add('active');
+            var target = sub.querySelector('[data-page="podcast-basic"]');
+            if (target) {
+              target.classList.add('active');
+              switchPage('podcast-basic');
+            }
+            return;
+          }
+        }
+
+        // Default: toggle collapse only
         sub.classList.toggle('collapsed');
         var arrow = this.querySelector('.menu-arrow');
         if (arrow) arrow.classList.toggle('open');
@@ -1607,6 +1838,22 @@
       link.addEventListener('click', function(e) {
         e.preventDefault();
         var page = this.getAttribute('data-page');
+
+        if (unsavedChanges) {
+          pendingNav = function() {
+            document.querySelectorAll('.sidebar-nav a, .sidebar-nav .sub-menu a').forEach(function(a) { a.classList.remove('active'); });
+            link.classList.add('active');
+            var parent = link.closest('.sub-menu');
+            var parentLink = parent.previousElementSibling;
+            if (parentLink) parentLink.classList.add('active');
+            parent.classList.remove('collapsed');
+            var arrow = parentLink && parentLink.querySelector('.menu-arrow');
+            if (arrow) arrow.classList.add('open');
+            switchPage(page);
+          };
+          document.getElementById('unsavedModal').classList.add('open');
+          return;
+        }
 
         document.querySelectorAll('.sidebar-nav a, .sidebar-nav .sub-menu a').forEach(function(a) { a.classList.remove('active'); });
         this.classList.add('active');
@@ -1644,19 +1891,139 @@
     }
     function saveEndnote() {
       closeEndnoteModal();
-      var saveBar = document.querySelector('.pb-save-bar');
-      if (saveBar) saveBar.classList.add('is-visible');
+      showActiveSaveBar();
     }
     // Close modal when clicking overlay background
     document.getElementById('endnoteModal').addEventListener('click', function(e) {
       if (e.target === this) closeEndnoteModal();
     });
 
+    // Unsaved Changes modal handlers
+    document.getElementById('unsavedModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        document.getElementById('unsavedModal').classList.remove('open');
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var modal = document.getElementById('unsavedModal');
+        if (modal.classList.contains('open')) {
+          modal.classList.remove('open');
+        }
+      }
+    });
+
+    document.getElementById('unsavedStay').addEventListener('click', function() {
+      document.getElementById('unsavedModal').classList.remove('open');
+    });
+
+    document.getElementById('unsavedLeave').addEventListener('click', function() {
+      document.getElementById('unsavedModal').classList.remove('open');
+      clearUnsaved();
+      // Hide the active page's save bar before switching
+      var oldSaveBar = document.querySelector('.page-section.active .pb-save-bar');
+      if (oldSaveBar) oldSaveBar.classList.remove('is-visible');
+      if (pendingNav) {
+        pendingNav();
+        pendingNav = null;
+      }
+    });
+
+    // Helper: get save bar in active page
+    function getActiveSaveBar() {
+      var activePage = document.querySelector('.page-section.active');
+      return activePage ? activePage.querySelector('.pb-save-bar') : null;
+    }
+
+    // Save button: Podcast Info
+    if (document.getElementById('podcastInfoSaveBtn')) {
+      document.getElementById('podcastInfoSaveBtn').addEventListener('click', function() {
+        var activePage = document.querySelector('.page-section.active');
+        if (!activePage || activePage.id !== 'page-podcast-basic') return;
+
+        // Validate all Podcast Info tabs
+        var errors = validatePodcastInfo();
+        if (errors.length > 0) {
+          // Switch to first tab with errors
+          var errorTabIds = [];
+          errors.forEach(function(err) { if (errorTabIds.indexOf(err.tabId) < 0) errorTabIds.push(err.tabId); });
+          if (errorTabIds.length > 0) {
+            var tabBtn = document.querySelector('.pb-tab[data-pb-tab="' + errorTabIds[0] + '"]');
+            if (tabBtn) tabBtn.click();
+            // Mark error tabs
+            document.querySelectorAll('.pb-tab').forEach(function(t) {
+              t.classList.toggle('has-error', errorTabIds.indexOf(t.getAttribute('data-pb-tab')) >= 0);
+            });
+            // Focus first error field
+            if (errors[0].el) errors[0].el.focus();
+          }
+          return;
+        }
+
+        // All clear: save
+        clearUnsaved();
+        clearAllErrors();
+        var saveBar = getActiveSaveBar();
+        if (saveBar) saveBar.classList.remove('is-visible');
+        captureState();
+        showToast();
+      });
+    }
+
+    // Save button: Feed
+    if (document.getElementById('feedSaveBtn')) {
+      document.getElementById('feedSaveBtn').addEventListener('click', function() {
+        var activePage = document.querySelector('.page-section.active');
+        if (!activePage || activePage.id !== 'page-feed') return;
+
+        // Validate Feed fields
+        var errors = [];
+        var feedItems = activePage.querySelectorAll('.info-content-item');
+
+        // Feed Website URL (typically item index 3)
+        var urlItem = null;
+        var urlLabel = activePage.querySelector('.cc-item-label');
+        feedItems.forEach(function(item) {
+          var label = item.querySelector('.cc-item-label');
+          if (label && label.textContent.indexOf('Feed Website URL') >= 0) {
+            urlItem = item;
+          }
+        });
+        if (urlItem) {
+          var urlInput = urlItem.querySelector('.pb-input');
+          if (urlInput) {
+            var uv = urlInput.value.trim();
+            if (uv === '') {
+              showFieldError(urlItem, 'Please enter a Feed Website URL');
+              errors.push({ el: urlInput });
+            }
+          }
+        }
+
+        if (errors.length > 0) {
+          if (errors[0].el) errors[0].el.focus();
+          return;
+        }
+
+        // All clear: save
+        clearUnsaved();
+        clearAllErrors();
+        var saveBar = getActiveSaveBar();
+        if (saveBar) saveBar.classList.remove('is-visible');
+        captureState();
+        showToast();
+      });
+    }
+
     function switchPage(page) {
       document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
       var target = document.getElementById('page-' + page);
       if (!target) return;
       target.classList.add('active');
+
+      // Capture initial state of the new page
+      captureState();
 
       // Reset to first tab when entering a page
       var firstTab = target.querySelector('.pb-tab');
@@ -1706,13 +2073,10 @@
       });
     });
 
-    // Show save bar on form changes
+    // Show save bar on form changes — attach listeners to all inputs across all pages
     (function() {
-      var saveBar = document.querySelector('.pb-save-bar');
-      if (!saveBar) return;
-
       function showSaveBar() {
-        saveBar.classList.add('is-visible');
+        showActiveSaveBar();
       }
 
       var inputs = document.querySelectorAll('.pb-input, .pb-url-input, .pb-vs, .pb-textarea');
@@ -1736,12 +2100,24 @@
         s.addEventListener('change', showSaveBar);
       });
 
-      var cancelBtn = saveBar.querySelector('.cancel-btn');
-      if (cancelBtn) {
+      // Attach cancel buttons for all save bars
+      document.querySelectorAll('.pb-save-bar .cancel-btn').forEach(function(cancelBtn) {
         cancelBtn.addEventListener('click', function() {
-          saveBar.classList.remove('is-visible');
+          var bar = this.closest('.pb-save-bar');
+          if (bar) bar.classList.remove('is-visible');
+          restoreState();
+          clearUnsaved();
+          clearAllErrors();
         });
+      });
+
+    function showActiveSaveBar() {
+      var saveBar = getActiveSaveBar();
+      if (saveBar) {
+        saveBar.classList.add('is-visible');
+        markUnsaved();
       }
+    }
     })();
 
     // Custom Select Dropdowns
@@ -1784,11 +2160,113 @@
         this.classList.add('selected');
         dropdown.classList.remove('open');
 
+        // Country mode toggle
+        if (dropdown.id === 'dropdown-country-mode') {
+          var countryList = document.getElementById('countryList');
+          if (countryList) {
+            countryList.style.display = this.getAttribute('data-value') === 'specific' ? 'block' : 'none';
+          }
+        }
+
         // Show save bar
-        var saveBar = document.querySelector('.pb-save-bar');
-        if (saveBar) saveBar.classList.add('is-visible');
+
+        // Show save bar
+        showActiveSaveBar();
       });
     });
+  
+
+    // ==============================================
+    // Validation helpers
+    // ==============================================
+
+    function clearAllErrors() {
+      document.querySelectorAll('.pb-field-error').forEach(function(el) { el.classList.remove('is-visible'); el.textContent = ''; });
+      document.querySelectorAll('.pb-input.is-error').forEach(function(el) { el.classList.remove('is-error'); });
+      document.querySelectorAll('.pb-editor.is-error').forEach(function(el) { el.classList.remove('is-error'); });
+      document.querySelectorAll('.pb-tab.has-error').forEach(function(el) { el.classList.remove('has-error'); });
+    }
+
+    function showFieldError(container, message) {
+      var errorEl = container.querySelector('.pb-field-error');
+      if (!errorEl) {
+        // Try to create one
+        errorEl = document.createElement('div');
+        errorEl.className = 'pb-field-error';
+        container.appendChild(errorEl);
+      }
+      errorEl.textContent = message;
+      errorEl.classList.add('is-visible');
+      // Highlight the input
+      var input = container.querySelector('.pb-input, .pb-editor-body');
+      if (input) {
+        input.classList.add('is-error');
+        var editor = container.querySelector('.pb-editor');
+        if (editor) editor.classList.add('is-error');
+      }
+    }
+
+    function validatePodcastInfo() {
+      clearAllErrors();
+      var errors = [];
+      var basic = document.getElementById('pb-basic');
+      var metadata = document.getElementById('pb-metadata');
+      var publication = document.getElementById('pb-publication');
+
+      // --- Basic Tab ---
+      var basicItems = basic ? basic.querySelectorAll('.info-content-item') : [];
+      if (basicItems.length >= 1) {
+        // Podcast Title
+        var titleInput = basicItems[0].querySelector('.pb-input');
+        if (titleInput) {
+          var tv = titleInput.value.trim();
+          if (tv === '') {
+            showFieldError(basicItems[0], 'Please enter a podcast title');
+            errors.push({ tabId: 'basic', el: titleInput });
+          }
+        }
+      }
+      if (basicItems.length >= 2) {
+        // Brief Description
+        var descBody = basicItems[1].querySelector('.pb-editor-body');
+        if (descBody) {
+          var dv = descBody.textContent.trim();
+          if (dv === '' || dv === 'New podcast weblog') {
+            showFieldError(basicItems[1], 'Please enter a brief description');
+            errors.push({ tabId: 'basic', el: descBody });
+          }
+        }
+      }
+      if (basicItems.length >= 3) {
+        // Podcast Category
+        var catRow = basicItems[2].querySelector('.pb-cat-row');
+        if (catRow) {
+          var catSpan = catRow.querySelector('.pb-vs span');
+          var cv = catSpan ? catSpan.textContent.trim() : '';
+          if (cv === '' || cv === 'Select a category') {
+            showFieldError(basicItems[2], 'Please select a podcast category');
+            errors.push({ tabId: 'basic', el: catRow });
+          }
+        }
+      }
+
+      // --- Metadata Tab ---
+      // (No required fields in Author & Region)
+
+      // --- Publication Tab ---
+      // (No required fields in Content Classification)
+
+      return errors;
+    }
+
+    function showToast() {
+      var toast = document.getElementById('saveToast');
+      if (!toast) return;
+      toast.classList.add('is-visible');
+      setTimeout(function() {
+        toast.classList.remove('is-visible');
+      }, 2500);
+    }
   </script>
 
 </body>
