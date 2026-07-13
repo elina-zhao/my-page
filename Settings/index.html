@@ -1563,10 +1563,10 @@
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Feed Website URL</span>
-                <input type="text" class="pb-input" placeholder="https://elinazplus.podbean.org" value="https://elinazplus.podbean.org" />
+                <span class="cc-item-label">Custom Website URL</span>
+                <input type="text" class="pb-input" placeholder="Leave this field blank to use your Podbean podcast website URL." value="" />
                 <div class="pb-field-error"></div>
-                <span class="tips">Use your own website URL to be displayed on Apple Podcasts instead of your Podbean website URL.</span>
+                <span class="tips">Use your own website URL as the podcast website link in your RSS feed.</span>
               </div>
 
 
@@ -1979,27 +1979,9 @@
 
         // Validate Feed fields
         var errors = [];
-        var feedItems = activePage.querySelectorAll('.info-content-item');
 
-        // Feed Website URL (typically item index 3)
-        var urlItem = null;
-        var urlLabel = activePage.querySelector('.cc-item-label');
-        feedItems.forEach(function(item) {
-          var label = item.querySelector('.cc-item-label');
-          if (label && label.textContent.indexOf('Feed Website URL') >= 0) {
-            urlItem = item;
-          }
-        });
-        if (urlItem) {
-          var urlInput = urlItem.querySelector('.pb-input');
-          if (urlInput) {
-            var uv = urlInput.value.trim();
-            if (uv === '') {
-              showFieldError(urlItem, 'Please enter a Feed Website URL');
-              errors.push({ el: urlInput });
-            }
-          }
-        }
+        // Custom Website URL is optional — only validate format if filled in
+        // (format validation to be added)
 
         if (errors.length > 0) {
           if (errors[0].el) errors[0].el.focus();
