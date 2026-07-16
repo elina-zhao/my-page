@@ -86,6 +86,7 @@
   .ep-table td { padding:21px 12px;font-size:14px;color:var(--text);border-bottom:1px solid #f1f5f9;vertical-align:middle; }
   .ep-table td:last-child { text-align:right;cursor:pointer; }
   .ep-table tr:hover td:last-child { color:var(--primary);font-weight:500;text-decoration:underline; }
+  .ep-table tbody tr { cursor:pointer; }
   .ep-table tr:hover td { background:#f8fafc; }
   .ep-table tr.selected td { background:#f0f9f4; }
   .ep-table .ep-title-cell { color:var(--text); }
@@ -855,10 +856,263 @@
   .ep-info-right .ed-v2-file-row svg { width: 18px; height: 18px; }
 
 
+  /* ── Share Episode Modal ────────────────── */
+  .share-overlay {
+    display: none; position: fixed; inset: 0; z-index: 400;
+    background: rgba(0,0,0,.3);
+    align-items: center; justify-content: center;
+  }
+  .share-overlay.show { display: flex; }
+  .share-modal {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.18);
+    width: 935px; max-width: 94%; height: 780px; max-height: 90vh;
+    display: flex; flex-direction: column;
+    overflow-y: hidden; position: relative;
+  }
+  .share-modal-scroll {
+    flex: 1; min-height: 0; overflow-y: auto;
+  }
+  .share-modal-close-abs {
+    position: absolute; right: 16px; top: 16px; z-index: 10;
+  }
+  .share-modal-header {
+    padding: 60px 24px 0;
+  }
+  .share-episode-header { display: flex; align-items: flex-start; gap: 14px; }
+  .share-episode-logo {
+    width: 72px; height: 72px; border-radius: 12px; overflow: hidden;
+    flex-shrink: 0;
+  }
+  .share-episode-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .share-episode-meta { display: flex; flex-direction: column; gap: 4px; padding-top: 6px; }
+  .share-episode-title {
+    font-size: 16px; font-weight: 700; color: #1e293b; line-height: 1.3;
+    text-align: left;
+  }
+  .share-episode-sub { display: flex; align-items: center; gap: 10px; text-align: left; }
+  .share-episode-status {
+    font-size: 11px; font-weight: 600; padding: 2px 0; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: .03em;
+  }
+  .share-episode-date { font-size: 13px; color: #94a3b8; }
+  .share-modal-header .share-title {
+    font-size: 18px; font-weight: 700; color: #1e293b;
+  }
+  .share-modal-close {
+    width: 32px; height: 32px; border-radius: 8px; border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #64748b; font-size: 18px; transition: all .12s;
+  }
+  .share-modal-close:hover { color: #1e293b; }
+  .share-modal-body {
+    padding: 24px;
+  }
+  .share-section { margin-bottom: 24px; }
+  .share-section:last-child { margin-bottom: 0; }
+  .share-section-title {
+    font-size: 13px; font-weight: 600; color: #64748b;
+    text-transform: uppercase; letter-spacing: .05em;
+    margin-bottom: 12px;
+  }
+  .share-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .share-row:last-child { margin-bottom: 0; }
+  .share-checkbox {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; color: #1e293b; cursor: pointer;
+  }
+  .share-checkbox input[type=checkbox] { accent-color: var(--primary); width: 16px; height: 16px; margin: 0; }
+  .share-social-icons { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .share-social-btn {
+    width: 60px; height: 60px; border-radius: 12px;
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all .2s; color: #64748b;
+    text-decoration: none; flex-direction: column; gap: 2px;
+  }
+  .share-social-btn:hover { background: #f1f5f9; color: #1e293b; transform: translateY(-2px); }
+  .share-social-btn:active { transform: translateY(0); background: #e2e8f0; }
+  .share-social-label { font-size: 11px; font-weight: 500; color: #64748b; line-height: 1; }
+  .share-social-btn[title="Facebook"]:hover { background: #f0f2f5; color: #1877f2; }
+  .share-social-btn[title="X (Twitter)"]:hover { background: #f0f0f0; color: #000; }
+  .share-social-btn[title="LinkedIn"]:hover { background: #eef3f8; color: #0a66c2; }
+  .share-social-btn[title="Email"]:hover { background: #f0f0ff; color: #6366f1; }
+  .share-auto-link { font-size: 12px; color: #94a3b8; line-height: 1.5; margin-top: 12px; }
+  .share-auto-link a { color: var(--primary); text-decoration: none; }
+  .share-auto-link a:hover { text-decoration: underline; }
+  .share-url-field { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .share-url-label { font-size: 13px; font-weight: 500; color: #64748b; min-width: 105px; flex-shrink: 0; }
+  .share-url-input {
+    flex: 1; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px;
+    font-size: 13px; font-family: inherit; color: #1e293b;
+    outline: none; cursor: default;
+  }
+  .share-copy-btn {
+    width: 32px; height: 32px; border-radius: 6px; border: 1px solid #e2e8f0;
+    cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    color: #64748b; transition: all .12s; flex-shrink: 0;
+  }
+  .share-copy-btn:hover { border-color: #cbd5e1; color: #1e293b; }
+  .share-copy-btn.copied { border-color: var(--primary); color: var(--primary); }
+  .share-copy-btn.primary {
+    background: #1b1b1b; border-color: #1b1b1b; color: #fff;
+    padding: 8px 18px; font-weight: 600; gap: 6px; font-size: 13px;
+    font-family: inherit; width: auto; height: auto;
+  }
+  .share-copy-btn.primary:hover { background: #333; border-color: #333; color: #fff; }
+  .share-copy-btn.primary.copied { background: #333; border-color: #333; color: #fff; }
+  .share-widget-code {
+    width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
+    font-size: 12px; font-family: monospace; color: #1e293b;
+    resize: vertical; min-height: 60px; outline: none;
+    box-sizing: border-box;
+  }
+  .share-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; }
+  .share-opt-label {
+    font-size: 13px; font-weight: 500; color: #1e293b; margin-bottom: 4px;
+  }
+  .share-opt-select {
+    width: 100%; padding: 7px 30px 7px 10px;
+    border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 13px; font-family: inherit; color: #1e293b;
+    cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center;
+  }
+  .share-opt-select:focus { outline: none; border-color: var(--primary); }
+  .share-color-row { display: flex; gap: 6px; }
+  .share-color-opt {
+    padding: 4px 12px; border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 13px; font-family: inherit; color: #1e293b;
+    cursor: pointer; transition: all .12s;
+  }
+  .share-color-opt:hover { border-color: #94a3b8; }
+  .share-color-opt.active { border-color: var(--primary); color: var(--primary); font-weight: 500; }
+  .share-toggle-row { display: flex; gap: 24px; }
+  .share-toggle-item { display: flex; align-items: center; gap: 8px; }
+  .share-toggle-item-label { font-size: 13px; color: #1e293b; font-weight: 500; }
+  .share-toggle-item select {
+    padding: 5px 24px 5px 8px; border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 13px; font-family: inherit; color: #1e293b;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 6px center;
+    cursor: pointer;
+  }
+  .share-embed-preview {
+    border-radius: 8px;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+  .share-more-options-grid { display: flex; flex-direction: column; gap: 10px; }
+  .share-more-row { display: flex; align-items: center; gap: 12px; }
+  .share-more-row label { font-size: 13px; color: #1e293b; font-weight: 500; min-width: 100px; }
+  .share-more-row select {
+    padding: 6px 28px 6px 10px; border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 13px; font-family: inherit; color: #1e293b;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 6px center;
+    cursor: pointer;
+  }
+  .share-more-row input[type=checkbox] { accent-color: var(--primary); width: 16px; height: 16px; margin: 0; }
+  .share-ep-link { font-size: 13px; margin-bottom: 12px; }
+  .share-ep-link a { color: var(--primary); text-decoration: none; font-weight: 500; }
+  .share-ep-link a:hover { text-decoration: underline; }
+  .share-footer { font-size: 12px; color: #94a3b8; margin-top: 20px; text-align: center; padding: 0; }
+  .share-url-tab {
+    padding: 6px 14px; border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 13px; font-family: inherit; color: #64748b;
+    cursor: pointer; transition: all .12s;
+  }
+  .share-url-tab:hover { border-color: #94a3b8; color: #1e293b; }
+  .share-url-tab.active { border-color: var(--primary); color: var(--primary); font-weight: 500; }
+  .share-player-style {
+    padding: 7px 18px; border: 1px solid #d1d5db; border-radius: 8px;
+    font-size: 13px; font-family: inherit; color: #64748b;
+    cursor: pointer; transition: all .12s;
+  }
+  .share-player-style:hover { border-color: #94a3b8; color: #1e293b; }
+  .share-player-style.active { border-color: var(--primary); color: var(--primary); font-weight: 600; }
+  .share-body-tab {
+    padding: 6px 4px 6px; margin: 0 12px;
+    border: none; background: none;
+    font-size: 16px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all .15s;
+    color: #94a3b8; letter-spacing: .02em;
+    border-bottom: 2px solid transparent;
+  }
+  .share-body-tab:first-child { margin-left: 0; }
+  .share-body-tab:hover { color: #64748b; }
+  .share-body-tab.active { color: #1e293b; font-weight: 700; border-bottom-color: #1a9a6c; }
+  .share-swatch-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+  .share-swatch {
+    width: 22px; height: 22px; border-radius: 5px;
+    border: 2px solid transparent; cursor: pointer;
+    transition: all .12s; flex-shrink: 0;
+  }
+  .share-swatch:hover { transform: scale(1.15); }
+  .share-swatch.active { border-color: #1e293b; box-shadow: 0 0 0 1px #fff inset; }
+  .share-card {
+    border-radius: 10px; padding: 16px 0;
+  }
+  .share-collapse {
+    border-radius: 10px; margin-bottom: 12px; overflow: hidden;
+  }
+  .share-collapse-header {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 16px 10px 0; cursor: pointer; user-select: none;
+    font-size: 13px; font-weight: 600; color: #1e293b;
+    border-radius: 10px; transition: background .12s;
+  }
+  
+  .share-collapse-arrow { transition: transform .15s; color: #94a3b8; }
+  .share-collapse.open .share-collapse-arrow { transform: rotate(180deg); }
+  .share-collapse-body { padding: 0 16px 16px 0; display: none; }
+  .share-collapse.open .share-collapse-body { display: block; }
+  .share-collapse.open .share-collapse-header { border-radius: 10px 10px 0 0; }
+  .share-collapse-body .share-card { padding: 0; }
+
+  /* ── Toast Notification ──────────────────── */
+  .toast-container {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 9999;
+    display: flex; flex-direction: column; gap: 10px;
+    pointer-events: none; align-items: center;
+  }
+  .toast-container > * { pointer-events: auto; }
+  .toast {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px; border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.25);
+    font-size: 14px; font-weight: 500; color: #fff;
+    background: #1e293b;
+    min-width: 320px; max-width: 420px;
+    animation: toastIn .3s ease-out;
+    transition: opacity .3s, transform .3s;
+  }
+  .toast-icon { flex-shrink: 0; display: flex; align-items: center; }
+  .toast-msg { flex: 1; line-height: 1.4; }
+  .toast-close {
+    flex-shrink: 0; width: 24px; height: 24px; border-radius: 6px;
+    border: none; background: rgba(255,255,255,.15); color: #fff;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; padding: 0; transition: background .15s;
+  }
+  .toast-close:hover { background: rgba(255,255,255,.25); }
+  .toast-out { opacity: 0; transform: translateY(12px); }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   * { font-family: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif !important; }
   input, textarea, select, button { font-family: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif !important; }</style>
 </head>
 <body>
+  <div class="toast-container" id="toastContainer"></div>
 
 <header class="topbar">
   <button class="menu-toggle" onclick="toggleSidebar()">
@@ -1751,6 +2005,322 @@
   </div>
 </div>
 
+<!-- ═══════════ Share Episode Modal ═══════════ -->
+<div class="share-overlay" id="shareModal" onclick="if(event.target===this)closeShareModal()">
+  <div class="share-modal">
+    <div class="share-modal-scroll">
+    <div class="share-modal-header">
+      <div style="max-width:60%;margin:0 auto;display:flex;align-items:flex-start;width:100%;">
+        <div class="share-episode-header">
+          <div class="share-episode-logo">
+            <img id="shareEpisodeLogo" src="4_basssp.jpg" alt="">
+          </div>
+          <div class="share-episode-meta">
+            <div class="share-episode-title" id="shareEpisodeTitle"></div>
+            <div class="share-episode-sub">
+              <span class="share-episode-status" id="shareEpisodeStatus"></span>
+              <span class="share-episode-date" id="shareEpisodeDate"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="share-modal-body">
+      <div style="max-width:60%;margin:0 auto;">
+      <!-- Tabs -->
+      <div style="display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid #f1f5f9;padding-bottom:0;">
+        <button class="share-body-tab active" data-tab="share" onclick="switchShareBodyTab(this)">Share</button>
+        <button class="share-body-tab" data-tab="embed" onclick="switchShareBodyTab(this)">Embed Player</button>
+      </div>
+
+      <!-- ═══ Share Tab ═══ -->
+      <div id="shareBodyTab" class="share-body-panel">
+
+        <!-- URL -->
+        <div style="margin-bottom:24px;">
+          <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+            <button class="share-url-tab active" data-type="episode" onclick="switchShareUrl(this)">Episode URL</button>
+            <button class="share-url-tab" data-type="download" onclick="switchShareUrl(this)">Download URL</button>
+            <button class="share-url-tab" data-type="share" onclick="switchShareUrl(this)">Share URL</button>
+          </div>
+          <div class="share-url-field">
+            <input type="text" class="share-url-input" id="shareUrlDisplay" readonly>
+            <button class="share-copy-btn" onclick="copyShareUrl('shareUrlDisplay',this)" title="Copy">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Social -->
+        <div style="margin-bottom:24px;">
+          <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:10px;">Share to</div>
+          <div class="share-social-icons">
+            <a href="#" class="share-social-btn" onclick="shareToSocial('facebook');return false;" title="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              <span class="share-social-label">Facebook</span>
+            </a>
+            <a href="#" class="share-social-btn" onclick="shareToSocial('twitter');return false;" title="X (Twitter)">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              <span class="share-social-label">X</span>
+            </a>
+            <a href="#" class="share-social-btn" onclick="shareToSocial('linkedin');return false;" title="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              <span class="share-social-label">LinkedIn</span>
+            </a>
+            <a href="#" class="share-social-btn email-s" onclick="shareToSocial('email');return false;" title="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <span class="share-social-label">Email</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Auto-share status -->
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:8px;">Auto-share Status</div>
+          <div style="font-size:12px;color:#94a3b8;line-height:1.5;">
+            Auto-share is not enabled. New episodes won't be automatically posted to your connected social accounts —
+            <a href="https://admin5.podbean.org/plus2026-01/distribute/SocialShare" target="_blank" style="color:var(--primary);text-decoration:none;font-weight:500;">click to enable</a>.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ═══ Embed Player Tab ═══ -->
+      <div id="embedBodyTab" class="share-body-panel" style="display:none;">
+        <!-- Embeddable Player -->
+        <div class="share-section">
+          <div style="display:flex;gap:10px;margin-bottom:12px;">
+            <button class="share-player-style active" data-style="classic" onclick="switchPlayerStyle(this)">Classic</button>
+            <button class="share-player-style" data-style="stylish" onclick="switchPlayerStyle(this)">Stylish</button>
+          </div>
+          <div class="share-embed-preview" id="sharePlayerPreview">
+            <img id="sharePlayerPreviewImg" src="classicplayer.png" alt="Player preview" style="width:100%;height:auto;display:block;border-radius:6px;">
+          </div>
+
+          <!-- Classic Options -->
+          <div id="shareClassicOptions" class="share-player-options">
+
+            <!-- Widget Code (collapsible) -->
+            <div class="share-card" style="margin-bottom:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <button class="share-copy-btn primary" onclick="copyShareUrl('shareWidgetCode',this)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy Embed Code
+                </button>
+                <span class="share-toggle-code" onclick="toggleShareCode(this)" style="font-size:13px;color:var(--primary);cursor:pointer;font-weight:500;user-select:none;">Show embed code</span>
+              </div>
+              <div class="share-code-wrapper" style="display:none;margin-top:10px;">
+                <textarea class="share-widget-code" id="shareWidgetCode" readonly></textarea>
+              </div>
+            </div>
+
+            <!-- Collapsible: Customizations -->
+            <div class="share-collapse">
+              <div class="share-collapse-header" onclick="toggleShareCollapse(this)">
+                <span>Customizations</span>
+                <svg class="share-collapse-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="share-collapse-body">
+                <div class="share-card">
+                  <div class="share-options-grid">
+                    <div>
+                      <div class="share-opt-label">Player color</div>
+                      <div class="share-swatch-grid" id="sharePlayerColorSwatches">
+                        <span class="share-swatch active" style="background:#f6f6f6" data-color="#f6f6f6" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#1b1b1b" data-color="#1b1b1b" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#3267a3" data-color="#3267a3" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#60a0c8" data-color="#60a0c8" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#2baf9e" data-color="#2baf9e" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#3ab278" data-color="#3ab278" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#8bbb4e" data-color="#8bbb4e" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#ff6d00" data-color="#ff6d00" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#c73a3a" data-color="#c73a3a" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#956f46" data-color="#956f46" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#654771" data-color="#654771" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#666666" data-color="#666666" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                        <span class="share-swatch" style="background:#fb0584" data-color="#fb0584" onclick="selectShareSwatch(this,'sharePlayerColor')"></span>
+                      </div>
+                      <div style="font-size:11px;color:#94a3b8;margin-top:4px;font-family:monospace;" id="sharePlayerColorValue">#f6f6f6</div>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Button color</div>
+                      <div class="share-swatch-grid" id="shareButtonColorSwatches">
+                        <span class="share-swatch active" style="background:#f6f6f6" data-color="#f6f6f6" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#1b1b1b" data-color="#1b1b1b" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#3267a3" data-color="#3267a3" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#60a0c8" data-color="#60a0c8" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#2baf9e" data-color="#2baf9e" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#3ab278" data-color="#3ab278" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#8bbb4e" data-color="#8bbb4e" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#ff6d00" data-color="#ff6d00" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#c73a3a" data-color="#c73a3a" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#956f46" data-color="#956f46" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#654771" data-color="#654771" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#666666" data-color="#666666" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                        <span class="share-swatch" style="background:#fb0584" data-color="#fb0584" onclick="selectShareSwatch(this,'shareButtonColor')"></span>
+                      </div>
+                      <div style="font-size:11px;color:#94a3b8;margin-top:4px;font-family:monospace;" id="shareButtonColorValue">#f6f6f6</div>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Font color</div>
+                      <div class="share-color-row">
+                        <span class="share-color-opt active" data-value="auto" onclick="selectShareFontColor(this)">Auto</span>
+                        <span class="share-color-opt" data-value="white" onclick="selectShareFontColor(this)">White</span>
+                        <span class="share-color-opt" data-value="black" onclick="selectShareFontColor(this)">Black</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Font</div>
+                      <select class="share-opt-select" id="shareFont">
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Verdana">Verdana</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Share</div>
+                      <select class="share-opt-select" style="width:100%;">
+                        <option value="show">Show</option>
+                        <option value="hide">Hide</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Download</div>
+                      <select class="share-opt-select" style="width:100%;">
+                        <option value="show">Show</option>
+                        <option value="hide">Hide</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Logo link</div>
+                      <select class="share-opt-select" style="width:100%;">
+                        <option value="episode">Episode page</option>
+                        <option value="podcast">Podcast page</option>
+                        <option value="none">None</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Right-to-left text</div>
+                      <select class="share-opt-select" style="width:100%;">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stylish Options -->
+          <div id="shareStylishOptions" class="share-player-options" style="display:none;">
+
+            <!-- Widget Code (collapsible) -->
+            <div class="share-card" style="margin-bottom:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <button class="share-copy-btn primary" onclick="copyShareUrl('shareWidgetCodeStylish',this)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy Embed Code
+                </button>
+                <span class="share-toggle-code" onclick="toggleShareCode(this)" style="font-size:13px;color:var(--primary);cursor:pointer;font-weight:500;user-select:none;">Show embed code</span>
+              </div>
+              <div class="share-code-wrapper" style="display:none;margin-top:10px;">
+                <textarea class="share-widget-code" id="shareWidgetCodeStylish" readonly></textarea>
+              </div>
+            </div>
+
+            <!-- Collapsible: Customizations -->
+            <div class="share-collapse">
+              <div class="share-collapse-header" onclick="toggleShareCollapse(this)">
+                <span>Customizations</span>
+                <svg class="share-collapse-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="share-collapse-body">
+                <div class="share-card">
+                  <div class="share-options-grid">
+                    <div>
+                      <div class="share-opt-label">Button color</div>
+                      <div class="share-swatch-grid" id="shareButtonColorStylishSwatches">
+                        <span class="share-swatch active" style="background:#f6f6f6" data-color="#f6f6f6" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#1b1b1b" data-color="#1b1b1b" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#3267a3" data-color="#3267a3" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#60a0c8" data-color="#60a0c8" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#2baf9e" data-color="#2baf9e" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#3ab278" data-color="#3ab278" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#8bbb4e" data-color="#8bbb4e" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#ff6d00" data-color="#ff6d00" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#c73a3a" data-color="#c73a3a" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#956f46" data-color="#956f46" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#654771" data-color="#654771" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#666666" data-color="#666666" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                        <span class="share-swatch" style="background:#fb0584" data-color="#fb0584" onclick="selectShareSwatch(this,'shareButtonColorStylish')"></span>
+                      </div>
+                      <div style="font-size:11px;color:#94a3b8;margin-top:4px;font-family:monospace;" id="shareButtonColorStylishValue">#f6f6f6</div>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Height</div>
+                      <div class="share-color-row">
+                        <span class="share-color-opt active" data-value="300px" onclick="selectShareHeight(this)">300px</span>
+                        <span class="share-color-opt" data-value="400px" onclick="selectShareHeight(this)">400px</span>
+                        <span class="share-color-opt" data-value="500px" onclick="selectShareHeight(this)">500px</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Font</div>
+                      <select class="share-opt-select" id="shareFontStylish">
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Verdana">Verdana</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Share</div>
+                      <select class="share-opt-select" style="width:100%;">
+                        <option value="show">Show</option>
+                        <option value="hide">Hide</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Download</div>
+                      <select class="share-opt-select" style="width:100%;">
+                        <option value="show">Show</option>
+                        <option value="hide">Hide</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Logo link</div>
+                      <select class="share-opt-select" style="width:100%;">
+                        <option value="episode">Episode page</option>
+                        <option value="podcast">Podcast page</option>
+                        <option value="none">None</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div class="share-opt-label">Right-to-left text</div>
+                      <select class="share-opt-select" style="width:100%;">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+    </div>
+    <button class="share-modal-close share-modal-close-abs" onclick="closeShareModal()">&times;</button>
+  </div>
+</div>
+
 <script>
   // Episode data
   var episodes = [
@@ -1786,24 +2356,421 @@
   function buildRows() {
     var html = '';
     episodes.forEach(function(ep, i) {
-      html += '<tr id="epRow' + i + '">' +
-        '<td><input type="checkbox" onchange="updateSelection()"></td>' +
+      html += '<tr id="epRow' + i + '" onclick="editEpisode(' + i + ')">' +
+        '<td onclick="event.stopPropagation()"><input type="checkbox" onchange="updateSelection()"></td>' +
         '<td class="ep-title-cell">' +
-          '<span class="title-text" href="#">' + ep.title + '</span>' +
+          '<span class="title-text">' + ep.title + '</span>' +
           '<span class="row-actions">' +
-            '<span class="act-btn" title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>' +
-            '<span class="act-btn" title="View"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>' +
-            '<span class="act-btn share-embed" title="Share &amp; Embed"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>' +
+            '<span class="act-btn" title="Edit" onclick="event.stopPropagation();editEpisode(' + i + ')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>' +
+            '<span class="act-btn" title="View" onclick="event.stopPropagation();viewEpisode(' + i + ')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>' +
+            '<span class="act-btn share-embed" title="Share &amp; Embed" onclick="event.stopPropagation();shareEpisode(' + i + ')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>' +
           '</span>' +
         '</td>' +
         '<td>Creator E</td>' +
-        '<td><span class="badge-status ' + badgeClass(ep.status) + '">' + ep.status + '</span></td>' +
+        '<td onclick="event.stopPropagation()"><span class="badge-status ' + badgeClass(ep.status) + '">' + ep.status + '</span></td>' +
         '<td>Public</td>' +
-        '<td>' + ep.when + '</td>' +
-        '<td>' + ep.dl.toLocaleString('en-US') + '</td>' +
+        '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
+        '<td onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
       '</tr>';
     });
     document.getElementById('epTableBody').innerHTML = html;
+  }
+
+  var editingIndex = -1;
+  function editEpisode(index) {
+    editingIndex = index;
+    var ep = episodes[index];
+    // Adjust UI for Published vs Draft
+    var titleEl = document.querySelector('.episode-details-overlay .ed-topbar-title');
+    var btnLabel = document.getElementById('publishBtnLabel');
+    if (ep.status === 'Published') {
+      if (titleEl) titleEl.textContent = 'Edit Episode';
+      if (btnLabel) btnLabel.textContent = 'Update';
+    } else {
+      if (titleEl) titleEl.textContent = 'Publish Episode';
+      if (btnLabel) btnLabel.textContent = 'Publish Now';
+    }
+    // Populate the V2 publish modal with episode data
+    var titleInput = document.getElementById('v2EpisodeTitle');
+    var descDiv = document.getElementById('v2EpisodeDesc');
+    var fileNameSpan = document.getElementById('v2FileName');
+    if (titleInput) titleInput.value = ep.title;
+    if (descDiv) descDiv.innerHTML = '';
+    if (fileNameSpan) fileNameSpan.textContent = ep.title + '.mp3';
+    // Also set the simple modal fields
+    var simpleTitle = document.getElementById('episodeTitle');
+    var simpleDesc = document.getElementById('episodeDesc');
+    if (simpleTitle) simpleTitle.value = ep.title;
+    if (simpleDesc) simpleDesc.value = '';
+    // Open the publish episode modal
+    openEpisodeDetailsModal();
+  }
+
+  function viewEpisode(index) {
+    var ep = episodes[index];
+    // Create a slug from the title for the episode website URL
+    var slug = ep.title.toLowerCase()
+      .replace(/[^a-z0-9一-鿿]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+      .substring(0, 80);
+    window.open('https://podcastingsmarter.podbean.com/' + encodeURIComponent(slug), '_blank');
+  }
+
+  function shareEpisode(index) {
+    var ep = episodes[index];
+    if (!ep) return;
+
+    // Generate URL slug from title
+    var slug = ep.title.toLowerCase()
+      .replace(/[^a-z0-9一-鿿]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+      .substring(0, 80);
+    var baseUrl = 'https://podcastingsmarter.podbean.com';
+    var episodeUrl = baseUrl + '/e/' + encodeURIComponent(slug);
+    var shareUrl = baseUrl + '/share/' + encodeURIComponent(slug);
+    var downloadUrl = baseUrl + '/media/' + encodeURIComponent(slug) + '/download';
+
+    // Store URLs on the modal
+    var modal = document.getElementById('shareModal');
+    modal.dataset.downloadUrl = downloadUrl;
+    modal.dataset.episodeUrl = episodeUrl;
+    modal.dataset.shareUrl = shareUrl;
+    modal.dataset.episodeTitle = ep.title;
+
+    // Populate episode info header
+    document.getElementById('shareEpisodeTitle').textContent = ep.title;
+    document.getElementById('shareEpisodeDate').textContent = ep.when;
+    var statusEl = document.getElementById('shareEpisodeStatus');
+    statusEl.textContent = ep.status;
+    // Set status color without background
+    var statusColors = { 'published':'#14805a', 'draft':'#64748b', 'future':'#3b82f6', 'pending':'#d97706' };
+    var color = statusColors[(ep.status||'').toLowerCase()] || '#64748b';
+    statusEl.style.color = color;
+
+    // Show default URL tab (Episode URL)
+    var activeTab = document.querySelector('.share-url-tab.active');
+    if (!activeTab) activeTab = document.querySelector('.share-url-tab');
+    switchShareUrl(activeTab);
+
+    // Store slug for widget generation
+    modal.dataset.episodeSlug = slug;
+
+    // Reset to Classic style
+    document.querySelectorAll('.share-player-style').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelector('.share-player-style[data-style="classic"]').classList.add('active');
+    switchPlayerStyle(document.querySelector('.share-player-style[data-style="classic"]'));
+
+    // Reset font color
+    document.querySelectorAll('.share-color-opt').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelector('.share-color-opt[data-value="auto"]').classList.add('active');
+    // Reset stylish height
+    var stylishHeightOpts = document.querySelectorAll('#shareStylishOptions .share-color-opt');
+    stylishHeightOpts.forEach(function(s) { s.classList.remove('active'); });
+    var defaultHeight = document.querySelector('#shareStylishOptions .share-color-opt[data-value="300px"]');
+    if (defaultHeight) defaultHeight.classList.add('active');
+
+    document.getElementById('shareModal').classList.add('show');
+  }
+
+  function switchShareUrl(btn) {
+    document.querySelectorAll('.share-url-tab').forEach(function(t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+    var type = btn.dataset.type;
+    var modal = document.getElementById('shareModal');
+    var url = '';
+    if (type === 'download') url = modal.dataset.downloadUrl || '';
+    else if (type === 'episode') url = modal.dataset.episodeUrl || '';
+    else if (type === 'share') url = modal.dataset.shareUrl || '';
+    document.getElementById('shareUrlDisplay').value = url;
+  }
+
+  function closeShareModal() {
+    document.getElementById('shareModal').classList.remove('show');
+  }
+
+  function copyShareUrl(inputId, btn) {
+    var input = document.getElementById(inputId);
+    var text = input.value || input.textContent || '';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        showCopyFeedback(btn);
+      }).catch(function() {
+        fallbackCopy(text, btn);
+      });
+    } else {
+      fallbackCopy(text, btn);
+    }
+  }
+
+  function fallbackCopy(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showCopyFeedback(btn);
+    } catch(e) {}
+    document.body.removeChild(ta);
+  }
+
+  function showCopyFeedback(btn) {
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.innerHTML = orig;
+      btn.classList.remove('copied');
+    }, 1500);
+  }
+
+  function shareToSocial(platform) {
+    var modal = document.getElementById('shareModal');
+    var url = modal.dataset.episodeUrl || window.location.href;
+    var title = modal.dataset.episodeTitle || '';
+
+    var names = { facebook:'Facebook', twitter:'X (Twitter)', linkedin:'LinkedIn', email:'Email' };
+    var name = names[platform] || platform;
+
+    var shareUrls = {
+      facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
+      twitter: 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodeURIComponent(url),
+      linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url),
+      email: 'mailto:?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(url)
+    };
+
+    var sim = document.createElement('div');
+    sim.style.cssText = 'position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;';
+
+    var popup = document.createElement('div');
+    popup.style.cssText = 'background:#fff;border-radius:12px;width:560px;max-width:94%;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;display:flex;flex-direction:column;max-height:80vh;';
+
+    // Platform-specific header colors
+    var headerColors = { facebook:'#1877f2', twitter:'#000', linkedin:'#0a66c2', email:'#6366f1' };
+    var headerColor = headerColors[platform] || '#1b1b1b';
+
+    // Title bar
+    var headerHtml = '';
+    if (platform === 'email') {
+      // Default browser email client look
+      headerHtml = '<div style="background:#f1f5f9;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e2e8f0;">' +
+        '<span style="font-size:13px;font-weight:600;color:#1e293b;">New Message</span>' +
+        '<button onclick="this.closest(\'.share-overlay-sim\').remove()" style="background:none;border:none;font-size:18px;color:#94a3b8;cursor:pointer;padding:0;line-height:1;">&times;</button>' +
+      '</div>';
+    } else {
+      headerHtml = '<div style="background:' + headerColor + ';padding:10px 16px;display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg>' +
+          '<span style="font-size:13px;font-weight:600;color:#fff;">Facebook</span>' +
+        '</div>' +
+        '<button onclick="this.closest(\'.share-overlay-sim\').remove()" style="background:rgba(255,255,255,.2);border:none;border-radius:4px;color:#fff;font-size:16px;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;padding:0;">&times;</button>' +
+      '</div>';
+    }
+
+    var contentHtml = '';
+    if (platform === 'facebook') {
+      contentHtml =
+        '<div style="padding:24px 20px 20px;">' +
+          '<div style="text-align:center;margin-bottom:20px;">' +
+            '<div style="width:64px;height:64px;border-radius:50%;background:#e2e8f0;margin:0 auto 10px;overflow:hidden;border:2px solid #e2e8f0;">' +
+              '<div style="width:100%;height:100%;background:linear-gradient(135deg,#cbd5e1,#94a3b8);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;font-weight:700;">F</div>' +
+            '</div>' +
+            '<div style="font-size:14px;font-weight:600;color:#1e293b;">Joe Podcast</div>' +
+            '<div style="font-size:12px;color:#64748b;margin-top:2px;">You are currently logged in as Joe Podcast</div>' +
+          '</div>' +
+          '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:16px;">' +
+            '<div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px;">' + title + '</div>' +
+            '<div style="font-size:12px;color:#64748b;">' + url + '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;">' +
+            '<button onclick="this.closest(\'.share-overlay-sim\').remove()" style="flex:1;padding:9px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-size:14px;font-family:inherit;color:#1e293b;cursor:pointer;">Cancel</button>' +
+            '<button onclick="window.open(\'' + shareUrls[platform] + '\',\'_blank\',\'width=600,height=500,noopener,noreferrer\');this.closest(\'.share-overlay-sim\').remove()" style="flex:1;padding:9px;border:none;border-radius:8px;background:#1877f2;color:#fff;font-size:14px;font-family:inherit;cursor:pointer;font-weight:600;">Share to Facebook</button>' +
+          '</div>' +
+        '</div>';
+    } else if (platform === 'twitter') {
+      contentHtml =
+        '<div style="padding:20px;">' +
+          '<div style="display:flex;gap:12px;margin-bottom:16px;">' +
+            '<div style="width:44px;height:44px;border-radius:50%;background:#e2e8f0;overflow:hidden;flex-shrink:0;">' +
+              '<div style="width:100%;height:100%;background:linear-gradient(135deg,#94a3b8,#64748b);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:700;">J</div>' +
+            '</div>' +
+            '<div style="flex:1;">' +
+              '<div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">' +
+                '<span style="font-size:14px;font-weight:700;color:#1e293b;">Joe Podcast</span>' +
+                '<span style="font-size:13px;color:#94a3b8;">@joepodcast</span>' +
+              '</div>' +
+              '<div style="font-size:14px;color:#1e293b;margin-top:8px;line-height:1.5;">' +
+                title + ' ' + url +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="border:1px solid #e2e8f0;border-radius:10px;padding:12px;background:#f8fafc;margin-bottom:16px;">' +
+            '<div style="display:flex;justify-content:space-between;font-size:12px;color:#64748b;">' +
+              '<span><strong style="color:#1e293b;">0</strong> Replies</span>' +
+              '<span><strong style="color:#1e293b;">0</strong> Reposts</span>' +
+              '<span><strong style="color:#1e293b;">0</strong> Likes</span>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;">' +
+            '<button onclick="this.closest(\'.share-overlay-sim\').remove()" style="flex:1;padding:9px;border:1px solid #e2e8f0;border-radius:999px;background:#fff;font-size:14px;font-family:inherit;color:#1e293b;cursor:pointer;">Cancel</button>' +
+            '<button onclick="window.open(\'' + shareUrls[platform] + '\',\'_blank\',\'width=600,height=500,noopener,noreferrer\');this.closest(\'.share-overlay-sim\').remove()" style="flex:1;padding:9px;border:none;border-radius:999px;background:#000;color:#fff;font-size:14px;font-family:inherit;cursor:pointer;font-weight:600;">Post</button>' +
+          '</div>' +
+        '</div>';
+    } else if (platform === 'linkedin') {
+      contentHtml =
+        '<div style="padding:20px;">' +
+          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #e2e8f0;">' +
+            '<div style="width:40px;height:40px;border-radius:50%;background:#e2e8f0;overflow:hidden;">' +
+              '<div style="width:100%;height:100%;background:linear-gradient(135deg,#cbd5e1,#94a3b8);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:700;">J</div>' +
+            '</div>' +
+            '<div>' +
+              '<div style="font-size:14px;font-weight:600;color:#1e293b;">Joe Podcast</div>' +
+              '<div style="font-size:12px;color:#94a3b8;">Podcaster</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="font-size:13px;color:#1e293b;margin-bottom:14px;line-height:1.5;">Check out this episode: ' + title + '</div>' +
+          '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:16px;">' +
+            '<div style="font-size:12px;color:#64748b;">' + url + '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;">' +
+            '<button onclick="this.closest(\'.share-overlay-sim\').remove()" style="flex:1;padding:9px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-size:14px;font-family:inherit;color:#1e293b;cursor:pointer;">Cancel</button>' +
+            '<button onclick="window.open(\'' + shareUrls[platform] + '\',\'_blank\',\'width=600,height=500,noopener,noreferrer\');this.closest(\'.share-overlay-sim\').remove()" style="flex:1;padding:9px;border:none;border-radius:8px;background:#0a66c2;color:#fff;font-size:14px;font-family:inherit;cursor:pointer;font-weight:600;">Post</button>' +
+          '</div>' +
+        '</div>';
+    } else if (platform === 'email') {
+      contentHtml =
+        '<div style="padding:16px 20px;">' +
+          '<div style="margin-bottom:14px;">' +
+            '<label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px;">To:</label>' +
+            '<input type="text" value="friend@example.com" readonly style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;box-sizing:border-box;">' +
+          '</div>' +
+          '<div style="margin-bottom:14px;">' +
+            '<label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px;">Subject:</label>' +
+            '<input type="text" value="' + title + '" readonly style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;box-sizing:border-box;">' +
+          '</div>' +
+          '<div style="margin-bottom:16px;">' +
+            '<textarea readonly style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;resize:none;height:80px;box-sizing:border-box;">' + url + '</textarea>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;justify-content:flex-end;">' +
+            '<button onclick="this.closest(\'.share-overlay-sim\').remove()" style="padding:8px 18px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-size:13px;font-family:inherit;color:#1e293b;cursor:pointer;">Cancel</button>' +
+            '<button onclick="window.open(\'' + shareUrls[platform] + '\');this.closest(\'.share-overlay-sim\').remove()" style="padding:8px 18px;border:none;border-radius:8px;background:#1b1b1b;color:#fff;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;">Send</button>' +
+          '</div>' +
+        '</div>';
+    }
+
+    popup.innerHTML = headerHtml + contentHtml;
+    sim.className = 'share-overlay-sim';
+    sim.appendChild(popup);
+    sim.addEventListener('click', function(e) { if (e.target === sim) sim.remove(); });
+    document.body.appendChild(sim);
+  }
+
+  function toggleShareCode(el) {
+    var wrapper = el.parentElement.nextElementSibling;
+    if (wrapper && wrapper.classList.contains('share-code-wrapper')) {
+      if (wrapper.style.display === 'none') {
+        wrapper.style.display = '';
+        el.textContent = 'Hide embed code';
+      } else {
+        wrapper.style.display = 'none';
+        el.textContent = 'Show embed code';
+      }
+    }
+  }
+
+  function selectShareFontColor(el) {
+    el.parentElement.querySelectorAll('.share-color-opt').forEach(function(s) { s.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  function switchShareBodyTab(btn) {
+    document.querySelectorAll('.share-body-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.share-body-panel').forEach(function(p) { p.style.display = 'none'; });
+    btn.classList.add('active');
+    var tab = btn.dataset.tab;
+    document.getElementById(tab + 'BodyTab').style.display = '';
+  }
+
+  function switchPlayerStyle(btn) {
+    document.querySelectorAll('.share-player-style').forEach(function(s) { s.classList.remove('active'); });
+    btn.classList.add('active');
+    var style = btn.dataset.style;
+    var modal = document.getElementById('shareModal');
+    modal.dataset.playerStyle = style;
+
+    // Show/hide options based on style
+    var classicOpts = document.getElementById('shareClassicOptions');
+    var stylishOpts = document.getElementById('shareStylishOptions');
+    if (classicOpts) classicOpts.style.display = style === 'classic' ? '' : 'none';
+    if (stylishOpts) stylishOpts.style.display = style === 'stylish' ? '' : 'none';
+
+    updateShareWidgetCode();
+    updateSharePlayerPreview();
+  }
+
+  function selectShareHeight(el) {
+    el.parentElement.querySelectorAll('.share-color-opt').forEach(function(s) { s.classList.remove('active'); });
+    el.classList.add('active');
+    updateShareWidgetCode();
+  }
+
+  function updateShareWidgetCode() {
+    var modal = document.getElementById('shareModal');
+    var slug = modal.dataset.episodeSlug || '';
+    var style = modal.dataset.playerStyle || 'classic';
+    var baseUrl = 'https://podcastingsmarter.podbean.com';
+
+    if (style === 'classic') {
+      var widgetCode = '<iframe src="' + baseUrl + '/embed/' + encodeURIComponent(slug) + '" width="100%" height="180" frameborder="0" scrolling="no" style="border-radius:8px;"></iframe>';
+      document.getElementById('shareWidgetCode').value = widgetCode;
+    } else {
+      var heightEl = document.querySelector('#shareStylishOptions .share-color-opt.active');
+      var height = heightEl ? heightEl.dataset.value : '300px';
+      var widgetCode = '<iframe src="' + baseUrl + '/embed/' + encodeURIComponent(slug) + '?style=stylish" width="100%" height="' + height + '" frameborder="0" scrolling="no" style="border-radius:8px;"></iframe>';
+      document.getElementById('shareWidgetCodeStylish').value = widgetCode;
+    }
+  }
+
+  function selectShareSwatch(el, group) {
+    var grid = el.parentElement;
+    grid.querySelectorAll('.share-swatch').forEach(function(s) { s.classList.remove('active'); });
+    el.classList.add('active');
+    // Update hex value display
+    var color = el.dataset.color;
+    var valueId = '';
+    if (group === 'sharePlayerColor') valueId = 'sharePlayerColorValue';
+    else if (group === 'shareButtonColor') valueId = 'shareButtonColorValue';
+    else if (group === 'shareButtonColorStylish') valueId = 'shareButtonColorStylishValue';
+    if (valueId) {
+      var valEl = document.getElementById(valueId);
+      if (valEl) valEl.textContent = color;
+    }
+    updateSharePlayerPreview();
+  }
+
+  function toggleShareCollapse(headerEl) {
+    var collapse = headerEl.parentElement;
+    collapse.classList.toggle('open');
+  }
+
+  function getActiveSwatchColor(gridId) {
+    var grid = document.getElementById(gridId);
+    if (!grid) return '#f6f6f6';
+    var active = grid.querySelector('.share-swatch.active');
+    return active ? active.dataset.color : '#f6f6f6';
+  }
+
+  function updateSharePlayerPreview() {
+    var style = (document.getElementById('shareModal').dataset.playerStyle || 'classic');
+    var img = document.getElementById('sharePlayerPreviewImg');
+    if (!img) return;
+    if (style === 'stylish') {
+      img.src = 'stylishplayer.png';
+    } else {
+      img.src = 'classicplayer.png';
+    }
   }
 
   function updateSelection() {
@@ -2420,18 +3387,35 @@
       openScheduleModal();
     } else {
       publishMode = 'publish';
-      label.textContent = 'Publish Now';
+      var isPublished = editingIndex >= 0 && episodes[editingIndex] && episodes[editingIndex].status === 'Published';
+      label.textContent = isPublished ? 'Update' : 'Publish Now';
       ddItem.textContent = 'Schedule Publish';
       document.getElementById('publishDropdown').classList.remove('show');
     }
   }
   function publishPublish() {
     if (publishMode === 'publish') {
-      alert('Episode published!');
       closeEpisodeDetailsModal();
+      var isUpdate = editingIndex >= 0 && episodes[editingIndex] && episodes[editingIndex].status === 'Published';
+      showToast(isUpdate ? 'Episode updated successfully!' : 'Episode published successfully!');
+      if (editingIndex >= 0) shareEpisode(editingIndex);
     } else {
       openScheduleModal();
     }
+  }
+  function showToast(msg, type, duration) {
+    if (!type) type = 'success';
+    if (!duration) duration = 4000;
+    var container = document.getElementById('toastContainer');
+    var icons = { success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>', error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' };
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    toast.innerHTML = '<span class="toast-icon">' + (icons[type] || icons.success) + '</span><span class="toast-msg">' + msg + '</span><button class="toast-close" onclick="this.parentElement.classList.add(\'toast-out\');setTimeout(function(){this.parentElement.remove()}.bind(this),300)">&times;</button>';
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.classList.add('toast-out');
+      setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
   }
   function openScheduleModal() {
     var now = new Date();
@@ -2450,10 +3434,10 @@
   function confirmSchedule() {
     var date = document.getElementById('scheduleDate').value;
     var time = document.getElementById('scheduleTime').value;
-    if (!date || !time) { alert('Please select date and time.'); return; }
+    if (!date || !time) { showToast('Please select date and time.', 'error'); return; }
     closeScheduleModal();
-    alert('Episode scheduled for ' + date + ' ' + time);
     closeEpisodeDetailsModal();
+    showToast('Episode scheduled for ' + date + ' ' + time, 'info', 5000);
   }
   document.addEventListener('click', function(e) {
     var dd = document.getElementById('publishDropdown');
@@ -2485,8 +3469,15 @@
     openNewEpisodeModal();
   }
   function saveAsDraft() {
-    alert('Episode saved as draft!');
     closeEpisodeDetailsModal();
+    showToast('Episode saved as draft!', 'info');
+  }
+  function publishEpisode() {
+    closeNewEpisodeModal();
+    showToast('Episode published successfully!');
+    // Auto-open Share modal for the most recent episode
+    var ep = episodes[episodes.length - 1];
+    if (ep) shareEpisode(episodes.length - 1);
   }
 
   // Wire up New Episode buttons
