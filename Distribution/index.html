@@ -427,7 +427,7 @@
     }
     .pa-banner-title {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       margin-bottom: 10px;
     }
@@ -473,7 +473,7 @@
     }
     .pa-checklist-title {
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
     }
     .pa-checklist-count {
@@ -847,7 +847,7 @@
     }
     .apple-modal h2 {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       margin: 0 0 4px;
     }
@@ -1392,7 +1392,7 @@
     }
     .ep-vp-ep-title-header {
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1486,7 +1486,7 @@
     }
     .ep-vp-episodes {
       padding: 4px 0;
-      max-height: 248px;
+      max-height: 157px;
       overflow-y: auto;
     }
     .ep-vp-episodes::-webkit-scrollbar { width: 6px; }
@@ -1605,15 +1605,15 @@
       background: #334155;
     }
     .ep-code-toggle {
-      font-size: 16px;
-      color: var(--primary);
+      font-size: 14px;
+      color: var(--text);
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
-      transition: opacity 0.15s;
+      transition: text-decoration 0.15s;
     }
     .ep-code-toggle:hover {
-      opacity: 0.75;
+      text-decoration: underline;
     }
 
     .ep-control-group {
@@ -1624,6 +1624,13 @@
       font-weight: 600;
       color: var(--text);
       margin-bottom: 6px;
+    }
+    /* Basic customizations (right panel): 14px labels & selects */
+    .ep-right-panel .ep-cg-label {
+      font-size: 14px;
+    }
+    .ep-right-panel .ep-control-group select {
+      font-size: 14px;
     }
     .ep-control-group select {
       width: 100%;
@@ -1733,7 +1740,7 @@
       top: 0;
       right: 0;
       bottom: 0;
-      width: 420px;
+      width: 480px;
       max-width: 90vw;
       background: #fff;
       z-index: 1000;
@@ -1756,7 +1763,7 @@
     }
     .ep-drawer-header h2 {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       margin: 0;
     }
@@ -1796,7 +1803,7 @@
     }
     .page-toolbar-title, .page-heading-title {
       font-size: 32px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       line-height: 1.2;
     }
@@ -1961,7 +1968,7 @@
     }
     .theme-showcase-name {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       margin-bottom: 10px;
     }
@@ -2056,7 +2063,7 @@
     }
     .theme-card-footer .theme-card-name {
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       margin: 0;
     }
@@ -2131,7 +2138,7 @@
     }
     .theme-card-placeholder .placeholder-title {
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       margin-bottom: 8px;
     }
@@ -2257,7 +2264,7 @@
       text-align: center;
     }
     .confirm-dialog .confirm-title {
-      font-size: 18px; font-weight: 700; color: #1e293b;
+      font-size: 18px; font-weight: 600; color: #1e293b;
       margin-bottom: 8px;
     }
     .confirm-dialog .confirm-desc {
@@ -2291,7 +2298,7 @@
        ============================== */
     .tab-panel-heading {
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
     }
 
@@ -2438,7 +2445,7 @@
     }
     .pages-empty-title {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       margin-bottom: 8px;
     }
@@ -2681,6 +2688,95 @@
       background: #f1f5f9;
       color: var(--text);
       font-weight: 600;
+    }
+
+    /* ── Embed Player: Drawer Group Label ──── */
+    .ep-group-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text);
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      margin-top: 28px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ep-group-label::before {
+      content: '';
+      width: 3px;
+      height: 14px;
+      background: var(--text);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .ep-group-label:first-of-type {
+      margin-top: 0;
+    }
+
+    /* ── Embed Player: Drawer Row Item ──── */
+    .ep-row-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .ep-row-item:last-child {
+      border-bottom: none;
+    }
+    .ep-color-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px 0 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ep-row-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      flex-shrink: 0;
+      min-width: 100px;
+      padding-top: 2px;
+    }
+    .ep-row-control {
+      flex: 1;
+      min-width: 0;
+    }
+    .ep-row-control.select-wrap {
+      max-width: 280px;
+    }
+    .ep-row-control select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+    .ep-row-control select:focus {
+      border-color: var(--text);
+    }
+
+    /* ── Embed Player: Color Swatch Wrapper ──── */
+    .ep-swatch-wrap {
+      cursor: pointer;
     }
 
   </style>
@@ -3238,10 +3334,13 @@
             <div id="epPlayer" class="ep-visual-player">
               <div class="ep-vp-loading" id="epVpLoading">Loading player preview...</div>
             </div>
-            <div style="margin-top:24px;">
-              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+            <div style="margin-top:16px;">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
                 <button class="ep-copy-btn" onclick="copyEmbedCode()">Copy Embed Code</button>
-                <span class="ep-code-toggle" id="epCodeToggle" onclick="toggleEmbedCode()">Show embed code ▸</span>
+                <span class="ep-code-toggle" id="epCodeToggle" onclick="toggleEmbedCode()">View Code</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-tertiary);margin-bottom:0;">
+                Changes update your embed code automatically. Copy the code again after making changes.
               </div>
             </div>
             <div class="ep-embed-box" id="embedCodeBox" style="display:none;">
@@ -3251,103 +3350,192 @@
           <div class="ep-right-panel">
 
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-              <div style="font-size:20px;font-weight:700;color:var(--text);">Customizations</div>
-              <div class="ep-advanced-toggle" style="border-top:none;padding:0;margin:0;" onclick="document.getElementById('epDrawerOverlay').classList.add('open');document.getElementById('epDrawer').classList.add('open');">
+              <div style="font-size:18px;font-weight:600;color:var(--text);">Customizations</div>
+              <div class="ep-advanced-toggle" style="border-top:none;padding:0;margin:0;" onclick="openEpDrawer()">
                 Advanced Options <span>❯</span>
               </div>
             </div>
 
             <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
-              <div class="ep-cg-label">Display Order</div>
-              <select id="epDisplayOrder" onchange="updatePlayer()"><option>Episodic (From New to Old)</option><option>Episodic (From Old to New)</option><option>Alphabetical</option></select>
+              <div class="ep-cg-label">Episode Filters</div>
+              <select id="epFilters" onchange="updatePlayer()"><option>All</option><option>Published only</option><option>Scheduled only</option><option>Draft only</option></select>
             </div>
             <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
               <div class="ep-cg-label">Number of Episodes</div>
               <select id="epNumEpisodes" onchange="updatePlayer()"><option>10</option><option>5</option><option>15</option><option>20</option><option>All</option></select>
             </div>
             <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
-              <div class="ep-cg-label">Episode Filters</div>
-              <select id="epFilters" onchange="updatePlayer()"><option>All</option><option>Published only</option><option>Scheduled only</option><option>Draft only</option></select>
+              <div class="ep-cg-label">Display Order</div>
+              <select id="epDisplayOrder" onchange="updatePlayer()"><option>Episodic (From New to Old)</option><option>Episodic (From Old to New)</option><option>Alphabetical</option></select>
             </div>
           </div>
         </div>
 
         <!-- Advanced Options Drawer -->
-        <div class="ep-drawer-overlay" id="epDrawerOverlay" onclick="document.getElementById('epDrawerOverlay').classList.remove('open');document.getElementById('epDrawer').classList.remove('open');"></div>
+        <div class="ep-drawer-overlay" id="epDrawerOverlay" onclick="closeEpDrawer()"></div>
         <div class="ep-drawer" id="epDrawer">
           <div class="ep-drawer-header">
             <h2>Advanced Options</h2>
-            <button class="ep-drawer-close" onclick="document.getElementById('epDrawerOverlay').classList.remove('open');document.getElementById('epDrawer').classList.remove('open');">&times;</button>
+            <button class="ep-drawer-close" onclick="closeEpDrawer()">&times;</button>
           </div>
           <div class="ep-drawer-body">
-            <div class="ep-control-group" style="margin-bottom:20px;">
-              <div class="ep-cg-label">Player color</div>
+
+            <!-- Appearance -->
+            <div class="ep-group-label">Appearance</div>
+
+            <div class="ep-color-group">
+              <div class="ep-row-label">Player color</div>
               <div class="ep-swatch-group" id="epPlayerColor">
-                <span class="ep-swatch" style="background:#f6f6f6;border:2px solid var(--border);" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch active" style="background:#1b1b1b;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#3267a3;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#60a0c8;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#2baf9e;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#3ab278;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#8bbb4e;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#ff6d00;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#c73a3a;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#956f46;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#654771;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#666666;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#fb0584;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <input type="color" value="#1b1b1b" style="width:24px;height:24px;border:none;border-radius:4px;cursor:pointer;padding:0;" onchange="this.parentElement.querySelectorAll('.ep-swatch').forEach(function(s){s.classList.remove('active')});updatePlayer()">
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#f6f6f6;border:2px solid var(--border);"></span>
+                </div>
+                <div class="ep-swatch-wrap active" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch active" style="background:#1b1b1b;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#3267a3;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#60a0c8;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#2baf9e;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#3ab278;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#8bbb4e;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#ff6d00;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#c73a3a;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#956f46;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#654771;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#666666;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
+                  <span class="ep-swatch" style="background:#fb0584;"></span>
+                </div>
               </div>
             </div>
-            <div class="ep-control-group" style="margin-bottom:20px;">
-              <div class="ep-cg-label">Button color</div>
+
+            <div class="ep-color-group">
+              <div class="ep-row-label">Button color</div>
               <div class="ep-swatch-group" id="epBtnColor">
-                <span class="ep-swatch" style="background:#f6f6f6;border:2px solid var(--border);" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#1b1b1b;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#3267a3;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#60a0c8;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#2baf9e;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#3ab278;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#8bbb4e;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#ff6d00;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#c73a3a;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch active" style="background:#956f46;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#654771;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#666666;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <span class="ep-swatch" style="background:#fb0584;" onclick="this.parentElement.querySelectorAll('.ep-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active');updatePlayer()"></span>
-                <input type="color" value="#1a9a6c" style="width:24px;height:24px;border:none;border-radius:4px;cursor:pointer;padding:0;" onchange="this.parentElement.querySelectorAll('.ep-swatch').forEach(function(s){s.classList.remove('active')});updatePlayer()">
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                  <span class="ep-swatch" style="background:#f6f6f6;border:2px solid var(--border);"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                  <span class="ep-swatch" style="background:#1b1b1b;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                  <span class="ep-swatch" style="background:#3267a3;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                  <span class="ep-swatch" style="background:#60a0c8;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                  <span class="ep-swatch" style="background:#2baf9e;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                  <span class="ep-swatch" style="background:#3ab278;"></span>
+                </div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                  <span class="ep-swatch" style="background:#8bbb4e;"></span>
+                </div>
+                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                    <span class="ep-swatch" style="background:#ff6d00;"></span>
+                  </div>
+                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                    <span class="ep-swatch" style="background:#c73a3a;"></span>
+                  </div>
+                  <div class="ep-swatch-wrap active" onclick="selectSwatch(this,'epBtnColor')">
+                    <span class="ep-swatch active" style="background:#956f46;"></span>
+                  </div>
+                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                    <span class="ep-swatch" style="background:#654771;"></span>
+                  </div>
+                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                    <span class="ep-swatch" style="background:#666666;"></span>
+                  </div>
+                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
+                    <span class="ep-swatch" style="background:#fb0584;"></span>
+                  </div>
+                </div>
+              </div>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Font color</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epFontColor" onchange="updatePlayer()"><option>auto</option><option>white</option><option>black</option></select>
               </div>
             </div>
-            <div class="ep-control-group" style="margin-bottom:20px;">
-              <div class="ep-cg-label">Font color</div>
-              <select id="epFontColor" onchange="updatePlayer()"><option>auto</option><option>white</option><option>black</option></select>
-            </div>
-            <div class="ep-control-group" style="margin-bottom:20px;">
-              <div class="ep-cg-label">Height</div>
-              <input type="text" id="epHeight" value="315px (default)" onchange="updatePlayer()">
-            </div>
-            <div class="ep-control-group" style="margin-bottom:20px;">
-              <div class="ep-cg-label">Font</div>
-              <select id="epFont" onchange="updatePlayer()"><option>Arial</option><option>Roboto</option><option>Helvetica</option><option>Georgia</option></select>
-            </div>
-            <div class="ep-control-group" style="margin-bottom:20px;">
-              <div class="ep-cg-label">Share</div>
-              <select id="epShare" onchange="updatePlayer()"><option>Show</option><option>Hide</option></select>
-            </div>
-            <div class="ep-control-group" style="margin-bottom:20px;">
-              <div class="ep-cg-label">Download</div>
-              <select id="epDownload" onchange="updatePlayer()"><option>Show</option><option>Hide</option></select>
-            </div>
-            <div style="padding-top:0;margin-top:0;border-top:none;">
-              <div class="ep-control-group" style="margin-bottom:20px;">
-                <div class="ep-cg-label">Logo link</div>
-                <select id="epLogoLink" onchange="updatePlayer()"><option>Episode page</option><option>Podcast page</option><option>None</option></select>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Font</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epFont" onchange="updatePlayer()"><option>Arial</option><option>Roboto</option><option>Helvetica</option><option>Georgia</option></select>
               </div>
-              <div class="ep-control-group" style="margin-bottom:0;">
-                <div class="ep-cg-label">Right-to-left text</div>
+            </div>
+
+            <!-- Layout -->
+            <div class="ep-group-label">Layout</div>
+
+            <div class="ep-row-item" style="flex-wrap:wrap;">
+              <div class="ep-row-label">Height</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epHeight" onchange="onHeightChange()">
+                  <option value="315">315px (Default)</option>
+                  <option value="480">480px (Large)</option>
+                  <option value="240">240px (For mobile)</option>
+                  <option value="other">Other Size</option>
+                </select>
+                <div id="epHeightOtherWrap" style="display:none;margin-top:8px;">
+                  <input type="number" id="epHeightOther" placeholder="Enter height in px" min="100" max="2000" oninput="onHeightOtherInput()" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;">
+                </div>
+              </div>
+            </div>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Right-to-left</div>
+              <div class="ep-row-control select-wrap">
                 <select id="epRtl" onchange="updatePlayer()"><option>No</option><option>Yes</option></select>
               </div>
             </div>
+
+            <!-- Controls -->
+            <div class="ep-group-label">Controls</div>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Share</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epShare" onchange="updatePlayer()"><option>Show</option><option>Hide</option></select>
+              </div>
+            </div>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Download</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epDownload" onchange="updatePlayer()"><option>Show</option><option>Hide</option></select>
+              </div>
+            </div>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Logo link</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epLogoLink" onchange="updatePlayer()"><option>Episode page</option><option>Podcast page</option><option>None</option></select>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -5024,6 +5212,52 @@
       { title: 'Welcome to Our Podcast', date: 'Apr 6, 2026', duration: '18:30', status: 'draft', num: 1 }
     ];
 
+    // ===== Embed Player: Drawer controls =====
+    function openEpDrawer() {
+      document.getElementById('epDrawerOverlay').classList.add('open');
+      document.getElementById('epDrawer').classList.add('open');
+    }
+
+    function closeEpDrawer() {
+      document.getElementById('epDrawerOverlay').classList.remove('open');
+      document.getElementById('epDrawer').classList.remove('open');
+    }
+
+    function selectSwatch(wrap, groupId) {
+      var group = document.getElementById(groupId);
+      group.querySelectorAll('.ep-swatch-wrap').forEach(function(w) {
+        w.classList.remove('active');
+        w.querySelector('.ep-swatch').classList.remove('active');
+      });
+      wrap.classList.add('active');
+      wrap.querySelector('.ep-swatch').classList.add('active');
+      updatePlayer();
+    }
+
+    function onHeightChange() {
+      var sel = document.getElementById('epHeight');
+      var wrap = document.getElementById('epHeightOtherWrap');
+      if (sel.value === 'other') {
+        wrap.style.display = 'block';
+      } else {
+        wrap.style.display = 'none';
+      }
+      updatePlayer();
+    }
+
+    function onHeightOtherInput() {
+      updatePlayer();
+    }
+
+    function getEffectiveHeight() {
+      var sel = document.getElementById('epHeight');
+      if (sel.value === 'other') {
+        var other = document.getElementById('epHeightOther').value;
+        return other ? parseInt(other, 10) : 315;
+      }
+      return parseInt(sel.value, 10);
+    }
+
     function getSwatchColor(id) {
       var g = document.getElementById(id);
       if (!g) return '1b1b1b';
@@ -5237,7 +5471,7 @@
       var skin = getSwatchColor('epPlayerColor') || '1b1b1b';
       var btnSkin = getSwatchColor('epBtnColor') || '654771';
       var fontColor = document.getElementById('epFontColor').value || 'auto';
-      var height = document.getElementById('epHeight').value.replace(/[^0-9]/g,'') || '315';
+      var height = getEffectiveHeight() || 315;
       var fonts = document.getElementById('epFont').value || 'Arial';
       var share = document.getElementById('epShare').value === 'Show' ? '1' : '0';
       var download = document.getElementById('epDownload').value === 'Show' ? '1' : '0';
@@ -5279,10 +5513,10 @@
       if (box.style.display === 'none') {
         box.style.display = '';
         generateEmbedCode();
-        toggle.textContent = 'Hide embed code';
+        toggle.textContent = 'Hide Code';
       } else {
         box.style.display = 'none';
-        toggle.textContent = 'Show embed code ▸';
+        toggle.textContent = 'View Code';
       }
     }
 
