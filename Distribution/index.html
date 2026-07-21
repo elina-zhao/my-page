@@ -3358,7 +3358,38 @@
 
             <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
               <div class="ep-cg-label">Episode Filters</div>
-              <select id="epFilters" onchange="updatePlayer()"><option>All</option><option>Published only</option><option>Scheduled only</option><option>Draft only</option></select>
+              <select id="epFilters" onchange="onEpisodeFilterChange()">
+                <option value="all">All</option>
+                <option value="publish_time">Publish Time</option>
+                <option value="season">Season NO.</option>
+                <option value="tags">Tags</option>
+              </select>
+
+              <!-- Publish Time -->
+              <div id="epFilterPublishTime" style="display:none;margin-top:14px;">
+                <div style="margin-bottom:10px;">
+                  <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;">Start Date</div>
+                  <input type="date" id="epStartDate" onchange="updatePlayer()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;box-sizing:border-box;">
+                </div>
+                <div>
+                  <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;">End Date</div>
+                  <input type="date" id="epEndDate" onchange="updatePlayer()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;box-sizing:border-box;">
+                </div>
+              </div>
+
+              <!-- Season NO. -->
+              <div id="epFilterSeason" style="display:none;margin-top:14px;">
+                <select id="epSeason" onchange="updatePlayer()">
+                  <option value="all">All Seasons</option>
+                  <option value="1">Season 1</option>
+                  <option value="2">Season 2</option>
+                </select>
+              </div>
+
+              <!-- Tags -->
+              <div id="epFilterTags" style="display:none;margin-top:14px;font-size:14px;color:var(--text-tertiary);">
+                You haven't set <a href="https://apps.podbean.org/services/appDetail/id/JESUES5C72" target="_blank" style="color:var(--primary);text-decoration:underline;">episode tags</a> yet.
+              </div>
             </div>
             <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
               <div class="ep-cg-label">Number of Episodes</div>
@@ -3366,7 +3397,7 @@
             </div>
             <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
               <div class="ep-cg-label">Display Order</div>
-              <select id="epDisplayOrder" onchange="updatePlayer()"><option>Episodic (From New to Old)</option><option>Episodic (From Old to New)</option><option>Alphabetical</option></select>
+              <select id="epDisplayOrder" onchange="updatePlayer()"><option>Episodic (From New to Old)</option><option>Serial (From Old to New)</option></select>
             </div>
           </div>
         </div>
@@ -5198,16 +5229,16 @@
 
     // ===== Episode data for visual player preview =====
     var epData = [
-      { title: 'The Future of AI in Everyday Life', date: 'Jun 22, 2026', duration: '34:15', status: 'published', num: 12 },
-      { title: 'Interview with Startup Founders', date: 'Jun 15, 2026', duration: '42:08', status: 'published', num: 11 },
-      { title: 'Understanding Blockchain Technology', date: 'Jun 8, 2026', duration: '28:44', status: 'published', num: 10 },
-      { title: 'Healthy Living Tips for Busy Professionals', date: 'Jun 1, 2026', duration: '31:22', status: 'published', num: 9 },
-      { title: 'Deep Dive: Climate Change Solutions', date: 'May 25, 2026', duration: '45:00', status: 'published', num: 8 },
-      { title: 'Remote Work Best Practices', date: 'May 18, 2026', duration: '26:37', status: 'published', num: 7 },
-      { title: 'Exploring Space: The Next Frontier', date: 'May 11, 2026', duration: '38:51', status: 'published', num: 6 },
-      { title: 'Mental Health Awareness Special', date: 'May 4, 2026', duration: '52:10', status: 'scheduled', num: 5 },
-      { title: 'Cryptocurrency Market Trends', date: 'Apr 27, 2026', duration: '29:45', status: 'scheduled', num: 4 },
-      { title: 'The Art of Storytelling in Podcasting', date: 'Apr 20, 2026', duration: '33:20', status: 'draft', num: 3 },
+      { title: 'The Future of AI in Everyday Life', date: 'Jun 22, 2026', duration: '34:15', status: 'published', num: 12, pubDate: '2026-06-22', season: 1 },
+      { title: 'Interview with Startup Founders', date: 'Jun 15, 2026', duration: '42:08', status: 'published', num: 11, pubDate: '2026-06-15', season: 1 },
+      { title: 'Understanding Blockchain Technology', date: 'Jun 8, 2026', duration: '28:44', status: 'published', num: 10, pubDate: '2026-06-08', season: 1 },
+      { title: 'Healthy Living Tips for Busy Professionals', date: 'Jun 1, 2026', duration: '31:22', status: 'published', num: 9, pubDate: '2026-06-01', season: 1 },
+      { title: 'Deep Dive: Climate Change Solutions', date: 'May 25, 2026', duration: '45:00', status: 'published', num: 8, pubDate: '2026-05-25', season: 1 },
+      { title: 'Remote Work Best Practices', date: 'May 18, 2026', duration: '26:37', status: 'published', num: 7, pubDate: '2026-05-18', season: 1 },
+      { title: 'Exploring Space: The Next Frontier', date: 'May 11, 2026', duration: '38:51', status: 'published', num: 6, pubDate: '2026-05-11', season: 1 },
+      { title: 'Mental Health Awareness Special', date: 'May 4, 2026', duration: '52:10', status: 'scheduled', num: 5, pubDate: '2026-05-04', season: 2 },
+      { title: 'Cryptocurrency Market Trends', date: 'Apr 27, 2026', duration: '29:45', status: 'scheduled', num: 4, pubDate: '2026-04-27', season: 2 },
+      { title: 'The Art of Storytelling in Podcasting', date: 'Apr 20, 2026', duration: '33:20', status: 'draft', num: 3, pubDate: '2026-04-20', season: 2 },
       { title: 'Behind the Scenes: Episode Production', date: 'Apr 13, 2026', duration: '25:15', status: 'draft', num: 2 },
       { title: 'Welcome to Our Podcast', date: 'Apr 6, 2026', duration: '18:30', status: 'draft', num: 1 }
     ];
@@ -5231,6 +5262,14 @@
       });
       wrap.classList.add('active');
       wrap.querySelector('.ep-swatch').classList.add('active');
+      updatePlayer();
+    }
+
+    function onEpisodeFilterChange() {
+      var val = document.getElementById('epFilters').value;
+      document.getElementById('epFilterPublishTime').style.display = val === 'publish_time' ? 'block' : 'none';
+      document.getElementById('epFilterSeason').style.display = val === 'season' ? 'block' : 'none';
+      document.getElementById('epFilterTags').style.display = val === 'tags' ? 'block' : 'none';
       updatePlayer();
     }
 
@@ -5292,14 +5331,19 @@
 
       // Filter
       var filtered = epData.slice();
-      if (filter === 'Published only') filtered = filtered.filter(function(e) { return e.status === 'published'; });
-      else if (filter === 'Scheduled only') filtered = filtered.filter(function(e) { return e.status === 'scheduled'; });
-      else if (filter === 'Draft only') filtered = filtered.filter(function(e) { return e.status === 'draft'; });
+      if (filter === 'publish_time') {
+        var startDate = document.getElementById('epStartDate').value;
+        var endDate = document.getElementById('epEndDate').value;
+        if (startDate) filtered = filtered.filter(function(e) { return e.pubDate && e.pubDate >= startDate; });
+        if (endDate) filtered = filtered.filter(function(e) { return e.pubDate && e.pubDate <= endDate; });
+      } else if (filter === 'season') {
+        var season = document.getElementById('epSeason').value;
+        if (season !== 'all') filtered = filtered.filter(function(e) { return e.season === parseInt(season, 10); });
+      }
+      // 'all' and 'tags' show all episodes
 
       // Sort
-      if (order === 'Alphabetical') {
-        filtered.sort(function(a, b) { return a.title.localeCompare(b.title); });
-      } else if (order === 'Episodic (From Old to New)') {
+      if (order === 'Serial (From Old to New)') {
         filtered.sort(function(a, b) { return a.num - b.num; });
       } else {
         filtered.sort(function(a, b) { return b.num - a.num; });
@@ -5481,8 +5525,8 @@
       var limit = document.getElementById('epNumEpisodes').value;
       var filter = document.getElementById('epFilters').value;
 
-      var orderMap = {'Episodic (From New to Old)':'episodic','Episodic (From Old to New)':'old_to_new','Alphabetical':'alphabetical'};
-      var filterMap = {'All':'all','Published only':'published','Scheduled only':'scheduled','Draft only':'draft'};
+      var orderMap = {'Episodic (From New to Old)':'episodic','Serial (From Old to New)':'old_to_new'};
+      var filterMap = {'all':'all','publish_time':'all','season':'all','tags':'all'};
       var logoMap = {'Episode page':'episode_page','Podcast page':'podcast_page','None':'none'};
 
       var params = [
