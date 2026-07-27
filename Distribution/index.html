@@ -236,8 +236,8 @@
 
     .content {
       padding: 32px;
-      flex: 1;
-      width: min(75%, 896px);
+      flex: 0 0 auto;
+      width: 70%;
       margin: 0 auto;
     }
     .content h1 {
@@ -269,6 +269,9 @@
            ============================== */
     .page.hidden {
       display: none;
+    }
+    .hidden {
+      display: none !important;
     }
 
     /* ==============================
@@ -444,7 +447,7 @@
       background: var(--text);
       color: #fff;
       border: none;
-      padding: 11px 28px;
+      padding: 11px 20px;
       border-radius: 50px;
       font-size: 16px;
       font-weight: 600;
@@ -663,7 +666,7 @@
     .pa-dist-card-footer {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       min-height: 28px;
     }
     .pa-page2-dots-wrap {
@@ -923,7 +926,7 @@
     .apple-modal .check-row {
       display: flex;
       align-items: flex-start;
-      gap: 10px;
+      gap: 8px;
       padding: 8px 0;
       cursor: pointer;
     }
@@ -986,7 +989,7 @@
       color: #b91c1c;
       display: flex;
       align-items: flex-start;
-      gap: 10px;
+      gap: 8px;
     }
     .apple-modal .prereq-error svg {
       flex-shrink: 0;
@@ -1054,7 +1057,7 @@
     .apple-modal .acc-step {
       display: flex;
       align-items: flex-start;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 10px;
     }
     .apple-modal .acc-step-num {
@@ -1242,7 +1245,7 @@
     .modal-permission-item {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-size: 16px;
       color: var(--text);
       padding: 4px 0;
@@ -1412,6 +1415,14 @@
     }
     .ep-vp-play-btn:hover { opacity: 0.85; }
     .ep-vp-play-btn svg { width: 16px; height: 16px; fill: #fff; }
+    .ep-custom-left .ep-vp-play-btn {
+      width: 56px;
+      height: 56px;
+    }
+    .ep-custom-left .ep-vp-play-btn svg {
+      width: 22px;
+      height: 22px;
+    }
     .ep-vp-progress {
       flex: 1;
       height: 4px;
@@ -1459,7 +1470,7 @@
     .ep-vp-header-actions .icons-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .ep-vp-header-actions button {
       background: none;
@@ -1478,7 +1489,7 @@
     .ep-vp-header-actions button svg {
       width: 16px;
       height: 16px;
-      stroke: #fff;
+      stroke: currentColor;
       fill: none;
       stroke-width: 2;
       stroke-linecap: round;
@@ -1683,17 +1694,30 @@
       display: flex;
       gap: 8px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .ep-swatch {
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
       cursor: pointer;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       transition: box-shadow 0.15s;
+      position: relative;
     }
     .ep-swatch.active {
       box-shadow: 0 0 0 2px #fff, 0 0 0 2px var(--primary);
+    }
+    .ep-swatch.active::after {
+      content: '✓';
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
     }
     .ep-advanced-toggle {
       display: flex;
@@ -1966,6 +1990,12 @@
       min-width: 0;
       padding-top: 8px;
     }
+    #page-embeddable-player .theme-showcase-preview {
+      flex: 8;
+    }
+    #page-embeddable-player .theme-showcase-detail {
+      flex: 3;
+    }
     .theme-showcase-name {
       font-size: 24px;
       font-weight: 600;
@@ -1985,7 +2015,7 @@
       background: var(--text);
       color: #fff;
       border: none;
-      padding: 11px 28px;
+      padding: 11px 20px;
       border-radius: 50px;
       font-size: 16px;
       font-weight: 600;
@@ -2219,7 +2249,7 @@
     .url-current-visit:hover { text-decoration: underline; }
     .url-input-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
     }
     .url-input-row input {
@@ -2725,7 +2755,6 @@
       justify-content: space-between;
       gap: 16px;
       padding: 12px 0;
-      border-bottom: 1px solid var(--border);
     }
     .ep-row-item:last-child {
       border-bottom: none;
@@ -2733,7 +2762,7 @@
     .ep-color-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       padding: 12px 0 20px;
       border-bottom: 1px solid var(--border);
     }
@@ -2751,6 +2780,38 @@
     }
     .ep-row-control.select-wrap {
       max-width: 280px;
+    }
+    .ep-row-control input[type="date"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+    .ep-row-control input[type="date"]:focus {
+      border-color: var(--text);
+    }
+    .ep-row-control input[type="number"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      box-sizing: border-box;
+      max-width: 280px;
+    }
+    .ep-row-control input[type="number"]:focus {
+      border-color: var(--text);
     }
     .ep-row-control select {
       width: 100%;
@@ -2779,6 +2840,119 @@
       cursor: pointer;
     }
 
+    /* ==============================
+       EMBED PLAYER CUSTOMIZATION OVERLAY
+       ============================== */
+    .ep-custom-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 999;
+      flex-direction: column;
+    }
+    .ep-custom-overlay.show {
+      display: flex;
+    }
+    .ep-custom-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .ep-custom-left {
+      flex: 1;
+      overflow-y: auto;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+    .ep-custom-left .ep-visual-player {
+      width: 100%;
+      max-width: 800px;
+    }
+    .ep-custom-right {
+      width: 460px;
+      flex-shrink: 0;
+      border-left: 1px solid var(--border);
+      overflow-y: auto;
+      background: #fff;
+    }
+    .ep-custom-toolbar-inner {
+      padding: 20px 28px 32px;
+    }
+    .ep-custom-toolbar-inner .ep-group-label:first-of-type {
+      margin-top: 0;
+    }
+
+    /* Embed Player: filter option sections */
+    .ep-filter-option {
+      margin-bottom: 4px;
+    }
+    .ep-filter-tags {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      padding: 10px 8px;
+    }
+    .ep-swatch-section {
+      padding: 12px 0;
+    }
+    .ep-swatch-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    /* Navigation views inside customization panel */
+    .ep-custom-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .ep-custom-nav-item:hover {
+      opacity: 0.7;
+    }
+    .ep-custom-nav-item-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .ep-custom-nav-item-arrow {
+      width: 18px;
+      height: 18px;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+    .ep-custom-sub-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      padding: 8px 0;
+      margin-bottom: 8px;
+      transition: opacity 0.15s;
+    }
+    .ep-custom-sub-back:hover {
+      opacity: 0.7;
+    }
+    .ep-custom-sub-back svg {
+      width: 16px;
+      height: 16px;
+    }
+    .ep-custom-sub-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      padding: 0 0 12px;
+    }
   </style>
 </head>
 <body>
@@ -3327,225 +3501,160 @@
 
       <!-- Embeddable Player page -->
       <div class="page hidden" id="page-embeddable-player">
-        <h1>Embed Player</h1>
-        <p style="color:var(--text-secondary);margin-top:8px;margin-bottom:24px;">Embed a multi-episode player on your site. Customize the look and feel to match your brand. <a href="#" style="color:var(--primary);text-decoration:none;">Learn more</a></p>
-        <div class="ep-layout">
-          <div class="ep-preview-panel">
-            <div id="epPlayer" class="ep-visual-player">
-              <div class="ep-vp-loading" id="epVpLoading">Loading player preview...</div>
-            </div>
-            <div style="margin-top:16px;">
-              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
-                <button class="ep-copy-btn" onclick="copyEmbedCode()">Copy Embed Code</button>
-                <span class="ep-code-toggle" id="epCodeToggle" onclick="toggleEmbedCode()">View Code</span>
-              </div>
-              <div style="font-size:13px;color:var(--text-tertiary);margin-bottom:0;">
-                Changes update your embed code automatically. Copy the code again after making changes.
-              </div>
-            </div>
-            <div class="ep-embed-box" id="embedCodeBox" style="display:none;">
-              <textarea id="embedCodeMulti" readonly=""></textarea>
-            </div>
-          </div>
-          <div class="ep-right-panel">
-
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-              <div style="font-size:18px;font-weight:600;color:var(--text);">Customizations</div>
-              <div class="ep-advanced-toggle" style="border-top:none;padding:0;margin:0;" onclick="openEpDrawer()">
-                Advanced Options <span>❯</span>
-              </div>
-            </div>
-
-            <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
-              <div class="ep-cg-label">Episode Filters</div>
-              <select id="epFilters" onchange="onEpisodeFilterChange()">
-                <option value="all">All</option>
-                <option value="publish_time">Publish Time</option>
-                <option value="season">Season NO.</option>
-                <option value="tags">Tags</option>
-              </select>
-
-              <!-- Publish Time -->
-              <div id="epFilterPublishTime" style="display:none;margin-top:14px;">
-                <div style="margin-bottom:10px;">
-                  <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;">Start Date</div>
-                  <input type="date" id="epStartDate" onchange="updatePlayer()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;box-sizing:border-box;">
-                </div>
-                <div>
-                  <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;">End Date</div>
-                  <input type="date" id="epEndDate" onchange="updatePlayer()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;box-sizing:border-box;">
-                </div>
-              </div>
-
-              <!-- Season NO. -->
-              <div id="epFilterSeason" style="display:none;margin-top:14px;">
-                <select id="epSeason" onchange="updatePlayer()">
-                  <option value="all">All Seasons</option>
-                  <option value="1">Season 1</option>
-                  <option value="2">Season 2</option>
-                </select>
-              </div>
-
-              <!-- Tags -->
-              <div id="epFilterTags" style="display:none;margin-top:14px;font-size:14px;color:var(--text-tertiary);">
-                You haven't set <a href="https://apps.podbean.org/services/appDetail/id/JESUES5C72" target="_blank" style="color:var(--primary);text-decoration:underline;">episode tags</a> yet.
-              </div>
-            </div>
-            <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
-              <div class="ep-cg-label">Number of Episodes</div>
-              <select id="epNumEpisodes" onchange="updatePlayer()"><option>10</option><option>5</option><option>15</option><option>20</option><option>All</option></select>
-            </div>
-            <div class="ep-control-group" style="margin-top:0;margin-bottom:20px;">
-              <div class="ep-cg-label">Display Order</div>
-              <select id="epDisplayOrder" onchange="updatePlayer()"><option>Episodic (From New to Old)</option><option>Serial (From Old to New)</option></select>
-            </div>
+        <div class="page-toolbar">
+          <div class="page-toolbar-left">
+            <div class="page-toolbar-title">Embed Player</div>
+            <div class="page-toolbar-desc">Embed a multi-episode player on your site.</div>
           </div>
         </div>
 
-        <!-- Advanced Options Drawer -->
-        <div class="ep-drawer-overlay" id="epDrawerOverlay" onclick="closeEpDrawer()"></div>
-        <div class="ep-drawer" id="epDrawer">
-          <div class="ep-drawer-header">
-            <h2>Advanced Options</h2>
-            <button class="ep-drawer-close" onclick="closeEpDrawer()">&times;</button>
+        <div class="theme-showcase">
+          <!-- Left: Player Preview -->
+          <div class="theme-showcase-preview">
+            <div class="preview-wrap" style="height:auto;overflow:visible;">
+              <div id="epPlayer" class="ep-visual-player">
+                <div class="ep-vp-loading" id="epVpLoading">Loading player preview...</div>
+              </div>
+            </div>
+            <div style="margin-top:8px;">
+              <span class="ep-code-toggle" id="epCodeToggle" onclick="toggleEmbedCode()">View Code</span>
+            </div>
+            <div class="ep-embed-box" id="embedCodeBox" style="display:none;margin-top:8px;">
+              <textarea id="embedCodeMulti" readonly=""></textarea>
+            </div>
           </div>
-          <div class="ep-drawer-body">
 
-            <!-- Appearance -->
-            <div class="ep-group-label">Appearance</div>
+          <!-- Right: Info + Actions -->
+          <div class="theme-showcase-detail">
+            <div class="theme-showcase-desc">
+              Embed your episodes anywhere. Choose which episodes to show, customize the look and feel, and drop the code onto your site.
+              <a href="#" style="color:var(--primary);text-decoration:none;">Learn more</a>
+            </div>
+            <div style="display:flex;flex-direction:row;gap:24px;align-items:center;">
+              <button class="theme-showcase-btn" onclick="copyEmbedCode()" style="justify-content:center;">
+                Copy Code
+              </button>
+              <a href="#" onclick="openEpCustomization();return false;" style="font-size:16px;font-weight:600;color:var(--text);text-decoration:none;white-space:nowrap;">Customize ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            <div class="ep-color-group">
-              <div class="ep-row-label">Player color</div>
-              <div class="ep-swatch-group" id="epPlayerColor">
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#f6f6f6;border:2px solid var(--border);"></span>
-                </div>
-                <div class="ep-swatch-wrap active" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch active" style="background:#1b1b1b;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#3267a3;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#60a0c8;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#2baf9e;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#3ab278;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#8bbb4e;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#ff6d00;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#c73a3a;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#956f46;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#654771;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#666666;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')">
-                  <span class="ep-swatch" style="background:#fb0584;"></span>
-                </div>
-              </div>
+  <!-- ===== EMBED PLAYER CONFIRMATION DIALOG ===== -->
+  <div class="ep-confirm-overlay" id="epConfirmOverlay" onclick="epHideConfirm()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center;">
+    <div onclick="event.stopPropagation()" style="background:#fff;border-radius:12px;padding:24px;max-width:400px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+      <div id="epConfirmTitle" style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;"></div>
+      <div id="epConfirmDesc" style="font-size:14px;color:var(--text-tertiary);margin-bottom:20px;line-height:1.5;"></div>
+      <div id="epConfirmActions" style="display:flex;justify-content:flex-end;gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- ===== EMBED PLAYER CUSTOMIZATION OVERLAY ===== -->
+  <div class="ep-custom-overlay" id="epCustomOverlay">
+    <div class="apple-modal-topbar">
+      <a href="#" onclick="epBackToPage();return false;" style="font-size:18px;font-weight:600;color:var(--text);text-decoration:none;margin-left:16px;white-space:nowrap;">&larr; Embed Player</a>
+      <div style="max-width:896px;margin:0 auto;display:flex;align-items:center;justify-content:center;position:relative;height:100%;flex:1;">
+        <span class="apple-modal-topbar-title">Player Customization</span>
+      </div>
+      <a href="#" onclick="epCancel();return false;" style="font-size:14px;font-weight:500;color:var(--text);text-decoration:none;margin-right:16px;flex-shrink:0;">Cancel</a>
+      <button class="btn-topbar-primary" id="epSaveBtn" onclick="saveEpCustomization()" disabled style="margin-right:16px;flex-shrink:0;">Save</button>
+    </div>
+
+    <div class="ep-custom-content">
+      <!-- Left: Preview -->
+      <div class="ep-custom-left">
+        <div style="width:100%;max-width:800px;">
+          <div id="epPlayerCustom" class="ep-visual-player">
+            <div class="ep-vp-loading">Loading player preview...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Toolbar -->
+      <div class="ep-custom-right">
+        <div class="ep-custom-toolbar-inner">
+
+          <!-- ===== Main Menu ===== -->
+          <div id="epCustomMainView">
+            <div style="font-size:18px;font-weight:700;color:var(--text);padding:4px 0 16px;">Customizations</div>
+
+            <div class="ep-custom-nav-item" onclick="epNavTo('content')">
+              <span class="ep-custom-nav-item-title">Content Controls</span>
+              <svg class="ep-custom-nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
             </div>
 
-            <div class="ep-color-group">
-              <div class="ep-row-label">Button color</div>
-              <div class="ep-swatch-group" id="epBtnColor">
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                  <span class="ep-swatch" style="background:#f6f6f6;border:2px solid var(--border);"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                  <span class="ep-swatch" style="background:#1b1b1b;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                  <span class="ep-swatch" style="background:#3267a3;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                  <span class="ep-swatch" style="background:#60a0c8;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                  <span class="ep-swatch" style="background:#2baf9e;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                  <span class="ep-swatch" style="background:#3ab278;"></span>
-                </div>
-                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                  <span class="ep-swatch" style="background:#8bbb4e;"></span>
-                </div>
-                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                    <span class="ep-swatch" style="background:#ff6d00;"></span>
-                  </div>
-                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                    <span class="ep-swatch" style="background:#c73a3a;"></span>
-                  </div>
-                  <div class="ep-swatch-wrap active" onclick="selectSwatch(this,'epBtnColor')">
-                    <span class="ep-swatch active" style="background:#956f46;"></span>
-                  </div>
-                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                    <span class="ep-swatch" style="background:#654771;"></span>
-                  </div>
-                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                    <span class="ep-swatch" style="background:#666666;"></span>
-                  </div>
-                  <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')">
-                    <span class="ep-swatch" style="background:#fb0584;"></span>
-                  </div>
-                </div>
-              </div>
+            <div class="ep-custom-nav-item" onclick="epNavTo('appearance')">
+              <span class="ep-custom-nav-item-title">Appearance and Layout</span>
+              <svg class="ep-custom-nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+            </div>
+          </div>
+
+          <!-- ===== Content Controls Sub-view ===== -->
+          <div id="epCustomContentControls" class="hidden">
+            <div class="ep-custom-sub-back" onclick="epNavTo('main')">
+              &larr; CUSTOMIZATIONS
+            </div>
+            <div class="ep-custom-sub-title">Content Controls</div>
 
             <div class="ep-row-item">
-              <div class="ep-row-label">Font color</div>
+              <div class="ep-row-label">Episode Filter</div>
               <div class="ep-row-control select-wrap">
-                <select id="epFontColor" onchange="updatePlayer()"><option>auto</option><option>white</option><option>black</option></select>
-              </div>
-            </div>
-
-            <div class="ep-row-item">
-              <div class="ep-row-label">Font</div>
-              <div class="ep-row-control select-wrap">
-                <select id="epFont" onchange="updatePlayer()"><option>Arial</option><option>Roboto</option><option>Helvetica</option><option>Georgia</option></select>
-              </div>
-            </div>
-
-            <!-- Layout -->
-            <div class="ep-group-label">Layout</div>
-
-            <div class="ep-row-item" style="flex-wrap:wrap;">
-              <div class="ep-row-label">Height</div>
-              <div class="ep-row-control select-wrap">
-                <select id="epHeight" onchange="onHeightChange()">
-                  <option value="315">315px (Default)</option>
-                  <option value="480">480px (Large)</option>
-                  <option value="240">240px (For mobile)</option>
-                  <option value="other">Other Size</option>
+                <select id="epFilters" onchange="onEpisodeFilterChange()">
+                  <option value="all">All</option>
+                  <option value="publish_time">Publish Time</option>
+                  <option value="season">Season NO.</option>
+                  <option value="tags">Tags</option>
                 </select>
-                <div id="epHeightOtherWrap" style="display:none;margin-top:8px;">
-                  <input type="number" id="epHeightOther" placeholder="Enter height in px" min="100" max="2000" oninput="onHeightOtherInput()" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;">
-                </div>
               </div>
             </div>
 
+            <div id="epFilterPublishTime" style="display:none;" class="ep-filter-option">
+              <div class="ep-row-item">
+                <div class="ep-row-label">Start Date</div>
+                <div class="ep-row-control">
+                  <input type="date" id="epStartDate" onchange="updatePlayer()">
+                </div>
+              </div>
+              <div class="ep-row-item">
+                <div class="ep-row-label">End Date</div>
+                <div class="ep-row-control">
+                  <input type="date" id="epEndDate" onchange="updatePlayer()">
+                </div>
+              </div>
+            </div>
+            <div id="epFilterSeason" style="display:none;" class="ep-filter-option">
+              <div class="ep-row-item">
+                <div class="ep-row-label">Season</div>
+                <div class="ep-row-control select-wrap">
+                  <select id="epSeason" onchange="updatePlayer()">
+                    <option value="all">All Seasons</option>
+                    <option value="1">Season 1</option>
+                    <option value="2">Season 2</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="epFilterTags" style="display:none;" class="ep-filter-option ep-filter-tags">
+              You haven't set <a href="https://apps.podbean.org/services/appDetail/id/JESUES5C72" target="_blank" style="color:var(--primary);text-decoration:underline;">episode tags</a> yet.
+            </div>
+
+            <!-- No. of Episodes -->
             <div class="ep-row-item">
-              <div class="ep-row-label">Right-to-left</div>
+              <div class="ep-row-label">No. of Episodes</div>
+              <div class="ep-row-control">
+                <input type="number" id="epNumEpisodes" value="10" min="1" max="200" onchange="updatePlayer()">
+              </div>
+            </div>
+            <div class="ep-row-item">
+              <div class="ep-row-label">Display Order</div>
               <div class="ep-row-control select-wrap">
-                <select id="epRtl" onchange="updatePlayer()"><option>No</option><option>Yes</option></select>
+                <select id="epDisplayOrder" onchange="updatePlayer()"><option>Episodic (From New to Old)</option><option>Serial (From Old to New)</option></select>
               </div>
             </div>
 
             <!-- Controls -->
-            <div class="ep-group-label">Controls</div>
-
             <div class="ep-row-item">
               <div class="ep-row-label">Share</div>
               <div class="ep-row-control select-wrap">
@@ -3566,8 +3675,97 @@
                 <select id="epLogoLink" onchange="updatePlayer()"><option>Episode page</option><option>Podcast page</option><option>None</option></select>
               </div>
             </div>
-
           </div>
+
+          <!-- ===== Appearance and Layout Sub-view ===== -->
+          <div id="epCustomAppearanceLayout" class="hidden">
+            <div class="ep-custom-sub-back" onclick="epNavTo('main')">
+              &larr; CUSTOMIZATIONS
+            </div>
+            <div class="ep-custom-sub-title">Appearance and Layout</div>
+
+            <!-- Appearance -->
+            <div class="ep-swatch-section">
+              <div class="ep-swatch-label">Player color</div>
+              <div class="ep-swatch-group" id="epPlayerColor">
+                <div class="ep-swatch-wrap active" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch active" style="background:#f6f6f6;border:2px solid var(--border);"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#1b1b1b;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#3267a3;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#60a0c8;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#2baf9e;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#3ab278;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#8bbb4e;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#ff6d00;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#c73a3a;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#956f46;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#654771;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#666666;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epPlayerColor')"><span class="ep-swatch" style="background:#fb0584;"></span></div>
+              </div>
+            </div>
+
+            <div class="ep-swatch-section">
+              <div class="ep-swatch-label">Button color</div>
+              <div class="ep-swatch-group" id="epBtnColor">
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#f6f6f6;border:2px solid var(--border);"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#1b1b1b;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#3267a3;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#60a0c8;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#2baf9e;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#3ab278;"></span></div>
+                <div class="ep-swatch-wrap active" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch active" style="background:#8bbb4e;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#ff6d00;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#c73a3a;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#956f46;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#654771;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#666666;"></span></div>
+                <div class="ep-swatch-wrap" onclick="selectSwatch(this,'epBtnColor')"><span class="ep-swatch" style="background:#fb0584;"></span></div>
+              </div>
+            </div>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Font color</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epFontColor" onchange="updatePlayer()"><option>auto</option><option>white</option><option>black</option></select>
+              </div>
+            </div>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Font</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epFont" onchange="updatePlayer()"><option>Arial</option><option>Roboto</option><option>Helvetica</option><option>Georgia</option></select>
+              </div>
+            </div>
+
+            <!-- Layout -->
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Height</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epHeight" onchange="onHeightChange()">
+                  <option value="315">315px (Default)</option>
+                  <option value="480">480px (Large)</option>
+                  <option value="240">240px (For mobile)</option>
+                  <option value="other">Other Size</option>
+                </select>
+                <div id="epHeightOtherWrap" style="display:none;margin-top:8px;">
+                  <input type="number" id="epHeightOther" placeholder="Enter height in px" min="100" max="2000" oninput="onHeightOtherInput()">
+                </div>
+              </div>
+            </div>
+
+            <div class="ep-row-item">
+              <div class="ep-row-label">Right-to-left</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epRtl" onchange="updatePlayer()"><option>No</option><option>Yes</option></select>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px;">
+              <a href="#" onclick="resetEpDefaults();return false;" style="font-size:14px;font-weight:500;color:var(--text-tertiary);text-decoration:underline;">Reset to default</a>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -5243,15 +5441,124 @@
       { title: 'Welcome to Our Podcast', date: 'Apr 6, 2026', duration: '18:30', status: 'draft', num: 1 }
     ];
 
-    // ===== Embed Player: Drawer controls =====
-    function openEpDrawer() {
-      document.getElementById('epDrawerOverlay').classList.add('open');
-      document.getElementById('epDrawer').classList.add('open');
+    // ===== Embed Player: Customization Overlay =====
+    var epDirty = false;
+
+    function markEpDirty() {
+      if (epDirty) return;
+      var overlay = document.getElementById('epCustomOverlay');
+      if (!overlay || !overlay.classList.contains('show')) return;
+      epDirty = true;
+      var btn = document.getElementById('epSaveBtn');
+      if (btn) btn.disabled = false;
     }
 
-    function closeEpDrawer() {
-      document.getElementById('epDrawerOverlay').classList.remove('open');
-      document.getElementById('epDrawer').classList.remove('open');
+    function openEpCustomization() {
+      epDirty = false;
+      var btn = document.getElementById('epSaveBtn');
+      if (btn) btn.disabled = true;
+      epNavTo('main');
+      document.getElementById('epCustomOverlay').classList.add('show');
+      renderVisualPlayer('epPlayerCustom');
+    }
+
+    function epShowConfirm(title, desc, buttons) {
+      document.getElementById('epConfirmTitle').textContent = title;
+      document.getElementById('epConfirmDesc').textContent = desc;
+      var actions = document.getElementById('epConfirmActions');
+      actions.innerHTML = '';
+      buttons.forEach(function(b) {
+        var btn = document.createElement('a');
+        btn.href = '#';
+        btn.textContent = b.label;
+        btn.onclick = function(e) {
+          e.preventDefault();
+          if (b.action) b.action();
+          epHideConfirm();
+        };
+        btn.style.cssText = 'font-size:14px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;cursor:pointer;' + b.style;
+        actions.appendChild(btn);
+      });
+      document.getElementById('epConfirmOverlay').style.display = 'flex';
+    }
+    function epHideConfirm() {
+      document.getElementById('epConfirmOverlay').style.display = 'none';
+    }
+
+    function epCancel() {
+      if (!epDirty) { closeEpCustomization(); return; }
+      epShowConfirm(
+        'Cancel changes?',
+        'Any unsaved changes will be discarded.',
+        [
+          {label:'No', style:'color:var(--text);', action:function(){}},
+          {label:'Yes', style:'background:var(--text);color:#fff;', action:function(){ closeEpCustomization(); }}
+        ]
+      );
+    }
+
+    function epBackToPage() {
+      if (!epDirty) { closeEpCustomization(); return; }
+      epShowConfirm(
+        'Exit without saving?',
+        'Any unsaved changes will be discarded when you exit.',
+        [
+          {label:'Exit', style:'color:var(--text);', action:function(){ closeEpCustomization(); }},
+          {label:'Save', style:'background:var(--text);color:#fff;', action:function(){ saveEpCustomization(); }}
+        ]
+      );
+    }
+
+    function closeEpCustomization() {
+      document.getElementById('epCustomOverlay').classList.remove('show');
+    }
+
+    function epNavTo(view) {
+      document.getElementById('epCustomMainView').classList.add('hidden');
+      document.getElementById('epCustomContentControls').classList.add('hidden');
+      document.getElementById('epCustomAppearanceLayout').classList.add('hidden');
+      if (view === 'content') {
+        document.getElementById('epCustomContentControls').classList.remove('hidden');
+      } else if (view === 'appearance') {
+        document.getElementById('epCustomAppearanceLayout').classList.remove('hidden');
+      } else {
+        document.getElementById('epCustomMainView').classList.remove('hidden');
+      }
+    }
+
+    function resetEpDefaults() {
+      // Player color
+      document.getElementById('epPlayerColor').querySelectorAll('.ep-swatch-wrap').forEach(function(w) { w.classList.remove('active'); w.querySelector('.ep-swatch').classList.remove('active'); });
+      var defaultPlayerColor = document.getElementById('epPlayerColor').querySelector('.ep-swatch-wrap:first-child');
+      if (defaultPlayerColor) { defaultPlayerColor.classList.add('active'); defaultPlayerColor.querySelector('.ep-swatch').classList.add('active'); }
+
+      // Button color
+      document.getElementById('epBtnColor').querySelectorAll('.ep-swatch-wrap').forEach(function(w) { w.classList.remove('active'); w.querySelector('.ep-swatch').classList.remove('active'); });
+      var defaultBtnColor = document.getElementById('epBtnColor').querySelector('.ep-swatch-wrap:nth-child(7)');
+      if (defaultBtnColor) { defaultBtnColor.classList.add('active'); defaultBtnColor.querySelector('.ep-swatch').classList.add('active'); }
+
+      // Selects
+      document.getElementById('epFontColor').value = 'auto';
+      document.getElementById('epFont').value = 'Arial';
+      document.getElementById('epHeight').value = '315';
+      document.getElementById('epHeightOtherWrap').style.display = 'none';
+      document.getElementById('epRtl').value = 'No';
+      document.getElementById('epShare').value = 'Show';
+      document.getElementById('epDownload').value = 'Show';
+      document.getElementById('epLogoLink').value = 'Episode page';
+      document.getElementById('epFilters').value = 'all';
+      document.getElementById('epFilterPublishTime').style.display = 'none';
+      document.getElementById('epFilterSeason').style.display = 'none';
+      document.getElementById('epFilterTags').style.display = 'none';
+      document.getElementById('epNumEpisodes').value = '10';
+      document.getElementById('epDisplayOrder').value = 'Episodic (From New to Old)';
+
+      updatePlayer();
+      markEpDirty();
+    }
+
+    function saveEpCustomization() {
+      closeEpCustomization();
     }
 
     function selectSwatch(wrap, groupId) {
@@ -5314,9 +5621,15 @@
       return p ? p.value.replace('#','') : '1b1b1b';
     }
 
-    function renderVisualPlayer() {
-      var container = document.getElementById('epPlayer');
+    function renderVisualPlayer(containerId) {
+      containerId = containerId || 'epPlayer';
+      var container = document.getElementById(containerId);
       if (!container) return;
+
+      var isCustom = containerId !== 'epPlayer';
+      var suffix = isCustom ? 'Custom' : '';
+      var waveId = 'epWaveCanvas' + suffix;
+      var playBtnId = 'epHeadPlayBtn' + suffix;
 
       var skin = getSwatchColor('epPlayerColor');
       var btnSkin = getSwatchColor('epBtnColor');
@@ -5357,6 +5670,14 @@
       var textColor = '#1e293b';
       if (fontColor === 'white') textColor = '#ffffff';
       else if (fontColor === 'black') textColor = '#000000';
+      else if (fontColor === 'auto') {
+        // Auto: calculate luminance from player color
+        var r = parseInt(skin.substring(0,2), 16);
+        var g = parseInt(skin.substring(2,4), 16);
+        var b = parseInt(skin.substring(4,6), 16);
+        var lum = 0.299 * r + 0.587 * g + 0.114 * b;
+        textColor = lum > 128 ? '#1e293b' : '#ffffff';
+      }
 
       // Build HTML
       var bgColor = '#' + skin;
@@ -5370,16 +5691,16 @@
 
       var playIcon = epPlaying ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>' : '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
 
-      var html = '<div class="ep-vp-header" style="background:' + bgColor + ';' + fontStyle + '">';
+      var html = '<div class="ep-vp-header" style="background:' + bgColor + ';' + fontStyle + 'color:' + textColor + ';">';
       html += '<div class="ep-vp-header-top">';
       html += headerIcon;
       html += '<div class="ep-vp-header-info">';
       html += '<div class="ep-vp-podcast-title">Tech Talks Weekly</div>';
-      html += '<div class="ep-vp-ep-title-header" style="color:#fff;">' + currentEpTitle + '</div>';
-      html += '<div class="ep-vp-player-row"><button class="ep-vp-play-btn" id="epHeadPlayBtn" style="background:' + btnBg + ';" onclick="togglePlaying()">' + playIcon + '</button><div class="ep-vp-progress"><div class="ep-vp-progress-bar"></div></div></div>';
-      html += '<div class="ep-vp-waves"><canvas id="epWaveCanvas"></canvas></div>';
+      html += '<div class="ep-vp-ep-title-header">' + currentEpTitle + '</div>';
+      html += '<div class="ep-vp-player-row"><button class="ep-vp-play-btn" id="' + playBtnId + '" style="background:' + btnBg + ';" onclick="togglePlaying(\'' + containerId + '\')">' + playIcon + '</button><div class="ep-vp-progress"><div class="ep-vp-progress-bar"></div></div></div>';
+      html += '<div class="ep-vp-waves"><canvas id="' + waveId + '"></canvas></div>';
       html += '</div>';
-      html += '<div class="ep-vp-header-actions"><div class="brand">Podbean</div><div class="icons-row">';
+      html += '<div class="ep-vp-header-actions"><div class="brand" style="color:' + textColor + ';">Podbean</div><div class="icons-row" style="color:' + textColor + ';">';
       html += '<button title="Info"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>';
       html += '<button title="WiFi" style="transform:rotate(45deg);"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg></button>';
       if (download) {
@@ -5413,8 +5734,10 @@
       html += '</div>';
 
       container.innerHTML = html;
-      // Start wave animation after canvas is in DOM
-      setTimeout(startWaveAnimation, 50);
+      // Start wave animation only for the main page player
+      if (!isCustom) {
+        setTimeout(startWaveAnimation, 50);
+      }
     }
 
     var epWaveAnimId = null;
@@ -5487,25 +5810,36 @@
       }
     }
 
-    function togglePlaying() {
+    function togglePlaying(containerId) {
       epPlaying = !epPlaying;
-      var btn = document.getElementById('epHeadPlayBtn');
-      if (btn) {
-        if (epPlaying) {
-          btn.innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-        } else {
-          btn.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+      // Update both instances if they exist
+      var ids = [['epHeadPlayBtn', 'epWaveCanvas'], ['epHeadPlayBtnCustom', 'epWaveCanvasCustom']];
+      ids.forEach(function(pair) {
+        var btn = document.getElementById(pair[0]);
+        if (btn) {
+          btn.innerHTML = epPlaying
+            ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+            : '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
         }
-      }
+      });
       startWaveAnimation();
     }
 
     function updatePlayer() {
-      renderVisualPlayer();
+      markEpDirty();
+
+      // Render main page player
+      renderVisualPlayer('epPlayer');
+
+      // If customization overlay is open, also render preview inside it
+      var customOverlay = document.getElementById('epCustomOverlay');
+      if (customOverlay && customOverlay.classList.contains('show')) {
+        renderVisualPlayer('epPlayerCustom');
+      }
 
       // Update embed code if visible
       var embedBox = document.getElementById('embedCodeBox');
-      if (embedBox.style.display !== 'none') {
+      if (embedBox && embedBox.style.display !== 'none') {
         generateEmbedCode();
       }
     }
@@ -5569,7 +5903,7 @@
       navigator.clipboard.writeText(textarea.value);
       var btn = document.querySelector('.ep-copy-btn');
       btn.textContent = 'Copied!';
-      setTimeout(function() { btn.textContent = 'Copy Embed Code'; }, 2000);
+      setTimeout(function() { btn.textContent = 'Copy Code'; }, 2000);
     }
 
     // ===== Init =====
