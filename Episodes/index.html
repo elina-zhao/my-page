@@ -270,6 +270,10 @@
   .badge-draft { background:#f1f5f9;color:#64748b; }
   .badge-future { background:#eff6ff;color:#3b82f6; }
   .badge-pending { background:#fffbeb;color:#d97706; }
+  .badge-ai-processing { background:#fef3c7;color:#b45309; }
+  .badge-ai-finished { background:#dbeafe;color:#1d4ed8; }
+  .badge-ai-failed { background:#fee2e2;color:#b91c1c; }
+  .badge-type { background:#f1f5f9;color:#475569; }
   .pagination { display:flex;align-items:center;justify-content:space-between;padding-top:20px;font-size:13px;color:var(--text-secondary); }
   .pagination .pages { display:flex;gap:4px; }
   .pagination .pages span {
@@ -471,8 +475,9 @@
   .ai-content { transition: opacity .2s; display: flex; flex-direction: column; min-height: 0; }
   .ai-content.off { opacity: .35; pointer-events: none; }
   .ai-settings-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .ai-settings-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .ai-settings-label { font-size: 13px; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+  .ai-settings-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.ai-settings-row:last-child { margin-bottom: 0; }
+  .ai-settings-label { font-size: 14px; color: var(--text); font-weight: 600; margin-bottom: 4px; }
   .ai-settings-select {
     font-size: 13px; padding: 6px 30px 6px 10px;
     border: 1px solid #d1d5db; border-radius: 8px;
@@ -484,7 +489,7 @@
   }
   .ai-settings-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(26,154,108,.15); }
   .ai-settings-divider { height: 1px; background: #e2e8f0; margin: 2px 0; }
-  .ai-settings-note { font-size: 11px; color: var(--text-tertiary); line-height: 1.4; margin-top: 2px; }
+  .ai-settings-note { font-size: 13px; color: var(--text-tertiary); line-height: 1.4; margin: 2px 0 40px; }
   .ai-settings-back {
     font-size: 12px; color: var(--text-secondary); text-decoration: none; font-weight: 500;
     display: inline-flex; align-items: center; gap: 4px; margin-bottom: 6px;
@@ -499,7 +504,7 @@
     transition: background .15s;
   }
   .ai-settings-save:hover { background: #14805a; }
-  .modal-step { display: flex; width: 100%; }
+  .modal-step { display: flex; width: 100%; padding-top: 120px; }
   .modal-back {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px;
@@ -547,7 +552,7 @@
   }
   .episode-details-overlay .ed-topbar-title {
     position: absolute; left: 50%; transform: translateX(-50%);
-    font-size: 16px; font-weight: 600; color: var(--text);
+    font-size: 22px; font-weight: 600; color: var(--text);
   }
   .episode-details-overlay .ed-back-btn {
     display: inline-flex; align-items: center; gap: 4px;
@@ -558,7 +563,7 @@
   }
   .episode-details-overlay .ed-back-btn:hover { background: #f8fafc; border-color: #cbd5e1; color: var(--text); }
   .episode-details-overlay .ed-save-draft {
-    font-size: 14px; font-weight: 500; color: var(--text-secondary);
+    font-size: 16px; font-weight: 500; color: var(--text-secondary);
     cursor: pointer; background: none; border: none; font-family: inherit;
     padding: 8px 12px; border-radius: 8px; transition: all .15s;
   }
@@ -576,6 +581,7 @@
     transition: background .15s;
   }
   .episode-details-overlay .ed-topbar-publish:hover { background: #334155; }
+  .episode-details-overlay .ed-topbar-publish:disabled { background: #94a3b8; cursor: not-allowed; opacity: 0.7; }
   .episode-details-overlay .ed-publish-arrow {
     display: inline-flex; align-items: center; justify-content: center;
     width: 22px; height: 22px; border-radius: 50%;
@@ -697,6 +703,71 @@
   }
 
   /* ── Confirm Modal (centered overlay) ──── */
+  /* ── AI Settings Modal ─────────────────── */
+  .ai-settings-overlay {
+    display: none; position: fixed; inset: 0; z-index: 600;
+    background: rgba(0,0,0,.3);
+    align-items: center; justify-content: center;
+  }
+  .ai-settings-overlay.show { display: flex; }
+  .ai-settings-dialog {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.18);
+    width: 930px; max-width: 90vw; max-height: 90vh; min-height: 80vh;
+    display: flex; flex-direction: column;
+  }
+  .ai-settings-dialog .ai-settings-header {
+    display: flex; align-items: center;
+    padding: 20px 24% 0; position: relative;
+  }
+  .ai-settings-dialog .ai-settings-header h2 {
+    font-size: 18px; font-weight: 700; color: #1e293b; margin: 0;
+  }
+  .ai-settings-dialog .ai-settings-close {
+    position: absolute; right: 24px; top: 20px;
+    width: 30px; height: 30px; border-radius: 8px; border: none;
+    background: #f1f5f9; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; color: #64748b;
+    font-size: 18px; line-height: 1;
+  }
+  .ai-settings-dialog .ai-settings-tabs {
+    display: flex; gap: 0; padding: 16px 24px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .ai-settings-dialog .ai-settings-tab {
+    padding: 8px 16px; border: none; border-radius: 0;
+    font-size: 14px; font-weight: 500; font-family: inherit;
+    cursor: pointer; background: transparent; color: #64748b;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: all .15s;
+  }
+  .ai-settings-dialog .ai-settings-tab:hover { color: #1e293b; }
+  .ai-settings-dialog .ai-settings-tab.active { color: #1e293b; border-bottom-color: #1e293b; }
+  .ai-settings-dialog .ai-settings-body {
+    padding: 48px 0; overflow-y: auto; flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .ai-settings-dialog .ai-settings-body-inner {
+    width: 52%; text-align: left;
+  }
+  .ai-settings-dialog .ai-settings-footer {
+    display: flex; justify-content: flex-end; gap: 10px;
+    padding: 16px 24px 20px;
+  }
+  .ai-settings-dialog .ai-settings-footer button {
+    padding: 9px 24px; border-radius: 50px; font-size: 14px;
+    font-weight: 600; font-family: inherit; cursor: pointer;
+    transition: background .15s;
+  }
+  .ai-settings-dialog .ai-settings-footer .btn-cancel {
+    border: 1px solid #d1d5db; background: #fff; color: #1e293b;
+  }
+  .ai-settings-dialog .ai-settings-footer .btn-cancel:hover { background: #f8fafc; }
+  .ai-settings-dialog .ai-settings-footer .btn-save {
+    border: none; background: #1e293b; color: #fff;
+  }
+  .ai-settings-dialog .ai-settings-footer .btn-save:hover { background: #334155; }
+
   .confirm-overlay {
     display: none; position: fixed; inset: 0; z-index: 500;
     background: rgba(0,0,0,.3);
@@ -751,14 +822,16 @@
     margin-bottom: 32px; position: sticky; top: 57px; z-index: 10;
   }
   .ed-v2-tab {
-    padding: 10px 20px; border: none; border-radius: 8px;
-    font-size: 14px; font-weight: 500; font-family: inherit;
+    padding: 10px 20px; border: none; border-radius: 0;
+    font-size: 16px; font-weight: 500; font-family: inherit;
     cursor: pointer; transition: all .15s;
     background: transparent; color: #64748b;
     white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
   }
-  .ed-v2-tab:hover { background: #f8fafc; color: #1e293b; }
-  .ed-v2-tab.active { background: #f0f9f4; color: #14805a; font-weight: 600; }
+  .ed-v2-tab:hover { background: transparent; color: #1e293b; }
+  .ed-v2-tab.active { background: transparent; color: #1e293b; font-size: 18px; font-weight: 500; border-bottom-color: #1e293b; }
   .ed-v2-panel { display: none; }
   .ed-v2-panel.active { display: block; }
   .ed-v2-card {
@@ -774,7 +847,7 @@
   .ed-v2-field { margin-bottom: 22px; }
   .ed-v2-field:last-child { margin-bottom: 0; }
   .ed-v2-label {
-    font-size: 13px; font-weight: 600; color: #1e293b;
+    font-size: 16px; font-weight: 600; color: #1e293b;
     margin-bottom: 6px;
   }
   .ed-v2-input {
@@ -841,19 +914,13 @@
 
   /* ── Episode Info Page refinements ── */
   .ep-info-grid {
-    display: grid; grid-template-columns: 7fr 3fr; gap: 32px; align-items: start;
+    max-width: 960px; margin: 0 auto;
   }
   .ep-info-left .ed-v2-card-title { font-size: 18px; }
   .ep-info-left .ed-v2-field:first-child { margin-top: 0; }
   .ep-info-right {
-    display: flex; flex-direction: column; gap: 24px;
+    display: none;
   }
-  .ep-info-right .ep-right-section-title {
-    font-size: 13px; font-weight: 600; color: #64748b;
-    text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px;
-  }
-  .ep-info-right .ed-v2-file-row { padding: 10px 14px; font-size: 13px; }
-  .ep-info-right .ed-v2-file-row svg { width: 18px; height: 18px; }
 
 
   /* ── Share Episode Modal ────────────────── */
@@ -1065,7 +1132,7 @@
   .share-collapse-header {
     display: flex; align-items: center; gap: 6px;
     padding: 10px 16px 10px 0; cursor: pointer; user-select: none;
-    font-size: 13px; font-weight: 600; color: #1e293b;
+    font-size: 14px; font-weight: 600; color: #1e293b;
     border-radius: 10px; transition: background .12s;
   }
   
@@ -1142,7 +1209,8 @@
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></span> Episodes
         <span class="nav-arrow" style="margin-left:auto;transition:transform .2s;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
-      <a href="#" class="sub active" data-page="episodelist" onclick="event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Episodes/';"><span class="nav-icon"></span> Episode List</a>
+      <a href="#" class="sub active" data-page="episodelist" onclick="event.stopPropagation();"><span class="nav-icon"></span> Episode List</a>
+      <a href="#" class="sub" data-page="episodelist2" onclick="event.stopPropagation();"><span class="nav-icon"></span> Episode List 2</a>
 
       <!-- Distribution -->
       <div class="nav-parent" onclick="toggleSubMenu(this);event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Distribution/';">
@@ -1376,6 +1444,204 @@
 
         <table class="ep-table" id="epTable">
           <thead>
+            <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th>User</th><th>Status</th><th>When</th><th>Downloads (All time)</th></tr>
+            <tr class="alt-header"><td colspan="6">
+              <div class="alt-header-bar">
+                <input type="checkbox" id="selectAllAlt" onchange="toggleSelectAllAlt(this)">
+                <span class="sel-count" id="selectCount">0</span>
+                <span>selected</span>
+              </div>
+            </td></tr>
+          </thead>
+          <tbody id="epTableBody"></tbody>
+        </table>
+
+        <div class="pagination">
+          <span>Showing 1 to 20 of 26 entries</span>
+          <div class="pages"><span class="active">1</span><span>2</span></div>
+        </div>
+      </div>
+      <!-- ═══════════ Episode List ═══════════ -->
+      <div id="page-episodelist2" class="page-content" style="display:none;">
+        <div class="dash-header">
+          <div class="dash-title">Episodes</div>
+          <a href="#" class="btn-create" style="display:inline-flex;align-items:center;gap:5px;padding:7px 16px;background:#1e293b;color:#fff;border:none;border-radius:50px;font-size:16px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New Episode
+          </a>
+        </div>
+        <div class="table-bar">
+          <input type="text" placeholder="Search episodes">
+          <div class="filter-wrap">
+            <button class="btn-filter" onclick="toggleFilter(event)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              Filter
+              <span class="dot"></span>
+            </button>
+            <div id="filterPopover" class="filter-popover">
+              <div class="filter-popover-body">
+              <div class="filter-nav" style="display:flex;flex-direction:column;">
+                <div style="flex:1;">
+                  <button class="filter-nav-item active" onclick="switchFilterPanel('status',this)">Status<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('media',this)">Media Type<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('season',this)">Season<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('published',this)">Published<span class="nav-dot"></span></button>
+                </div>
+                <div class="filter-panel-foot" style="padding:8px 16px 12px;font-size:13px;justify-content:flex-start;align-items:center;min-height:36px;">
+                  <span class="clear-link" onclick="resetFilter()">Clear all</span>
+                </div>
+              </div>
+              <div class="filter-panel">
+                <div id="fp-status" class="filter-panel-content active">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="handleSelectAll(this,'fp-status')"> All Statuses</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Published</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Draft</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Future</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Processing</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Finished</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Failed</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Pending</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="sel-count">1 of 8 selected</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                  </div>
+                </div>
+                <div id="fp-media" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="updatePanelFoot()"> Audio</label>
+                    <label><input type="checkbox" checked onchange="updatePanelFoot()"> Video</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="sel-count">2 of 2 selected</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                  </div>
+                </div>
+                <div id="fp-season" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="handleSelectAll(this,'fp-season')"> All Seasons</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 1</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 2</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 3</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 4</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 5</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 6</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 7</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 8</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 9</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 10</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="sel-count">1 of 11 selected</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                  </div>
+                </div>
+                <div id="fp-published" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Select a date range</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                      <div>
+                        <div style="font-size:12px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">From</div>
+                        <input type="date" onchange="updatePanelFoot()" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;color:var(--text);">
+                      </div>
+                      <div>
+                        <div style="font-size:12px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">To</div>
+                        <input type="date" onchange="updatePanelFoot()" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;color:var(--text);">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="sel-count">No date set</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div style="padding:12px 20px 16px;border-top:1px solid var(--border);">
+                <button class="btn-apply" onclick="applyFilter()">Apply</button>
+              </div>
+            </div>
+          </div>
+          <div class="action-wrap" id="actionsWrap" style="display:none;">
+            <button class="btn-actions" id="actionsBtn" onclick="toggleActionsPopover(event)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+              Actions
+              <span class="dot"></span>
+            </button>
+            <div class="actions-popover" id="actionsPopover">
+              <div class="actions-popover-body">
+                <!-- Main Menu -->
+                <div id="actionsMenuView" class="actions-view active">
+                  <div class="actions-menu-item" onclick="showActionsView('season')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    Set Season
+                    <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                  </div>
+                  <div class="actions-menu-item" onclick="showActionsView('tags')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    Set Tags
+                    <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                  </div>
+                </div>
+
+                <!-- Season Panel -->
+                <div id="actionsSeasonView" class="actions-view">
+                  <div class="actions-panel-inner">
+                    <div class="actions-view-header">
+                      <button class="actions-view-back" onclick="showActionsMenu()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                      </button>
+                      <span class="actions-view-title">Set Season</span>
+                    </div>
+                    <div class="actions-section">
+                      <select id="ddSeasonSelect">
+                        <option value="">Select season...</option>
+                        <option value="1">Season 1</option>
+                        <option value="2">Season 2</option>
+                        <option value="3">Season 3</option>
+                        <option value="4">Season 4</option>
+                        <option value="5">Season 5</option>
+                        <option value="6">Season 6</option>
+                        <option value="7">Season 7</option>
+                        <option value="8">Season 8</option>
+                        <option value="9">Season 9</option>
+                        <option value="10">Season 10</option>
+                      </select>
+                      <button class="btn-apply-sub" onclick="batchSetSeasonSelected()">Apply</button>
+                      <span class="actions-link-danger" onclick="batchRemoveSeasonSelected()">Remove season from episodes</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tags Panel -->
+                <div id="actionsTagsView" class="actions-view">
+                  <div class="actions-panel-inner">
+                    <div class="actions-view-header">
+                      <button class="actions-view-back" onclick="showActionsMenu()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                      </button>
+                      <span class="actions-view-title">Set Tags</span>
+                    </div>
+                    <div class="tags-wrapper">
+                      <div class="tags-selected" id="tagsSelected"></div>
+                      <input type="text" class="tags-input-inline" id="tagsInputInline" placeholder="Select or type tags..." autocomplete="off" onfocus="showTagsDropdown()" oninput="filterTagsDropdown(this.value)" onkeydown="if(event.key==='Enter' && this.value.trim())addNewTag(this.value.trim());if(event.key==='Backspace' && !this.value){event.preventDefault();removeLastTag()}">
+                      <div class="tags-dropdown" id="tagsDropdown"></div>
+                    </div>
+                    <button class="btn-apply-sub" onclick="batchSetTagsSelected()">Apply</button>
+                    <span class="actions-link-danger" onclick="batchClearTagsSelected()">Remove tags from episodes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-delete-toolbar" id="deleteToolbarBtn" style="display:none;" onclick="batchDeleteSelected()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Delete
+          </button>
+        </div>
+
+        <table class="ep-table" id="epTable">
+          <thead>
             <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th>User</th><th>Status</th><th>Type</th><th>When</th><th>Downloads (All time)</th></tr>
             <tr class="alt-header"><td colspan="7">
               <div class="alt-header-bar">
@@ -1385,7 +1651,7 @@
               </div>
             </td></tr>
           </thead>
-          <tbody id="epTableBody"></tbody>
+          <tbody id="epTableBody2"></tbody>
         </table>
 
         <div class="pagination">
@@ -1403,10 +1669,10 @@
 <!-- ═══════════ New Episode Modal ═══════════ -->
 <div class="modal-overlay" id="newEpisodeModal">
   <div class="modal-topbar">
-    <button class="modal-back-btn" onclick="closeNewEpisodeModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
+    <button class="modal-back-btn" onclick="closeNewEpisodeModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
         Cancel
     </button>
-    <span style="position:absolute;left:50%;transform:translateX(-50%);font-size:16px;font-weight:600;color:var(--text);">Upload media file</span>
+    <span style="position:absolute;left:50%;transform:translateX(-50%);font-size:22px;font-weight:600;color:var(--text);">Upload media file</span>
   </div>
   <div class="modal-box">
 
@@ -1442,31 +1708,9 @@
             <div class="ai-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Cut Filler Words and Silence</div>
             <div class="ai-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Filtering &amp; AutoEQ</div>
           </div>
-          <div class="ai-settings-panel" id="aiAudioSettingsPanel" style="display:none;">
-            <a href="#" class="ai-settings-back" onclick="toggleAudioOptSettings(false);return false;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Back
-            </a>
-            <div class="ai-settings-body">
-              <div class="ai-settings-label">Denoising Method</div>
-              <select class="ai-settings-select">
-                <option value="static">Static — Remove constant noises only.</option>
-                <option value="dynamic" selected>Dynamic — Keep speech and music, remove everything else.</option>
-                <option value="speech">Speech Isolation — Keep speech, remove everything else.</option>
-              </select>
-              <div class="ai-settings-row">
-                <span class="ai-settings-label" style="margin-bottom:0;">Cut Silence</span>
-                <div class="ai-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
-              <div class="ai-settings-row">
-                <span class="ai-settings-label" style="margin-bottom:0;">Cut Fillers</span>
-                <div class="ai-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
-            </div>
-            <button class="ai-settings-save" onclick="toggleAudioOptSettings(false);return false;">Save</button>
-          </div>
           <div style="display:flex;align-items:center;gap:16px;margin-top:8px;" id="aiAudioLinks">
             <a href="#" class="ai-how">How it works →</a>
-            <a href="#" class="ai-how" style="display:inline-flex;align-items:center;gap:4px;" onclick="toggleAudioOptSettings(true);return false;">
+            <a href="#" class="ai-how" style="display:inline-flex;align-items:center;gap:4px;" onclick="openAIAudioSettingsModal();return false;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
               Settings
             </a>
@@ -1487,37 +1731,9 @@
             <div class="ai-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Precisely Crafted Chapter Markers</div>
             <div class="ai-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> AI Enhanced Transcripts</div>
           </div>
-          <div class="ai-settings-panel" id="aiContentAsstSettingsPanel" style="display:none;">
-            <a href="#" class="ai-settings-back" onclick="toggleContentAsstSettings(false);return false;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Back
-            </a>
-            <div class="ai-settings-body">
-              <div class="ai-settings-label">Description Style</div>
-              <select class="ai-settings-select">
-                <option value="standard" selected>Standard — Generate a simple, clear episode description</option>
-                <option value="informative">Informative — Overview of topics, guests, and key points</option>
-                <option value="conversational">Conversational — Casual, friendly tone as if to a friend</option>
-                <option value="storytelling">Storytelling — Narrative style to engage listeners</option>
-              </select>
-              <div class="ai-settings-label">Description Length</div>
-              <select class="ai-settings-select">
-                <option value="brief" selected>Brief — Concise description highlighting key points</option>
-                <option value="comprehensive">Comprehensive — Detailed description covering various aspects</option>
-              </select>
-              <div class="ai-settings-divider"></div>
-              <div class="ai-settings-row" style="align-items:flex-start;">
-                <div>
-                  <div class="ai-settings-label">Transcript Speaker Diarization</div>
-                  <div class="ai-settings-note">Requires AI Audio Optimization enabled.</div>
-                </div>
-                <div class="ai-toggle on" id="toggleDiarization" onclick="this.classList.toggle('on')"></div>
-              </div>
-            </div>
-            <button class="ai-settings-save" onclick="toggleContentAsstSettings(false);return false;">Save</button>
-          </div>
           <div style="display:flex;align-items:center;gap:16px;margin-top:8px;" id="aiContentAsstLinks">
             <a href="#" class="ai-how">How it works →</a>
-            <a href="#" class="ai-how" style="display:inline-flex;align-items:center;gap:4px;" onclick="toggleContentAsstSettings(true);return false;">
+            <a href="#" class="ai-how" style="display:inline-flex;align-items:center;gap:4px;" onclick="openAIContentSettingsModal();return false;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
               Settings
             </a>
@@ -1573,7 +1789,7 @@
 <div class="episode-details-overlay" id="episodeDetailsModal">
   <div class="ed-topbar">
     <div class="ed-topbar-left">
-      <button class="ed-back-btn" onclick="closeEpisodeDetailsModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
+      <button class="ed-back-btn" onclick="closeEpisodeDetailsModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
         Cancel
       </button>
     </div>
@@ -1581,7 +1797,7 @@
     <div class="ed-topbar-right">
       <button class="ed-save-draft" onclick="saveAsDraft()">Save as Draft</button>
       <div class="ed-publish-wrap">
-        <button class="ed-topbar-publish" onclick="publishPublish()">
+        <button class="ed-topbar-publish" id="publishBtn" onclick="publishPublish()" disabled>
           <span id="publishBtnLabel">Publish Now</span>
           <span style="width:1px;height:20px;background:rgba(255,255,255,.25);flex-shrink:0;"></span>
           <span class="ed-publish-arrow" onclick="event.stopPropagation();togglePublishDropdown(event)">
@@ -1612,22 +1828,20 @@
         <div class="ep-info-grid">
           <!-- Left: Episode Info -->
           <div class="ep-info-left">
-            <div class="ed-v2-card-title">Episode Info</div>
-            <div class="ed-v2-card-desc">File name, title, and description for your episode</div>
 
             <div class="ed-v2-field">
               <div class="ed-v2-label">File Name</div>
               <div class="ed-v2-file-row">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 <span id="v2FileName">episode-audio.mp3</span>
-                <span style="margin-left:auto;font-size:13px;color:#1a9a6c;font-weight:500;cursor:pointer;flex-shrink:0;" onclick="document.getElementById('v2FileInput').click()" onmouseover="this.style.color='#14805a'" onmouseout="this.style.color='#1a9a6c'">Change</span>
-                <input type="file" id="v2FileInput" style="display:none" onchange="if(this.files.length>0)document.getElementById('v2FileName').textContent=this.files[0].name;">
+                <span style="margin-left:auto;font-size:13px;color:#3b82f6;font-weight:700;cursor:pointer;flex-shrink:0;" onclick="document.getElementById('v2FileInput').click()" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#3b82f6'">Change</span>
+                <input type="file" id="v2FileInput" style="display:none" onchange="if(this.files.length>0)document.getElementById('v2FileName').textContent=this.files[0].name;updatePublishBtn()">
               </div>
             </div>
 
             <div class="ed-v2-field">
               <div class="ed-v2-label">Title</div>
-              <input type="text" class="ed-v2-input" id="v2EpisodeTitle" placeholder="Enter episode title" value="">
+              <input type="text" class="ed-v2-input" id="v2EpisodeTitle" placeholder="Enter episode title" value="" oninput="updatePublishBtn()">
             </div>
 
             <div class="ed-v2-field">
@@ -1641,138 +1855,124 @@
                   <button type="button" onclick="document.execCommand('insertUnorderedList')" style="width:30px;height:30px;border:none;background:transparent;border-radius:6px;cursor:pointer;">&bull;&#8211;</button>
                   <button type="button" onclick="document.execCommand('insertOrderedList')" style="width:30px;height:30px;border:none;background:transparent;border-radius:6px;cursor:pointer;">1&#8211;</button>
                 </div>
-                <div contenteditable="true" id="v2EpisodeDesc" style="min-height:460px;padding:12px 14px;font-size:14px;color:#1e293b;line-height:1.7;outline:none;resize:vertical;overflow:auto;" data-placeholder="One or more sentences describing your episode to potential listeners."></div>
+                <div contenteditable="true" id="v2EpisodeDesc" style="min-height:280px;padding:12px 14px;font-size:14px;color:#1e293b;line-height:1.7;outline:none;resize:vertical;overflow:auto;" data-placeholder="One or more sentences describing your episode to potential listeners."></div>
               </div>
             </div>
           </div>
 
-          <!-- Right: Logo + Social -->
-          <div class="ep-info-right">
-            <!-- Logo -->
-            <div>
-              <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-                <!-- Logo preview -->
-                <div style="width:100%;aspect-ratio:1;border-radius:12px;background:#e2e8f0;overflow:hidden;border:1px solid #e2e8f0;">
-                  <img src="podbean_81.jpg" alt="Artwork" style="width:100%;height:100%;object-fit:cover;display:block;">
-                </div>
-                <!-- Upload button with dropdown -->
-                <div style="position:relative;width:100%;">
-                  <div style="display:flex;width:100%;">
-                    <button onclick="document.getElementById('v2LogoInput').click()" style="flex:1;padding:8px 14px;border:1px solid #d1d5db;border-right:none;border-radius:8px 0 0 8px;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:background .15s;white-space:nowrap;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                      Upload
-                    </button>
-                    <button onclick="toggleLogoDropdown(event)" style="width:34px;padding:8px 0;border:1px solid #d1d5db;border-radius:0 8px 8px 0;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#64748b;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
-                    </button>
-                  </div>
-                  <!-- Dropdown -->
-                  <div id="v2LogoDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:60;overflow:hidden;">
-                    <div onclick="chooseLogoFromAccount(1)" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                      <div style="width:32px;height:32px;border-radius:6px;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:9px;">L1</div>
-                      Logo 1
-                    </div>
-                    <div onclick="chooseLogoFromAccount(2)" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                      <div style="width:32px;height:32px;border-radius:6px;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:9px;">L2</div>
-                      Logo 2
-                    </div>
-                    <div onclick="chooseLogoFromAccount(3)" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                      <div style="width:32px;height:32px;border-radius:6px;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:9px;">L3</div>
-                      Logo 3
-                    </div>
-                    <div onclick="chooseLogoFromAccount(4)" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                      <div style="width:32px;height:32px;border-radius:6px;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:9px;">L4</div>
-                      Logo 4
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <input type="file" id="v2LogoInput" style="display:none" accept="image/jpeg,image/png">
-            </div>
-            <div style="font-size:11px;color:#94a3b8;text-align:center;margin-top:4px;">Between 1400 and 2048 pixels square (jpg or png).</div>
-            <div style="height:1px;background:#e2e8f0;margin:12px 0 0;"></div>
+	  <!-- Logo -->
+	  <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px;">
+		    <div style="font-size:16px;font-weight:600;color:#1e293b;">Episode Artwork</div>
+	    <div style="display:flex;align-items:flex-start;gap:20px;">
+	      <div style="width:200px;flex-shrink:0;">
+	        <div style="width:100%;aspect-ratio:1;border-radius:12px;background:#e2e8f0;overflow:hidden;border:1px solid #e2e8f0;">
+	          <img src="podbean_81.jpg" alt="Artwork" style="width:100%;height:100%;object-fit:cover;display:block;">
+	        </div>
+	      </div>
+	      <div style="flex:1;min-width:0;">
+	        <div style="font-size:13px;color:#64748b;margin-bottom:12px;">Between 1400 and 2048 pixels square (jpg or png).</div>
+	        <div style="position:relative;">
+	          <div style="display:flex;max-width:260px;">
+	            <button onclick="document.getElementById('v2LogoInput').click()" style="flex:1;padding:8px 14px;border:1px solid #d1d5db;border-right:none;border-radius:8px 0 0 8px;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:background .15s;white-space:nowrap;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+	              Upload
+	            </button>
+	            <button onclick="toggleLogoDropdown(event)" style="width:34px;padding:8px 0;border:1px solid #d1d5db;border-radius:0 8px 8px 0;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#64748b;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+	              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
+	            </button>
+	          </div>
+	          <div id="v2LogoDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;max-width:260px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:60;overflow:hidden;">
+	            <div onclick="chooseLogoFromAccount(1)" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+	              <div style="width:32px;height:32px;border-radius:6px;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:9px;">L1</div>
+	              Logo 1
+	            </div>
+	            <div onclick="chooseLogoFromAccount(2)" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+	              <div style="width:32px;height:32px;border-radius:6px;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:9px;">L2</div>
+	              Logo 2
+	            </div>
+	            <div onclick="chooseLogoFromAccount(3)" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+	              <div style="width:32px;height:32px;border-radius:6px;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:9px;">L3</div>
+	              Logo 3
+	            </div>
+	            <div onclick="chooseLogoFromAccount(4)" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+	              <div style="width:32px;height:32px;border-radius:6px;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:9px;">L4</div>
+	              Logo 4
+	            </div>
+	          </div>
+	        </div>
+	        <input type="file" id="v2LogoInput" style="display:none" accept="image/jpeg,image/png">
+	      </div>
+	    </div>
 
-            <!-- Social -->
-            <div>
-              <div style="font-size:16px;font-weight:600;color:#1e293b;margin-bottom:4px;">Social Sharing</div>
-              <div style="font-size:13px;color:#64748b;margin-bottom:16px;">Auto-share after publishing — click icons to enable or disable.</div>
-                <div class="ed-v2-social-icons">
-                  <div class="ed-v2-social-icon active" onclick="this.classList.toggle('active')" title="Facebook">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                  </div>
-                  <div class="ed-v2-social-icon active" onclick="this.classList.toggle('active')" title="X (Twitter)">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  </div>
-                  <div class="ed-v2-social-icon active" onclick="this.classList.toggle('active')" title="LinkedIn">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                  </div>
-                  <div class="ed-v2-social-icon" onclick="this.classList.toggle('active');toggleYouTubeSettings(this.classList.contains('active'))" title="YouTube">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                  </div>
-                  <div class="ed-v2-social-icon" onclick="this.classList.toggle('active')" title="WordPress">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm0 21.6c-5.301 0-9.6-4.299-9.6-9.6S6.699 2.4 12 2.4s9.6 4.299 9.6 9.6-4.299 9.6-9.6 9.6zM6 8.4h1.2v1.2H6V8.4zm10.8 0h1.2v1.2h-1.2V8.4zm-7.2 8.4c.6-1.2 1.8-2.4 3.6-3 0 0 0 .6-.6 1.2s-1.2 1.8-1.8 3h3c.6 0 1.2-.6 1.2-1.2s-.6-1.2-1.2-1.2c-1.2 0-2.4-1.2-2.4-2.4s1.2-2.4 2.4-2.4c.6 0 1.2.6 1.2 1.2h1.2c0-1.2-1.2-2.4-2.4-2.4s-2.4 1.2-2.4 2.4c0 .6.6 1.2 1.2 1.8-1.2.6-2.4 1.8-2.4 3 0 .6.6 1.2 1.2 1.2h2.4z"/></svg>
-                  </div>
-                </div>
-              </div>
+	    <!-- Social -->
+	    <div>
+	      <div style="font-size:16px;font-weight:600;color:#1e293b;margin-bottom:4px;margin-top:15px;">Social Sharing</div>
+	      <div style="font-size:13px;color:#64748b;margin-bottom:16px;">Auto-share after publishing — click icons to enable or disable.</div>
+	      <div class="ed-v2-social-icons">
+	        <div class="ed-v2-social-icon active" onclick="this.classList.toggle('active')" title="Facebook">
+	          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+	        </div>
+	        <div class="ed-v2-social-icon active" onclick="this.classList.toggle('active')" title="X (Twitter)">
+	          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+	        </div>
+	        <div class="ed-v2-social-icon active" onclick="this.classList.toggle('active')" title="LinkedIn">
+	          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+	        </div>
+	        <div class="ed-v2-social-icon" onclick="this.classList.toggle('active');toggleYouTubeSettings(this.classList.contains('active'))" title="YouTube">
+	          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+	        </div>
+	        <div class="ed-v2-social-icon" onclick="this.classList.toggle('active')" title="WordPress">
+	          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm0 21.6c-5.301 0-9.6-4.299-9.6-9.6S6.699 2.4 12 2.4s9.6 4.299 9.6 9.6-4.299 9.6-9.6 9.6zM6 8.4h1.2v1.2H6V8.4zm10.8 0h1.2v1.2h-1.2V8.4zm-7.2 8.4c.6-1.2 1.8-2.4 3.6-3 0 0 0 .6-.6 1.2s-1.2 1.8-1.8 3h3c.6 0 1.2-.6 1.2-1.2s-.6-1.2-1.2-1.2c-1.2 0-2.4-1.2-2.4-2.4s1.2-2.4 2.4-2.4c.6 0 1.2.6 1.2 1.2h1.2c0-1.2-1.2-2.4-2.4-2.4s-2.4 1.2-2.4 2.4c0 .6.6 1.2 1.2 1.8-1.2.6-2.4 1.8-2.4 3 0 .6.6 1.2 1.2 1.2h2.4z"/></svg>
+	        </div>
+	      </div>
+	    </div>
 
-              <!-- YouTube Settings -->
-              <div id="v2YouTubeSettings" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
-                  <svg viewBox="0 0 24 24" fill="#ff0000" width="18" height="18"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/></svg>
-                  <span style="font-size:14px;font-weight:600;color:#1e293b;">YouTube Video Settings</span>
-                </div>
+	    <!-- YouTube Settings -->
+	    <div id="v2YouTubeSettings" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0;">
+	      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+	        <svg width="18" height="18" viewBox="0 0 24 24" fill="red"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+	      <span style="font-size:14px;font-weight:600;color:#1e293b;">YouTube Settings</span>
+	    </div>
+	    <div style="display:flex;flex-direction:column;gap:12px;">
+	      <div style="display:flex;align-items:center;gap:10px;">
+	        <label style="font-size:13px;font-weight:500;color:#1e293b;min-width:100px;">Visibility</label>
+	        <select style="flex:1;padding:7px 30px 7px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%2364748b%27 stroke-width=%273%27%3E%3Cpolyline points=%276 9 12 15 18 9%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center;">
+	          <option>Public</option>
+	          <option>Unlisted</option>
+	        </select>
+	      </div>
+	      <div style="display:flex;align-items:center;gap:10px;">
+	        <label style="font-size:13px;font-weight:500;color:#1e293b;min-width:100px;">Category</label>
+	        <select style="flex:1;padding:7px 30px 7px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%2364748b%27 stroke-width=%273%27%3E%3Cpolyline points=%276 9 12 15 18 9%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center;">
+	          <option>Education</option>
+	          <option>Entertainment</option>
+	          <option>Technology</option>
+	        </select>
+	      </div>
+	      <div style="display:flex;align-items:center;gap:10px;">
+	        <label style="font-size:13px;font-weight:500;color:#1e293b;min-width:100px;">Language</label>
+	        <select style="flex:1;padding:7px 30px 7px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%2364748b%27 stroke-width=%273%27%3E%3Cpolyline points=%276 9 12 15 18 9%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center;">
+	          <option>English</option>
+	          <option>Spanish</option>
+	          <option>Chinese</option>
+	        </select>
+	      </div>
+	      <div style="display:flex;align-items:center;gap:10px;">
+	        <label style="font-size:13px;font-weight:500;color:#1e293b;min-width:100px;">Paid Promotion</label>
+	        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#1e293b;cursor:pointer;">
+	          <input type="checkbox" style="accent-color:#1a9a6c;width:15px;height:15px;"> Contains paid promotion
+	        </label>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
-                <div class="ed-v2-field">
-                  <div class="ed-v2-label">Title</div>
-                  <input type="text" class="ed-v2-input" id="v2YouTubeTitle" placeholder="YouTube video title (leave empty to use episode title)">
-                </div>
-
-                <div class="ed-v2-field">
-                  <div class="ed-v2-label">Description</div>
-                  <textarea class="ed-v2-textarea" id="v2YouTubeDesc" placeholder="YouTube video description (leave empty to use episode description)" style="min-height:60px;"></textarea>
-                </div>
-
-                <div class="ed-v2-field">
-                  <div class="ed-v2-label">Category</div>
-                  <select class="ed-v2-select" id="v2YouTubeCategory">
-                    <option value="entertainment" selected>Entertainment</option>
-                    <option value="education">Education</option>
-                    <option value="music">Music</option>
-                    <option value="people">People &amp; Blogs</option>
-                    <option value="science">Science &amp; Technology</option>
-                    <option value="sports">Sports</option>
-                    <option value="news">News &amp; Politics</option>
-                    <option value="howto">Howto &amp; Style</option>
-                  </select>
-                </div>
-
-                <div class="ed-v2-field">
-                  <div class="ed-v2-label">Visibility</div>
-                  <div style="display:flex;flex-direction:column;gap:6px;">
-                    <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#1e293b;cursor:pointer;">
-                      <input type="radio" name="v2YouTubeVisibility" value="public" checked style="accent-color:#1a9a6c;width:15px;height:15px;margin:0;"> Public
-                    </label>
-                    <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#1e293b;cursor:pointer;">
-                      <input type="radio" name="v2YouTubeVisibility" value="unlisted" style="accent-color:#1a9a6c;width:15px;height:15px;margin:0;"> Unlisted
-                    </label>
-                    <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#1e293b;cursor:pointer;">
-                      <input type="radio" name="v2YouTubeVisibility" value="private" style="accent-color:#1a9a6c;width:15px;height:15px;margin:0;"> Private
-                    </label>
-                  </div>
-                </div>
-
-                <div style="font-size:12px;color:#94a3b8;line-height:1.5;padding:10px 12px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;">
-                  Share to YouTube with episode length in excess of 15 minutes
-                  <a href="https://www.youtube.com/verify" target="_blank" style="color:#1a9a6c;text-decoration:none;font-weight:500;">requires YouTube account verification</a> first.
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
+
+      </div>
+
       <!-- ── Panel: Chapter Markers ── -->
       <div class="ed-v2-panel" id="v2-chapters">
         <div class="ed-v2-card">
-          <div class="ed-v2-card-title">Chapter Markers</div>
-          <div class="ed-v2-card-desc">Listen to your episode and add chapters at key moments</div>
 
           <!-- Audio Player -->
           <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
@@ -1792,7 +1992,7 @@
               </div>
             </div>
             <div style="display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;">
-              <button onclick="addChapterFromPlayer()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #1a9a6c;border-radius:8px;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#1a9a6c;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#f0f9f4'" onmouseout="this.style.background='#fff'">
+              <button onclick="addChapterFromPlayer()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Add Chapter <span style="font-weight:600;margin-left:2px;" id="v2CurrentTimeBtnLabel">00:00</span>
               </button>
@@ -1839,8 +2039,6 @@
       <!-- ── Panel: Transcripts ── -->
       <div class="ed-v2-panel" id="v2-transcripts">
         <div class="ed-v2-card">
-          <div class="ed-v2-card-title">Transcripts</div>
-          <div class="ed-v2-card-desc">Follow along with the transcript while listening</div>
 
           <!-- Audio Player (shared with Chapter Markers) -->
           <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
@@ -1889,7 +2087,7 @@
                 </div>
               </div>
             </div>
-            <textarea class="ed-v2-textarea" id="v2Transcript" placeholder="Paste or write your episode transcript here..." style="min-height:200px;"></textarea>
+            <textarea class="ed-v2-textarea" id="v2Transcript" placeholder="Paste or write your episode transcript here..." style="min-height:380px;"></textarea>
             <div class="ed-v2-hint">Paste or type your transcript above, or upload a .srt or .vtt file.</div>
           </div>
         </div>
@@ -1898,30 +2096,16 @@
       <!-- ── Panel: More Options ── -->
       <div class="ed-v2-panel" id="v2-more">
         <div class="ed-v2-card">
-          <div class="ed-v2-card-title">More Options</div>
-          <div class="ed-v2-card-desc">Season, episode type, author, duration, and RSS settings</div>
 
-          <!-- Season NO. + Episode NO. (side by side) -->
-          <div style="margin-bottom:22px;">
-            <div class="ed-v2-grid-2">
-              <div class="ed-v2-field">
-                <div class="ed-v2-label">Season NO.</div>
-                <select class="ed-v2-select" id="v2Season">
-                  <option value="">Select season</option>
-                  <option value="1">Season 1</option>
-                  <option value="2">Season 2</option>
-                  <option value="3">Season 3</option>
-                  <option value="4">Season 4</option>
-                  <option value="5">Season 5</option>
-                </select>
-              </div>
-              <div class="ed-v2-field">
-                <div class="ed-v2-label">Episode NO.</div>
-                <input type="text" class="ed-v2-input" id="v2EpisodeNo" placeholder="e.g. 12">
-              </div>
-            </div>
+          <!-- Season NO. + Episode NO. -->
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Season NO.</div>
+            <input type="text" class="ed-v2-input" id="v2Season" placeholder="e.g. 1">
           </div>
-
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Episode NO.</div>
+            <input type="text" class="ed-v2-input" id="v2EpisodeNo" placeholder="e.g. 12">
+          </div>
           <div class="ed-v2-field">
             <div class="ed-v2-label">Episode Type</div>
             <select class="ed-v2-select" id="v2EpisodeType">
@@ -1954,7 +2138,6 @@
           <div style="height:1px;background:#e2e8f0;margin:24px 0;"></div>
           <div style="margin-bottom:22px;">
             <div style="font-size:18px;font-weight:700;color:#1e293b;margin-bottom:20px;">Episode Tags</div>
-            <div style="font-size:14px;color:#64748b;margin-bottom:16px;">Add tags to categorize this episode</div>
             <div class="ed-v2-field">
               <div class="v2-tags-wrapper" style="position:relative;">
                 <div class="v2-tags-selected" id="v2TagsSelected" style="display:flex;flex-wrap:wrap;gap:4px;padding:0 0 6px;min-height:0;"></div>
@@ -1969,6 +2152,78 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ AI Audio Optimization Settings Modal ═══════════ -->
+<div class="ai-settings-overlay" id="aiAudioSettingsModal" onclick="if(event.target===this)closeAIAudioSettingsModal()">
+  <div class="ai-settings-dialog">
+    <div class="ai-settings-header">
+      <h2>AI Audio Optimization</h2>
+      <button class="ai-settings-close" onclick="closeAIAudioSettingsModal()">&times;</button>
+    </div>
+    <div class="ai-settings-body">
+      <div class="ai-settings-body-inner">
+        <div class="ai-settings-label">Denoising Method</div>
+        <select class="ai-settings-select" id="aiSettingsDenoise">
+          <option value="static">Static — Remove constant noises only.</option>
+          <option value="dynamic" selected>Dynamic — Keep speech and music, remove everything else.</option>
+          <option value="speech">Speech Isolation — Keep speech, remove everything else.</option>
+        </select>
+        <div class="ai-settings-note">Define whether the AI should remove only static or also fast-changing noises, and whether it should keep or eliminate music.</div>
+        <div class="ai-settings-row">
+          <span class="ai-settings-label" style="margin-bottom:0;">Cut Silence</span>
+          <div class="ai-toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="ai-settings-note">It detects and removes silent segments from your record, that might be caused by speech breaks, pauses for breathing, or equipment-re-adjusting, except video files.</div>
+        <div class="ai-settings-row">
+          <span class="ai-settings-label" style="margin-bottom:0;">Cut Fillers</span>
+          <div class="ai-toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="ai-settings-note">It detects and removes filler words, namely any kind of "um", "uh", "mh", German "ähm", "äh", "öh", French "euh", Spanish "eh" and similar, except video files.</div>
+        <div class="ai-settings-note" style="margin-top:20px;margin-bottom:40px;border-top:1px solid #e2e8f0;padding-top:16px;">The changes you made will be applied when you publish new episodes using AI Audio Optimization.</div>
+      </div>
+    </div>
+    <div class="ai-settings-footer">
+      <button class="btn-save" onclick="closeAIAudioSettingsModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ AI Content Assistant Settings Modal ═══════════ -->
+<div class="ai-settings-overlay" id="aiContentSettingsModal" onclick="if(event.target===this)closeAIContentSettingsModal()">
+  <div class="ai-settings-dialog">
+    <div class="ai-settings-header">
+      <h2>AI Content Assistant</h2>
+      <button class="ai-settings-close" onclick="closeAIContentSettingsModal()">&times;</button>
+    </div>
+    <div class="ai-settings-body">
+      <div class="ai-settings-body-inner">
+        <div class="ai-settings-label">Description Style</div>
+        <select class="ai-settings-select" id="aiSettingsDescStyle" style="margin-bottom:20px;">
+          <option value="standard" selected>Standard — Generate a simple, clear episode description</option>
+          <option value="informative">Informative — Overview of topics, guests, and key points</option>
+          <option value="conversational">Conversational — Casual, friendly tone as if to a friend</option>
+          <option value="storytelling">Storytelling — Narrative style to engage listeners</option>
+        </select>
+        <div class="ai-settings-label">Description Length</div>
+        <select class="ai-settings-select" id="aiSettingsDescLength" style="margin-bottom:20px;">
+          <option value="brief" selected>Brief — Concise description highlighting key points</option>
+          <option value="comprehensive">Comprehensive — Detailed description covering various aspects</option>
+        </select>
+        <div class="ai-settings-row" style="align-items:flex-start;">
+          <div>
+            <div class="ai-settings-label">Transcript Speaker Diarization</div>
+            <div class="ai-settings-note">Automatically labels speakers with identifiers (e.g., Speaker 1) and allows you to edit these names in the episode transcript edit box for personalization.</div>
+          </div>
+          <div class="ai-toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="ai-settings-note" style="margin-top:20px;margin-bottom:40px;border-top:1px solid #e2e8f0;padding-top:16px;">The changes you made will be applied when you publish new episodes using AI Content Assistant.</div>
+      </div>
+    </div>
+    <div class="ai-settings-footer">
+      <button class="btn-save" onclick="closeAIContentSettingsModal()">Save</button>
     </div>
   </div>
 </div>
@@ -2311,6 +2566,12 @@
               </div>
             </div>
           </div>
+
+          <!-- Multi-episode link -->
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--text-secondary);line-height:1.5;">
+            Get the multi-episode embed player from the
+            <a href="https://elina-zhao.github.io/my-page/Distribution/" style="color:var(--primary);text-decoration:none;font-weight:500;" target="_blank">Distribution → Embed Player</a> page.
+          </div>
         </div>
       </div>
 
@@ -2324,39 +2585,40 @@
 <script>
   // Episode data
   var episodes = [
-    {title:'英文里的"奇妙日常"：旅馆为何被拼布大会订满？',status:'Future',when:'Jun 26, 2026',dl:0,tags:['tutorial'],season:''},
-    {title:'future episode',status:'Published',when:'May 15, 2026',dl:156,tags:['news'],season:''},
-    {title:'How to Start a Podcast in 9 Steps (2026): From Idea to Growth',status:'Draft',when:'Mar 10, 2026',dl:0,tags:['tutorial','audio'],season:'1'},
-    {title:'Cómo empezar un podcast en 9 pasos: guía práctica para 2026',status:'Draft',when:'Mar 10, 2026',dl:0,tags:['tutorial'],season:'1'},
-    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'Draft',when:'Feb 28, 2026',dl:0,tags:['audio'],season:''},
-    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'Draft',when:'Feb 28, 2026',dl:0,tags:[],season:''},
-    {title:'How_to_Record',status:'Published',when:'Dec 16, 2025',dl:3241,tags:['tutorial','video'],season:'2'},
-    {title:'Hometown Heroes Expanded: Up to $35K for Florida First-Time Buyers',status:'Published',when:'Dec 16, 2025',dl:892,tags:['news'],season:''},
-    {title:'How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes',status:'Published',when:'Dec 16, 2025',dl:2156,tags:['video','tutorial'],season:'2'},
-    {title:'Summary',status:'Published',when:'Dec 16, 2025',dl:1873,tags:['solo'],season:''},
-    {title:'Podcasting 2025: From Idea to Launch in 10 Steps',status:'Published',when:'Dec 16, 2025',dl:510,tags:[],season:''},
-    {title:'this is video episode 2',status:'Published',when:'Oct 27, 2025',dl:4632,tags:['video'],season:''},
-    {title:'This is a video mp4 episode',status:'Published',when:'Oct 27, 2025',dl:1420,tags:['video'],season:''},
-    {title:'Renewing the Temple: Haggai\'s Call to Action',status:'Published',when:'May 14, 2025',dl:678,tags:[],season:''},
-    {title:'Born on the Seven-Mile Miracle: John John Florence',status:'Published',when:'May 13, 2025',dl:1950,tags:[],season:''},
-    {title:'Episode Title 4903942504',status:'Pending',when:'May 12, 2025',dl:0,tags:[],season:''},
-    {title:'When God Chose My Parents: A Heartfelt Ode jnw7zxim',status:'Published',when:'Feb 17, 2025',dl:345,tags:[],season:''},
-    {title:'Discovering Musical Landscapes',status:'Published',when:'Feb 17, 2025',dl:1178,tags:['music'],season:''},
-    {title:'Exploring the Seven Mile Mirror: A Dive into Hidden Depths',status:'Published',when:'Feb 17, 2025',dl:723,tags:['solo'],season:''},
-    {title:'Editing Your Podcast Like a Pro: Tools and Tips',status:'Published',when:'Feb 17, 2025',dl:2891,tags:['tutorial'],season:'1'}
+    {title:'英文里的"奇妙日常"：旅馆为何被拼布大会订满？',status:'Future',when:'Jun 26, 2026',dl:0,tags:['tutorial'],season:'',type:'Free'},
+    {title:'future episode',status:'Published',when:'May 15, 2026',dl:156,tags:['news'],season:'',type:'Ad-free'},
+    {title:'How to Start a Podcast in 9 Steps (2026): From Idea to Growth',status:'Draft',when:'Mar 10, 2026',dl:0,tags:['tutorial','audio'],season:'1',type:'Subscriber-only'},
+    {title:'Cómo empezar un podcast en 9 pasos: guía práctica para 2026',status:'AI Processing',when:'Mar 10, 2026',dl:0,tags:['tutorial'],season:'1',type:'Early access'},
+    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Finished',when:'Feb 28, 2026',dl:0,tags:['audio'],season:'',type:'Archive access'},
+    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Failed',when:'Feb 28, 2026',dl:0,tags:[],season:'',type:'Free'},
+    {title:'How_to_Record',status:'Published',when:'Dec 16, 2025',dl:3241,tags:['tutorial','video'],season:'2',type:'Ad-free'},
+    {title:'Hometown Heroes Expanded: Up to $35K for Florida First-Time Buyers',status:'Published',when:'Dec 16, 2025',dl:892,tags:['news'],season:'',type:'Subscriber-only'},
+    {title:'How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes',status:'AI Finished',when:'Dec 16, 2025',dl:2156,tags:['video','tutorial'],season:'2',type:'Early access'},
+    {title:'Summary',status:'AI Processing',when:'Dec 16, 2025',dl:1873,tags:['solo'],season:'',type:'Archive access'},
+    {title:'Podcasting 2025: From Idea to Launch in 10 Steps',status:'Published',when:'Dec 16, 2025',dl:510,tags:[],season:'',type:'Free'},
+    {title:'this is video episode 2',status:'Published',when:'Oct 27, 2025',dl:4632,tags:['video'],season:'',type:'Ad-free'},
+    {title:'This is a video mp4 episode',status:'AI Failed',when:'Oct 27, 2025',dl:1420,tags:['video'],season:'',type:'Subscriber-only'},
+    {title:'Renewing the Temple: Haggai\'s Call to Action',status:'Published',when:'May 14, 2025',dl:678,tags:[],season:'',type:'Early access'},
+    {title:'Born on the Seven-Mile Miracle: John John Florence',status:'Published',when:'May 13, 2025',dl:1950,tags:[],season:'',type:'Archive access'},
+    {title:'Episode Title 4903942504',status:'Pending',when:'May 12, 2025',dl:0,tags:[],season:'',type:'Free'},
+    {title:'When God Chose My Parents: A Heartfelt Ode jnw7zxim',status:'Published',when:'Feb 17, 2025',dl:345,tags:[],season:'',type:'Ad-free'},
+    {title:'Discovering Musical Landscapes',status:'Published',when:'Feb 17, 2025',dl:1178,tags:['music'],season:'',type:'Subscriber-only'},
+    {title:'Exploring the Seven Mile Mirror: A Dive into Hidden Depths',status:'Published',when:'Feb 17, 2025',dl:723,tags:['solo'],season:'',type:'Early access'},
+    {title:'Editing Your Podcast Like a Pro: Tools and Tips',status:'Published',when:'Feb 17, 2025',dl:2891,tags:['tutorial'],season:'1',type:'Archive access'}
   ];
 
   var availableTags = ['interview','solo','monetization','audio','video','tutorial','news','story','music','review'];
   var selectedTags = [];
 
   function badgeClass(s) {
-    return 'badge-' + s.toLowerCase();
+    return 'badge-' + s.toLowerCase().replace(/\s+/g, '-');
   }
 
   function buildRows() {
     var html = '';
+    var html2 = '';
     episodes.forEach(function(ep, i) {
-      html += '<tr id="epRow' + i + '" onclick="editEpisode(' + i + ')">' +
+      var rowStart = '<tr id="epRow' + i + '" onclick="editEpisode(' + i + ')">' +
         '<td onclick="event.stopPropagation()"><input type="checkbox" onchange="updateSelection()"></td>' +
         '<td class="ep-title-cell">' +
           '<span class="title-text">' + ep.title + '</span>' +
@@ -2367,13 +2629,22 @@
           '</span>' +
         '</td>' +
         '<td>Creator E</td>' +
-        '<td onclick="event.stopPropagation()"><span class="badge-status ' + badgeClass(ep.status) + '">' + ep.status + '</span></td>' +
-        '<td>Public</td>' +
+        '<td onclick="event.stopPropagation()"><span class="badge-status ' + badgeClass(ep.status) + '">' + ep.status + '</span></td>';
+      // Episode List (no Type column)
+      html += rowStart +
+        '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
+        '<td onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
+      '</tr>';
+      // Episode List 2 (with Type column)
+      html2 += rowStart +
+        '<td><span class="badge-status badge-type">' + ep.type + '</span></td>' +
         '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
         '<td onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
       '</tr>';
     });
     document.getElementById('epTableBody').innerHTML = html;
+    var epTableBody2 = document.getElementById('epTableBody2');
+    if (epTableBody2) epTableBody2.innerHTML = html2;
   }
 
   var editingIndex = -1;
@@ -2398,6 +2669,7 @@
     if (descDiv) descDiv.innerHTML = '';
     if (fileNameSpan) fileNameSpan.textContent = ep.title + '.mp3';
     // Also set the simple modal fields
+    updatePublishBtn();
     var simpleTitle = document.getElementById('episodeTitle');
     var simpleDesc = document.getElementById('episodeDesc');
     if (simpleTitle) simpleTitle.value = ep.title;
@@ -2650,7 +2922,7 @@
             '<label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px;">Subject:</label>' +
             '<input type="text" value="' + title + '" readonly style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;box-sizing:border-box;">' +
           '</div>' +
-          '<div style="margin-bottom:16px;">' +
+          '<div>' +
             '<textarea readonly style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;resize:none;height:80px;box-sizing:border-box;">' + url + '</textarea>' +
           '</div>' +
           '<div style="display:flex;gap:8px;justify-content:flex-end;">' +
@@ -2856,6 +3128,7 @@
     var parentMap = {
       'dashboard': -1,
       'episodelist': 0,
+      'episodelist2': 0,
       'podcastapps': 1,
       'socialshare': 1,
       'podcastwebsite': 1,
@@ -3298,36 +3571,17 @@
     toggle.classList.toggle('on');
     content.classList.toggle('off');
   }
-  function toggleContentAsstSettings(showSettings) {
-    document.getElementById('aiContentAsstFeatures').style.display = showSettings ? 'none' : '';
-    document.getElementById('aiContentAsstSettingsPanel').style.display = showSettings ? '' : 'none';
-    document.getElementById('aiContentAsstLinks').style.display = showSettings ? 'none' : '';
-    refreshSettingsLayout();
+  function openAIAudioSettingsModal() {
+    document.getElementById('aiAudioSettingsModal').classList.add('show');
   }
-  function toggleAudioOptSettings(showSettings) {
-    document.getElementById('aiAudioFeatures').style.display = showSettings ? 'none' : '';
-    document.getElementById('aiAudioSettingsPanel').style.display = showSettings ? '' : 'none';
-    document.getElementById('aiAudioLinks').style.display = showSettings ? 'none' : '';
-    refreshSettingsLayout();
+  function closeAIAudioSettingsModal() {
+    document.getElementById('aiAudioSettingsModal').classList.remove('show');
   }
-  function refreshSettingsLayout() {
-    var audioOpen = document.getElementById('aiAudioSettingsPanel').style.display !== 'none';
-    var contentOpen = document.getElementById('aiContentAsstSettingsPanel').style.display !== 'none';
-    var rightPanel = document.getElementById('modalRight');
-    var audioSec = document.getElementById('aiAudioSection');
-    var audioCtn = document.getElementById('aiAudioContent');
-    var contentSec = document.getElementById('aiContentAsstSection');
-    var contentCtn = document.getElementById('aiContentAsstContent');
-    function reset(el) { if (el) { el.style.flex = ''; el.style.overflowY = ''; el.style.maxHeight = ''; } }
-    reset(audioSec); reset(audioCtn); reset(contentSec); reset(contentCtn);
-    rightPanel.style.overflowY = '';
-    if (audioOpen && contentOpen) {
-      rightPanel.style.overflowY = 'auto';
-    } else if (audioOpen) {
-      audioSec.style.flex = '1'; audioCtn.style.flex = '1';
-    } else if (contentOpen) {
-      contentSec.style.flex = '1'; contentCtn.style.flex = '1';
-    }
+  function openAIContentSettingsModal() {
+    document.getElementById('aiContentSettingsModal').classList.add('show');
+  }
+  function closeAIContentSettingsModal() {
+    document.getElementById('aiContentSettingsModal').classList.remove('show');
   }
   function handleDrop(e) {
     e.preventDefault();
@@ -3392,6 +3646,12 @@
       ddItem.textContent = 'Schedule Publish';
       document.getElementById('publishDropdown').classList.remove('show');
     }
+  }
+  function updatePublishBtn() {
+    var title = document.getElementById('v2EpisodeTitle').value.trim();
+    var fileName = document.getElementById('v2FileName').textContent.trim();
+    var btn = document.getElementById('publishBtn');
+    btn.disabled = !title || !fileName;
   }
   function publishPublish() {
     if (publishMode === 'publish') {
