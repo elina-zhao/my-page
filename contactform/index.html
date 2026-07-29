@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Support — Podbean</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --color-primary: #2563EB;
+      --color-primary-hover: #1D4ED8;
+      --color-primary-light: #EFF6FF;
+      --color-primary-dark: #1E3A8A;
+      --color-bg: #FFFFFF;
+      --color-card: #FFFFFF;
+      --color-text: #1A1D29;
+      --color-text-secondary: #6B7280;
+      --color-text-placeholder: #ADB2BD;
+      --color-border: #E0E2E8;
+      --color-border-hover: #C4C8D2;
+      --color-border-focus: #1A1D29;
+      --color-error: #DE3B3B;
+      --color-error-bg: #FEF2F2;
+      --color-success: #0F9D58;
+      --color-success-bg: #F0FDF4;
+      --font-display: 'Helvetica Neue', Helvetica, sans-serif;
+      --font-body: 'Helvetica Neue', Helvetica, sans-serif;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--color-text);
+      background: var(--color-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      line-height: 1.5;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-img {
+      height: 36px;
+      width: auto;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--color-card);
+      width: 100%;
+      max-width: 724px;
+      padding: 48px 48px 40px;
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .card-header h1 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+
+    .card-header p {
+      color: var(--color-text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── Section ── */
+    .form-section {
+      margin-bottom: 0;
+    }
+
+    /* ── Form grid ── */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-grid-2 .form-group {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    label .required {
+      color: var(--color-error);
+      margin-left: 2px;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-top: 0;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--color-text);
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      padding: 11px 13px;
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--color-text-placeholder);
+      font-size: 14px;
+    }
+
+    input:hover,
+    select:hover,
+    textarea:hover {
+      border-color: var(--color-border-hover);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--color-border-focus);
+      border-width: 1.5px;
+    }
+
+    input.error,
+    select.error,
+    textarea.error {
+      border-color: var(--color-error);
+    }
+
+    .error-message {
+      font-size: 13px;
+      color: var(--color-error);
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    select {
+      background-color: var(--color-card);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+
+    /* ── File upload ── */
+    .file-upload-area {
+      border: 1.5px dashed var(--color-border);
+      padding: 24px 16px;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background-color 0.15s;
+      position: relative;
+    }
+
+    .file-upload-area:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+
+    .file-upload-area.dragover {
+      border-color: var(--color-primary);
+      border-style: solid;
+      background: var(--color-primary-light);
+    }
+
+    .file-upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-upload-icon {
+      color: var(--color-primary);
+      margin-bottom: 6px;
+    }
+
+    .file-upload-text {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+    }
+
+    .file-upload-text strong {
+      color: var(--color-primary);
+    }
+
+    .file-upload-hint {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-top: 4px;
+    }
+
+    .file-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .file-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
+      font-size: 13px;
+      padding: 4px 10px;
+      font-weight: 500;
+    }
+
+    .file-tag button {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 0 2px;
+    }
+
+    .file-tag button:hover {
+      color: var(--color-primary-dark);
+    }
+
+    /* ── Submit ── */
+    .submit-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 24px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      color: #fff;
+      background: #1A1A2E;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background: #2D2D44;
+    }
+
+    .submit-btn:active:not(:disabled) {
+      background: #0F0F1A;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .submit-btn .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    .submit-btn.loading .spinner {
+      display: block;
+    }
+
+    .submit-btn.loading .btn-text {
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+
+    /* ── Alert ── */
+    .alert {
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+      margin-bottom: 24px;
+    }
+
+    .alert.visible {
+      display: block;
+    }
+
+    .alert-success {
+      background: var(--color-success-bg);
+      color: #065F46;
+      border: 1px solid #BBF7D0;
+    }
+
+    .alert-error {
+      background: var(--color-error-bg);
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+
+    /* ── Success view ── */
+    .success-view {
+      display: none;
+      text-align: center;
+      padding: 24px 0 8px;
+    }
+    .success-view.visible {
+      display: block;
+    }
+    .success-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--color-success-bg);
+      margin-bottom: 20px;
+    }
+    .success-view h2 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--color-text);
+      margin-bottom: 8px;
+    }
+    .success-view .ticket-ref {
+      display: inline-block;
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 6px 16px;
+      margin: 12px 0;
+    }
+    .success-view p {
+      color: var(--color-text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+    .success-view .btn-new-request {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 28px;
+      padding: 12px 28px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--color-primary);
+      background: none;
+      border: 1.5px solid var(--color-border);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: border-color 0.15s, background-color 0.15s;
+    }
+    .success-view .btn-new-request:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+
+    /* ── Layout toggle ── */
+    .form-content.visible {
+      display: block;
+    }
+    .form-content { display: block; }
+    .form-content.hidden { display: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      body {
+        padding: 0;
+      }
+
+      .card {
+        padding: 32px 20px 28px;
+      }
+
+      .card-header h1 {
+        font-size: 22px;
+      }
+
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .form-group.half {
+        margin-bottom: 16px;
+      }
+
+      input, select, textarea {
+        font-size: 16px; /* prevents iOS zoom */
+      }
+
+      .submit-btn {
+        padding: 16px 24px;
+      }
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .submit-btn {
+        transition: none;
+      }
+    }
+
+    /* ── Focus visible ── */
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="formCard">
+    <!-- Logo -->
+    <div class="logo" aria-label="Podbean">
+      <img src="880.png" alt="Podbean" class="logo-img">
+    </div>
+
+    <!-- Header -->
+    <div class="card-header">
+      <h1>Contact Support</h1>
+      <p>Tell us what's going on and we'll get back to you as soon as possible.</p>
+    </div>
+
+    <!-- Alert area -->
+    <div class="alert" id="alert" role="alert"></div>
+
+    <!-- Form -->
+    <div class="form-content" id="formContent">
+
+      <!-- Section: Account -->
+      <div class="form-section">
+
+        <div class="form-group full">
+          <label for="email">Account email <span class="required">*</span></label>
+          <input type="email" id="email" name="email" placeholder="For Podbean users, please enter your account login email" required autocomplete="email">
+          <div class="error-message" id="emailError">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-group full">
+          <label for="podcastUrl">Podcast URL <span class="required">*</span></label>
+          <input type="text" id="podcastUrl" name="podcast_url" placeholder="https://example.podbean.com — If you do not have a Podbean account, simply enter N/A" required>
+          <div class="error-message" id="urlError">Please enter your podcast URL.</div>
+        </div>
+      </div>
+
+      <!-- Section: Issue -->
+      <div class="form-section">
+
+        <div class="form-grid-2">
+          <div class="form-group half">
+            <label for="severity">Severity <span class="required">*</span></label>
+            <select id="severity" name="severity" required>
+              <option value="">Select severity</option>
+              <option value="Low">Low</option>
+              <option value="Normal">Normal</option>
+              <option value="High">High</option>
+              <option value="Critical">Critical</option>
+            </select>
+            <div class="error-message" id="severityError">Please select a severity level.</div>
+          </div>
+
+          <div class="form-group half">
+            <label for="issueType">Issue type <span class="required">*</span></label>
+            <select id="issueType" name="issue_type" required>
+              <option value="">Select type</option>
+              <option value="Account">Account</option>
+              <option value="Billing">Billing</option>
+              <option value="Publishing">Publishing</option>
+              <option value="Audio Quality">Audio Quality</option>
+              <option value="Feature Request">Feature Request</option>
+              <option value="Bug Report">Bug Report</option>
+              <option value="Other">Other</option>
+            </select>
+            <div class="error-message" id="issueTypeError">Please select an issue type.</div>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label for="subject">Subject <span class="required">*</span></label>
+          <input type="text" id="subject" name="subject" placeholder="Brief summary of your issue" required>
+          <div class="error-message" id="subjectError">Please enter a subject.</div>
+        </div>
+
+        <div class="form-group full">
+          <label for="description">Description <span class="required">*</span></label>
+          <textarea id="description" name="description" placeholder="Describe the issue in detail. Include any steps to reproduce if applicable." required></textarea>
+          <div class="error-message" id="descriptionError">Please describe your issue.</div>
+        </div>
+      </div>
+
+      <!-- Section: Attachments -->
+      <div class="form-section">
+        <div class="form-group full">
+          <label>Attachments</label>
+          <div class="file-upload-area" id="fileUploadArea">
+            <input type="file" id="attachments" name="attachments" multiple accept="image/*,.pdf,.doc,.docx,.txt,.csv,.mp3,.mp4,.wav,.zip">
+            <div class="file-upload-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+            </div>
+            <div class="file-upload-text">
+              <strong>Choose files</strong> or drag them here
+            </div>
+            <div class="file-upload-hint">
+              Images, PDFs, audio files — up to 20 MB each
+            </div>
+          </div>
+          <div class="file-list" id="fileList"></div>
+        </div>
+      </div>
+
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn" id="submitBtn" form="supportForm">
+        <span class="btn-text">Submit request</span>
+        <span class="spinner"></span>
+      </button>
+
+    </div>
+
+    <!-- Success view -->
+    <div class="success-view" id="successView">
+      <div class="success-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F9D58" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+      <h2>Request Submitted</h2>
+      <div class="ticket-ref">Ticket number <span id="ticketRef">#PB-12345</span></div>
+      <p>We'll follow up at your account email shortly.</p>
+      <p>Our support team will follow up as soon as possible.</p>
+      <button class="btn-new-request" id="btnNewRequest">Submit a new request</button>
+    </div>
+
+    <form id="supportForm" novalidate style="display: none;"></form>
+  </div>
+
+  <script>
+    (function () {
+      const form = document.getElementById('supportForm');
+      const formContent = document.getElementById('formContent');
+      const alert = document.getElementById('alert');
+      const submitBtn = document.getElementById('submitBtn');
+      const fileInput = document.getElementById('attachments');
+      const fileList = document.getElementById('fileList');
+      const fileArea = document.getElementById('fileUploadArea');
+      const successView = document.getElementById('successView');
+      const btnNewRequest = document.getElementById('btnNewRequest');
+
+      // Fields
+      const fields = {
+        email: { el: document.getElementById('email'), error: document.getElementById('emailError'), validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+        podcastUrl: { el: document.getElementById('podcastUrl'), error: document.getElementById('urlError'), validate: v => v.trim().length > 0 },
+        severity: { el: document.getElementById('severity'), error: document.getElementById('severityError'), validate: v => v !== '' },
+        issueType: { el: document.getElementById('issueType'), error: document.getElementById('issueTypeError'), validate: v => v !== '' },
+        subject: { el: document.getElementById('subject'), error: document.getElementById('subjectError'), validate: v => v.trim().length >= 2 },
+        description: { el: document.getElementById('description'), error: document.getElementById('descriptionError'), validate: v => v.trim().length >= 10 }
+      };
+
+      let attachedFiles = [];
+
+      // ── Validation ──
+      function validateField(name) {
+        const f = fields[name];
+        if (!f) return true;
+        const valid = f.validate(f.el.value);
+        f.el.classList.toggle('error', !valid);
+        f.error.classList.toggle('visible', !valid);
+        return valid;
+      }
+
+      function validateAll() {
+        let valid = true;
+        for (const name in fields) {
+          if (!validateField(name)) valid = false;
+        }
+        return valid;
+      }
+
+      // Live validation on blur
+      for (const name in fields) {
+        const f = fields[name];
+        f.el.addEventListener('blur', () => validateField(name));
+        if (f.el.tagName === 'SELECT') {
+          f.el.addEventListener('change', () => validateField(name));
+        }
+      }
+
+      // ── File handling ──
+      function updateFileList() {
+        const files = fileInput.files;
+        attachedFiles = Array.from(files);
+        if (attachedFiles.length === 0) {
+          fileList.innerHTML = '';
+          return;
+        }
+        fileList.innerHTML = attachedFiles.map((f, i) => {
+          const size = f.size > 1024 * 1024
+            ? (f.size / (1024 * 1024)).toFixed(1) + ' MB'
+            : (f.size / 1024).toFixed(0) + ' KB';
+          return `<span class="file-tag">${f.name} (${size})<button type="button" data-index="${i}" aria-label="Remove ${f.name}">&times;</button></span>`;
+        }).join('');
+
+        fileList.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const dt = new DataTransfer();
+            const idx = parseInt(btn.dataset.index);
+            for (let i = 0; i < fileInput.files.length; i++) {
+              if (i !== idx) dt.items.add(fileInput.files[i]);
+            }
+            fileInput.files = dt.files;
+            updateFileList();
+          });
+        });
+      }
+
+      fileInput.addEventListener('change', updateFileList);
+
+      // Drag-and-drop visual
+      fileArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileArea.classList.add('dragover');
+      });
+      fileArea.addEventListener('dragleave', () => {
+        fileArea.classList.remove('dragover');
+      });
+      fileArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+          const dt = new DataTransfer();
+          for (const f of e.dataTransfer.files) dt.items.add(f);
+          // Merge with existing
+          for (const f of fileInput.files) dt.items.add(f);
+          fileInput.files = dt.files;
+          updateFileList();
+        }
+      });
+
+      // ── Alert helper ──
+      function showAlert(message, type) {
+        alert.textContent = message;
+        alert.className = 'alert visible ' + (type === 'success' ? 'alert-success' : 'alert-error');
+      }
+
+      function hideAlert() {
+        alert.className = 'alert';
+        alert.textContent = '';
+      }
+
+      // ── Show success view ──
+      function showSuccess(ticketId) {
+        hideAlert();
+        formContent.classList.add('hidden');
+        formContent.classList.remove('visible');
+        document.getElementById('ticketRef').textContent = ticketId ? `#${ticketId}` : '';
+        successView.classList.add('visible');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      }
+
+      // ── Reset to new request ──
+      function resetForm() {
+        successView.classList.remove('visible');
+        formContent.classList.remove('hidden');
+        formContent.classList.add('visible');
+        form.reset();
+        attachedFiles = [];
+        fileList.innerHTML = '';
+        for (const name in fields) {
+          fields[name].el.classList.remove('error');
+          fields[name].error.classList.remove('visible');
+        }
+        hideAlert();
+      }
+
+      btnNewRequest.addEventListener('click', resetForm);
+
+      // ── Submit ──
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert();
+
+        if (!validateAll()) return;
+
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+
+        // Build FormData
+        const fd = new FormData();
+        fd.append('email', fields.email.el.value.trim());
+        fd.append('podcast_url', fields.podcastUrl.el.value.trim());
+        fd.append('severity', fields.severity.el.value);
+        fd.append('issue_type', fields.issueType.el.value);
+        fd.append('subject', fields.subject.el.value.trim());
+        fd.append('description', fields.description.el.value.trim());
+
+        // Attachments
+        for (const file of attachedFiles) {
+          fd.append('attachments[]', file);
+        }
+
+        try {
+          // Simulated success for demo
+          await new Promise(r => setTimeout(r, 1000));
+          showSuccess('PB-12345');
+
+        } catch (err) {
+          showAlert(err.message || 'Something went wrong. Please try again or email us directly.', 'error');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('loading');
+        }
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
