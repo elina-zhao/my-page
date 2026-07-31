@@ -258,6 +258,7 @@
       .content { padding: 24px; }
       .topbar { padding: 0 16px; height: 60px; }
       .topbar .menu-toggle { display: flex; }
+      #appleBottomBar, #spotifyBottomBar { left: 0 !important; }
     }
 
     @media (max-width: 480px) {
@@ -733,10 +734,9 @@
       display: block;
     }
     .apple-modal {
-      max-width: 896px;
-      margin: 0 auto;
-      padding: 48px 36px 36px;
-      position: relative;
+      margin: 0;
+      padding: 48px 0 36px;
+      text-align: left;
     }
     @media (max-width: 1100px) {
       .apple-modal { padding-right: 80px; }
@@ -938,7 +938,7 @@
       flex-shrink: 0;
     }
     .apple-modal .check-row span {
-      font-size: 16px;
+      font-size: 14px;
       color: var(--text);
       line-height: 1.5;
     }
@@ -2653,11 +2653,10 @@
 
     /* ── Apple Podcasts Claim Box ──── */
     .claim-box {
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .claim-box:hover {
-      border-color: #cbd5e1;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      background: transparent;
     }
     .claim-header {
       display: inline-flex;
@@ -2720,6 +2719,41 @@
       font-weight: 600;
     }
 
+    /* ── Apple Submit: Step Progress ──── */
+    .apple-step-done .apple-step-circle {
+      background: #22c55e !important;
+      color: #fff !important;
+    }
+    .apple-step-active .apple-step-circle {
+      background: var(--text) !important;
+      color: #fff !important;
+    }
+    .apple-step-done .apple-step-label {
+      color: var(--text) !important;
+      font-weight: 600 !important;
+    }
+    .apple-step-active .apple-step-label {
+      color: var(--text) !important;
+      font-weight: 600 !important;
+    }
+    .apple-step-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .apple-step-item:hover:not(.apple-step-done) .apple-step-circle {
+      background: #cbd5e1;
+      color: var(--text);
+    }
+    .apple-step-item:hover:not(.apple-step-done) .apple-step-label {
+      color: var(--text);
+    }
+    .apple-step-label.active {
+      border-bottom: 2px solid var(--text);
+      padding-bottom: 2px;
+    }
     /* ── Embed Player: Drawer Group Label ──── */
     .ep-group-label {
       font-size: 12px;
@@ -3038,6 +3072,7 @@
       </a>
       <div class="sub-menu">
         <a href="#" class="active" onclick="switchSubPage(event, 'podcast-apps')">Podcast Apps</a>
+        <a href="#" onclick="switchSubPage(event, 'podcast-apps-2')">Podcast Apps 2</a>
         <a href="#" onclick="switchSubPage(event, 'podcast-apps-upgrade')">Podcast apps-upgrade</a>
         <a href="#" onclick="switchSubPage(event, 'podcast-apps-preaction')">Podcast apps-preaction</a>
         <a href="#" onclick="switchSubPage(event, 'social-share')">Social Share</a>
@@ -3058,6 +3093,18 @@
 
         <div id="distroSection">
           <div class="pa-dist-list" id="paDistList"></div>
+        </div>
+
+      </div>
+
+      <!-- Podcast Apps 2 (Apple Podcasts approved) -->
+      <div class="page hidden" id="page-podcast-apps-2">
+
+        <div class="page-heading-title" style="font-weight:700;color:var(--text);margin-bottom:8px;">Podcast Apps</div>
+        <p style="font-size:15px;color:var(--text-secondary);margin:0 0 32px;max-width:600px;">Distribute your podcast to every major platform and reach millions of listeners worldwide.</p>
+
+        <div id="distroSection">
+          <div class="pa-dist-list" id="paDistList2"></div>
         </div>
 
       </div>
@@ -3175,6 +3222,465 @@
             </div>
           </div>
         </div>
+
+      </div>
+
+      <div class="page hidden" id="page-apple-podcasts-submit" style="padding-bottom:130px;">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <a onclick="closeAppleModal()" style="cursor:pointer;font-size:14px;font-weight:500;color:var(--text-secondary);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Podcast Apps
+            </a>
+            <div class="page-toolbar-title">Apple Podcasts</div>
+          </div>
+        </div>
+
+        <!-- Step progress bar -->
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:28px;" id="appleStepProgress">
+          <div id="appleStep1" class="apple-step-active apple-step-item" onclick="clickAppleStep(1)" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <span id="appleStep1Circle" class="apple-step-circle" style="width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">1</span>
+            <span id="appleStep1Label" class="apple-step-label" style="font-size:15px;font-weight:600;color:var(--text);">Submit</span>
+          </div>
+          <div style="flex:0 0 48px;height:2px;background:var(--border);border-radius:1px;margin:0 12px;" id="appleStepConnector"></div>
+          <div id="appleStep2" class="apple-step-item" onclick="clickAppleStep(2)" style="display:flex;align-items:center;gap:8px;opacity:0.4;cursor:pointer;">
+            <span id="appleStep2Circle" class="apple-step-circle" style="width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">2</span>
+            <span id="appleStep2Label" class="apple-step-label" style="font-size:15px;font-weight:500;color:var(--text-secondary);">Claim Podcast</span>
+          </div>
+          <div style="flex:0 0 48px;height:2px;background:var(--border);border-radius:1px;margin:0 12px;" id="appleStepConnector2"></div>
+          <div id="appleStep3" class="apple-step-item" onclick="clickAppleStep(3)" style="display:flex;align-items:center;gap:8px;opacity:0.4;cursor:pointer;">
+            <span id="appleStep3Circle" class="apple-step-circle" style="width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">3</span>
+            <span id="appleStep3Label" class="apple-step-label" style="font-size:15px;font-weight:500;color:var(--text-secondary);">Additional Features</span>
+          </div>
+        </div>
+
+        <div class="apple-modal" style="padding-top:0;padding-bottom:16px;">
+
+          <!-- Step 1: Submit -->
+          <div id="appleStepContent-1">
+            <div id="applePrereqErrors"></div>
+
+            <div class="existing-url-wrap" id="existingUrlWrap" style="padding-top:0;">
+            <div class="already-link" id="alreadyLink" style="cursor:pointer;" onclick="openExistingUrlModal()">
+              Already submitted your podcast to Apple Podcasts? <a onclick="event.stopPropagation();openExistingUrlModal()">Save your existing URL here.</a>
+            </div>
+            <div id="existingUrlSuccess" style="display:none;margin-top:12px;">
+              <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">Your Podcast URL in Apple Podcasts</div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;background:#f8fafc;font-size:14px;color:var(--text);word-break:break-all;">
+                <span id="savedAppleUrlDisplay" style="flex:1;"></span>
+                <a style="white-space:nowrap;font-weight:600;color:var(--text);cursor:pointer;text-decoration:underline;" onclick="window.open(document.getElementById('savedAppleUrlDisplay').textContent)">View→</a>
+              </div>
+              <div style="margin-top:8px;font-size:13px;"><a style="color:var(--text-secondary);cursor:pointer;text-decoration:underline;" onclick="deleteExistingAppleUrl()">Delete the podcast URL from Podbean</a></div>
+            </div>
+            </div>
+
+            <div id="appleSubmitPending" style="display:none;margin-bottom:20px;">
+              <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:#fffbeb;border-radius:10px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:#f59e0b;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;">Submission Pending Approval</div>
+                  <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Your podcast has been submitted to Apple Podcasts for review. This process typically takes 1–5 business days. You'll be notified once it's approved.</div>
+                </div>
+              </div>
+            </div>
+            <div id="appleSubmitApproved" style="display:none;margin-bottom:20px;">
+              <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:#f0fdf4;border-radius:10px;margin-bottom:14px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;">Approved</div>
+                  <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Your podcast has been approved and is now live on Apple Podcasts.</div>
+                </div>
+              </div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">Your Podcast URL in Apple Podcasts</div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;background:#f8fafc;font-size:14px;color:var(--text);word-break:break-all;">
+                <span id="savedAppleUrlDisplay2" style="flex:1;"></span>
+                <a style="white-space:nowrap;font-weight:600;color:var(--text);cursor:pointer;text-decoration:underline;" onclick="window.open(document.getElementById('savedAppleUrlDisplay2').textContent)">View→</a>
+              </div>
+              <div style="margin-top:8px;font-size:13px;"><a style="color:var(--text-secondary);cursor:pointer;text-decoration:underline;" onclick="openDeleteAppleUrlModal()">Delete the podcast URL from Podbean</a></div>
+            </div>
+
+            <div id="appleSubmitWrap">
+            <div id="appleSubmitDetails" style="padding:0 0 16px;">
+
+              <!-- Show Information — required by Apple Podcasts -->
+              <div style="margin-bottom:28px;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                  <div style="width:36px;height:36px;border-radius:10px;background:#1DB954;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div>
+                    <div style="font-size:15px;font-weight:600;color:var(--text);">Show Information</div>
+                    <div style="font-size:12px;color:var(--text-tertiary);">Required by Apple Podcasts</div>
+                  </div>
+                </div>
+
+                <div style="margin-bottom:18px;">
+                  <div class="setup-text" style="margin-bottom:4px;font-size:14px;">Content Rights</div>
+                  <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">Shows that contain third-party content must have all the necessary rights to that content or be otherwise permitted to use it under the laws of each country or region in which they're available.</div>
+                  <select class="sel-underline" id="selContentRights" onchange="checkAppleAgreements();showAppleBottomBar()" style="background:#fff;border-radius:8px;padding:10px 12px;">
+                    <option value="" selected disabled>Select...</option>
+                    <option value="This show does not contain third-party content">This show does not contain third-party content</option>
+                    <option value="This show has rights to its third-party content">This show has rights to its third-party content</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div class="setup-text" style="margin-bottom:4px;font-size:14px;">Update Frequency</div>
+                  <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">How often you publish new episodes to your podcast.</div>
+                  <select class="sel-underline" id="selUpdateFreq" onchange="checkAppleAgreements();showAppleBottomBar()" style="background:#fff;border-radius:8px;padding:10px 12px;">
+                    <option value="" selected disabled>Select...</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Biweekly">Biweekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="No Set Schedule">No Set Schedule</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Apple Podcasts content requirements -->
+              <div class="micro-headline" style="margin-top:0;">Read and agree to Apple Podcasts Content Requirements</div>
+              <label class="check-row">
+                <input type="checkbox" onchange="checkAppleAgreements();showAppleBottomBar()">
+                <span>I request for Podbean to submit my podcast for distribution on Apple Podcasts. I agree with <a class="terms-inline" onclick="alert('Podbean Terms of Service')">Podbean's Terms of Service</a>.</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" onchange="checkAppleAgreements();showAppleBottomBar()">
+                <span>I have reviewed Apple Podcasts' <a class="terms-inline" onclick="alert('Apple Podcasts content requirements')">content requirements</a> to ensure my podcast complies.</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" onchange="checkAppleAgreements();showAppleBottomBar()">
+                <span>I certify that I have licensing rights for all music used in my podcast.</span>
+              </label>
+
+            </div>
+
+            </div>
+
+          </div>
+
+          <!-- Step 2: Claim (shown after step 1 completes) -->
+          <div id="appleStepContent-2" style="display:none;">
+            <div style="display:flex;flex-direction:column;gap:20px;padding:4px 0;">
+
+              <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:4px;">
+                After claiming, you can enable <strong>HLS Video</strong> for high-quality video streaming and set up <strong>Apple Podcasts Subscriptions</strong> for premium content.
+              </div>
+
+              <div class="claim-box">
+                <div id="claimExpandContent" style="display:block;padding:0;">
+                  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;">
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">1</div>
+                    <div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;">Log in to your <a href="https://podcastsconnect.apple.com/" target="_blank" style="color:var(--text);text-decoration:underline;">Apple Podcasts Connect</a> account. If you don't have an Apple account, you can <a href="https://podcasters.apple.com/support/827-create-an-account" target="_blank" style="color:var(--text);text-decoration:underline;">create one</a>.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;">
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">2</div>
+                    <div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;">At the bottom of the page, under <strong>More Actions</strong>, click <strong>Claim Existing Show</strong>.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:18px;">
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">3</div>
+                    <div style="flex:1;">
+                      <div style="font-size:14px;color:var(--text);margin-bottom:6px;">Copy your Apple Podcast URL</div>
+                      <div style="display:flex;gap:8px;align-items:center;">
+                        <span id="claimPodcastUrlDisplay3" style="flex:1;padding:8px 12px;border-radius:8px;font-size:13px;color:var(--text);background:#f8fafc;word-break:break-all;">https://podcasts.apple.com/us/podcast/my-podcast/id123456789</span>
+                        <button class="btn-topbar-outline" onclick="copyClaimUrl3()" style="white-space:nowrap;height:36px;padding:0 16px;font-size:13px;">Copy</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;">
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">4</div>
+                    <div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;">Follow the prompts to find your show and <strong>generate a token</strong>. The token is valid for seven days.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;">
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">5</div>
+                    <div style="flex:1;">
+                      <div style="font-size:14px;color:var(--text);margin-bottom:6px;">Copy the claim token from Apple, paste it below</div>
+                      <input type="text" id="claimTokenInput3" placeholder="Paste your claim token" oninput="onClaimTokenInput3();showAppleBottomBar()" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;">
+                      <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">The token will be added to your RSS feed. Within 24 hours, Apple Podcasts will verify it matches the one you generated in Apple Podcasts Connect and will automatically move your show to your account.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding:12px 16px;background:#f0fdf4;border-radius:10px;font-size:13px;color:var(--text);line-height:1.6;display:none;" id="claimSuccessBanner">
+                <strong>Claim token added to your RSS feed.</strong> Apple Podcasts will verify it within 24 hours and move your show to your account. If it does not appear, try claiming it again or contact Apple Support.
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Additional Features -->
+          <div id="appleStepContent-3" style="display:none;">
+
+            <div style="display:grid;grid-template-columns:1fr;gap:20px;">
+
+              <!-- HLS Video Card -->
+              <div style="border:1px solid var(--border);border-radius:12px;padding:24px;background:#fff;">
+                <!-- Summary -->
+                <div id="hlsCardSummary">
+                  <div style="width:40px;height:40px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                  </div>
+                  <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;">Enable HLS Video</div>
+                  <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:18px;">Authorize Podbean to publish your video episodes to Apple Podcasts in HLS video format.</div>
+                  <button id="btnHlsSetup" onclick="setupHlsCard()" style="height:34px;padding:0 16px;font-size:13px;border:none;border-radius:50px;background:#1e293b;color:#fff;font-weight:500;font-family:inherit;cursor:pointer;">Set up →</button>
+                </div>
+                <!-- Expanded details (shown inline below summary) -->
+                <div id="hlsCardDetails" style="display:none;margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+                  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">1</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;"><strong>Log in</strong> to <a href="https://podcastsconnect.apple.com/" target="_blank" style="color:var(--text);text-decoration:underline;">Apple Podcasts Connect</a>.</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">2</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;">Go to <strong>Account &gt; Keys</strong>.</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">3</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;">Click the <strong>+</strong> icon next to Active.</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">4</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;">Enter a name for the API key, such as <strong>Podbean</strong>.</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">5</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;">Click <strong>Generate</strong>, then click <strong>Download</strong>. Do not rename the downloaded file.</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">6</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;"><strong>Upload your API key file</strong> to Podbean.</div></div>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+                    <input type="file" id="hlsApiKeyUploadStep3" accept=".p8,.json,.txt,.key" onchange="onHlsApiKeyUploadStep3()" style="display:none;">
+                    <button class="btn-topbar-outline" onclick="document.getElementById('hlsApiKeyUploadStep3').click()" style="height:36px;padding:0 16px;font-size:13px;flex-shrink:0;">Choose File</button>
+                    <span id="hlsFileNameStep3" style="font-size:13px;color:var(--text-secondary);">No file chosen</span>
+                  </div>
+                  <div style="display:flex;justify-content:center;align-items:center;gap:16px;">
+                    <button id="btnHlsCancel" onclick="cancelHlsSetup()" style="height:36px;padding:0 20px;font-size:13px;background:none;border:none;color:var(--text-secondary);cursor:pointer;display:none;">Cancel</button>
+                    <button class="btn-topbar-primary" id="btnHlsSaveStep3" onclick="saveHlsStep3()" style="height:36px;padding:0 20px;font-size:13px;opacity:0.5;cursor:default;" disabled>Save</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Apple Podcasts Subscriptions Card -->
+              <div style="border:1px solid var(--border);border-radius:12px;padding:24px;background:#fff;">
+                <!-- Summary -->
+                <div id="subsCardSummary">
+                  <div style="width:40px;height:40px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                  </div>
+                  <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;">Apple Podcasts Subscriptions</div>
+                  <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:18px;">Offer premium content — like ad-free episodes, early access, or bonus shows — and charge your listeners a recurring fee.</div>
+                  <button id="btnSubsSetup" onclick="setupSubsCard()" style="height:34px;padding:0 16px;font-size:13px;border:none;border-radius:50px;background:#1e293b;color:#fff;font-weight:500;font-family:inherit;cursor:pointer;">Set up →</button>
+                </div>
+                <!-- Expanded details (shown inline below summary) -->
+                <div id="subsCardDetails" style="display:none;margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+                  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">1</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;"><strong>Publish</strong> at least one audio episode.</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">2</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;"><strong>Sign up</strong> for Apple Podcasts Subscriptions and create your subscription.</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">3</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;"><strong>Download</strong> your Apple Podcasts API Key from Apple. <a href="https://podcasters.apple.com/support/5593-how-to-publish-video" target="_blank" style="color:var(--text);text-decoration:underline;">Learn more</a>.</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;color:var(--text-secondary);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">4</div><div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;"><strong>Upload</strong> your Apple Podcasts API Key to connect your Apple Podcasts account with Podbean.</div></div>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+                    <input type="file" id="subApiKeyUploadStep3" accept=".p8,.json,.txt,.key" onchange="onSubApiKeyUploadStep3()" style="display:none;">
+                    <button class="btn-topbar-outline" onclick="document.getElementById('subApiKeyUploadStep3').click()" style="height:36px;padding:0 16px;font-size:13px;flex-shrink:0;">Choose File</button>
+                    <span id="subFileNameStep3" style="font-size:13px;color:var(--text-secondary);">No file chosen</span>
+                  </div>
+                  <div style="display:flex;justify-content:center;align-items:center;gap:16px;">
+                    <button id="btnSubsCancel" onclick="cancelSubsSetup()" style="height:36px;padding:0 20px;font-size:13px;background:none;border:none;color:var(--text-secondary);cursor:pointer;display:none;">Cancel</button>
+                    <button class="btn-topbar-primary" id="btnSubSaveStep3" onclick="saveSubStep3()" style="height:36px;padding:0 20px;font-size:13px;opacity:0.5;cursor:default;" disabled>Save</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Spotify Submit page -->
+      <div class="page hidden" id="page-spotify-submit" style="padding-bottom:130px;">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <a onclick="closeSpotifyModal()" style="cursor:pointer;font-size:14px;font-weight:500;color:var(--text-secondary);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Podcast Apps
+            </a>
+            <div class="page-toolbar-title">Spotify</div>
+          </div>
+        </div>
+
+        <div class="apple-modal" style="padding-top:0;padding-bottom:16px;">
+
+          <div class="existing-url-wrap" id="spotifyExistingUrlWrap" style="padding-top:0;">
+            <div class="already-link" id="spotifyAlreadyLink" style="cursor:pointer;" onclick="openSpotifyExistingUrlModal()">
+              Already submitted your podcast to Spotify? <a onclick="event.stopPropagation();openSpotifyExistingUrlModal()">Save your existing URL here.</a>
+            </div>
+            <div id="spotifyExistingUrlSuccess" style="display:none;margin-top:12px;">
+              <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">Your Podcast URL in Spotify</div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;background:#f8fafc;font-size:14px;color:var(--text);word-break:break-all;">
+                <span id="spotifySavedUrlDisplay" style="flex:1;"></span>
+                <a style="white-space:nowrap;font-weight:600;color:var(--text);cursor:pointer;text-decoration:underline;" onclick="window.open(document.getElementById('spotifySavedUrlDisplay').textContent)">View→</a>
+              </div>
+              <div style="margin-top:8px;font-size:13px;"><a style="color:var(--text-secondary);cursor:pointer;text-decoration:underline;" onclick="deleteSpotifyExistingUrl()">Delete the podcast URL from Podbean</a></div>
+            </div>
+          </div>
+
+          <div id="spotifySubmitWrap">
+            <div id="spotifySubmitDetails" style="padding:0 0 16px;">
+
+              <!-- Spotify-Compatible Audio — required compatibility setting -->
+              <div style="margin-bottom:28px;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                  <div style="width:36px;height:36px;border-radius:10px;background:#1DB954;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+                  </div>
+                  <div>
+                    <div style="font-size:15px;font-weight:600;color:var(--text);">Spotify-Compatible Audio</div>
+                    <div style="font-size:12px;color:var(--text-tertiary);">Settings &rsaquo; Feed</div>
+                  </div>
+                </div>
+                <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:14px;">
+                  Automatically generates an MP3 audio version in your feed for video episodes to ensure compatibility with Spotify, while delivering HLS video streams for video-supported platforms like Apple Podcasts.
+                </div>
+                <label class="check-row" style="align-items:center;">
+                  <input type="checkbox" id="spotifyMp3Toggle" onchange="toggleSpotifyMp3(this)">
+                  <span style="font-size:14px;line-height:1.5;">Enable &ldquo;Generate MP3 for Video Episodes&rdquo; <a class="terms-inline" onclick="event.stopPropagation();openSpotifyMp3Modal()">What's this?</a></span>
+                </label>
+              </div>
+
+              <!-- Spotify content requirements -->
+              <div class="micro-headline" style="margin-top:0;">Read and agree to Spotify Content Requirements</div>
+              <label class="check-row">
+                <input type="checkbox" onchange="checkSpotifyAgreements();showSpotifyBottomBar()">
+                <span>I request for Podbean to submit my podcast for distribution on Spotify. I agree with <a class="terms-inline" onclick="alert('Podbean Terms of Service')">Podbean's Terms of Service</a>.</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" onchange="checkSpotifyAgreements();showSpotifyBottomBar()">
+                <span>I have reviewed Spotify's <a class="terms-inline" onclick="alert('Spotify content requirements')">content requirements</a> to ensure my podcast complies.</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" onchange="checkSpotifyAgreements();showSpotifyBottomBar()">
+                <span>I certify that I have licensing rights for all music used in my podcast.</span>
+              </label>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- YouTube Submit page -->
+      <div class="page hidden" id="page-youtube-submit" style="padding-bottom:130px;">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <a onclick="closeYouTubeModal()" style="cursor:pointer;font-size:14px;font-weight:500;color:var(--text-secondary);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Podcast Apps
+            </a>
+            <div class="page-toolbar-title">YouTube</div>
+          </div>
+        </div>
+
+        <div class="apple-modal" style="padding-top:0;padding-bottom:16px;">
+
+          <div class="existing-url-wrap" id="youtubeExistingUrlWrap" style="padding-top:0;">
+            <div class="already-link" style="cursor:pointer;" onclick="focusYouTubeUrl()">
+              Already submitted your podcast to YouTube? <a onclick="event.stopPropagation();focusYouTubeUrl()">Save your existing URL here.</a>
+            </div>
+          </div>
+
+          <!-- Step 1: Submit your RSS feed to YouTube -->
+          <div id="youtubeStep1Card" style="margin-bottom:36px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+              <span style="width:26px;height:26px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">1</span>
+              <div>
+                <div style="font-size:15px;font-weight:600;color:var(--text);">Submit your RSS feed to YouTube</div>
+              </div>
+            </div>
+            <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">Follow these steps in YouTube Studio:</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex:0 0 20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--border);color:var(--text-secondary);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:2px;">1</span>
+                <span style="font-size:14px;color:var(--text);line-height:1.6;">Within <a href="https://studio.youtube.com" target="_blank" style="color:var(--text);text-decoration:underline;font-weight:600;">YouTube Studio</a>, click <strong>Create New podcast</strong>.</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex:0 0 20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--border);color:var(--text-secondary);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:2px;">2</span>
+                <span style="font-size:14px;color:var(--text);line-height:1.6;">From the pop-up, select <strong>Submit RSS feed</strong>, then follow the steps to submit your podcast.
+                  <span style="display:block;margin-top:6px;" id="youtubeVerificationStatus">Add <a onclick="event.stopPropagation();openYouTubeVerificationModal()" style="color:var(--text);text-decoration:underline;font-weight:600;cursor:pointer;">Ownership Verification Email</a> to your RSS feed.</span>
+                </span>
+              </div>
+            </div>
+            <div>
+              <a href="https://studio.youtube.com" target="_blank" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 20px;background:var(--text);color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;">Open YouTube Studio
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Step 2: Save your podcast URL in YouTube -->
+          <div id="youtubeUrlWrap" style="margin-bottom:28px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+              <span style="width:26px;height:26px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">2</span>
+              <div>
+                <div style="font-size:15px;font-weight:600;color:var(--text);">Save your podcast URL in YouTube</div>
+              </div>
+            </div>
+            <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">Follow these steps in YouTube Studio:</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex:0 0 20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--border);color:var(--text-secondary);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:2px;">1</span>
+                <span style="font-size:14px;color:var(--text);line-height:1.6;">Open your podcast in YouTube Studio.</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex:0 0 20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--border);color:var(--text-secondary);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:2px;">2</span>
+                <span style="font-size:14px;color:var(--text);line-height:1.6;">Get your podcast website playlist address (URL). <a href="https://help.podbean.com/support/solutions/articles/25000032163-how-to-submit-podcasts-to-youtube#How%20to%20get%20your%20YouTube%20podcast%20website%20playlist%20address%20(URL)" target="_blank" style="color:var(--text);text-decoration:underline;font-weight:600;">Learn how</a></span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex:0 0 20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--border);color:var(--text-secondary);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:2px;">3</span>
+                <span style="font-size:14px;color:var(--text);line-height:1.6;">Paste the URL below.</span>
+              </div>
+            </div>
+            <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Your podcast URL in YouTube</div>
+            <input type="text" id="youtubeUrlInput" placeholder="https://www.youtube.com/playlist?list=..." oninput="onYouTubeUrlInput()" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;background:#fff;">
+            <div style="font-size:12px;color:var(--text-tertiary);margin-top:6px;">Example: https://www.youtube.com/playlist?list=PLw7r_sjXp8MU88dKohEwjnvOC6UQFWY8r</div>
+          </div>
+
+          <!-- Saved state -->
+          <div id="youtubeUrlSaved" style="display:none;margin-bottom:28px;">
+            <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">Your podcast URL in YouTube</div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;background:#fff;border:1px solid var(--border);font-size:13px;color:var(--text);word-break:break-all;">
+              <span id="youtubeSavedUrlDisplay" style="flex:1;"></span>
+              <a style="white-space:nowrap;font-weight:600;color:var(--text);cursor:pointer;text-decoration:underline;" onclick="window.open(document.getElementById('youtubeSavedUrlDisplay').textContent)">View→</a>
+            </div>
+            <div style="margin-top:8px;font-size:13px;"><a style="color:var(--text-secondary);cursor:pointer;text-decoration:underline;" onclick="deleteYouTubeUrl()">Delete the podcast URL from Podbean</a></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- YouTube floating bottom bar -->
+      <div id="youtubeBottomBar" style="display:none;position:fixed;bottom:0;left:230px;right:0;height:111px;background:#fff;border-top:1px solid var(--border);padding:12px 24px;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,0.06);justify-content:flex-end;align-items:center;gap:12px;">
+
+        <button id="btnYouTubeCancel" onclick="cancelYouTubeAction()" style="height:44px;padding:0 24px;font-size:15px;background:none;border:none;border-radius:12px;color:var(--text-secondary);cursor:pointer;font-weight:500;">Cancel</button>
+
+        <button class="btn-topbar-primary" id="btnYouTubeSave" disabled onclick="saveYouTubeUrl()" style="opacity:0.5;cursor:default;height:44px;padding:0 28px;font-size:15px;border-radius:50px;font-weight:600;">Save</button>
+
+      </div>
+
+      <!-- Spotify floating bottom bar -->
+      <div id="spotifyBottomBar" style="display:none;position:fixed;bottom:0;left:230px;right:0;height:111px;background:#fff;border-top:1px solid var(--border);padding:12px 24px;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,0.06);justify-content:flex-end;align-items:center;gap:12px;">
+
+        <button id="btnSpotifyCancel" onclick="cancelSpotifyAction()" style="height:44px;padding:0 24px;font-size:15px;background:none;border:none;border-radius:12px;color:var(--text-secondary);cursor:pointer;font-weight:500;">Cancel</button>
+
+        <button class="btn-topbar-primary" id="btnSpotifySubmit" disabled onclick="submitSpotify()" style="opacity:0.5;cursor:default;height:44px;padding:0 28px;font-size:15px;border-radius:50px;font-weight:600;">Submit</button>
+
+      </div>
+
+      <!-- Floating bottom bar for Submit / Save (positioned at bottom of right panel) -->
+      <div id="appleBottomBar" style="display:none;position:fixed;bottom:0;left:230px;right:0;height:111px;background:#fff;border-top:1px solid var(--border);padding:12px 24px;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,0.06);justify-content:flex-end;align-items:center;gap:12px;">
+
+        <button id="btnAppleCancel" onclick="cancelAppleAction()" style="height:44px;padding:0 24px;font-size:15px;background:none;border:none;border-radius:12px;color:var(--text-secondary);cursor:pointer;font-weight:500;">Cancel</button>
+
+        <button class="btn-topbar-primary" id="btnAppleSubmit" disabled data-mode="submit" style="opacity:0.5;cursor:default;height:44px;padding:0 28px;font-size:15px;border-radius:50px;font-weight:600;">Submit</button>
+
+        <button class="btn-topbar-primary" id="btnClaimSaveTopBar" onclick="saveClaimTopBar()" style="display:none;height:44px;padding:0 28px;font-size:15px;border-radius:50px;font-weight:600;">Save</button>
 
       </div>
 
@@ -3758,377 +4264,6 @@
     </div>
   </div>
 
-  <!-- ===== APPLE PODCASTS SUBMIT MODAL ===== -->
-  <div class="apple-modal-overlay" id="appleSubmitModal">
-    <div class="apple-modal-topbar">
-      <a onclick="closeAppleModal()" class="apple-modal-topbar-back">&lt; Podcast Apps</a>
-      <div style="max-width:896px;margin:0 auto;display:flex;align-items:center;justify-content:center;position:relative;height:100%;flex:1;">
-        <span class="apple-modal-topbar-title">Submit to Apple Podcasts</span>
-      </div>
-      <button class="btn-topbar-primary" id="btnAppleSubmit" disabled data-mode="submit" style="display:none;margin-right:8px;flex-shrink:0;">Submit</button>
-      <button class="btn-topbar-primary" id="btnClaimSaveTopBar" onclick="saveClaimTopBar()" style="display:none;margin-right:16px;flex-shrink:0;">Save</button>
-    </div>
-        <div class="apple-modal">
-          <!-- Status 1: Submit Form -->
-          <!-- Status 1: Submit Form -->
-          <div class="apple-tab-content active" id="appleStatusContent-status1">
-            <div id="applePrereqErrors"></div>
-
-            <div class="existing-url-wrap" id="existingUrlWrap">
-            <div class="already-link" id="alreadyLink" style="cursor:pointer;" onclick="toggleExistingUrl()">
-              Already submitted your podcast to Apple Podcasts? <a onclick="event.stopPropagation();toggleExistingUrl()">Save your existing URL here.</a>
-            </div>
-            <div id="existingUrlSection" style="display:none;margin-top:12px;">
-              <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">Your Podcast URL in Apple Podcasts</div>
-              <input type="text" id="existingAppleUrl" placeholder="Paste your Apple Podcasts URL" oninput="onAppleUrlInput()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;">
-              <div style="font-size:13px;color:var(--text-secondary);margin-top:6px;">Paste your existing Apple Podcasts show URL to link your podcast to this account.</div>
-            </div>
-            <div id="existingUrlSuccess" style="display:none;margin-top:12px;">
-              <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">Your Podcast URL in Apple Podcasts</div>
-              <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:14px;color:var(--text);word-break:break-all;">
-                <span id="savedAppleUrlDisplay" style="flex:1;"></span>
-                <a style="white-space:nowrap;font-weight:600;color:var(--text);cursor:pointer;text-decoration:underline;" onclick="window.open(document.getElementById('savedAppleUrlDisplay').textContent)">View→</a>
-              </div>
-              <div style="margin-top:8px;font-size:13px;"><a style="color:var(--text-secondary);cursor:pointer;text-decoration:underline;" onclick="deleteExistingAppleUrl()">Delete the podcast URL from Podbean</a></div>
-
-              <div class="claim-box" style="margin-top:20px;" onclick="openClaimModal()">
-                <div>
-                  <div class="claim-header" style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">
-                    <span class="claim-header-text">Claim your podcast on Apple Podcasts</span>
-                    <span class="claim-arrow">→</span>
-                  </div>
-                  <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;">Claim your show to access Apple Podcasts analytics, enable <strong>HLS Video</strong> and <strong>Apple Podcast Subscription</strong>.</div>
-                </div>
-              </div>
-            </div>
-            </div>
-
-            <div id="appleSubmitWrap">
-            <div id="appleSubmitHeader" style="cursor:pointer;padding:0;" onclick="toggleSubmitDetails()"></div>
-            <div id="appleSubmitDetails" style="padding:0 0 16px;">
-            <div style="margin-bottom:20px;">
-            <div class="setup-text" style="margin-bottom:4px;">Content Rights</div>
-            <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">Shows that contain third-party content must have all the necessary rights to that content or be otherwise permitted to use it under the laws of each country or region in which they're available.</div>
-            <select class="sel-underline" id="selContentRights" onchange="checkAppleAgreements()">
-              <option value="" selected disabled>Select...</option>
-              <option value="This show does not contain third-party content">This show does not contain third-party content</option>
-              <option value="This show has rights to its third-party content">This show has rights to its third-party content</option>
-            </select>
-            </div>
-            <div class="setup-row">
-            <div class="setup-text">Update Frequency</div>
-            <select class="sel-underline" id="selUpdateFreq" onchange="checkAppleAgreements()">
-              <option value="" selected disabled>Select...</option>
-              <option value="Weekly">Weekly</option>
-              <option value="Daily">Daily</option>
-              <option value="Biweekly">Biweekly</option>
-              <option value="Monthly">Monthly</option>
-              <option value="No Set Schedule">No Set Schedule</option>
-            </select>
-            </div>
-
-            <div class="micro-headline">Read and agree to Apple Podcasts Content Requirements</div>
-            <label class="check-row">
-              <input type="checkbox" onchange="checkAppleAgreements()">
-              <span>I request for Podbean to submit my podcast for distribution on Apple Podcasts. I agree with <a class="terms-inline" onclick="alert('Podbean Terms of Service')">Podbean's Terms of Service</a>.</span>
-            </label>
-            <label class="check-row">
-              <input type="checkbox" onchange="checkAppleAgreements()">
-              <span>I have reviewed Apple Podcasts' <a class="terms-inline" onclick="alert('Apple Podcasts content requirements')">content requirements</a> to ensure my podcast complies.</span>
-            </label>
-            <label class="check-row">
-              <input type="checkbox" onchange="checkAppleAgreements()">
-              <span>I certify that I have licensing rights for all music used in my podcast.</span>
-            </label>
-
-            </div>
-            </div>
-          </div>
-
-          <!-- Status 2: Waiting for Review -->
-          <div class="apple-tab-content" id="appleStatusContent-status2">
-            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:8px 0;">
-              <div style="width:40px;height:40px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <polyline points="12 6 12 12 16 14"/>
-                </svg>
-              </div>
-              <div style="font-size:16px;font-weight:700;color:var(--text);">Waiting for Apple Review</div>
-              <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Your podcast has been submitted to Apple Podcasts and is now awaiting their review process. This usually takes 1-5 business days but can vary depending on volume.</div>
-              <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">You'll receive a notification once Apple has approved or rejected your submission. No further action is needed from you at this time.</div>
-              <div style="width:100%;padding:12px 14px;background:#f8fafc;border-radius:8px;border:1px solid var(--border);">
-                <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Submission Status</div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span style="width:8px;height:8px;border-radius:50%;background:#fbbf24;"></span>
-                  <span style="font-size:13px;font-weight:600;color:#92400e;">Pending Review</span>
-                </div>
-              </div>
-            </div>
-
-            <div style="width:100%;display:flex;flex-direction:column;gap:20px;padding:4px 0;margin-top:20px;">
-              <div class="s3-feature-item">
-                <div onclick="openAppleInfoModal('Enable HLS Video', 'You can enable HLS video after your podcast is approved and get listed on Apple Podcasts.')" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-                  <div>
-                    <div class="s3-feature-title" style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px;">Enable HLS Video <span class="claim-arrow">→</span></div>
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">Deliver high-quality video streaming to Apple Podcasts</div>
-                  </div>
-                </div>
-              </div>
-
-              <div style="border-bottom:1px solid var(--border);margin:4px 0;"></div>
-
-              <div class="s3-feature-item">
-                <div onclick="openAppleInfoModal('Setup Apple Podcasts Subscription', 'You can set up Apple Podcasts Subscriptions after your podcast is approved and get listed on Apple Podcasts.')" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-                  <div>
-                    <div class="s3-feature-title" style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px;">Setup Apple Podcasts Subscription <span class="claim-arrow">→</span></div>
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">Offer premium content through Apple Podcasts Subscriptions</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Status 3: Approved / Listed -->
-          <div class="apple-tab-content" id="appleStatusContent-status3">
-            <div style="display:flex;flex-direction:column;gap:20px;padding:4px 0;">
-              <div>
-                <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;">Your Podcast URL in Apple Podcasts</div>
-                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:14px;color:var(--text);word-break:break-all;">
-                  <span id="savedAppleUrlDisplay3" style="flex:1;"></span>
-                  <a style="white-space:nowrap;font-weight:600;color:var(--text);cursor:pointer;text-decoration:underline;" onclick="window.open(document.getElementById('savedAppleUrlDisplay').textContent || document.getElementById('savedAppleUrlDisplay3').textContent)">View→</a>
-                </div>
-                <div style="margin-top:8px;font-size:13px;"><a style="color:var(--text-secondary);cursor:pointer;text-decoration:underline;" onclick="deleteExistingAppleUrl()">Delete the podcast URL from Podbean</a></div>
-              </div>
-
-              <div class="claim-box">
-                <div onclick="toggleClaimExpand(event)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-                  <div>
-                    <div class="claim-header" style="font-size:14px;font-weight:600;color:var(--text);">
-                      <span class="claim-header-text">Claim your podcast on Apple Podcasts</span>
-                      <span class="claim-arrow" id="claimArrow3">→</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Inline expand content -->
-                <div id="claimExpandContent" style="display:none;padding-top:18px;border-top:1px solid var(--border);margin-top:14px;">
-                  <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:14px;">1. <strong>Log in</strong> to your <a href="https://podcastsconnect.apple.com/" target="_blank" style="color:var(--text);text-decoration:underline;">Apple Podcasts Connect</a> account. If you don't have an Apple account, you can <a href="https://podcasters.apple.com/support/827-create-an-account" target="_blank" style="color:var(--text);text-decoration:underline;">create one</a>.</div>
-
-                  <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:14px;">2. At the bottom of the page, under More Actions, click <strong>Claim Existing Show</strong>.</div>
-
-                  <div style="margin-bottom:18px;">
-                    <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:6px;">3. <strong>Copy your Apple Podcast URL</strong></div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                      <span id="claimPodcastUrlDisplay3" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:#f8fafc;word-break:break-all;"></span>
-                      <button class="btn-topbar-outline" onclick="copyClaimUrl3()" style="white-space:nowrap;height:36px;padding:0 16px;font-size:13px;">Copy</button>
-                    </div>
-                  </div>
-
-                  <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:14px;">4. Follow the prompts to find your show and <strong>generate a token</strong>. The token is valid for seven days.</div>
-
-                  <div style="margin-bottom:18px;">
-                    <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:6px;">5. <strong>Copy the claim token</strong> from Apple, paste it below</div>
-                    <input type="text" id="claimTokenInput3" placeholder="Paste your claim token" oninput="onClaimTokenInput3()" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;">
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">The token will be added to your RSS feed. Within 24 hours, Apple Podcasts will verify it matches the one you generated in Apple Podcasts Connect and will automatically move your show to your account.</div>
-                  </div>
-
-                </div>
-              </div>
-
-              <div style="border-top:1px solid var(--border);padding-top:4px;"></div>
-
-              <div class="s3-feature-item">
-                <div onclick="toggleHlsExpandS3(event)" style="display:flex;align-items:center;justify-content:space-between;">
-                  <div>
-                    <div class="s3-feature-title" style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px;">Enable HLS Video <span class="claim-arrow" id="hlsArrowS3">→</span></div>
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">Deliver high-quality video streaming to Apple Podcasts</div>
-                  </div>
-                </div>
-                <div id="hlsExpandS3" style="display:none;padding:18px 0 6px 0;">
-                  <div style="font-size:14px;color:var(--text);line-height:1.6;margin-bottom:18px;">Authorize Podbean to publish your video episodes to Apple Podcasts in HLS video format.</div>
-
-                  <div style="font-size:14px;color:var(--text);font-weight:400;line-height:1.8;padding-left:2px;">
-                    <div style="margin-bottom:6px;">1. <strong>Log in</strong> to <a href="https://podcastsconnect.apple.com/" target="_blank" style="color:var(--text);text-decoration:underline;">Apple Podcasts Connect</a>.</div>
-                    <div style="margin-bottom:6px;">2. Make sure <strong>{podcast name}</strong> is listed in your Apple Podcasts Connect account. If it is not listed, please <a style="color:var(--text);text-decoration:underline;cursor:pointer;" onclick="openClaimSection()">claim your podcast</a> first and wait 24 hours.</div>
-                    <div style="margin-bottom:6px;">3. Go to <strong>Account &gt; Keys</strong>.</div>
-                    <div style="margin-bottom:6px;">4. Click the <strong>+</strong> icon next to Active.</div>
-                    <div style="margin-bottom:6px;">5. Enter a name for the API key, such as <strong>Podbean</strong>.</div>
-                    <div style="margin-bottom:6px;">6. Click <strong>Generate</strong>, then click <strong>Download</strong>. Do not rename the downloaded file.</div>
-                    <div style="margin-bottom:14px;">7. <strong>Upload your API key file</strong> to Podbean.</div>
-                  </div>
-
-                  <div style="margin-bottom:16px;">
-                    <div style="display:flex;gap:8px;align-items:center;">
-                      <input type="file" id="hlsApiKeyUploadS3" accept=".p8,.json,.txt,.key" onchange="onHlsApiKeyUploadS3()" style="flex:1;padding:8px 0;font-size:14px;font-family:inherit;color:var(--text);">
-                    </div>
-                  </div>
-
-                  <div style="display:flex;justify-content:flex-end;">
-                    <button class="btn-topbar-primary" id="btnHlsSaveS3" onclick="saveHlsInlineS3()" style="height:36px;padding:0 20px;font-size:13px;display:none;">Save</button>
-                  </div>
-                </div>
-              </div>
-
-              <div style="border-bottom:1px solid var(--border);margin:4px 0;"></div>
-
-              <div class="s3-feature-item">
-                <div onclick="toggleSubExpandS3(event)" style="display:flex;align-items:center;justify-content:space-between;">
-                  <div>
-                    <div class="s3-feature-title" style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px;">Setup Apple Podcasts Subscription <span class="claim-arrow" id="subArrowS3">→</span></div>
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">Offer premium content through Apple Podcasts Subscriptions</div>
-                  </div>
-                </div>
-                <div id="subExpandS3" style="display:none;padding:18px 0 6px 0;">
-                  <div style="font-size:14px;color:var(--text);font-weight:400;line-height:1.8;padding-left:2px;">
-                    <div style="margin-bottom:6px;">1. <strong>Publish</strong> at least one audio episode.</div>
-                    <div style="margin-bottom:6px;">2. Make sure <strong>{podcast name}</strong> is listed in your Apple Podcasts Connect account. If it is not listed, please <a style="color:var(--text);text-decoration:underline;cursor:pointer;" onclick="openClaimSection()">claim your podcast</a> first and wait 24 hours.</div>
-                    <div style="margin-bottom:6px;">3. <strong>Sign up</strong> for Apple Podcasts Subscriptions and create your subscription.</div>
-                    <div style="margin-bottom:6px;">4. <strong>Download</strong> your Apple Podcasts API Key from Apple. <a href="https://podcasters.apple.com/support/5593-how-to-publish-video" target="_blank" style="color:var(--text);text-decoration:underline;">Learn more</a>.</div>
-                    <div style="margin-bottom:14px;">5. <strong>Upload</strong> your Apple Podcasts API Key to connect your Apple Podcasts account with Podbean.</div>
-                  </div>
-
-                  <div style="margin-bottom:16px;">
-                    <div style="display:flex;gap:8px;align-items:center;">
-                      <input type="file" id="subApiKeyUploadS3" accept=".p8,.json,.txt,.key" onchange="onSubApiKeyUploadS3()" style="flex:1;padding:8px 0;font-size:14px;font-family:inherit;color:var(--text);">
-                    </div>
-                  </div>
-
-                  <div style="display:flex;justify-content:flex-end;">
-                    <button class="btn-topbar-primary" id="btnSubSaveS3" onclick="saveSubInlineS3()" style="height:36px;padding:0 20px;font-size:13px;display:none;">Save</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Status 4: Claimed -->
-          <div class="apple-tab-content" id="appleStatusContent-status4">
-            <div style="display:flex;flex-direction:column;gap:20px;padding:4px 0;">
-              <div>
-                <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;">Your Podcast URL in Apple Podcasts</div>
-                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:14px;color:var(--text);word-break:break-all;">
-                  <span id="savedAppleUrlDisplay4" style="flex:1;"></span>
-                  <a style="white-space:nowrap;font-weight:600;color:var(--text);cursor:pointer;text-decoration:underline;" onclick="window.open(document.getElementById('savedAppleUrlDisplay').textContent || document.getElementById('savedAppleUrlDisplay4').textContent)">View→</a>
-                </div>
-                <div style="margin-top:8px;font-size:13px;"><a style="color:var(--text-secondary);cursor:pointer;text-decoration:underline;" onclick="deleteExistingAppleUrl()">Delete the podcast URL from Podbean</a></div>
-              </div>
-
-              <div class="claim-box">
-                <div onclick="toggleClaimExpandS4(event)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-                  <div>
-                    <div class="claim-header" style="font-size:14px;font-weight:600;color:var(--text);">
-                      <span class="claim-header-text">Claim your podcast on Apple Podcasts</span>
-                      <span class="claim-arrow" id="claimArrow4">→</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Inline expand content -->
-                <div id="claimExpandContent4" style="display:none;padding-top:18px;border-top:1px solid var(--border);margin-top:14px;">
-                  <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:14px;">1. <strong>Log in</strong> to your <a href="https://podcastsconnect.apple.com/" target="_blank" style="color:var(--text);text-decoration:underline;">Apple Podcasts Connect</a> account. If you don't have an Apple account, you can <a href="https://podcasters.apple.com/support/827-create-an-account" target="_blank" style="color:var(--text);text-decoration:underline;">create one</a>.</div>
-
-                  <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:14px;">2. At the bottom of the page, under More Actions, click <strong>Claim Existing Show</strong>.</div>
-
-                  <div style="margin-bottom:18px;">
-                    <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:6px;">3. <strong>Copy your Apple Podcast URL</strong></div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                      <span id="claimPodcastUrlDisplayS4" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:#f8fafc;word-break:break-all;"></span>
-                      <button class="btn-topbar-outline" onclick="copyClaimUrlS4()" style="white-space:nowrap;height:36px;padding:0 16px;font-size:13px;">Copy</button>
-                    </div>
-                  </div>
-
-                  <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:14px;">4. Follow the prompts to find your show and <strong>generate a token</strong>. The token is valid for seven days.</div>
-
-                  <div style="margin-bottom:18px;">
-                    <div style="font-size:14px;color:var(--text);font-weight:400;margin-bottom:6px;">5. <strong>Copy the claim token</strong> from Apple, paste it below</div>
-                    <input type="text" id="claimTokenInputS4" placeholder="Paste your claim token" value="APAuthSync ABCD1234EFGH5678IJKLMNOP" oninput="onClaimTokenInputS4()" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;">
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">The token will be added to your RSS feed. Within 24 hours, Apple Podcasts will verify it matches the one you generated in Apple Podcasts Connect and will automatically move your show to your account.</div>
-                  </div>
-
-                </div>
-              </div>
-
-              <div style="padding:12px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:13px;color:var(--text);line-height:1.6;">
-                <strong>Claim token added to your RSS feed.</strong> Apple Podcasts will verify it within 24 hours and move your show to your account. If it does not appear, try claiming it again or contact Apple Support.
-              </div>
-
-              <div style="border-top:1px solid var(--border);padding-top:4px;"></div>
-
-              <div class="s3-feature-item">
-                <div onclick="toggleHlsExpandS4(event)" style="display:flex;align-items:center;justify-content:space-between;">
-                  <div>
-                    <div class="s3-feature-title" style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px;">Enable HLS Video <span class="claim-arrow" id="hlsArrowS4">→</span></div>
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">Deliver high-quality video streaming to Apple Podcasts</div>
-                  </div>
-                </div>
-                <div id="hlsExpandS4" style="display:none;padding:18px 0 6px 0;">
-                  <div style="font-size:14px;color:var(--text);line-height:1.6;margin-bottom:18px;">Authorize Podbean to publish your video episodes to Apple Podcasts in HLS video format.</div>
-
-                  <div style="font-size:14px;color:var(--text);font-weight:400;line-height:1.8;padding-left:2px;">
-                    <div style="margin-bottom:6px;">1. <strong>Log in</strong> to <a href="https://podcastsconnect.apple.com/" target="_blank" style="color:var(--text);text-decoration:underline;">Apple Podcasts Connect</a>.</div>
-                    <div style="margin-bottom:6px;">2. Make sure <strong>{podcast name}</strong> is listed in your Apple Podcasts Connect account. If it is not listed, please <a style="color:var(--text);text-decoration:underline;cursor:pointer;" onclick="openClaimSection()">claim your podcast</a> first and wait 24 hours.</div>
-                    <div style="margin-bottom:6px;">3. Go to <strong>Account &gt; Keys</strong>.</div>
-                    <div style="margin-bottom:6px;">4. Click the <strong>+</strong> icon next to Active.</div>
-                    <div style="margin-bottom:6px;">5. Enter a name for the API key, such as <strong>Podbean</strong>.</div>
-                    <div style="margin-bottom:6px;">6. Click <strong>Generate</strong>, then click <strong>Download</strong>. Do not rename the downloaded file.</div>
-                    <div style="margin-bottom:14px;">7. <strong>Upload your API key file</strong> to Podbean.</div>
-                  </div>
-
-                  <div style="margin-bottom:16px;">
-                    <div style="display:flex;gap:8px;align-items:center;">
-                      <input type="file" id="hlsApiKeyUploadS4" accept=".p8,.json,.txt,.key" onchange="onHlsApiKeyUploadS4()" style="flex:1;padding:8px 0;font-size:14px;font-family:inherit;color:var(--text);">
-                    </div>
-                  </div>
-
-                  <div style="display:flex;justify-content:flex-end;">
-                    <button class="btn-topbar-primary" id="btnHlsSaveS4" onclick="saveHlsInlineS4()" style="height:36px;padding:0 20px;font-size:13px;display:none;">Save</button>
-                  </div>
-                </div>
-              </div>
-
-              <div style="border-bottom:1px solid var(--border);margin:4px 0;"></div>
-
-              <div class="s3-feature-item">
-                <div onclick="toggleSubExpandS4(event)" style="display:flex;align-items:center;justify-content:space-between;">
-                  <div>
-                    <div class="s3-feature-title" style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px;">Setup Apple Podcasts Subscription <span class="claim-arrow" id="subArrowS4">→</span></div>
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">Offer premium content through Apple Podcasts Subscriptions</div>
-                  </div>
-                </div>
-                <div id="subExpandS4" style="display:none;padding:18px 0 6px 0;">
-                  <div style="font-size:14px;color:var(--text);font-weight:400;line-height:1.8;padding-left:2px;">
-                    <div style="margin-bottom:6px;">1. <strong>Publish</strong> at least one audio episode.</div>
-                    <div style="margin-bottom:6px;">2. Make sure <strong>{podcast name}</strong> is listed in your Apple Podcasts Connect account. If it is not listed, please <a style="color:var(--text);text-decoration:underline;cursor:pointer;" onclick="openClaimSection()">claim your podcast</a> first and wait 24 hours.</div>
-                    <div style="margin-bottom:6px;">3. <strong>Sign up</strong> for Apple Podcasts Subscriptions and create your subscription.</div>
-                    <div style="margin-bottom:6px;">4. <strong>Download</strong> your Apple Podcasts API Key from Apple. <a href="https://podcasters.apple.com/support/5593-how-to-publish-video" target="_blank" style="color:var(--text);text-decoration:underline;">Learn more</a>.</div>
-                    <div style="margin-bottom:14px;">5. <strong>Upload</strong> your Apple Podcasts API Key to connect your Apple Podcasts account with Podbean.</div>
-                  </div>
-
-                  <div style="margin-bottom:16px;">
-                    <div style="display:flex;gap:8px;align-items:center;">
-                      <input type="file" id="subApiKeyUploadS4" accept=".p8,.json,.txt,.key" onchange="onSubApiKeyUploadS4()" style="flex:1;padding:8px 0;font-size:14px;font-family:inherit;color:var(--text);">
-                    </div>
-                  </div>
-
-                  <div style="display:flex;justify-content:flex-end;">
-                    <button class="btn-topbar-primary" id="btnSubSaveS4" onclick="saveSubInlineS4()" style="height:36px;padding:0 20px;font-size:13px;display:none;">Save</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-    <!-- Right side status tabs -->
-    <div class="apple-right-tabbar">
-      <div class="apple-right-tab active" data-stab="status1" onclick="switchAppleStatusTab('status1')">状态1</div>
-      <div class="apple-right-tab" data-stab="status2" onclick="switchAppleStatusTab('status2')">状态2</div>
-      <div class="apple-right-tab" data-stab="status3" onclick="switchAppleStatusTab('status3')">状态3</div>
-      <div class="apple-right-tab" data-stab="status4" onclick="switchAppleStatusTab('status4')">状态4</div>
-    </div>
-
     <!-- ===== APPLE INFO MODAL (custom alert) ===== -->
     <div class="modal-overlay" id="appleInfoModal">
       <div class="modal-box" style="width:420px;text-align:center;">
@@ -4143,6 +4278,78 @@
         <button class="btn-topbar-primary" onclick="closeAppleInfoModal()" style="margin:0 auto;">Got it</button>
       </div>
     </div>
+
+  <!-- ===== EXISTING URL MODAL ===== -->
+  <div class="modal-overlay" id="existingUrlModal">
+    <div class="modal-box" style="width:460px;text-align:left;">
+      <button class="modal-close" onclick="closeExistingUrlModal()">&times;</button>
+      <div style="font-size:17px;font-weight:600;color:var(--text);margin-bottom:16px;">Your Podcast URL in Apple Podcasts</div>
+      <input type="text" id="existingAppleUrl" placeholder="Paste your Apple Podcasts URL" oninput="onExistingUrlInput()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;margin-bottom:6px;">
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:24px;">Paste your existing Apple Podcasts show URL to link your podcast to this account.</div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-topbar-outline" onclick="closeExistingUrlModal()" style="height:36px;padding:0 20px;font-size:13px;">Cancel</button>
+        <button class="btn-topbar-primary" id="btnModalExistingUrlSave" onclick="saveExistingAppleUrl()" disabled style="height:36px;padding:0 20px;font-size:13px;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SPOTIFY EXISTING URL MODAL ===== -->
+  <div class="modal-overlay" id="spotifyExistingUrlModal">
+    <div class="modal-box" style="width:460px;text-align:left;">
+      <button class="modal-close" onclick="closeSpotifyExistingUrlModal()">&times;</button>
+      <div style="font-size:17px;font-weight:600;color:var(--text);margin-bottom:16px;">Your Podcast URL in Spotify</div>
+      <input type="text" id="spotifyExistingUrl" placeholder="Paste your Spotify podcast URL" oninput="onSpotifyUrlInput()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;margin-bottom:6px;">
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:24px;">Paste your existing Spotify show URL to link your podcast to this account.</div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-topbar-outline" onclick="closeSpotifyExistingUrlModal()" style="height:36px;padding:0 20px;font-size:13px;">Cancel</button>
+        <button class="btn-topbar-primary" id="btnModalSpotifyUrlSave" onclick="saveSpotifyExistingUrl()" disabled style="height:36px;padding:0 20px;font-size:13px;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GENERATE MP3 FOR VIDEO EPISODES SETTING MODAL ===== -->
+  <div class="modal-overlay" id="spotifyMp3Modal">
+    <div class="modal-box" style="width:440px;text-align:left;">
+      <button class="modal-close" onclick="closeSpotifyMp3Modal()">&times;</button>
+      <div style="font-size:17px;font-weight:600;color:var(--text);margin-bottom:6px;">Spotify-Compatible Audio</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">Settings &rsaquo; Feed</div>
+      <div style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:24px;">
+        Automatically generates an MP3 audio version in your feed for video episodes to ensure compatibility with platforms like Spotify, while delivering HLS video streams for video-supported platforms like Apple Podcasts.
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-topbar-outline" onclick="closeSpotifyMp3Modal()" style="height:36px;padding:0 20px;font-size:13px;">Cancel</button>
+        <button class="btn-topbar-primary" onclick="enableSpotifyMp3()" style="height:36px;padding:0 20px;font-size:13px;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== YOUTUBE OWNERSHIP VERIFICATION EMAIL MODAL ===== -->
+  <div class="modal-overlay" id="youtubeVerificationModal">
+    <div class="modal-box" style="width:460px;text-align:left;">
+      <button class="modal-close" onclick="closeYouTubeVerificationModal()">&times;</button>
+      <div style="font-size:17px;font-weight:600;color:var(--text);margin-bottom:6px;">Ownership Verification Email</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">Settings &rsaquo; Feed</div>
+      <input type="text" id="youtubeVerificationEmail" placeholder="Enter your email address" oninput="onYouTubeVerificationInput()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box;margin-bottom:10px;">
+      <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:24px;">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-topbar-outline" onclick="closeYouTubeVerificationModal()" style="height:36px;padding:0 20px;font-size:13px;">Cancel</button>
+        <button class="btn-topbar-primary" id="btnYouTubeVerificationSave" onclick="saveYouTubeVerification()" disabled style="height:36px;padding:0 20px;font-size:13px;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DELETE APPLE URL CONFIRMATION MODAL ===== -->
+  <div class="modal-overlay" id="deleteAppleUrlModal">
+    <div class="modal-box" style="width:420px;text-align:left;">
+      <button class="modal-close" onclick="closeDeleteAppleUrlModal()">&times;</button>
+      <div style="font-size:17px;font-weight:600;color:var(--text);margin-bottom:12px;">Delete Apple Podcasts URL?</div>
+      <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:24px;">This will return you to the Apple Podcasts submission page, remove the Apple Podcasts icon from your website, and disable the Apple Podcasts HLS feature (if enabled).</div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-topbar-outline" onclick="closeDeleteAppleUrlModal()" style="height:36px;padding:0 20px;font-size:13px;">Cancel</button>
+        <button class="btn-topbar-primary" onclick="confirmDeleteAppleUrl()" style="background:#ef4444;height:36px;padding:0 20px;font-size:13px;">Delete</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ===== HLS VIDEO OVERLAY (centered modal) ===== -->
   <div class="modal-overlay" id="hlsModal">
@@ -4281,16 +4488,22 @@
       if (list2) list2.innerHTML = '';
       distPlatformData.forEach(function(p) {
         var isSubmitted = distSubmitted[p.key];
+        // On the Podcast Apps 2 page, Apple Podcasts always shows as submitted + approved
+        var isSubmitted2 = isSubmitted || (p.key === 'apple-podcasts');
         var card = document.createElement('div');
         card.className = 'pa-dist-card' + (isSubmitted ? ' submitted' : '');
+        if (isSubmitted && p.key === 'apple-podcasts') {
+          card.style.cursor = 'pointer';
+          card.onclick = function() { openAppleModal('submit'); };
+        }
         var inner = '';
         var checkSvg = '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="display:block;"><circle cx="12" cy="12" r="11" fill="#22c55e"/><polyline points="16.5 7.5 10 16.5 6.5 12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
         var actionHtml = isSubmitted
           ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;">' +
             checkSvg +
           '</span>'
-          : '<button class="btn-circle" onclick="' + (p.key === 'apple-podcasts' ? "openAppleModal(\'submit\')" : "toggleDistSubmit(\'" + p.key + "\')") + '">+</button>';
-        var actionHtmlPage2Dots = isSubmitted
+          : '<button class="btn-circle" onclick="' + (p.key === 'apple-podcasts' ? "openAppleModal(\'submit\')" : (p.key === 'spotify' ? "openSpotifyModal()" : (p.key === 'youtube-dist' ? "openYouTubeModal()" : "toggleDistSubmit(\'" + p.key + "\')"))) + '">+</button>';
+        var actionHtmlPage2Dots = isSubmitted2
           ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;">' +
             checkSvg +
           '</span>'
@@ -4331,10 +4544,14 @@
         list.appendChild(card);
         if (list2) {
           var card2 = document.createElement('div');
-          card2.className = card.className;
+          card2.className = 'pa-dist-card' + (isSubmitted2 ? ' submitted' : '');
           card2.style.alignItems = 'center';
           card2.innerHTML = '<div class="pa-dist-card-icon"><img src="' + p.img + '" alt="' + p.name + '"></div>' + buildCardInner(true) + '<div style="display:flex;align-items:center;flex-shrink:0;align-self:center;">' + actionHtmlPage2Dots + '</div>';
           list2.appendChild(card2);
+          if (isSubmitted2 && p.key === 'apple-podcasts') {
+            card2.style.cursor = 'pointer';
+            card2.onclick = function() { openAppleApprovedView(); };
+          }
         }
       });
     }
@@ -4377,7 +4594,9 @@
 
     // ===== Apple Podcasts submit modal =====
     var appleSubmitted = false;
+    var appleApproved = false;
     var appleClaimed = false;
+    var appleHlsSaved = false;
 
     function openAppleFeature(tab) {
       if (tab === 'hls') {
@@ -4395,9 +4614,39 @@
       openAppleModal();
     }
 
+    var appleSourcePage = 'page-podcast-apps';
+
     function openAppleModal(tab) {
-      document.getElementById('appleSubmitModal').classList.add('show');
-            checkApplePrereq();
+      // Remember which page to return to
+      if (!document.getElementById('page-podcast-apps-2').classList.contains('hidden')) {
+        appleSourcePage = 'page-podcast-apps-2';
+      } else {
+        appleSourcePage = 'page-podcast-apps';
+      }
+      // Hide all pages, show the Apple Podcasts submit page
+      document.querySelectorAll('.page').forEach(function(p) { p.classList.add('hidden'); });
+      document.getElementById('page-apple-podcasts-submit').classList.remove('hidden');
+      document.getElementById('appleBottomBar').style.display = 'none';
+      checkApplePrereq();
+      checkAppleAgreements();
+      initAppleStepState();
+    }
+
+    // Open Apple Podcasts page in approved state (used from Podcast Apps 2)
+    function openAppleApprovedView() {
+      appleSubmitted = true;
+      appleApproved = true;
+      appleClaimed = false;
+      appleHlsSaved = false;
+      distSubmitted['apple-podcasts'] = true;
+      if (!distPlatformData[0].url) {
+        distPlatformData[0].url = 'https://podcasts.apple.com/us/podcast/your-podcast/id123456';
+      }
+      document.getElementById('savedAppleUrlDisplay').textContent = distPlatformData[0].url;
+      openAppleModal('submit');
+      // Default to step 2 (Claim Podcast): step 1 is done + approved, step 2 is active
+      activateAppleStep(2);
+      goToAppleStep(2);
     }
 
     function checkApplePrereq() {
@@ -4424,7 +4673,24 @@
     }
 
     function closeAppleModal() {
-      document.getElementById('appleSubmitModal').classList.remove('show');
+      document.getElementById('page-apple-podcasts-submit').classList.add('hidden');
+      document.getElementById(appleSourcePage).classList.remove('hidden');
+      document.getElementById('appleBottomBar').style.display = 'none';
+      renderDistList();
+    }
+
+    function simulateAppleApproval() {
+      appleApproved = true;
+      document.getElementById('appleSubmitPending').style.display = 'none';
+      document.getElementById('appleSubmitApproved').style.display = '';
+      document.getElementById('savedAppleUrlDisplay2').textContent = distPlatformData[0].url;
+      // Visually enable step 2 — text & circle turn dark to show it's clickable
+      var s2 = document.getElementById('appleStep2');
+      s2.style.opacity = '1';
+      document.getElementById('appleStep2Circle').style.background = 'var(--text)';
+      document.getElementById('appleStep2Circle').style.color = '#fff';
+      document.getElementById('appleStep2Label').style.color = 'var(--text)';
+      document.getElementById('appleStep2Label').style.fontWeight = '600';
     }
 
     function switchAppleTab(tab) {
@@ -4436,17 +4702,200 @@
       document.getElementById('appleTabContent-' + tab).classList.add('active');
     }
 
-    function switchAppleStatusTab(tab) {
-      var tabs = document.querySelectorAll('.apple-right-tab');
-      var contents = document.querySelectorAll('[id^="appleStatusContent-"]');
-      tabs.forEach(function(t) { t.classList.remove('active'); });
-      contents.forEach(function(c) { c.classList.remove('active'); });
-      document.querySelector('.apple-right-tab[data-stab="' + tab + '"]').classList.add('active');
-      document.getElementById('appleStatusContent-' + tab).classList.add('active');
+    // ===== Step progress management =====
+    var currentAppleStep = 1;
+
+    function clickAppleStep(n) {
+      // Can't click step 2 until approved by Apple
+      if (n === 2 && !appleApproved) return;
+      // Can't click step 3 until step 2 is done
+      if (n === 3) {
+        var prevDone = document.getElementById('appleStep' + (n - 1)).classList.contains('apple-step-done');
+        if (!prevDone) return;
+      }
+      updateStepLabelActive(n);
+      // If the step is already done, just navigate there
+      var el = document.getElementById('appleStep' + n);
+      if (el.classList.contains('apple-step-done')) {
+        goToAppleStep(n);
+        return;
+      }
+      // Highlight this step as currently viewed
+      for (var i = 1; i <= 3; i++) {
+        var si = document.getElementById('appleStep' + i);
+        if (si.classList.contains('apple-step-done')) continue;
+        si.classList.remove('apple-step-active');
+        si.style.opacity = '0.4';
+        document.getElementById('appleStep' + i + 'Circle').style.background = 'var(--border)';
+        document.getElementById('appleStep' + i + 'Circle').style.color = 'var(--text-secondary)';
+      }
+      el.classList.add('apple-step-active');
+      el.style.opacity = '1';
+      document.getElementById('appleStep' + n + 'Circle').style.background = 'var(--text)';
+      document.getElementById('appleStep' + n + 'Circle').style.color = '#fff';
+      goToAppleStep(n);
+    }
+
+    function updateStepLabelActive(n) {
+      for (var i = 1; i <= 3; i++) {
+        document.getElementById('appleStep' + i + 'Label').classList.remove('active');
+      }
+      document.getElementById('appleStep' + n + 'Label').classList.add('active');
+    }
+
+    function showAppleBottomBar() {
+      var bar = document.getElementById('appleBottomBar');
+      if (bar.style.display === 'flex') return;
+      bar.style.display = 'flex';
+      // Ensure per-step buttons are visible/active
+      if (currentAppleStep === 1) {
+        document.getElementById('btnAppleCancel').style.display = '';
+        checkAppleAgreements();
+      } else if (currentAppleStep === 2) {
+        document.getElementById('btnAppleCancel').style.display = '';
+        onClaimTokenInput3();
+      }
+    }
+
+    function goToAppleStep(step) {
+      currentAppleStep = step;
+      document.getElementById('appleStepContent-1').style.display = step === 1 ? '' : 'none';
+      document.getElementById('appleStepContent-2').style.display = step === 2 ? '' : 'none';
+      document.getElementById('appleStepContent-3').style.display = step === 3 ? '' : 'none';
+      if (step === 1 && appleSubmitted) {
+        document.getElementById('appleSubmitWrap').style.display = 'none';
+        document.getElementById('alreadyLink').style.display = 'none';
+        document.getElementById('appleSubmitPending').style.display = appleApproved ? 'none' : '';
+        document.getElementById('appleSubmitApproved').style.display = appleApproved ? '' : 'none';
+        if (appleApproved) {
+          document.getElementById('savedAppleUrlDisplay2').textContent = distPlatformData[0].url;
+        }
+      }
+      // Floating bar buttons
+      var cancelBtn = document.getElementById('btnAppleCancel');
+      var submitBtn = document.getElementById('btnAppleSubmit');
+      var saveBtn = document.getElementById('btnClaimSaveTopBar');
+      if (step === 1 && appleSubmitted) {
+        // Hide the existing-URL block for pending/approved states, but keep it visible
+        // when an existing URL was saved (existingUrlSuccess lives inside the wrap).
+        var urlSuccess = document.getElementById('existingUrlSuccess');
+        document.getElementById('existingUrlWrap').style.display = (urlSuccess && urlSuccess.style.display !== 'none') ? '' : 'none';
+        document.getElementById('appleBottomBar').style.display = 'none';
+      } else if (step === 1) {
+        document.getElementById('existingUrlWrap').style.display = '';
+        cancelBtn.style.display = '';
+        saveBtn.style.display = 'none';
+        checkAppleAgreements(); // re-evaluate submit button visibility
+      } else if (step === 2 && appleClaimed) {
+        document.getElementById('appleBottomBar').style.display = 'none';
+      } else if (step === 2) {
+        cancelBtn.style.display = '';
+        submitBtn.style.display = 'none';
+        onClaimTokenInput3(); // re-evaluate save button visibility
+      } else {
+        document.getElementById('appleBottomBar').style.display = 'none';
+      }
+    }
+
+    function activateAppleStep(n) {
+      var el = document.getElementById('appleStep' + n);
+      el.classList.add('apple-step-active');
+      el.style.opacity = '1';
+      document.getElementById('appleStep' + n + 'Circle').style.background = 'var(--text)';
+      document.getElementById('appleStep' + n + 'Circle').style.color = '#fff';
+      document.getElementById('appleStep' + n + 'Label').style.color = 'var(--text)';
+      document.getElementById('appleStep' + n + 'Label').style.fontWeight = '600';
+      updateStepLabelActive(n);
+    }
+
+    function completeAppleStep(step) {
+      if (step === 1) {
+        var s1 = document.getElementById('appleStep1');
+        s1.classList.add('apple-step-done');
+        s1.classList.remove('apple-step-active');
+        document.getElementById('appleStep1Circle').textContent = '✓';
+        document.getElementById('appleStep1Circle').style.fontSize = '16px';
+        document.getElementById('appleStepConnector').style.background = '#22c55e';
+        goToAppleStep(1);
+      } else if (step === 2) {
+        var s2 = document.getElementById('appleStep2');
+        s2.classList.add('apple-step-done');
+        s2.classList.remove('apple-step-active');
+        document.getElementById('appleStep2Circle').textContent = '✓';
+        document.getElementById('appleStep2Circle').style.fontSize = '16px';
+        document.getElementById('appleStep2Circle').style.background = '#22c55e';
+        document.getElementById('appleStepConnector2').style.background = '#22c55e';
+        activateAppleStep(3);
+        goToAppleStep(3);
+      } else if (step === 3) {
+        var s3 = document.getElementById('appleStep3');
+        s3.classList.add('apple-step-done');
+        s3.classList.remove('apple-step-active');
+        document.getElementById('appleStep3Circle').textContent = '✓';
+        document.getElementById('appleStep3Circle').style.fontSize = '16px';
+        document.getElementById('appleStep3Circle').style.background = '#22c55e';
+      }
+    }
+
+    function resetAppleSteps() {
+      currentAppleStep = 1;
+      // Reset step 1
+      var s1 = document.getElementById('appleStep1');
+      s1.classList.remove('apple-step-done', 'apple-step-active');
+      s1.classList.add('apple-step-active');
+      document.getElementById('appleStep1Circle').textContent = '1';
+      document.getElementById('appleStep1Circle').style.fontSize = '13px';
+      // Reset step 2
+      var s2 = document.getElementById('appleStep2');
+      s2.classList.remove('apple-step-done', 'apple-step-active');
+      s2.style.opacity = '0.4';
+      document.getElementById('appleStep2Circle').textContent = '2';
+      document.getElementById('appleStep2Circle').style.fontSize = '13px';
+      document.getElementById('appleStep2Circle').style.background = 'var(--border)';
+      document.getElementById('appleStep2Circle').style.color = 'var(--text-secondary)';
+      document.getElementById('appleStep2Label').style.color = 'var(--text-secondary)';
+      document.getElementById('appleStep2Label').style.fontWeight = '500';
+      document.getElementById('appleStepConnector').style.background = 'var(--border)';
+      // Reset step 3
+      var s3 = document.getElementById('appleStep3');
+      s3.classList.remove('apple-step-done', 'apple-step-active');
+      s3.style.opacity = '0.4';
+      document.getElementById('appleStep3Circle').textContent = '3';
+      document.getElementById('appleStep3Circle').style.fontSize = '13px';
+      document.getElementById('appleStep3Circle').style.background = 'var(--border)';
+      document.getElementById('appleStep3Circle').style.color = 'var(--text-secondary)';
+      document.getElementById('appleStep3Label').style.color = 'var(--text-secondary)';
+      document.getElementById('appleStep3Label').style.fontWeight = '500';
+      document.getElementById('appleStep3Label').classList.remove('active');
+      document.getElementById('appleStepConnector2').style.background = 'var(--border)';
+      // Reset step 1 form state
+      document.getElementById('appleSubmitPending').style.display = 'none';
+      document.getElementById('appleSubmitApproved').style.display = 'none';
+      document.getElementById('alreadyLink').style.display = '';
+      document.getElementById('appleSubmitWrap').style.display = '';
+      document.getElementById('existingUrlWrap').style.display = '';
+      // Show step 1 content with underline
+      updateStepLabelActive(1);
+      goToAppleStep(1);
+    }
+
+    function initAppleStepState() {
+      if (appleSubmitted && appleClaimed && appleHlsSaved) {
+        completeAppleStep(1);
+        completeAppleStep(2);
+        completeAppleStep(3);
+      } else if (appleSubmitted && appleClaimed) {
+        completeAppleStep(1);
+        completeAppleStep(2);
+      } else if (appleSubmitted) {
+        completeAppleStep(1);
+      } else {
+        resetAppleSteps();
+      }
     }
 
     function checkAppleAgreements() {
-      var checks = document.querySelectorAll('#appleStatusContent-status1 .check-row input[type="checkbox"]');
+      var checks = document.querySelectorAll('#appleStepContent-1 .check-row input[type="checkbox"]');
       var allChecked = true;
       checks.forEach(function(c) { if (!c.checked) allChecked = false; });
       var rights = document.getElementById('selContentRights').value;
@@ -4454,86 +4903,29 @@
       var allFilled = allChecked && rights && freq;
       var btn = document.getElementById('btnAppleSubmit');
       if (allFilled) {
-        btn.style.display = '';
         btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
       } else {
-        btn.style.display = 'none';
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
       }
     }
 
-    function onAppleUrlInput() {
-      var btn = document.getElementById('btnAppleSubmit');
+
+    function openExistingUrlModal() {
+      document.getElementById('existingAppleUrl').value = '';
+      document.getElementById('btnModalExistingUrlSave').disabled = true;
+      document.getElementById('existingUrlModal').classList.add('show');
+    }
+    function closeExistingUrlModal() {
+      document.getElementById('existingUrlModal').classList.remove('show');
+    }
+
+    function onExistingUrlInput() {
       var url = document.getElementById('existingAppleUrl').value.trim();
-      if (url) {
-        btn.style.display = '';
-        btn.disabled = false;
-      } else {
-        btn.style.display = 'none';
-        btn.disabled = true;
-      }
-    }
-
-
-    function toggleExistingUrl() {
-      var urlSection = document.getElementById('existingUrlSection');
-      var submitDetails = document.getElementById('appleSubmitDetails');
-      var successState = document.getElementById('existingUrlSuccess');
-      var isOpen = urlSection.style.display !== 'none' || successState.style.display !== 'none';
-      if (!isOpen && appleSubmitted) {
-        successState.style.display = '';
-        urlSection.style.display = 'none';
-      } else if (!isOpen) {
-        urlSection.style.display = '';
-        successState.style.display = 'none';
-      } else {
-        urlSection.style.display = 'none';
-        successState.style.display = 'none';
-      }
-      submitDetails.style.display = isOpen ? '' : 'none';
-      var btn = document.getElementById('btnAppleSubmit');
-      var header = document.getElementById('appleSubmitHeader');
-      if (!isOpen) {
-        btn.style.display = 'none';
-        btn.textContent = 'Save';
-        btn.disabled = false;
-        btn.dataset.mode = 'save';
-        header.innerHTML = 'Haven’t submitted to Apple Podcasts yet? <a style="color:var(--text);font-weight:600;text-decoration:underline;cursor:pointer;" onclick="event.stopPropagation();toggleSubmitDetails()">Submit directly via Podbean.</a>';
-      } else {
-        btn.style.display = 'none';
-        header.innerHTML = '';
-      }
-    }
-
-    function toggleSubmitDetails() {
-      var submitDetails = document.getElementById('appleSubmitDetails');
-      var urlSection = document.getElementById('existingUrlSection');
-      var successState = document.getElementById('existingUrlSuccess');
-      var isOpen = submitDetails.style.display !== 'none';
-      submitDetails.style.display = isOpen ? 'none' : '';
-      urlSection.style.display = 'none';
-      if (!isOpen) {
-        successState.style.display = 'none';
-      } else if (appleSubmitted) {
-        successState.style.display = '';
-      } else {
-        successState.style.display = 'none';
-      }
-      var btn = document.getElementById('btnAppleSubmit');
-      var header = document.getElementById('appleSubmitHeader');
-      if (!isOpen) {
-        btn.style.display = 'none';
-        btn.textContent = 'Submit';
-        btn.disabled = true;
-        btn.dataset.mode = 'submit';
-        header.innerHTML = '';
-        checkAppleAgreements();
-      } else {
-        btn.style.display = 'none';
-        btn.textContent = 'Save';
-        btn.disabled = false;
-        btn.dataset.mode = 'save';
-        header.innerHTML = 'Haven’t submitted to Apple Podcasts yet? <a style="color:var(--text);font-weight:600;text-decoration:underline;cursor:pointer;" onclick="event.stopPropagation();toggleSubmitDetails()">Submit directly via Podbean.</a>';
-      }
+      document.getElementById('btnModalExistingUrlSave').disabled = !url;
     }
 
     function saveExistingAppleUrl() {
@@ -4542,39 +4934,308 @@
       appleSubmitted = true;
       distPlatformData[0].url = url;
       document.getElementById('existingAppleUrl').value = '';
-      document.getElementById('existingUrlSection').style.display = 'none';
+      closeExistingUrlModal();
       document.getElementById('alreadyLink').style.display = 'none';
       document.getElementById('appleSubmitWrap').style.display = 'none';
-      document.getElementById('appleSubmitDetails').style.display = 'none';
+      document.getElementById('appleSubmitPending').style.display = 'none';
       document.getElementById('savedAppleUrlDisplay').textContent = url;
-      document.getElementById('savedAppleUrlDisplay3').textContent = url;
-      document.getElementById('savedAppleUrlDisplay4').textContent = url;
       document.getElementById('existingUrlSuccess').style.display = '';
       var btn = document.getElementById('btnAppleSubmit');
-      btn.style.display = 'none';
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.style.cursor = 'default';
       renderDistList();
+      // Advance steps: existing URL means already submitted + already claimed (no review needed)
+      appleApproved = true;
+      appleClaimed = true;
+      completeAppleStep(1);
+      completeAppleStep(2);
     }
 
     function deleteExistingAppleUrl() {
       appleSubmitted = false;
+      appleApproved = false;
+      appleClaimed = false;
+      document.getElementById('appleBottomBar').style.display = 'none';
       distPlatformData[0].url = '';
       document.getElementById('existingUrlSuccess').style.display = 'none';
-      document.getElementById('existingUrlSection').style.display = 'none';
+      document.getElementById('appleSubmitPending').style.display = 'none';
       document.getElementById('alreadyLink').style.display = '';
       document.getElementById('appleSubmitWrap').style.display = '';
-      document.getElementById('appleSubmitDetails').style.display = '';
+      document.getElementById('existingUrlWrap').style.display = '';
       document.getElementById('existingAppleUrl').value = '';
       document.getElementById('savedAppleUrlDisplay').textContent = '';
-      document.getElementById('savedAppleUrlDisplay3').textContent = '';
-      document.getElementById('savedAppleUrlDisplay4').textContent = '';
-      document.getElementById('appleSubmitHeader').innerHTML = '';
       document.getElementById('selContentRights').value = '';
       document.getElementById('selUpdateFreq').value = '';
-      var checks = document.querySelectorAll('#appleStatusContent-status1 .check-row input[type="checkbox"]');
+      var checks = document.querySelectorAll('#appleStepContent-1 .check-row input[type="checkbox"]');
       checks.forEach(function(c) { c.checked = false; });
       var btn = document.getElementById('btnAppleSubmit');
-      btn.style.display = 'none';
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.style.cursor = 'default';
+      resetAppleSteps();
       renderDistList();
+    }
+
+    // ===== Delete Apple URL confirmation =====
+    function openDeleteAppleUrlModal() {
+      document.getElementById('deleteAppleUrlModal').classList.add('show');
+    }
+    function closeDeleteAppleUrlModal() {
+      document.getElementById('deleteAppleUrlModal').classList.remove('show');
+    }
+    function confirmDeleteAppleUrl() {
+      closeDeleteAppleUrlModal();
+      deleteExistingAppleUrl();
+    }
+
+    // ===== Spotify Submit page =====
+    var spotifySourcePage = 'page-podcast-apps';
+    var spotifyMp3Enabled = false;    // Spotify-Compatible Audio setting
+
+    function openSpotifyModal() {
+      if (!document.getElementById('page-podcast-apps-2').classList.contains('hidden')) {
+        spotifySourcePage = 'page-podcast-apps-2';
+      } else {
+        spotifySourcePage = 'page-podcast-apps';
+      }
+      document.querySelectorAll('.page').forEach(function(p) { p.classList.add('hidden'); });
+      document.getElementById('page-spotify-submit').classList.remove('hidden');
+      document.getElementById('spotifyBottomBar').style.display = 'none';
+      checkSpotifyAgreements();
+    }
+
+    function closeSpotifyModal() {
+      document.getElementById('page-spotify-submit').classList.add('hidden');
+      document.getElementById('spotifyBottomBar').style.display = 'none';
+      document.getElementById(spotifySourcePage).classList.remove('hidden');
+      renderDistList();
+    }
+
+    function showSpotifyBottomBar() {
+      var bar = document.getElementById('spotifyBottomBar');
+      if (bar.style.display === 'flex') return;
+      bar.style.display = 'flex';
+      document.getElementById('btnSpotifyCancel').style.display = '';
+      checkSpotifyAgreements();
+    }
+
+    function checkSpotifyAgreements() {
+      var checks = document.querySelectorAll('#page-spotify-submit .check-row input[type="checkbox"]');
+      var allChecked = true;
+      checks.forEach(function(c) { if (!c.checked) allChecked = false; });
+      var btn = document.getElementById('btnSpotifySubmit');
+      // Spotify-Compatible Audio is always required — it ensures
+      // video episodes stay compatible with Spotify (prevents future takedowns).
+      var videoBlocked = !spotifyMp3Enabled;
+      if (allChecked && !videoBlocked) {
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
+      } else {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
+      }
+    }
+
+    function openSpotifyMp3Modal() {
+      document.getElementById('spotifyMp3Modal').classList.add('show');
+    }
+
+    function closeSpotifyMp3Modal() {
+      document.getElementById('spotifyMp3Modal').classList.remove('show');
+    }
+
+    function toggleSpotifyMp3(cb) {
+      spotifyMp3Enabled = !!cb.checked;
+      checkSpotifyAgreements();
+      showSpotifyBottomBar();
+    }
+
+    function enableSpotifyMp3() {
+      spotifyMp3Enabled = true;
+      var toggle = document.getElementById('spotifyMp3Toggle');
+      if (toggle) toggle.checked = true;
+      closeSpotifyMp3Modal();
+      checkSpotifyAgreements();
+    }
+
+    function cancelSpotifyAction() {
+      var checks = document.querySelectorAll('#page-spotify-submit .check-row input[type="checkbox"]');
+      checks.forEach(function(c) { c.checked = false; });
+      document.getElementById('spotifyBottomBar').style.display = 'none';
+      checkSpotifyAgreements();
+    }
+
+    function submitSpotify() {
+      distSubmitted['spotify'] = true;
+      renderDistList();
+      closeSpotifyModal();
+    }
+
+    // ===== Spotify existing URL =====
+    function openSpotifyExistingUrlModal() {
+      document.getElementById('spotifyExistingUrl').value = '';
+      document.getElementById('btnModalSpotifyUrlSave').disabled = true;
+      document.getElementById('spotifyExistingUrlModal').classList.add('show');
+    }
+    function closeSpotifyExistingUrlModal() {
+      document.getElementById('spotifyExistingUrlModal').classList.remove('show');
+    }
+    function onSpotifyUrlInput() {
+      var url = document.getElementById('spotifyExistingUrl').value.trim();
+      document.getElementById('btnModalSpotifyUrlSave').disabled = !url;
+    }
+    function saveSpotifyExistingUrl() {
+      var url = document.getElementById('spotifyExistingUrl').value.trim();
+      if (!url) return;
+      distSubmitted['spotify'] = true;
+      document.getElementById('spotifyExistingUrl').value = '';
+      closeSpotifyExistingUrlModal();
+      document.getElementById('spotifyAlreadyLink').style.display = 'none';
+      document.getElementById('spotifySavedUrlDisplay').textContent = url;
+      document.getElementById('spotifyExistingUrlSuccess').style.display = '';
+      document.getElementById('spotifySubmitWrap').style.display = 'none';
+      renderDistList();
+    }
+    function deleteSpotifyExistingUrl() {
+      distSubmitted['spotify'] = false;
+      document.getElementById('spotifyExistingUrlSuccess').style.display = 'none';
+      document.getElementById('spotifyAlreadyLink').style.display = '';
+      document.getElementById('spotifySubmitWrap').style.display = '';
+      document.getElementById('spotifyExistingUrl').value = '';
+      document.getElementById('spotifySavedUrlDisplay').textContent = '';
+      var checks = document.querySelectorAll('#page-spotify-submit .check-row input[type="checkbox"]');
+      checks.forEach(function(c) { c.checked = false; });
+      document.getElementById('spotifyBottomBar').style.display = 'none';
+      checkSpotifyAgreements();
+      renderDistList();
+    }
+
+    // ===== YouTube submit page =====
+    var youtubeSourcePage = 'page-podcast-apps';
+
+    function resetYouTubeForm() {
+      document.getElementById('youtubeStep1Card').style.display = '';
+      document.getElementById('youtubeUrlWrap').style.display = '';
+      document.getElementById('youtubeUrlInput').value = '';
+      document.getElementById('youtubeBottomBar').style.display = 'none';
+      onYouTubeUrlInput();
+    }
+
+    function openYouTubeModal() {
+      if (!document.getElementById('page-podcast-apps-2').classList.contains('hidden')) {
+        youtubeSourcePage = 'page-podcast-apps-2';
+      } else {
+        youtubeSourcePage = 'page-podcast-apps';
+      }
+      document.querySelectorAll('.page').forEach(function(p) { p.classList.add('hidden'); });
+      document.getElementById('page-youtube-submit').classList.remove('hidden');
+      document.getElementById('youtubeBottomBar').style.display = 'none';
+      // Reset to form state if not yet saved
+      if (!distSubmitted['youtube-dist']) {
+        document.getElementById('youtubeExistingUrlWrap').style.display = '';
+        document.getElementById('youtubeUrlSaved').style.display = 'none';
+        resetYouTubeForm();
+      }
+    }
+
+    function closeYouTubeModal() {
+      document.getElementById('page-youtube-submit').classList.add('hidden');
+      document.getElementById('youtubeBottomBar').style.display = 'none';
+      document.getElementById(youtubeSourcePage).classList.remove('hidden');
+      renderDistList();
+    }
+
+    function focusYouTubeUrl() {
+      // "Already submitted? Save your existing URL here." — jump to the URL form.
+      var saved = document.getElementById('youtubeUrlSaved');
+      if (saved && saved.style.display !== 'none') saved.style.display = 'none';
+      var wrap = document.getElementById('youtubeUrlWrap');
+      wrap.style.display = '';
+      var input = document.getElementById('youtubeUrlInput');
+      input.focus();
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      onYouTubeUrlInput();
+    }
+
+    function onYouTubeUrlInput() {
+      var url = document.getElementById('youtubeUrlInput').value.trim();
+      var btn = document.getElementById('btnYouTubeSave');
+      var bar = document.getElementById('youtubeBottomBar');
+      if (url) {
+        bar.style.display = 'flex';
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
+      } else {
+        bar.style.display = 'none';
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
+      }
+    }
+
+    function cancelYouTubeAction() {
+      document.getElementById('youtubeUrlInput').value = '';
+      document.getElementById('youtubeBottomBar').style.display = 'none';
+      onYouTubeUrlInput();
+    }
+
+    function saveYouTubeUrl() {
+      var url = document.getElementById('youtubeUrlInput').value.trim();
+      if (!url) return;
+      distSubmitted['youtube-dist'] = true;
+      document.getElementById('youtubeExistingUrlWrap').style.display = 'none';
+      document.getElementById('youtubeStep1Card').style.display = 'none';
+      document.getElementById('youtubeUrlWrap').style.display = 'none';
+      document.getElementById('youtubeSavedUrlDisplay').textContent = url;
+      document.getElementById('youtubeUrlSaved').style.display = '';
+      document.getElementById('youtubeBottomBar').style.display = 'none';
+      renderDistList();
+      closeYouTubeModal();
+    }
+
+    function deleteYouTubeUrl() {
+      distSubmitted['youtube-dist'] = false;
+      document.getElementById('youtubeExistingUrlWrap').style.display = '';
+      document.getElementById('youtubeUrlSaved').style.display = 'none';
+      resetYouTubeForm();
+      renderDistList();
+    }
+
+    // ===== YouTube ownership verification email modal =====
+    var youtubeVerificationEmail = '';
+
+    function openYouTubeVerificationModal() {
+      document.getElementById('youtubeVerificationEmail').value = youtubeVerificationEmail;
+      document.getElementById('btnYouTubeVerificationSave').disabled = !youtubeVerificationEmail;
+      document.getElementById('youtubeVerificationModal').classList.add('show');
+    }
+
+    function closeYouTubeVerificationModal() {
+      document.getElementById('youtubeVerificationModal').classList.remove('show');
+    }
+
+    function onYouTubeVerificationInput() {
+      var email = document.getElementById('youtubeVerificationEmail').value.trim();
+      document.getElementById('btnYouTubeVerificationSave').disabled = !email;
+    }
+
+    function saveYouTubeVerification() {
+      var email = document.getElementById('youtubeVerificationEmail').value.trim();
+      if (!email) return;
+      youtubeVerificationEmail = email;
+      closeYouTubeVerificationModal();
+      document.getElementById('youtubeVerificationStatus').innerHTML =
+        'Ownership Verification Email added: <strong>' + email + '</strong> <a onclick="deleteYouTubeVerification()" style="color:var(--text-secondary);text-decoration:underline;cursor:pointer;">Delete</a>';
+    }
+
+    function deleteYouTubeVerification() {
+      youtubeVerificationEmail = '';
+      document.getElementById('youtubeVerificationStatus').innerHTML =
+        'Add <a onclick="event.stopPropagation();openYouTubeVerificationModal()" style="color:var(--text);text-decoration:underline;font-weight:600;cursor:pointer;">Ownership Verification Email</a> to your RSS feed.';
     }
 
     // ===== Apple Info Modal (replaces alert()) =====
@@ -4589,15 +5250,18 @@
 
     document.addEventListener('click', function(e) {
       if (e.target.id === 'btnAppleSubmit') {
-        if (e.target.dataset.mode === 'save') {
-          saveExistingAppleUrl();
-          return;
-        }
         distSubmitted['apple-podcasts'] = true;
         distPlatformData[0].url = 'https://podcasts.apple.com/us/podcast/your-podcast/id123456';
         appleSubmitted = true;
         renderDistList();
-        closeAppleModal();
+        // Show pending approval, hide submit form and existing URL link
+        document.getElementById('savedAppleUrlDisplay').textContent = distPlatformData[0].url;
+        document.getElementById('existingUrlWrap').style.display = 'none';
+        document.getElementById('appleSubmitWrap').style.display = 'none';
+        document.getElementById('alreadyLink').style.display = 'none';
+        document.getElementById('appleSubmitPending').style.display = '';
+        completeAppleStep(1);
+        document.getElementById('appleBottomBar').style.display = 'none';
       }
     });
 
@@ -4670,63 +5334,7 @@
       }
     });
 
-    // ===== Status 3 inline claim expand =====
-    function collapseS3Items(excludeId) {
-      var items = [
-        { id: 'claimExpandContent', arrow: 'claimArrow3' },
-        { id: 'hlsExpandS3', arrow: 'hlsArrowS3' },
-        { id: 'subExpandS3', arrow: 'subArrowS3' }
-      ];
-      for (var i = 0; i < items.length; i++) {
-        if (items[i].id !== excludeId) {
-          var el = document.getElementById(items[i].id);
-          var a = document.getElementById(items[i].arrow);
-          if (el && el.style.display !== 'none') {
-            el.style.display = 'none';
-            if (a) a.textContent = '→';
-          }
-        }
-      }
-    }
-
-    function collapseS4Items(excludeId) {
-      var items = [
-        { id: 'claimExpandContent4', arrow: 'claimArrow4' },
-        { id: 'hlsExpandS4', arrow: 'hlsArrowS4' },
-        { id: 'subExpandS4', arrow: 'subArrowS4' }
-      ];
-      for (var i = 0; i < items.length; i++) {
-        if (items[i].id !== excludeId) {
-          var el = document.getElementById(items[i].id);
-          var a = document.getElementById(items[i].arrow);
-          if (el && el.style.display !== 'none') {
-            el.style.display = 'none';
-            if (a) a.textContent = '→';
-          }
-        }
-      }
-    }
-
-    function toggleClaimExpand(e) {
-      e.stopPropagation();
-      var content = document.getElementById('claimExpandContent');
-      var arrow = document.getElementById('claimArrow3');
-      if (content.style.display === 'none') {
-        collapseS3Items('claimExpandContent');
-        content.style.display = 'block';
-        arrow.textContent = '↓';
-        // Populate the URL display
-        var urlEl = document.getElementById('savedAppleUrlDisplay');
-        if (urlEl && urlEl.textContent) {
-          document.getElementById('claimPodcastUrlDisplay3').textContent = urlEl.textContent;
-        }
-        document.getElementById('claimTokenInput3').value = '';
-        document.getElementById('btnClaimSaveTopBar').style.display = 'none';
-      } else {
-        content.style.display = 'none';
-        arrow.textContent = '→';
-      }
-    }
+    // ===== Claim expand (Claim tab) =====
 
     function copyClaimUrl3() {
       var url = document.getElementById('claimPodcastUrlDisplay3').textContent;
@@ -4742,275 +5350,153 @@
     function onClaimTokenInput3() {
       var btn = document.getElementById('btnClaimSaveTopBar');
       var token = document.getElementById('claimTokenInput3').value.trim();
+      btn.style.display = '';
       if (token) {
-        btn.style.display = '';
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
       } else {
-        btn.style.display = 'none';
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
       }
     }
 
     function saveClaimTopBar() {
-      var content3 = document.getElementById('claimExpandContent');
-      var content4 = document.getElementById('claimExpandContent4');
-      if (content3 && content3.style.display !== 'none') {
-        var token = document.getElementById('claimTokenInput3').value.trim();
-        if (token) {
-          appleClaimed = true;
-          alert('Token saved! Apple will verify your show within 24 hours.');
-          content3.style.display = 'none';
-          document.getElementById('claimArrow3').textContent = '→';
-          document.getElementById('btnClaimSaveTopBar').style.display = 'none';
-        }
-      } else if (content4 && content4.style.display !== 'none') {
-        var token4 = document.getElementById('claimTokenInputS4').value.trim();
-        if (token4) {
-          appleClaimed = true;
-          alert('Token saved! Apple will verify your show within 24 hours.');
-          content4.style.display = 'none';
-          document.getElementById('claimArrow4').textContent = '→';
-          document.getElementById('btnClaimSaveTopBar').style.display = 'none';
-        }
-      }
-    }
-
-    // ===== Status 4 inline HLS expand =====
-    function toggleHlsExpandS4(e) {
-      e.stopPropagation();
-      var el = document.getElementById('hlsExpandS4');
-      var arrow = document.getElementById('hlsArrowS4');
-      var isOpen = el.style.display !== 'none';
-      if (!isOpen) {
-        collapseS4Items('hlsExpandS4');
-      }
-      el.style.display = isOpen ? 'none' : 'block';
-      arrow.textContent = isOpen ? '→' : '↓';
-      // Reset state
-      if (!isOpen) {
-        document.getElementById('hlsApiKeyUploadS4').value = '';
-        document.getElementById('btnHlsSaveS4').style.display = 'none';
-        hlsApiKeyUploadedS4 = false;
-      }
-    }
-
-    var hlsApiKeyUploadedS4 = false;
-
-    function onHlsApiKeyUploadS4() {
-      var file = document.getElementById('hlsApiKeyUploadS4').files[0];
-      if (file) {
-        hlsApiKeyUploadedS4 = true;
-        document.getElementById('btnHlsSaveS4').style.display = '';
-        document.getElementById('btnHlsSaveS4').disabled = false;
-      } else {
-        hlsApiKeyUploadedS4 = false;
-        document.getElementById('btnHlsSaveS4').style.display = 'none';
-      }
-    }
-
-    function saveHlsInlineS4() {
-      if (hlsApiKeyUploadedS4) {
-        alert('HLS Video API key saved successfully!');
-        document.getElementById('hlsExpandS4').style.display = 'none';
-        document.getElementById('hlsArrowS4').textContent = '→';
-        hlsApiKeyUploadedS4 = false;
-      }
-    }
-
-    function toggleSubExpandS4(e) {
-      e.stopPropagation();
-      var el = document.getElementById('subExpandS4');
-      var arrow = document.getElementById('subArrowS4');
-      var isOpen = el.style.display !== 'none';
-      if (!isOpen) {
-        collapseS4Items('subExpandS4');
-      }
-      el.style.display = isOpen ? 'none' : 'block';
-      arrow.textContent = isOpen ? '→' : '↓';
-      if (!isOpen) {
-        document.getElementById('subApiKeyUploadS4').value = '';
-        document.getElementById('btnSubSaveS4').style.display = 'none';
-        subApiKeyUploadedS4 = false;
-      }
-    }
-
-    var subApiKeyUploadedS4 = false;
-
-    function onSubApiKeyUploadS4() {
-      var file = document.getElementById('subApiKeyUploadS4').files[0];
-      if (file) {
-        subApiKeyUploadedS4 = true;
-        document.getElementById('btnSubSaveS4').style.display = '';
-        document.getElementById('btnSubSaveS4').disabled = false;
-      } else {
-        subApiKeyUploadedS4 = false;
-        document.getElementById('btnSubSaveS4').style.display = 'none';
-      }
-    }
-
-    function saveSubInlineS4() {
-      if (subApiKeyUploadedS4) {
-        alert('Apple Podcasts API Key saved successfully!');
-        document.getElementById('subExpandS4').style.display = 'none';
-        document.getElementById('subArrowS4').textContent = '→';
-        subApiKeyUploadedS4 = false;
-      }
-    }
-
-    // ===== Status 3 inline expand: HLS & Subscription =====
-    function toggleHlsExpandS3(e) {
-      e.stopPropagation();
-      var el = document.getElementById('hlsExpandS3');
-      var arrow = document.getElementById('hlsArrowS3');
-      var isOpen = el.style.display !== 'none';
-      if (!isOpen) {
-        collapseS3Items('hlsExpandS3');
-      }
-      el.style.display = isOpen ? 'none' : 'block';
-      arrow.textContent = isOpen ? '→' : '↓';
-      if (!isOpen) {
-        document.getElementById('hlsApiKeyUploadS3').value = '';
-        document.getElementById('btnHlsSaveS3').style.display = 'none';
-        hlsApiKeyUploadedS3 = false;
-      }
-    }
-
-    var hlsApiKeyUploadedS3 = false;
-
-    function onHlsApiKeyUploadS3() {
-      var file = document.getElementById('hlsApiKeyUploadS3').files[0];
-      if (file) {
-        hlsApiKeyUploadedS3 = true;
-        document.getElementById('btnHlsSaveS3').style.display = '';
-        document.getElementById('btnHlsSaveS3').disabled = false;
-      } else {
-        hlsApiKeyUploadedS3 = false;
-        document.getElementById('btnHlsSaveS3').style.display = 'none';
-      }
-    }
-
-    function saveHlsInlineS3() {
-      if (hlsApiKeyUploadedS3) {
-        alert('HLS Video API key saved successfully!');
-        document.getElementById('hlsExpandS3').style.display = 'none';
-        document.getElementById('hlsArrowS3').textContent = '→';
-        hlsApiKeyUploadedS3 = false;
-      }
-    }
-
-    function toggleSubExpandS3(e) {
-      e.stopPropagation();
-      var el = document.getElementById('subExpandS3');
-      var arrow = document.getElementById('subArrowS3');
-      var isOpen = el.style.display !== 'none';
-      if (!isOpen) {
-        collapseS3Items('subExpandS3');
-      }
-      el.style.display = isOpen ? 'none' : 'block';
-      arrow.textContent = isOpen ? '→' : '↓';
-      if (!isOpen) {
-        document.getElementById('subApiKeyUploadS3').value = '';
-        document.getElementById('btnSubSaveS3').style.display = 'none';
-        subApiKeyUploadedS3 = false;
-      }
-    }
-
-    var subApiKeyUploadedS3 = false;
-
-    function onSubApiKeyUploadS3() {
-      var file = document.getElementById('subApiKeyUploadS3').files[0];
-      if (file) {
-        subApiKeyUploadedS3 = true;
-        document.getElementById('btnSubSaveS3').style.display = '';
-        document.getElementById('btnSubSaveS3').disabled = false;
-      } else {
-        subApiKeyUploadedS3 = false;
-        document.getElementById('btnSubSaveS3').style.display = 'none';
-      }
-    }
-
-    function saveSubInlineS3() {
-      if (subApiKeyUploadedS3) {
-        alert('Apple Podcasts API Key saved successfully!');
-        document.getElementById('subExpandS3').style.display = 'none';
-        document.getElementById('subArrowS3').textContent = '→';
-        subApiKeyUploadedS3 = false;
-      }
-    }
-
-    // ===== Status 4 claim expand =====
-    function toggleClaimExpandS4(e) {
-      e.stopPropagation();
-      var content = document.getElementById('claimExpandContent4');
-      var arrow = document.getElementById('claimArrow4');
-      if (content.style.display === 'none') {
-        collapseS4Items(null);
-        content.style.display = 'block';
-        arrow.textContent = '↓';
-        // Populate the URL display
-        var urlEl = document.getElementById('savedAppleUrlDisplay');
-        if (urlEl && urlEl.textContent) {
-          document.getElementById('claimPodcastUrlDisplayS4').textContent = urlEl.textContent;
-        }
-        document.getElementById('claimTokenInputS4').value = 'APAuthSync ABCD1234EFGH5678IJKLMNOP';
+      var token = document.getElementById('claimTokenInput3').value.trim();
+      if (token) {
+        appleClaimed = true;
+        document.getElementById('appleBottomBar').style.display = 'none';
+        var banner = document.getElementById('claimSuccessBanner');
+        if (banner) banner.style.display = '';
+        // Mark step 2 done + activate step 3, but stay on step 2
+        var s2 = document.getElementById('appleStep2');
+        s2.classList.add('apple-step-done');
+        s2.classList.remove('apple-step-active');
+        document.getElementById('appleStep2Circle').textContent = '✓';
+        document.getElementById('appleStep2Circle').style.fontSize = '16px';
+        document.getElementById('appleStep2Circle').style.background = '#22c55e';
+        document.getElementById('appleStep2Circle').style.color = '#fff';
+        document.getElementById('appleStepConnector2').style.background = '#22c55e';
         document.getElementById('btnClaimSaveTopBar').style.display = 'none';
-      } else {
-        content.style.display = 'none';
-        arrow.textContent = '→';
+        activateAppleStep(3);
+        goToAppleStep(2);
+        updateStepLabelActive(2);
       }
     }
 
-    function copyClaimUrlS4() {
-      var url = document.getElementById('claimPodcastUrlDisplayS4').textContent;
-      if (url) {
-        navigator.clipboard.writeText(url).then(function() {
-          alert('URL copied to clipboard!');
-        })['catch'](function() {
-          alert('Failed to copy URL');
-        });
+    function cancelAppleAction() {
+      if (currentAppleStep === 1) {
+        // Reset form
+        document.getElementById('selContentRights').value = '';
+        document.getElementById('selUpdateFreq').value = '';
+        var checks = document.querySelectorAll('#appleStepContent-1 .check-row input[type="checkbox"]');
+        checks.forEach(function(c) { c.checked = false; });
+        checkAppleAgreements();
+      } else if (currentAppleStep === 2) {
+        // Clear token and hide bar
+        document.getElementById('claimTokenInput3').value = '';
+        document.getElementById('appleBottomBar').style.display = 'none';
+        onClaimTokenInput3();
       }
     }
 
-    function onClaimTokenInputS4() {
-      var btn = document.getElementById('btnClaimSaveTopBar');
-      var token = document.getElementById('claimTokenInputS4').value.trim();
-      if (token && token !== 'APAuthSync ABCD1234EFGH5678IJKLMNOP') {
-        btn.style.display = '';
+    // ===== Step 3: Enable HLS Video =====
+    function onHlsApiKeyUploadStep3() {
+      var file = document.getElementById('hlsApiKeyUploadStep3').files[0];
+      if (file) {
+        document.getElementById('hlsFileNameStep3').textContent = file.name;
+        var btn = document.getElementById('btnHlsSaveStep3');
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
       } else {
-        btn.style.display = 'none';
+        document.getElementById('hlsFileNameStep3').textContent = 'No file chosen';
+        var btn = document.getElementById('btnHlsSaveStep3');
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
       }
     }
 
-    // ===== Open claim section from step 2 link =====
-    function openClaimSection() {
-      // Collapse all S3 items, reset S4 items too
-      collapseS3Items(null);
-      collapseS4Items(null);
-      // Check which tab is active
-      var s4tab = document.querySelector('.apple-right-tab[data-stab="status4"]');
-      var isS4 = s4tab && s4tab.classList.contains('active');
-      if (isS4) {
-        var claimContent4 = document.getElementById('claimExpandContent4');
-        if (claimContent4) {
-          claimContent4.style.display = 'block';
-          document.getElementById('claimArrow4').textContent = '↓';
-          var urlEl = document.getElementById('savedAppleUrlDisplay');
-          if (urlEl && urlEl.textContent) {
-            document.getElementById('claimPodcastUrlDisplayS4').textContent = urlEl.textContent;
-          }
-          document.getElementById('claimTokenInputS4').value = 'APAuthSync ABCD1234EFGH5678IJKLMNOP';
-          document.getElementById('btnClaimSaveTopBar').style.display = 'none';
-        }
+    // ===== Step 3 card expand (summary stays visible, details shown below with separator) =====
+    function setupHlsCard() {
+      document.getElementById('btnHlsSetup').style.display = 'none';
+      document.getElementById('btnHlsCancel').style.display = '';
+      document.getElementById('hlsCardDetails').style.display = '';
+    }
+    function cancelHlsSetup() {
+      document.getElementById('btnHlsSetup').style.display = '';
+      document.getElementById('btnHlsCancel').style.display = 'none';
+      document.getElementById('hlsCardDetails').style.display = 'none';
+      document.getElementById('hlsApiKeyUploadStep3').value = '';
+      document.getElementById('hlsFileNameStep3').textContent = 'No file chosen';
+      var btn = document.getElementById('btnHlsSaveStep3');
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.style.cursor = 'default';
+    }
+    function setupSubsCard() {
+      document.getElementById('btnSubsSetup').style.display = 'none';
+      document.getElementById('btnSubsCancel').style.display = '';
+      document.getElementById('subsCardDetails').style.display = '';
+    }
+    function cancelSubsSetup() {
+      document.getElementById('btnSubsSetup').style.display = '';
+      document.getElementById('btnSubsCancel').style.display = 'none';
+      document.getElementById('subsCardDetails').style.display = 'none';
+      document.getElementById('subApiKeyUploadStep3').value = '';
+      document.getElementById('subFileNameStep3').textContent = 'No file chosen';
+      var btn = document.getElementById('btnSubSaveStep3');
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.style.cursor = 'default';
+    }
+
+    function saveHlsStep3() {
+      var file = document.getElementById('hlsApiKeyUploadStep3').files[0];
+      if (file) {
+        appleHlsSaved = true;
+        alert('HLS Video API key saved successfully!');
+        document.getElementById('hlsApiKeyUploadStep3').value = '';
+        document.getElementById('hlsFileNameStep3').textContent = 'No file chosen';
+        var btn = document.getElementById('btnHlsSaveStep3');
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
+        completeAppleStep(3);
+      }
+    }
+
+    // ===== Step 3 view switching (click title) =====
+    // ===== Step 3: Apple Podcasts Subscriptions =====
+    function onSubApiKeyUploadStep3() {
+      var file = document.getElementById('subApiKeyUploadStep3').files[0];
+      if (file) {
+        document.getElementById('subFileNameStep3').textContent = file.name;
+        var btn = document.getElementById('btnSubSaveStep3');
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
       } else {
-        var claimContent = document.getElementById('claimExpandContent');
-        if (claimContent) {
-          claimContent.style.display = 'block';
-          document.getElementById('claimArrow3').textContent = '↓';
-          var urlEl = document.getElementById('savedAppleUrlDisplay');
-          if (urlEl && urlEl.textContent) {
-            document.getElementById('claimPodcastUrlDisplay3').textContent = urlEl.textContent;
-          }
-          document.getElementById('claimTokenInput3').value = '';
-          document.getElementById('btnClaimSaveTopBar').style.display = 'none';
-        }
+        document.getElementById('subFileNameStep3').textContent = 'No file chosen';
+        var btn = document.getElementById('btnSubSaveStep3');
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
+      }
+    }
+
+    function saveSubStep3() {
+      var file = document.getElementById('subApiKeyUploadStep3').files[0];
+      if (file) {
+        alert('Apple Podcasts API Key saved successfully!');
+        document.getElementById('subApiKeyUploadStep3').value = '';
+        document.getElementById('subFileNameStep3').textContent = 'No file chosen';
+        var btn = document.getElementById('btnSubSaveStep3');
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
       }
     }
 
@@ -5072,6 +5558,8 @@
         p.classList.add('hidden');
       });
       document.getElementById('page-' + pageId).classList.remove('hidden');
+      document.getElementById('appleBottomBar').style.display = 'none';
+      document.getElementById('spotifyBottomBar').style.display = 'none';
       if (pageId === 'podcast-apps' || pageId === 'podcast-apps-2') {
         renderDistList();
       }
