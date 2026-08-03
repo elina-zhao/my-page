@@ -1818,8 +1818,8 @@
       <!-- V2 Tabs -->
       <div class="ed-v2-tabs">
         <button class="ed-v2-tab active" onclick="switchV2Tab('v2-details', this)">Episode Info</button>
-        <button class="ed-v2-tab" onclick="switchV2Tab('v2-chapters', this)">Chapter Markers</button>
         <button class="ed-v2-tab" onclick="switchV2Tab('v2-transcripts', this)">Transcripts</button>
+        <button class="ed-v2-tab" onclick="switchV2Tab('v2-chapters', this)">Chapter Markers</button>
         <button class="ed-v2-tab" onclick="switchV2Tab('v2-more', this)">More Options</button>
       </div>
 
@@ -1970,72 +1970,6 @@
 
       </div>
 
-      <!-- ── Panel: Chapter Markers ── -->
-      <div class="ed-v2-panel" id="v2-chapters">
-        <div class="ed-v2-card">
-
-          <!-- Audio Player -->
-          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
-            <div style="display:flex;align-items:center;gap:16px;">
-              <button id="v2PlayBtn" onclick="toggleV2Player()" style="width:44px;height:44px;border-radius:50%;border:none;background:#1a9a6c;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;" onmouseover="this.style.background='#14805a';this.style.transform='scale(1.05)'" onmouseout="this.style.background='#1a9a6c';this.style.transform='scale(1)'">
-                <svg id="v2PlayIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </button>
-              <div style="flex:1;min-width:0;">
-                <div style="font-size:13px;font-weight:500;color:#1e293b;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="v2PlayerFileName">episode-audio.mp3</div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;font-weight:500;" id="v2PlayerCurrentTime">00:00</span>
-                  <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;position:relative;cursor:pointer;" onclick="seekV2Player(event)">
-                    <div id="v2PlayerProgress" style="width:0%;height:100%;background:#1a9a6c;border-radius:3px;transition:width .1s;"></div>
-                  </div>
-                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;text-align:right;font-weight:500;" id="v2PlayerDuration">00:00</span>
-                </div>
-              </div>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;">
-              <button onclick="addChapterFromPlayer()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Chapter <span style="font-weight:600;margin-left:2px;" id="v2CurrentTimeBtnLabel">00:00</span>
-              </button>
-            </div>
-          </div>
-          <!-- Hidden audio element -->
-          <audio id="v2AudioPlayer" style="display:none;"></audio>
-
-          <!-- Chapter List -->
-          <div class="ed-v2-field">
-            <div class="ed-v2-label" style="margin-bottom:10px;">Chapters <span style="font-weight:400;color:#94a3b8;font-size:13px;" id="v2ChapterCount">0 total</span></div>
-            <div id="v2ChapterList" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
-              <div id="v2ChapterEmpty" style="padding:40px 24px;text-align:center;color:#94a3b8;font-size:14px;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 10px;display:block;color:#cbd5e1;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                No chapter markers yet. Play your episode and add chapters at key moments.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Add Chapter Modal -->
-      <div id="v2AddChapterModal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);align-items:center;justify-content:center;" onclick="if(event.target===this)closeAddChapterModal()">
-        <div style="background:#fff;border-radius:14px;width:440px;max-width:90vw;box-shadow:0 16px 64px rgba(0,0,0,.2);padding:28px 32px 24px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-            <div style="font-size:17px;font-weight:700;color:#1e293b;">Add Chapter Marker</div>
-            <button onclick="closeAddChapterModal()" style="width:30px;height:30px;border-radius:8px;border:none;background:#f1f5f9;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:18px;">&times;</button>
-          </div>
-          <div class="ed-v2-field">
-            <div class="ed-v2-label">Start Time (mm:ss)</div>
-            <input type="text" id="v2ModalChapterTime" class="ed-v2-input" placeholder="05:30" style="font-size:15px;text-align:center;font-family:monospace;">
-          </div>
-          <div class="ed-v2-field">
-            <div class="ed-v2-label">Chapter Title</div>
-            <input type="text" id="v2ModalChapterTitle" class="ed-v2-input" placeholder="Enter chapter title..." style="font-size:15px;" onkeydown="if(event.key==='Enter')confirmAddChapter()">
-          </div>
-          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;">
-            <button onclick="closeAddChapterModal()" style="padding:9px 20px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:14px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;">Cancel</button>
-            <button onclick="confirmAddChapter()" style="padding:9px 24px;border:none;border-radius:8px;background:#1a9a6c;color:#fff;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#14805a'" onmouseout="this.style.background='#1a9a6c'">Add Chapter</button>
-          </div>
-        </div>
-      </div>
-
       <!-- ── Panel: Transcripts ── -->
       <div class="ed-v2-panel" id="v2-transcripts">
         <div class="ed-v2-card">
@@ -2093,18 +2027,86 @@
         </div>
       </div>
 
+      <!-- Add Chapter Modal -->
+      <div id="v2AddChapterModal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);align-items:center;justify-content:center;" onclick="if(event.target===this)closeAddChapterModal()">
+        <div style="background:#fff;border-radius:14px;width:440px;max-width:90vw;box-shadow:0 16px 64px rgba(0,0,0,.2);padding:28px 32px 24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <div style="font-size:17px;font-weight:700;color:#1e293b;">Add Chapter Marker</div>
+            <button onclick="closeAddChapterModal()" style="width:30px;height:30px;border-radius:8px;border:none;background:#f1f5f9;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:18px;">&times;</button>
+          </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Start Time (mm:ss)</div>
+            <input type="text" id="v2ModalChapterTime" class="ed-v2-input" placeholder="05:30" style="font-size:15px;text-align:center;font-family:monospace;">
+          </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Chapter Title</div>
+            <input type="text" id="v2ModalChapterTitle" class="ed-v2-input" placeholder="Enter chapter title..." style="font-size:15px;" onkeydown="if(event.key==='Enter')confirmAddChapter()">
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;">
+            <button onclick="closeAddChapterModal()" style="padding:9px 20px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:14px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;">Cancel</button>
+            <button onclick="confirmAddChapter()" style="padding:9px 24px;border:none;border-radius:8px;background:#1a9a6c;color:#fff;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#14805a'" onmouseout="this.style.background='#1a9a6c'">Add Chapter</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Panel: Chapter Markers ── -->
+      <div class="ed-v2-panel" id="v2-chapters">
+        <div class="ed-v2-card">
+
+          <!-- Audio Player -->
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+              <button id="v2PlayBtn" onclick="toggleV2Player()" style="width:44px;height:44px;border-radius:50%;border:none;background:#1a9a6c;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;" onmouseover="this.style.background='#14805a';this.style.transform='scale(1.05)'" onmouseout="this.style.background='#1a9a6c';this.style.transform='scale(1)'">
+                <svg id="v2PlayIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </button>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;color:#1e293b;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="v2PlayerFileName">episode-audio.mp3</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;font-weight:500;" id="v2PlayerCurrentTime">00:00</span>
+                  <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;position:relative;cursor:pointer;" onclick="seekV2Player(event)">
+                    <div id="v2PlayerProgress" style="width:0%;height:100%;background:#1a9a6c;border-radius:3px;transition:width .1s;"></div>
+                  </div>
+                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;text-align:right;font-weight:500;" id="v2PlayerDuration">00:00</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;">
+              <button onclick="addChapterFromPlayer()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Chapter <span style="font-weight:600;margin-left:2px;" id="v2CurrentTimeBtnLabel">00:00</span>
+              </button>
+            </div>
+          </div>
+          <!-- Hidden audio element -->
+          <audio id="v2AudioPlayer" style="display:none;"></audio>
+
+          <!-- Chapter List -->
+          <div class="ed-v2-field">
+            <div class="ed-v2-label" style="margin-bottom:10px;">Chapters <span style="font-weight:400;color:#94a3b8;font-size:13px;" id="v2ChapterCount">0 total</span></div>
+            <div id="v2ChapterList" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+              <div id="v2ChapterEmpty" style="padding:40px 24px;text-align:center;color:#94a3b8;font-size:14px;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 10px;display:block;color:#cbd5e1;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                No chapter markers yet. Play your episode and add chapters at key moments.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ── Panel: More Options ── -->
       <div class="ed-v2-panel" id="v2-more">
         <div class="ed-v2-card">
 
           <!-- Season NO. + Episode NO. -->
-          <div class="ed-v2-field">
-            <div class="ed-v2-label">Season NO.</div>
-            <input type="text" class="ed-v2-input" id="v2Season" placeholder="e.g. 1">
-          </div>
-          <div class="ed-v2-field">
-            <div class="ed-v2-label">Episode NO.</div>
-            <input type="text" class="ed-v2-input" id="v2EpisodeNo" placeholder="e.g. 12">
+          <div class="ed-v2-grid-2" style="margin-bottom:22px;">
+            <div class="ed-v2-field" style="margin-bottom:0;">
+              <div class="ed-v2-label">Season NO.</div>
+              <input type="text" class="ed-v2-input" id="v2Season" placeholder="e.g. 1">
+            </div>
+            <div class="ed-v2-field" style="margin-bottom:0;">
+              <div class="ed-v2-label">Episode NO.</div>
+              <input type="text" class="ed-v2-input" id="v2EpisodeNo" placeholder="e.g. 12">
+            </div>
           </div>
           <div class="ed-v2-field">
             <div class="ed-v2-label">Episode Type</div>
@@ -2135,7 +2137,6 @@
             <div class="ed-v2-hint">Use your own episode URL as the episode link in your RSS feed.</div>
           </div>
           <!-- Tags section -->
-          <div style="height:1px;background:#e2e8f0;margin:24px 0;"></div>
           <div style="margin-bottom:22px;">
             <div style="font-size:18px;font-weight:700;color:#1e293b;margin-bottom:20px;">Episode Tags</div>
             <div class="ed-v2-field">
