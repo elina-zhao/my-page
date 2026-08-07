@@ -26,6 +26,15 @@
   .btn-filter.active { background:#f0f9f4;border-color:var(--primary);color:var(--primary); }
   .btn-filter .dot { width:7px;height:7px;border-radius:50%;background:var(--primary);display:none; }
   .btn-filter.active .dot { display:inline-block; }
+  .btn-filter-clear {
+    display:none;align-items:center;justify-content:center;
+    width:30px;height:30px;flex-shrink:0;
+    border:1px solid var(--border);border-radius:50%;
+    background:#fff;color:var(--text-secondary);
+    cursor:pointer;transition:all .15s;
+  }
+  .btn-filter-clear:hover { background:#fee2e2;border-color:#f87171;color:#b91c1c; }
+  .btn-filter-clear.show { display:inline-flex; }
   .filter-popover {
     display:none;position:absolute;top:100%;left:0;margin-top:6px;
     width:380px;
@@ -57,7 +66,6 @@
   }
   .filter-panel-foot .clear-link { color:var(--text-secondary);cursor:pointer;transition:color .1s; }
   .filter-panel-foot .clear-link:hover { color:var(--text); }
-  .filter-panel-foot .sel-count { color:var(--text-tertiary); }
   .filter-panel-content { display:none; }
   .filter-panel-content.active { display:flex;flex-direction:column;height:100%; }
   .filter-panel label { display:flex;align-items:center;gap:6px;padding:5px 0;font-size:14px;color:var(--text);cursor:pointer; }
@@ -155,6 +163,9 @@
     cursor:pointer;transition:all .12s;
   }
   .actions-menu-item:hover { background:#f8fafc; }
+  .actions-menu-item.danger { color:#dc2626; }
+  .actions-menu-item.danger:hover { background:#fef2f2; }
+  .actions-menu-item.danger svg { color:#dc2626; }
   .actions-menu-item svg { color:var(--text-secondary);flex-shrink:0; }
   .actions-menu-item .menu-arrow {
     margin-left:auto;color:var(--text-tertiary);
@@ -227,16 +238,6 @@
     padding:12px;text-align:center;font-size:13px;color:var(--text-tertiary);
   }
 
-  /* ── Toolbar Delete button ──────────── */
-  .btn-delete-toolbar {
-    display:inline-flex;align-items:center;gap:6px;
-    padding:8px 16px;border:1px solid #fecaca;border-radius:8px;
-    font-size:13px;font-family:inherit;color:#dc2626;background:#fef2f2;
-    cursor:pointer;transition:all .15s;white-space:nowrap;
-  }
-  .btn-delete-toolbar:hover { background:#fee2e2;border-color:#fca5a5;color:#b91c1c; }
-  .btn-delete-toolbar svg { width:14px;height:14px;flex-shrink:0; }
-
   /* ── Alternate Header ─────────────────── */
   .ep-table .alt-header { display:none; }
   .ep-table.alt-mode .normal-header { display:none; }
@@ -254,6 +255,7 @@
   .ep-table .alt-header-bar input[type=checkbox] {
     accent-color:var(--primary);width:15px;height:15px;margin:0;cursor:pointer;
   }
+  .ep-table .alt-header-bar .action-wrap { margin-left:auto; }
   .ep-table .ep-title-cell .title-text { cursor:pointer; }
   .ep-table .ep-title-cell .title-text:hover { color:var(--primary); }
   .ep-table .row-actions { display:inline-flex;gap:4px;margin-left:8px;opacity:0;transition:opacity .12s;vertical-align:middle; }
@@ -269,7 +271,6 @@
   .badge-published { background:#f0f9f4;color:#14805a; }
   .badge-draft { background:#f1f5f9;color:#64748b; }
   .badge-future { background:#eff6ff;color:#3b82f6; }
-  .badge-pending { background:#fffbeb;color:#d97706; }
   .badge-ai-processing { background:#fef3c7;color:#b45309; }
   .badge-ai-finished { background:#dbeafe;color:#1d4ed8; }
   .badge-ai-failed { background:#fee2e2;color:#b91c1c; }
@@ -1204,13 +1205,20 @@
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span> Dashboard
       </a>
 
+      <!-- Episodes 0 (empty state) -->
+      <a href="#" data-page="episodelist0">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="12" y1="7" x2="12" y2="12"/><line x1="12" y1="12" x2="15" y2="15"/></svg></span> Episodes 0
+      </a>
+
       <!-- Episodes -->
-      <div class="nav-parent expanded" onclick="toggleSubMenu(this);event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Episodes/';">
+      <a href="#" class="active" data-page="episodelist">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></span> Episodes
-        <span class="nav-arrow" style="margin-left:auto;transition:transform .2s;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></span>
-      </div>
-      <a href="#" class="sub active" data-page="episodelist" onclick="event.stopPropagation();"><span class="nav-icon"></span> Episode List</a>
-      <a href="#" class="sub" data-page="episodelist2" onclick="event.stopPropagation();"><span class="nav-icon"></span> Episode List 2</a>
+      </a>
+
+      <!-- Episodes 2 (Apple Podcast Subscription demo) -->
+      <a href="#" data-page="episodelist2">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M12 11l6-6"/></svg></span> Episodes 2
+      </a>
 
       <!-- Distribution -->
       <div class="nav-parent" onclick="toggleSubMenu(this);event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Distribution/';">
@@ -1263,6 +1271,50 @@
       <div id="page-feed" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Feed</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Feed content coming soon.</div></div>
       <div id="page-plugins" class="page-content" style="display:none;"><div class="dash-header"><div class="dash-title">Plugins</div></div><div style="text-align:center;padding:80px 0;color:var(--text-secondary);font-size:15px;">Plugins content coming soon.</div></div>
 
+      <!-- ═══════════ Episodes 0 (empty state) ═══════════ -->
+      <div id="page-episodelist0" class="page-content" style="display:none;">
+        <div class="dash-header">
+          <div class="dash-title">Episodes</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 20px 48px;">
+          <div style="width:88px;height:88px;border-radius:50%;background:#f8fafc;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M12 11l6-6"/></svg>
+          </div>
+          <div style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:8px;">No episodes yet</div>
+          <div style="font-size:14px;color:var(--text-secondary);max-width:440px;line-height:1.6;margin-bottom:28px;">You haven't published any episodes. When you upload your first episode, it will show up here.</div>
+          <a href="#" class="btn-create" style="display:inline-flex;align-items:center;gap:5px;padding:9px 20px;background:#1e293b;color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New Episode
+          </a>
+        </div>
+
+        <div style="max-width:760px;margin:0 auto;padding:0 20px 60px;">
+          <div style="font-size:14px;font-weight:600;color:var(--text-secondary);text-align:center;margin-bottom:18px;">Ready to create your first episode? Try these</div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+
+            <!-- Podbean AI Podcast Creator -->
+            <div style="flex:1;min-width:280px;max-width:372px;background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;flex-direction:column;">
+              <div style="width:44px;height:44px;border-radius:10px;background:#f0f9f4;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14805a" stroke-width="2"><path d="M12 3l1.9 5.7a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3z"/></svg>
+              </div>
+              <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;">Podbean AI Podcast Creator</div>
+              <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;flex:1;">Turn your ideas into a full episode — AI writes the script, generates realistic voices, and creates show notes automatically.</div>
+              <a href="#" onclick="event.preventDefault();" style="font-size:14px;font-weight:500;color:#14805a;text-decoration:none;">Try AI Podcast Creator →</a>
+            </div>
+
+            <!-- Podbean App -->
+            <div style="flex:1;min-width:280px;max-width:372px;background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;flex-direction:column;">
+              <div style="width:44px;height:44px;border-radius:10px;background:#f8fafc;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+              </div>
+              <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;">Record with the Podbean App</div>
+              <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;flex:1;">Record high-quality episodes right from your phone with the Podbean App, then upload and publish directly.</div>
+              <a href="#" onclick="event.preventDefault();" style="font-size:14px;font-weight:500;color:#14805a;text-decoration:none;">Learn more →</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       <!-- ═══════════ Episode List ═══════════ -->
       <div id="page-episodelist" class="page-content">
         <div class="dash-header">
@@ -1279,6 +1331,9 @@
               Filter
               <span class="dot"></span>
             </button>
+            <button class="btn-filter-clear" onclick="clearFilter(this)" title="Reset all filters">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
             <div id="filterPopover" class="filter-popover">
               <div class="filter-popover-body">
               <div class="filter-nav" style="display:flex;flex-direction:column;">
@@ -1289,7 +1344,7 @@
                   <button class="filter-nav-item" onclick="switchFilterPanel('published',this)">Published<span class="nav-dot"></span></button>
                 </div>
                 <div class="filter-panel-foot" style="padding:8px 16px 12px;font-size:13px;justify-content:flex-start;align-items:center;min-height:36px;">
-                  <span class="clear-link" onclick="resetFilter()">Clear all</span>
+                  <span class="clear-link" onclick="resetFilter()">Reset all</span>
                 </div>
               </div>
               <div class="filter-panel">
@@ -1302,11 +1357,9 @@
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Processing</label>
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Finished</label>
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Failed</label>
-                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Pending</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="sel-count">1 of 8 selected</span>
-                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
                   </div>
                 </div>
                 <div id="fp-media" class="filter-panel-content">
@@ -1315,8 +1368,7 @@
                     <label><input type="checkbox" checked onchange="updatePanelFoot()"> Video</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="sel-count">2 of 2 selected</span>
-                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
                   </div>
                 </div>
                 <div id="fp-season" class="filter-panel-content">
@@ -1334,8 +1386,7 @@
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 10</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="sel-count">1 of 11 selected</span>
-                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
                   </div>
                 </div>
                 <div id="fp-published" class="filter-panel-content">
@@ -1353,8 +1404,7 @@
                     </div>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="sel-count">No date set</span>
-                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
                   </div>
                 </div>
               </div>
@@ -1364,82 +1414,6 @@
               </div>
             </div>
           </div>
-          <div class="action-wrap" id="actionsWrap" style="display:none;">
-            <button class="btn-actions" id="actionsBtn" onclick="toggleActionsPopover(event)">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-              Actions
-              <span class="dot"></span>
-            </button>
-            <div class="actions-popover" id="actionsPopover">
-              <div class="actions-popover-body">
-                <!-- Main Menu -->
-                <div id="actionsMenuView" class="actions-view active">
-                  <div class="actions-menu-item" onclick="showActionsView('season')">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                    Set Season
-                    <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
-                  </div>
-                  <div class="actions-menu-item" onclick="showActionsView('tags')">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                    Set Tags
-                    <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
-                  </div>
-                </div>
-
-                <!-- Season Panel -->
-                <div id="actionsSeasonView" class="actions-view">
-                  <div class="actions-panel-inner">
-                    <div class="actions-view-header">
-                      <button class="actions-view-back" onclick="showActionsMenu()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                      </button>
-                      <span class="actions-view-title">Set Season</span>
-                    </div>
-                    <div class="actions-section">
-                      <select id="ddSeasonSelect">
-                        <option value="">Select season...</option>
-                        <option value="1">Season 1</option>
-                        <option value="2">Season 2</option>
-                        <option value="3">Season 3</option>
-                        <option value="4">Season 4</option>
-                        <option value="5">Season 5</option>
-                        <option value="6">Season 6</option>
-                        <option value="7">Season 7</option>
-                        <option value="8">Season 8</option>
-                        <option value="9">Season 9</option>
-                        <option value="10">Season 10</option>
-                      </select>
-                      <button class="btn-apply-sub" onclick="batchSetSeasonSelected()">Apply</button>
-                      <span class="actions-link-danger" onclick="batchRemoveSeasonSelected()">Remove season from episodes</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Tags Panel -->
-                <div id="actionsTagsView" class="actions-view">
-                  <div class="actions-panel-inner">
-                    <div class="actions-view-header">
-                      <button class="actions-view-back" onclick="showActionsMenu()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                      </button>
-                      <span class="actions-view-title">Set Tags</span>
-                    </div>
-                    <div class="tags-wrapper">
-                      <div class="tags-selected" id="tagsSelected"></div>
-                      <input type="text" class="tags-input-inline" id="tagsInputInline" placeholder="Select or type tags..." autocomplete="off" onfocus="showTagsDropdown()" oninput="filterTagsDropdown(this.value)" onkeydown="if(event.key==='Enter' && this.value.trim())addNewTag(this.value.trim());if(event.key==='Backspace' && !this.value){event.preventDefault();removeLastTag()}">
-                      <div class="tags-dropdown" id="tagsDropdown"></div>
-                    </div>
-                    <button class="btn-apply-sub" onclick="batchSetTagsSelected()">Apply</button>
-                    <span class="actions-link-danger" onclick="batchClearTagsSelected()">Remove tags from episodes</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="btn-delete-toolbar" id="deleteToolbarBtn" style="display:none;" onclick="batchDeleteSelected()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            Delete
-          </button>
         </div>
 
         <table class="ep-table" id="epTable">
@@ -1450,6 +1424,82 @@
                 <input type="checkbox" id="selectAllAlt" onchange="toggleSelectAllAlt(this)">
                 <span class="sel-count" id="selectCount">0</span>
                 <span>selected</span>
+                <div class="action-wrap" id="actionsWrap" style="display:none;">
+                  <button class="btn-actions" id="actionsBtn" onclick="toggleActionsPopover(event)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                    Actions
+                    <span class="dot"></span>
+                  </button>
+                  <div class="actions-popover" id="actionsPopover">
+                    <div class="actions-popover-body">
+                      <!-- Main Menu -->
+                      <div id="actionsMenuView" class="actions-view active">
+                        <div class="actions-menu-item" onclick="showActionsView('season')">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                          Set Season
+                          <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                        </div>
+                        <div class="actions-menu-item" onclick="showActionsView('tags')">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                          Set Tags
+                          <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                        </div>
+                        <div class="actions-menu-item danger" onclick="batchDeleteSelected()">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                          Delete
+                        </div>
+                      </div>
+
+                      <!-- Season Panel -->
+                      <div id="actionsSeasonView" class="actions-view">
+                        <div class="actions-panel-inner">
+                          <div class="actions-view-header">
+                            <button class="actions-view-back" onclick="showActionsMenu()">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <span class="actions-view-title">Set Season</span>
+                          </div>
+                          <div class="actions-section">
+                            <select id="ddSeasonSelect">
+                              <option value="">Select season...</option>
+                              <option value="1">Season 1</option>
+                              <option value="2">Season 2</option>
+                              <option value="3">Season 3</option>
+                              <option value="4">Season 4</option>
+                              <option value="5">Season 5</option>
+                              <option value="6">Season 6</option>
+                              <option value="7">Season 7</option>
+                              <option value="8">Season 8</option>
+                              <option value="9">Season 9</option>
+                              <option value="10">Season 10</option>
+                            </select>
+                            <button class="btn-apply-sub" onclick="batchSetSeasonSelected()">Apply</button>
+                            <span class="actions-link-danger" onclick="batchRemoveSeasonSelected()">Remove season from episodes</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Tags Panel -->
+                      <div id="actionsTagsView" class="actions-view">
+                        <div class="actions-panel-inner">
+                          <div class="actions-view-header">
+                            <button class="actions-view-back" onclick="showActionsMenu()">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <span class="actions-view-title">Set Tags</span>
+                          </div>
+                          <div class="tags-wrapper">
+                            <div class="tags-selected" id="tagsSelected"></div>
+                            <input type="text" class="tags-input-inline" id="tagsInputInline" placeholder="Select or type tags..." autocomplete="off" onfocus="showTagsDropdown()" oninput="filterTagsDropdown(this.value)" onkeydown="if(event.key==='Enter' && this.value.trim())addNewTag(this.value.trim());if(event.key==='Backspace' && !this.value){event.preventDefault();removeLastTag()}">
+                            <div class="tags-dropdown" id="tagsDropdown"></div>
+                          </div>
+                          <button class="btn-apply-sub" onclick="batchSetTagsSelected()">Apply</button>
+                          <span class="actions-link-danger" onclick="batchClearTagsSelected()">Remove tags from episodes</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </td></tr>
           </thead>
@@ -1477,6 +1527,9 @@
               Filter
               <span class="dot"></span>
             </button>
+            <button class="btn-filter-clear" onclick="clearFilter(this)" title="Reset all filters">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
             <div id="filterPopover" class="filter-popover">
               <div class="filter-popover-body">
               <div class="filter-nav" style="display:flex;flex-direction:column;">
@@ -1487,7 +1540,7 @@
                   <button class="filter-nav-item" onclick="switchFilterPanel('published',this)">Published<span class="nav-dot"></span></button>
                 </div>
                 <div class="filter-panel-foot" style="padding:8px 16px 12px;font-size:13px;justify-content:flex-start;align-items:center;min-height:36px;">
-                  <span class="clear-link" onclick="resetFilter()">Clear all</span>
+                  <span class="clear-link" onclick="resetFilter()">Reset all</span>
                 </div>
               </div>
               <div class="filter-panel">
@@ -1500,11 +1553,9 @@
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Processing</label>
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Finished</label>
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Failed</label>
-                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Pending</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="sel-count">1 of 8 selected</span>
-                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
                   </div>
                 </div>
                 <div id="fp-media" class="filter-panel-content">
@@ -1513,8 +1564,7 @@
                     <label><input type="checkbox" checked onchange="updatePanelFoot()"> Video</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="sel-count">2 of 2 selected</span>
-                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
                   </div>
                 </div>
                 <div id="fp-season" class="filter-panel-content">
@@ -1532,8 +1582,7 @@
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 10</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="sel-count">1 of 11 selected</span>
-                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
                   </div>
                 </div>
                 <div id="fp-published" class="filter-panel-content">
@@ -1551,8 +1600,7 @@
                     </div>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="sel-count">No date set</span>
-                    <span class="clear-link" onclick="clearCurrentPanel()">Clear</span>
+                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
                   </div>
                 </div>
               </div>
@@ -1562,82 +1610,6 @@
               </div>
             </div>
           </div>
-          <div class="action-wrap" id="actionsWrap" style="display:none;">
-            <button class="btn-actions" id="actionsBtn" onclick="toggleActionsPopover(event)">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-              Actions
-              <span class="dot"></span>
-            </button>
-            <div class="actions-popover" id="actionsPopover">
-              <div class="actions-popover-body">
-                <!-- Main Menu -->
-                <div id="actionsMenuView" class="actions-view active">
-                  <div class="actions-menu-item" onclick="showActionsView('season')">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                    Set Season
-                    <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
-                  </div>
-                  <div class="actions-menu-item" onclick="showActionsView('tags')">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                    Set Tags
-                    <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
-                  </div>
-                </div>
-
-                <!-- Season Panel -->
-                <div id="actionsSeasonView" class="actions-view">
-                  <div class="actions-panel-inner">
-                    <div class="actions-view-header">
-                      <button class="actions-view-back" onclick="showActionsMenu()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                      </button>
-                      <span class="actions-view-title">Set Season</span>
-                    </div>
-                    <div class="actions-section">
-                      <select id="ddSeasonSelect">
-                        <option value="">Select season...</option>
-                        <option value="1">Season 1</option>
-                        <option value="2">Season 2</option>
-                        <option value="3">Season 3</option>
-                        <option value="4">Season 4</option>
-                        <option value="5">Season 5</option>
-                        <option value="6">Season 6</option>
-                        <option value="7">Season 7</option>
-                        <option value="8">Season 8</option>
-                        <option value="9">Season 9</option>
-                        <option value="10">Season 10</option>
-                      </select>
-                      <button class="btn-apply-sub" onclick="batchSetSeasonSelected()">Apply</button>
-                      <span class="actions-link-danger" onclick="batchRemoveSeasonSelected()">Remove season from episodes</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Tags Panel -->
-                <div id="actionsTagsView" class="actions-view">
-                  <div class="actions-panel-inner">
-                    <div class="actions-view-header">
-                      <button class="actions-view-back" onclick="showActionsMenu()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                      </button>
-                      <span class="actions-view-title">Set Tags</span>
-                    </div>
-                    <div class="tags-wrapper">
-                      <div class="tags-selected" id="tagsSelected"></div>
-                      <input type="text" class="tags-input-inline" id="tagsInputInline" placeholder="Select or type tags..." autocomplete="off" onfocus="showTagsDropdown()" oninput="filterTagsDropdown(this.value)" onkeydown="if(event.key==='Enter' && this.value.trim())addNewTag(this.value.trim());if(event.key==='Backspace' && !this.value){event.preventDefault();removeLastTag()}">
-                      <div class="tags-dropdown" id="tagsDropdown"></div>
-                    </div>
-                    <button class="btn-apply-sub" onclick="batchSetTagsSelected()">Apply</button>
-                    <span class="actions-link-danger" onclick="batchClearTagsSelected()">Remove tags from episodes</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="btn-delete-toolbar" id="deleteToolbarBtn" style="display:none;" onclick="batchDeleteSelected()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            Delete
-          </button>
         </div>
 
         <table class="ep-table" id="epTable">
@@ -1648,6 +1620,82 @@
                 <input type="checkbox" id="selectAllAlt" onchange="toggleSelectAllAlt(this)">
                 <span class="sel-count" id="selectCount">0</span>
                 <span>selected</span>
+                <div class="action-wrap" id="actionsWrap" style="display:none;">
+                  <button class="btn-actions" id="actionsBtn" onclick="toggleActionsPopover(event)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                    Actions
+                    <span class="dot"></span>
+                  </button>
+                  <div class="actions-popover" id="actionsPopover">
+                    <div class="actions-popover-body">
+                      <!-- Main Menu -->
+                      <div id="actionsMenuView" class="actions-view active">
+                        <div class="actions-menu-item" onclick="showActionsView('season')">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                          Set Season
+                          <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                        </div>
+                        <div class="actions-menu-item" onclick="showActionsView('tags')">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                          Set Tags
+                          <span class="menu-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+                        </div>
+                        <div class="actions-menu-item danger" onclick="batchDeleteSelected()">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                          Delete
+                        </div>
+                      </div>
+
+                      <!-- Season Panel -->
+                      <div id="actionsSeasonView" class="actions-view">
+                        <div class="actions-panel-inner">
+                          <div class="actions-view-header">
+                            <button class="actions-view-back" onclick="showActionsMenu()">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <span class="actions-view-title">Set Season</span>
+                          </div>
+                          <div class="actions-section">
+                            <select id="ddSeasonSelect">
+                              <option value="">Select season...</option>
+                              <option value="1">Season 1</option>
+                              <option value="2">Season 2</option>
+                              <option value="3">Season 3</option>
+                              <option value="4">Season 4</option>
+                              <option value="5">Season 5</option>
+                              <option value="6">Season 6</option>
+                              <option value="7">Season 7</option>
+                              <option value="8">Season 8</option>
+                              <option value="9">Season 9</option>
+                              <option value="10">Season 10</option>
+                            </select>
+                            <button class="btn-apply-sub" onclick="batchSetSeasonSelected()">Apply</button>
+                            <span class="actions-link-danger" onclick="batchRemoveSeasonSelected()">Remove season from episodes</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Tags Panel -->
+                      <div id="actionsTagsView" class="actions-view">
+                        <div class="actions-panel-inner">
+                          <div class="actions-view-header">
+                            <button class="actions-view-back" onclick="showActionsMenu()">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <span class="actions-view-title">Set Tags</span>
+                          </div>
+                          <div class="tags-wrapper">
+                            <div class="tags-selected" id="tagsSelected"></div>
+                            <input type="text" class="tags-input-inline" id="tagsInputInline" placeholder="Select or type tags..." autocomplete="off" onfocus="showTagsDropdown()" oninput="filterTagsDropdown(this.value)" onkeydown="if(event.key==='Enter' && this.value.trim())addNewTag(this.value.trim());if(event.key==='Backspace' && !this.value){event.preventDefault();removeLastTag()}">
+                            <div class="tags-dropdown" id="tagsDropdown"></div>
+                          </div>
+                          <button class="btn-apply-sub" onclick="batchSetTagsSelected()">Apply</button>
+                          <span class="actions-link-danger" onclick="batchClearTagsSelected()">Remove tags from episodes</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </td></tr>
           </thead>
@@ -2132,9 +2180,9 @@
             <input type="text" class="ed-v2-input" id="v2Duration" placeholder="e.g. 00:32:15">
           </div>
           <div class="ed-v2-field">
-            <div class="ed-v2-label">Custom Episode Link</div>
+            <div class="ed-v2-label">Alternative Episode Link</div>
             <input type="text" class="ed-v2-input" id="v2RssLink" placeholder="Leave this field blank to use the default Podbean episode URL.">
-            <div class="ed-v2-hint">Use your own episode URL as the episode link in your RSS feed.</div>
+            <div class="ed-v2-hint">If set, this URL will be used in the RSS feed &lt;link&gt; tag for this episode, replacing the default Podbean episode page.</div>
           </div>
           <!-- Tags section -->
           <div style="margin-bottom:22px;">
@@ -2257,6 +2305,18 @@
     <div class="confirm-actions">
       <button class="confirm-btn confirm-btn-primary" onclick="leavePage()">Leave</button>
       <button class="confirm-btn confirm-btn-secondary" onclick="closeConfirmModal()">Stay</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ Delete Episodes Confirm Modal ═══════════ -->
+<div class="confirm-overlay" id="deleteConfirmModal">
+  <div class="confirm-dialog" style="text-align:left;">
+    <div class="confirm-title" style="text-align:center;" id="deleteConfirmTitle">Delete selected episode</div>
+    <div class="confirm-desc" style="text-align:center;">Are you sure you want to delete the selected episode(s)? This action cannot be undone and will also permanently delete the attached media files.</div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeDeleteConfirmModal()">Cancel</button>
+      <button class="confirm-btn confirm-btn-danger" onclick="confirmDeleteSelected()">Delete</button>
     </div>
   </div>
 </div>
@@ -2601,7 +2661,7 @@
     {title:'This is a video mp4 episode',status:'AI Failed',when:'Oct 27, 2025',dl:1420,tags:['video'],season:'',type:'Subscriber-only'},
     {title:'Renewing the Temple: Haggai\'s Call to Action',status:'Published',when:'May 14, 2025',dl:678,tags:[],season:'',type:'Early access'},
     {title:'Born on the Seven-Mile Miracle: John John Florence',status:'Published',when:'May 13, 2025',dl:1950,tags:[],season:'',type:'Archive access'},
-    {title:'Episode Title 4903942504',status:'Pending',when:'May 12, 2025',dl:0,tags:[],season:'',type:'Free'},
+    {title:'Episode Title 4903942504',status:'Draft',when:'May 12, 2025',dl:0,tags:[],season:'',type:'Free'},
     {title:'When God Chose My Parents: A Heartfelt Ode jnw7zxim',status:'Published',when:'Feb 17, 2025',dl:345,tags:[],season:'',type:'Ad-free'},
     {title:'Discovering Musical Landscapes',status:'Published',when:'Feb 17, 2025',dl:1178,tags:['music'],season:'',type:'Subscriber-only'},
     {title:'Exploring the Seven Mile Mirror: A Dive into Hidden Depths',status:'Published',when:'Feb 17, 2025',dl:723,tags:['solo'],season:'',type:'Early access'},
@@ -2620,7 +2680,7 @@
     var html2 = '';
     episodes.forEach(function(ep, i) {
       var rowStart = '<tr id="epRow' + i + '" onclick="editEpisode(' + i + ')">' +
-        '<td onclick="event.stopPropagation()"><input type="checkbox" onchange="updateSelection()"></td>' +
+        '<td onclick="event.stopPropagation()"><input type="checkbox" onchange="updateSelection(this)"></td>' +
         '<td class="ep-title-cell">' +
           '<span class="title-text">' + ep.title + '</span>' +
           '<span class="row-actions">' +
@@ -3046,60 +3106,75 @@
     }
   }
 
-  function updateSelection() {
-    var checks = document.querySelectorAll('#epTableBody input[type=checkbox]');
+  function getVisibleTable() {
+    var tables = document.querySelectorAll('.ep-table');
+    for (var i = 0; i < tables.length; i++) {
+      if (tables[i].offsetParent !== null) return tables[i];
+    }
+    return tables[0];
+  }
+
+  function updateSelection(el) {
+    var table = el && el.closest ? el.closest('.ep-table') : getVisibleTable();
+    var checks = table.querySelectorAll('tbody input[type=checkbox]');
     var count = 0;
     checks.forEach(function(cb, i) {
+      var row = table.querySelector('#epRow' + i);
+      if (!row) return;
       if (cb.checked) {
         count++;
-        document.getElementById('epRow' + i).classList.add('selected');
+        row.classList.add('selected');
       } else {
-        document.getElementById('epRow' + i).classList.remove('selected');
+        row.classList.remove('selected');
       }
     });
-    document.getElementById('selectCount').textContent = count;
-    var table = document.getElementById('epTable');
-    var actionsWrap = document.getElementById('actionsWrap');
-    var deleteBtn = document.getElementById('deleteToolbarBtn');
+    table.querySelector('#selectCount').textContent = count;
+    var actionsWrap = table.querySelector('.action-wrap');
     var total = checks.length;
     if (count > 0) {
       table.classList.add('alt-mode');
-      actionsWrap.style.display = '';
-      deleteBtn.style.display = '';
+      if (actionsWrap) actionsWrap.style.display = '';
     } else {
       table.classList.remove('alt-mode');
-      actionsWrap.style.display = 'none';
-      deleteBtn.style.display = 'none';
+      if (actionsWrap) actionsWrap.style.display = 'none';
     }
-    var allCb = document.getElementById('selectAll');
-    var altCb = document.getElementById('selectAllAlt');
-    allCb.checked = (count === total && count > 0);
-    allCb.indeterminate = (count > 0 && count < total);
-    altCb.checked = (count === total && count > 0);
-    altCb.indeterminate = (count > 0 && count < total);
+    var allCb = table.querySelector('#selectAll');
+    var altCb = table.querySelector('#selectAllAlt');
+    if (allCb) {
+      allCb.checked = (count === total && count > 0);
+      allCb.indeterminate = (count > 0 && count < total);
+    }
+    if (altCb) {
+      altCb.checked = (count === total && count > 0);
+      altCb.indeterminate = (count > 0 && count < total);
+    }
   }
 
   function toggleSelectAllAlt(el) {
-    var allCb = document.getElementById('selectAll');
+    var table = el.closest('.ep-table');
+    var allCb = table.querySelector('#selectAll');
     allCb.checked = el.checked;
     toggleSelectAll(allCb);
   }
 
   function toggleSelectAll(el) {
-    var checks = document.querySelectorAll('#epTableBody input[type=checkbox]');
+    var table = el.closest('.ep-table');
+    var checks = table.querySelectorAll('tbody input[type=checkbox]');
     checks.forEach(function(cb, i) {
       cb.checked = el.checked;
+      var row = table.querySelector('#epRow' + i);
+      if (!row) return;
       if (el.checked) {
-        document.getElementById('epRow' + i).classList.add('selected');
+        row.classList.add('selected');
       } else {
-        document.getElementById('epRow' + i).classList.remove('selected');
+        row.classList.remove('selected');
       }
     });
     updateSelection();
   }
 
   function clearSelection() {
-    var checks = document.querySelectorAll('#epTableBody input[type=checkbox]');
+    var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]');
     checks.forEach(function(cb) { cb.checked = false; });
     updateSelection();
   }
@@ -3128,17 +3203,15 @@
   function expandParent(page) {
     var parentMap = {
       'dashboard': -1,
-      'episodelist': 0,
-      'episodelist2': 0,
-      'podcastapps': 1,
-      'socialshare': 1,
-      'podcastwebsite': 1,
-      'embedplayer': 1,
-      'overview': 2,
-      'statsepisodes': 2,
-      'podcastinfo': 3,
-      'feed': 3,
-      'plugins': 3
+      'podcastapps': 0,
+      'socialshare': 0,
+      'podcastwebsite': 0,
+      'embedplayer': 0,
+      'overview': 1,
+      'statsepisodes': 1,
+      'podcastinfo': 2,
+      'feed': 2,
+      'plugins': 2
     };
     var parents = document.querySelectorAll('.nav-parent');
     document.querySelectorAll('.nav-parent').forEach(function(p) { p.classList.remove('expanded'); });
@@ -3184,8 +3257,13 @@
 
   function toggleFilter(e) {
     e.stopPropagation();
-    var p = document.getElementById('filterPopover');
+    var p = e.currentTarget.closest('.filter-wrap').querySelector('#filterPopover');
+    var wasClosed = !p.classList.contains('show');
     p.classList.toggle('show');
+    if (wasClosed) {
+      // Close Actions popover when Filter opens
+      document.querySelectorAll('#actionsPopover').forEach(function(a) { a.classList.remove('show'); });
+    }
   }
   function handleSelectAll(el, panelId) {
     var panel = document.getElementById(panelId);
@@ -3211,22 +3289,6 @@
   }
 
   function updatePanelFoot() {
-    var active = document.querySelector('.filter-panel-content.active');
-    if (!active) return;
-    var foot = active.querySelector('.sel-count');
-    if (!foot) return;
-    if (active.id === 'fp-published') {
-      var dates = active.querySelectorAll('input[type=date]');
-      var from = dates[0] ? dates[0].value : '';
-      var to = dates[1] ? dates[1].value : '';
-      foot.textContent = (from || to) ? 'Date range set' : 'No date set';
-    } else {
-      var checks = active.querySelectorAll('input[type=checkbox]');
-      var total = checks.length;
-      var count = 0;
-      checks.forEach(function(cb) { if (cb.checked) count++; });
-      foot.textContent = count + ' of ' + total + ' selected';
-    }
     updateNavDots();
   }
 
@@ -3270,39 +3332,43 @@
   }
 
   function applyFilter() {
-    var btn = document.querySelector('.btn-filter');
-    btn.classList.add('active');
-    document.getElementById('filterPopover').classList.remove('show');
+    document.querySelectorAll('.btn-filter').forEach(function(b) { b.classList.add('active'); });
+    document.querySelectorAll('#filterPopover').forEach(function(p) { p.classList.remove('show'); });
+    document.querySelectorAll('.btn-filter-clear').forEach(function(b) { b.classList.add('show'); });
+  }
+
+  function clearFilter(btn) {
+    resetFilter();
+    var wrap = btn ? btn.closest('.filter-wrap') : null;
+    if (wrap) {
+      var pop = wrap.querySelector('#filterPopover');
+      if (pop) pop.classList.remove('show');
+    }
   }
 
   function resetFilter() {
-    document.querySelectorAll('#filterPopover input[type=checkbox]').forEach(function(cb, i) {
-      cb.checked = (i === 0 || cb.parentElement.parentElement.id === 'fp-media');
+    document.querySelectorAll('#filterPopover').forEach(function(pop) {
+      ['fp-status','fp-season'].forEach(function(pid) {
+        var panel = pop.querySelector('#' + pid);
+        if (panel) {
+          var checks = panel.querySelectorAll('input[type=checkbox]');
+          checks.forEach(function(cb, i) { cb.checked = (i === 0); });
+        }
+      });
+      var media = pop.querySelector('#fp-media');
+      if (media) media.querySelectorAll('input[type=checkbox]').forEach(function(cb) { cb.checked = true; });
+      var pub = pop.querySelector('#fp-published');
+      if (pub) pub.querySelectorAll('input[type=date]').forEach(function(d) { d.value = ''; });
     });
-    document.querySelectorAll('#fp-media input[type=checkbox]').forEach(function(cb) { cb.checked = true; });
-    document.querySelectorAll('#fp-published input[type=date]').forEach(function(d) { d.value = ''; });
-    var statusChecks = document.querySelectorAll('#fp-status input[type=checkbox]');
-    statusChecks.forEach(function(cb, i) { cb.checked = (i === 0); });
-    var seasonChecks = document.querySelectorAll('#fp-season input[type=checkbox]');
-    seasonChecks.forEach(function(cb, i) { cb.checked = (i === 0); });
-    document.querySelector('.btn-filter').classList.remove('active');
+    document.querySelectorAll('.btn-filter').forEach(function(b) { b.classList.remove('active'); });
     document.querySelectorAll('.filter-nav-item').forEach(function(b) { b.classList.remove('dirty'); });
-    var active = document.querySelector('.filter-panel-content.active');
-    if (active) {
-      var foot = active.querySelector('.sel-count');
-      if (foot) {
-        if (active.id === 'fp-published') { foot.textContent = 'No date set'; }
-        else if (active.id === 'fp-status') { foot.textContent = '1 of 8 selected'; }
-        else if (active.id === 'fp-media') { foot.textContent = '2 of 2 selected'; }
-        else if (active.id === 'fp-season') { foot.textContent = '1 of 11 selected'; }
-      }
-    }
+    document.querySelectorAll('.btn-filter-clear').forEach(function(b) { b.classList.remove('show'); });
   }
   document.addEventListener('click', function(e) {
-    var popover = document.getElementById('filterPopover');
-    if (popover && !popover.contains(e.target) && !e.target.closest('.btn-filter')) {
-      popover.classList.remove('show');
-    }
+    if (e.target.closest('.btn-filter') || e.target.closest('.btn-filter-clear')) return;
+    document.querySelectorAll('#filterPopover').forEach(function(popover) {
+      if (!popover.contains(e.target)) popover.classList.remove('show');
+    });
   });
 
   function selectSwatch(el) {
@@ -3312,31 +3378,44 @@
 
   /* ── Actions Popover / Drill-down ────── */
   function showActionsMenu() {
-    document.querySelectorAll('#actionsPopover .actions-view').forEach(function(v) { v.classList.remove('active'); });
-    document.getElementById('actionsMenuView').classList.add('active');
+    document.querySelectorAll('#actionsPopover').forEach(function(pop) {
+      pop.querySelectorAll('.actions-view').forEach(function(v) { v.classList.remove('active'); });
+      var m = pop.querySelector('#actionsMenuView');
+      if (m) m.classList.add('active');
+    });
   }
 
   function showActionsView(view) {
-    document.querySelectorAll('#actionsPopover .actions-view').forEach(function(v) { v.classList.remove('active'); });
-    document.getElementById('actions' + view.charAt(0).toUpperCase() + view.slice(1) + 'View').classList.add('active');
+    var pop = null;
+    document.querySelectorAll('#actionsPopover').forEach(function(p) {
+      if (p.classList.contains('show')) pop = p;
+    });
+    if (!pop) return;
+    pop.querySelectorAll('.actions-view').forEach(function(v) { v.classList.remove('active'); });
+    var v = pop.querySelector('#actions' + view.charAt(0).toUpperCase() + view.slice(1) + 'View');
+    if (v) v.classList.add('active');
   }
 
   function toggleActionsPopover(e) {
     e.stopPropagation();
-    var pop = document.getElementById('actionsPopover');
+    var pop = e.currentTarget.closest('.action-wrap').querySelector('#actionsPopover');
     var wasClosed = !pop.classList.contains('show');
     pop.classList.toggle('show');
-    if (wasClosed) showActionsMenu();
+    if (wasClosed) {
+      // Close Filter popover when Actions opens
+      document.querySelectorAll('#filterPopover').forEach(function(f) { f.classList.remove('show'); });
+      showActionsMenu();
+    }
   }
   document.addEventListener('click', function(e) {
-    var pop = document.getElementById('actionsPopover');
-    if (pop && !pop.contains(e.target) && !e.target.closest('.btn-actions')) {
-      pop.classList.remove('show');
-    }
+    if (e.target.closest('.btn-actions')) return;
+    document.querySelectorAll('#actionsPopover').forEach(function(pop) {
+      if (!pop.contains(e.target)) pop.classList.remove('show');
+    });
   });
 
   function getSelectedCount() {
-    return document.querySelectorAll('#epTableBody input[type=checkbox]:checked').length;
+    return getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked').length;
   }
 
   function batchSetSeasonSelected() {
@@ -3344,7 +3423,7 @@
     var sel = document.getElementById('ddSeasonSelect');
     var season = sel.value;
     if (!season) { alert('Please select a season.'); return; }
-    var checks = document.querySelectorAll('#epTableBody input[type=checkbox]:checked');
+    var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked');
     checks.forEach(function(cb) {
       var row = cb.closest('tr');
       if (row) {
@@ -3354,14 +3433,14 @@
         }
       }
     });
-    document.getElementById('actionsPopover').classList.remove('show');
+    document.querySelectorAll('#actionsPopover').forEach(function(p) { p.classList.remove('show'); });
     sel.value = '';
     alert('Set ' + getSelectedCount() + ' episode(s) to Season ' + season);
   }
 
   function batchRemoveSeasonSelected() {
     if (getSelectedCount() === 0) { alert('No episodes selected.'); return; }
-    var checks = document.querySelectorAll('#epTableBody input[type=checkbox]:checked');
+    var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked');
     checks.forEach(function(cb) {
       var row = cb.closest('tr');
       if (row) {
@@ -3371,11 +3450,19 @@
         }
       }
     });
-    document.getElementById('actionsPopover').classList.remove('show');
+    document.querySelectorAll('#actionsPopover').forEach(function(p) { p.classList.remove('show'); });
     alert('Removed season from ' + getSelectedCount() + ' episode(s).');
   }
 
   /* ── Tags Selector ──────────────────── */
+  function getActiveActionsPop() {
+    var found = null;
+    document.querySelectorAll('#actionsPopover').forEach(function(p) {
+      if (p.classList.contains('show')) found = p;
+    });
+    return found || document.querySelector('#actionsPopover');
+  }
+
   function getTagEpisodeCount(tag) {
     var count = 0;
     episodes.forEach(function(ep) {
@@ -3385,7 +3472,7 @@
   }
 
   function renderSelectedTags() {
-    var container = document.getElementById('tagsSelected');
+    var container = getActiveActionsPop().querySelector('#tagsSelected');
     container.innerHTML = '';
     selectedTags.forEach(function(tag) {
       var chip = document.createElement('span');
@@ -3396,7 +3483,7 @@
   }
 
   function renderTagsDropdown(filter) {
-    var dd = document.getElementById('tagsDropdown');
+    var dd = getActiveActionsPop().querySelector('#tagsDropdown');
     var html = '';
     var filtered = [];
     var lowerFilter = (filter || '').toLowerCase();
@@ -3429,17 +3516,19 @@
   }
 
   function showTagsDropdown() {
-    renderTagsDropdown(document.getElementById('tagsInputInline').value);
-    document.getElementById('tagsDropdown').classList.add('show');
+    var pop = getActiveActionsPop();
+    renderTagsDropdown(pop.querySelector('#tagsInputInline').value);
+    pop.querySelector('#tagsDropdown').classList.add('show');
   }
 
   function hideTagsDropdown() {
-    document.getElementById('tagsDropdown').classList.remove('show');
+    getActiveActionsPop().querySelector('#tagsDropdown').classList.remove('show');
   }
 
   function filterTagsDropdown(value) {
+    var pop = getActiveActionsPop();
     renderTagsDropdown(value);
-    document.getElementById('tagsDropdown').classList.add('show');
+    pop.querySelector('#tagsDropdown').classList.add('show');
   }
 
   function toggleTagSelection(tag) {
@@ -3450,7 +3539,7 @@
       selectedTags.splice(idx, 1);
     }
     renderSelectedTags();
-    renderTagsDropdown(document.getElementById('tagsInputInline').value);
+    renderTagsDropdown(getActiveActionsPop().querySelector('#tagsInputInline').value);
   }
 
   function addNewTag(tagName) {
@@ -3463,9 +3552,10 @@
       selectedTags.push(tagName);
     }
     renderSelectedTags();
-    document.getElementById('tagsInputInline').value = '';
+    var pop = getActiveActionsPop();
+    pop.querySelector('#tagsInputInline').value = '';
     renderTagsDropdown('');
-    document.getElementById('tagsDropdown').classList.add('show');
+    pop.querySelector('#tagsDropdown').classList.add('show');
   }
 
   function removeSelectedTag(tag) {
@@ -3474,14 +3564,14 @@
       selectedTags.splice(idx, 1);
     }
     renderSelectedTags();
-    renderTagsDropdown(document.getElementById('tagsInputInline').value);
+    renderTagsDropdown(getActiveActionsPop().querySelector('#tagsInputInline').value);
   }
 
   function removeLastTag() {
     if (selectedTags.length > 0) {
       selectedTags.pop();
       renderSelectedTags();
-      renderTagsDropdown(document.getElementById('tagsInputInline').value);
+      renderTagsDropdown(getActiveActionsPop().querySelector('#tagsInputInline').value);
     }
   }
 
@@ -3496,7 +3586,7 @@
     if (getSelectedCount() === 0) { alert('No episodes selected.'); return; }
     if (selectedTags.length === 0) { alert('Please select at least one tag.'); return; }
     var tagsToApply = selectedTags.slice();
-    var checks = document.querySelectorAll('#epTableBody input[type=checkbox]:checked');
+    var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked');
     checks.forEach(function(cb) {
       var row = cb.closest('tr');
       if (row) {
@@ -3511,17 +3601,17 @@
         }
       }
     });
-    document.getElementById('actionsPopover').classList.remove('show');
+    document.querySelectorAll('#actionsPopover').forEach(function(p) { p.classList.remove('show'); });
     selectedTags = [];
     renderSelectedTags();
-    document.getElementById('tagsInputInline').value = '';
+    document.querySelectorAll('#tagsInputInline').forEach(function(inp) { inp.value = ''; });
     buildRows();
     alert('Tagged ' + getSelectedCount() + ' episode(s) with: ' + tagsToApply.join(', '));
   }
 
   function batchClearTagsSelected() {
     if (getSelectedCount() === 0) { alert('No episodes selected.'); return; }
-    var checks = document.querySelectorAll('#epTableBody input[type=checkbox]:checked');
+    var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked');
     checks.forEach(function(cb) {
       var row = cb.closest('tr');
       if (row) {
@@ -3531,17 +3621,27 @@
         }
       }
     });
-    document.getElementById('actionsPopover').classList.remove('show');
+    document.querySelectorAll('#actionsPopover').forEach(function(p) { p.classList.remove('show'); });
     selectedTags = [];
     renderSelectedTags();
-    document.getElementById('tagsInputInline').value = '';
+    document.querySelectorAll('#tagsInputInline').forEach(function(inp) { inp.value = ''; });
     buildRows();
     alert('Cleared all tags from ' + getSelectedCount() + ' episode(s).');
   }
 
   function batchDeleteSelected() {
-    var checks = document.querySelectorAll('#epTableBody input[type=checkbox]:checked');
+    var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked');
     if (checks.length === 0) { alert('No episodes selected.'); return; }
+    document.querySelectorAll('#actionsPopover').forEach(function(p) { p.classList.remove('show'); });
+    document.getElementById('deleteConfirmTitle').textContent = 'Delete selected ' + checks.length + ' episode' + (checks.length > 1 ? 's' : '');
+    document.getElementById('deleteConfirmModal').classList.add('show');
+  }
+  function closeDeleteConfirmModal() {
+    document.getElementById('deleteConfirmModal').classList.remove('show');
+  }
+  function confirmDeleteSelected() {
+    var table = getVisibleTable();
+    var checks = table.querySelectorAll('tbody input[type=checkbox]:checked');
     var names = [];
     checks.forEach(function(cb) {
       var row = cb.closest('tr');
@@ -3551,6 +3651,7 @@
         row.remove();
       }
     });
+    document.getElementById('deleteConfirmModal').classList.remove('show');
     updateSelection();
     alert('Deleted ' + names.length + ' episode(s):\n' + names.join('\n'));
   }
