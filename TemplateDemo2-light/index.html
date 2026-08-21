@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meditation for sleep well and work better | Meditation Studio</title>
+<meta name="description" content="Guided meditations for deeper sleep, morning focus, and stress-free workdays. Gentle body scans, breathing exercises, and calming soundscapes from Meditation Studio.">
+<meta property="og:image" content="https://pbcdn1.podbean.com/imglogo/dir-logo/621870/621870_300x300.jpg">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     v2 — Spotify Web Player 风格
+     三栏 app 框架：260px 侧边栏 + 可滚动主区 + 88px 底部播放条
+     ============================================================ */
+  :root {
+    --bg: #f5f5f6;
+    --panel: #ffffff;
+    --card: #ffffff;
+    --card-hover: #e9e9eb;
+    --row-hover: #ececee;
+    --line: #e4e4e6;
+    --text: #1f1a24;
+    --sub: #6f6778;
+    --dim: #9d95a6;
+    --green: #1db954;
+    --green-hover: #17a34a;
+    --sidebar: #ffffff;
+    --nowbar: #ffffff;
+    --radius: 8px;
+    --font: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text);
+    background: #efeaf0;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button {
+    font-family: inherit; cursor: pointer;
+    background: none; border: 0; color: inherit; padding: 0;
+  }
+  ul { margin: 0; padding: 0; list-style: none; }
+  h1, h2, h3, p { margin: 0; }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+  .app {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) 40px 22px 88px;
+    grid-template-areas:
+      "sidebar main"
+      "caption caption"
+      "wave    wave"
+      "nowbar  nowbar";
+    overflow: hidden;
+  }
+
+  /* ============ Sidebar ============ */
+  .sidebar {
+    grid-area: sidebar;
+    background: var(--sidebar);
+    display: flex; flex-direction: column;
+    padding: 16px 12px;
+    overflow-y: auto;
+    min-width: 0;
+  }
+  .side-menu { display: flex; flex-direction: column; gap: 2px; }
+  /* Mobile/tablet drawer controls — hidden on desktop */
+  .menu-toggle, .menu-backdrop { display: none; }
+  .side-head { display: none; }
+  .side-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 6px;
+    color: var(--sub); font-size: 14px; font-weight: 600;
+    transition: color .15s ease;
+  }
+  .side-link:hover { color: var(--text); }
+  .side-link.active { color: var(--text); }
+  .side-ico { flex-shrink: 0; width: 18px; height: 18px; }
+  .side-toggle { width: 100%; text-align: left; }
+  .side-toggle .chev { margin-left: auto; transition: transform .2s ease; }
+  .side-toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .side-submenu { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 0; }
+  .side-submenu[hidden] { display: none; }
+  .side-opt {
+    display: flex; align-items: center;
+    padding: 8px 12px 8px 50px;
+    border-radius: 6px;
+    color: var(--sub); font-size: 14px;
+    transition: color .15s ease, background .15s ease;
+  }
+  .side-opt:hover { color: var(--text); background: var(--row-hover); }
+  .side-opt.is-selected { color: var(--green); font-weight: 700; }
+  /* ============ Main area ============ */
+  .main {
+    grid-area: main;
+    background: var(--bg);
+    overflow-y: auto;
+    position: relative;
+    scrollbar-color: #cfc8d6 transparent;
+    scrollbar-width: thin;
+  }
+  .content {
+    min-height: 100%;
+    display: flex; flex-direction: column;
+    padding-bottom: 32px;
+  }
+
+  /* ============ Podcast hero ============ */
+  .pod-hero {
+    position: relative;
+    height: calc(clamp(150px, 17vw, 200px) + 80px);
+    display: flex; align-items: center;
+    padding: 24px clamp(20px, 4vw, 40px) 28px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 55%),
+      radial-gradient(150% 190% at 0% 0%, #EBD9E7 0%, #EBD3DB 48%, #F4E9EE 100%);
+    overflow: hidden;
+  }
+  .pod-hero::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(90% 120% at 88% 120%, rgba(255, 255, 255, .6), transparent 55%);
+  }
+  .pod-hero-inner {
+    position: relative; z-index: 1;
+    width: 100%;
+    display: flex; align-items: center; gap: clamp(20px, 3.5vw, 36px);
+    max-width: 1280px; margin: 0 auto;
+  }
+  .pod-cover {
+    width: clamp(150px, 17vw, 200px); height: clamp(150px, 17vw, 200px);
+    flex-shrink: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .18);
+  }
+  .pod-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .pod-info { min-width: 0; padding-bottom: 6px; }
+  .pod-kicker {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.4px;
+    text-transform: uppercase; color: rgba(59, 36, 49, .65);
+  }
+  .pod-title {
+    margin-top: 6px;
+    font-size: clamp(32px, 4.6vw, 58px);
+    font-weight: 800; letter-spacing: -.04em; line-height: 1.04;
+    color: var(--text);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .pod-title.is-episode {
+    font-size: clamp(23px, 2.8vw, 34px);
+    font-weight: 800; letter-spacing: -.02em; line-height: 1.18;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .pod-author { display: flex; align-items: center; margin-top: 18px; }
+  .pod-author[hidden] { display: none; }
+  .pod-cover[hidden] { display: none; }
+  .pod-author-name {
+    font-size: 15px; font-weight: 700; color: var(--text);
+    text-decoration: none; cursor: pointer;
+  }
+  .pod-author-name:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .hero-play {
+    margin-top: 22px;
+    width: 54px; height: 54px;
+    border: 0; border-radius: 50%;
+    background: var(--green); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(29, 185, 84, .38);
+    transition: transform .15s ease, background .15s ease;
+  }
+  .hero-play:hover { transform: scale(1.06); background: var(--green-hover); }
+  .hero-play:active { transform: scale(1); }
+  .hero-play[hidden] { display: none; }
+
+  /* ============ Sections ============ */
+  .sections {
+    width: min(100%, calc(1280px + 2 * clamp(20px, 4vw, 40px)));
+    margin: 0 auto 32px; padding: 0 clamp(20px, 4vw, 40px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 24px;
+    align-items: start;
+  }
+  .sections.is-episode-view { grid-template-columns: minmax(0, 1fr); }
+  .side-col {
+    grid-column: 2;
+    position: sticky; top: 24px;
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .side-col[hidden] { display: none; }
+  .listen-panel { margin-top: 0; padding: 0; background: transparent; border-radius: 0; }
+  .listen-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .listen-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 12px; border-radius: 8px;
+    color: var(--sub); font-size: 14px;
+    transition: color .15s ease, background .15s ease;
+  }
+  .listen-row:hover { color: var(--text); background: var(--row-hover); }
+  .listen-row img { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+  .listen-row span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .about-panel {
+    margin-top: 0; padding: 0;
+    background: transparent;
+    border-radius: 0;
+  }
+  .panel {
+    margin-top: 20px;
+    padding: 22px 24px;
+  }
+  .panel-title {
+    font-size: 22px; font-weight: 800; letter-spacing: -.02em;
+    margin-bottom: 14px;
+  }
+
+  /* --- Sidebar Search input --- */
+  .side-search {
+    display: flex; align-items: center; gap: 10px;
+    margin: 2px 0;
+    padding: 0 12px; height: 38px; border-radius: 6px;
+    background: var(--panel); border: 1px solid var(--line);
+    color: var(--sub); cursor: text;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .side-search svg { flex-shrink: 0; }
+  .side-search input {
+    flex: 1; min-width: 0; height: 100%;
+    background: none; border: 0; outline: none;
+    color: var(--text); font: inherit; font-size: 14px;
+  }
+  .side-search input::placeholder { color: var(--sub); }
+  .side-search.active {
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px var(--green);
+    color: var(--text);
+  }
+  .side-search-clear {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(0, 0, 0, .08); color: #6f6778; border: 0; cursor: pointer;
+    transition: background .15s ease;
+  }
+  .side-search-clear:hover { background: rgba(0, 0, 0, .14); }
+  .side-search-clear[hidden] { display: none; }
+  .search-empty {
+    margin: 30px 0 8px; color: var(--sub);
+    font-size: 14px; text-align: center;
+  }
+  .search-empty[hidden] { display: none; }
+
+  /* --- About --- */
+  .about-text {
+    color: var(--sub); font-size: 14px; line-height: 1.75; max-width: 720px;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .about-text.expanded { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .about-more {
+    margin-top: 8px; padding: 0;
+    background: none; border: 0; cursor: pointer;
+    color: var(--green); font-size: 13px; font-weight: 700;
+  }
+  .about-more:hover { text-decoration: underline; }
+  .about-more[hidden] { display: none; }
+
+  /* --- Episodes --- */
+  .episodes { margin-top: 28px; }
+  .episodes-head { margin-bottom: 14px; }
+  .episodes-head .panel-title { margin-bottom: 0; }
+  .load-more {
+    display: block; margin: 16px auto 4px; padding: 8px 22px;
+    border-radius: 20px; border: 1px solid var(--line);
+    background: transparent; color: var(--text);
+    font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .load-more:hover { border-color: var(--text); background: var(--row-hover); }
+  .load-more[hidden] { display: none; }
+  .episode-list { display: flex; flex-direction: column; gap: 8px; }
+  .episode-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 12px 12px; border-radius: var(--radius);
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .episode-row:hover { background: var(--row-hover); }
+  .ep-thumb {
+    width: 120px; height: 120px; flex-shrink: 0;
+    border-radius: 6px; overflow: hidden; position: relative;
+  }
+  .ep-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .ep-info { min-width: 0; flex: 1; }
+  .ep-title {
+    font-size: 15px; font-weight: 700; line-height: 1.35; color: var(--text);
+    cursor: pointer;
+  }
+  .ep-title:hover { text-decoration: underline; }
+  .ep-desc {
+    margin-top: 3px; font-size: 13px; color: var(--sub); line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .ep-meta-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 6px;
+  }
+  .ep-meta {
+    font-size: 11px; font-weight: 600; letter-spacing: .5px;
+    text-transform: uppercase; color: var(--sub);
+  }
+  .meta-play {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    background: var(--green); color: #fff; border: 0; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .meta-play svg { margin-left: 2px; }
+  .meta-play:hover { background: var(--green-hover); transform: scale(1.06); }
+  .episode-row.is-playing .ep-title { color: var(--green); }
+  /* play button keeps the same green in both playing and paused states (icon toggles instead) */
+
+  /* --- In-place episode detail --- */
+  .pod-backlinks {
+    margin-top: 10px;
+    display: flex; align-items: center; flex-wrap: wrap;
+  }
+  .pod-backlinks[hidden] { display: none; }
+  .pod-backlinks:not(:has(.pod-home-link:not([hidden]))) { display: none; }
+  .pod-backlinks .pod-home-link { margin-top: 0; }
+  .pod-backlinks .pod-backlink-sep {
+    color: rgba(59, 36, 49, .45);
+    font-weight: 700;
+    margin: 0 14px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .pod-backlinks .pod-backlink-sep[hidden] { display: none; }
+  .pod-home-link {
+    padding: 0; background: none; border: 0; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: inherit; font-size: 16px; font-weight: 700;
+    color: rgba(59, 36, 49, .72); letter-spacing: .3px;
+    transition: color .15s ease;
+  }
+  .pod-home-link:hover { color: #241429; text-decoration: underline; }
+  .pod-home-link[hidden] { display: none; }
+  .episode-detail-panel { margin-top: 10px; }
+  .episode-detail-panel[hidden] { display: none; }
+  .ed-desc {
+    color: var(--sub); font-size: 14.5px; line-height: 1.75; max-width: 760px;
+    display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .ed-desc.expanded { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .ed-more {
+    margin-top: 8px; padding: 0;
+    background: none; border: 0; cursor: pointer;
+    color: var(--green); font-size: 13.5px; font-weight: 700;
+  }
+  .ed-more:hover { text-decoration: underline; }
+  .ed-more[hidden] { display: none; }
+  .ed-stats { display: flex; align-items: center; gap: 32px; margin-top: 20px; }
+  .ed-stat { display: flex; align-items: center; gap: 7px; color: var(--sub); }
+  .ed-ico { flex-shrink: 0; color: var(--sub); }
+  .ed-num { font-size: 15px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .ed-heading { font-size: 16px; font-weight: 700; margin: 24px 0 12px; }
+  .ed-comments { display: flex; flex-direction: column; gap: 2px; }
+  .ed-comment { display: flex; gap: 12px; padding: 12px; border-radius: 8px; }
+  .ed-comment:hover { background: var(--row-hover); }
+  .ed-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #333; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .ed-c-body { min-width: 0; }
+  .ed-c-head { display: flex; align-items: center; gap: 8px; }
+  .ed-c-name { font-size: 13.5px; font-weight: 700; color: var(--text); }
+  .ed-c-time { font-size: 12px; color: var(--dim); }
+  .ed-c-text { font-size: 14px; color: var(--sub); margin-top: 3px; line-height: 1.6; }
+
+  /* ============ Be a guest page ============ */
+  .guest-panel { margin-top: 28px; max-width: 720px; }
+  .guest-panel[hidden] { display: none; }
+  .guest-title { font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+  .guest-intro { margin-top: 12px; color: var(--sub); font-size: 15px; line-height: 1.7; }
+  .guest-h3 { font-size: 16px; font-weight: 700; margin-top: 24px; margin-bottom: 10px; }
+  .guest-list { list-style: disc; padding-left: 20px; color: var(--sub); font-size: 14.5px; line-height: 1.7; }
+  .guest-list li { margin-bottom: 6px; }
+  .guest-steps { list-style: decimal; padding-left: 20px; color: var(--sub); font-size: 14.5px; line-height: 1.7; }
+  .guest-steps li { margin-bottom: 6px; }
+  .guest-cta { margin-top: 24px; color: var(--green); font-weight: 600; }
+
+  /* ============ Main footer ============ */
+  .main-footer {
+    max-width: 1280px; width: 100%;
+    margin: auto auto 0;
+    padding: 28px clamp(20px, 4vw, 40px) 12px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    color: var(--dim); font-size: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .footer-social { display: flex; align-items: center; gap: 12px; }
+  .main-footer .footer-social-link {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    color: var(--sub);
+    transition: color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .main-footer .footer-social-link:hover {
+    color: var(--text); background: var(--row-hover);
+    text-decoration: none; transform: translateY(-2px);
+  }
+  .main-footer .footer-social-link svg { width: 18px; height: 18px; }
+  .main-footer a { color: var(--sub); }
+  .main-footer a:hover { color: var(--text); text-decoration: underline; }
+
+  /* ============ Now playing bar (Podbean style) ============ */
+  .now-playing {
+    grid-area: nowbar;
+    background: var(--nowbar);
+    border-top: 1px solid var(--line);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.6fr) minmax(0, 1.2fr);
+    align-items: center;
+    gap: 20px;
+    padding: 10px 42px 14px 16px;
+    z-index: 60;
+  }
+  .pp-caption {
+    grid-area: caption;
+    display: flex; align-items: center; justify-content: center;
+    padding: 6px 24px;
+    background: #ffffff;
+    color: var(--text);
+    font-size: 14px; font-weight: 600; letter-spacing: .01em;
+    text-align: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    pointer-events: none;
+  }
+  .pp-wave {
+    grid-area: wave;
+    display: flex; align-items: flex-end; gap: 2px;
+    overflow: hidden; pointer-events: none;
+    background: #ffffff;
+  }
+  .pp-wave i {
+    flex: 1; background: var(--green); border-radius: 1px; transform-origin: bottom;
+    opacity: .35; transition: opacity .3s ease;
+  }
+  .pp-wave.playing i { opacity: 1; animation: ppwave .9s ease-in-out infinite; }
+  @keyframes ppwave {
+    0%, 100% { transform: scaleY(.35); }
+    50% { transform: scaleY(1); }
+  }
+  .pp-left { display: flex; align-items: center; gap: 8px; min-width: 0; z-index: 1; }
+  .pp-ctrl {
+    color: var(--sub); transition: color .15s ease, transform .15s ease, background .15s ease;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  }
+  .pp-ctrl:hover { color: var(--text); background: rgba(0,0,0,.06); }
+  .pp-ctrl:active { transform: scale(.9); }
+  .pp-meta { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
+  .pp-cover { width: 46px; height: 46px; border-radius: 4px; overflow: hidden; flex-shrink: 0; }
+  .pp-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .pp-detail { min-width: 0; }
+  .pp-name {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;
+  }
+  .pp-date { font-size: 11px; color: var(--sub); margin-top: 2px; }
+
+  .pp-center {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; min-width: 0; z-index: 1;
+  }
+  .pp-play {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--green); color: #fff; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .pp-play:hover { background: var(--green-hover); transform: scale(1.06); }
+  .pp-time { font-size: 11px; color: var(--sub); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .pp-track {
+    position: relative; height: 5px; flex: 1; max-width: 520px;
+    background: #ddd6e1; border-radius: 3px; cursor: pointer;
+  }
+  .pp-fill {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+    background: var(--green); border-radius: 3px;
+    transition: background .15s ease;
+  }
+  .pp-track:hover .pp-fill { background: var(--green-hover); }
+  .pp-knob {
+    position: absolute; top: 50%; width: 13px; height: 13px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.35); transform: translate(-50%, -50%);
+    opacity: 0; transition: opacity .15s ease; pointer-events: none;
+  }
+  .pp-track:hover .pp-knob { opacity: 1; }
+
+  .pp-right { display: flex; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; z-index: 2; }
+  .pp-apps { position: relative; }
+  .pp-apps-menu {
+    position: absolute; bottom: calc(100% + 8px); right: 0;
+    background: #ffffff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 8px; min-width: 216px;
+    display: flex; flex-direction: column; gap: 2px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  }
+  .pp-apps-menu[hidden] { display: none; }
+  .pp-apps-menu a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 6px;
+    color: var(--text); font-size: 13px; white-space: nowrap;
+  }
+  .pp-apps-menu a:hover { background: var(--row-hover); }
+  .pp-apps-menu img { width: 22px; height: 22px; object-fit: contain; }
+  .pp-apps-sep { height: 1px; background: rgba(0,0,0,.08); margin: 6px 10px; }
+  .pp-close {
+    position: absolute; top: 6px; right: 8px;
+    color: var(--dim); border-radius: 50%; width: 26px; height: 26px;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: color .15s ease, background .15s ease; z-index: 2;
+  }
+  .pp-close svg { width: 14px; height: 14px; }
+  .pp-close .pp-ico-expand { display: none; }
+  .pp-close:hover { color: var(--text); background: rgba(0,0,0,.06); }
+  .app.pp-closed { grid-template-rows: minmax(0, 1fr) 40px 22px 42px; }
+  .app.pp-closed .pp-left, .app.pp-closed .pp-center, .app.pp-closed .pp-right { display: none; }
+  .app.pp-closed .pp-ico-collapse { display: none; }
+  .app.pp-closed .pp-ico-expand { display: block; }
+  .app.pp-closed .now-playing { padding: 3px 12px; grid-template-columns: 1fr; }
+  .app.pp-closed .pp-close {
+    position: static; grid-column: 1 / -1; justify-self: center;
+    width: 34px; height: 34px;
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 1000px) {
+    .app {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "main"
+        "caption"
+        "wave"
+        "nowbar";
+    }
+    .menu-toggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      position: fixed; top: 12px; left: 12px; z-index: 95;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(0,0,0,.08); color: var(--text);
+      transition: background .15s ease, transform .15s ease;
+    }
+    .menu-toggle:hover { background: rgba(0,0,0,.14); }
+    .menu-toggle:active { transform: scale(.92); }
+    .app.menu-open .menu-toggle { display: none; }
+
+    .menu-backdrop {
+      position: fixed; inset: 0; z-index: 90;
+      background: rgba(0,0,0,.5);
+    }
+    .app:not(.menu-open) .menu-backdrop { display: none; }
+    .app.menu-open .menu-backdrop { display: block; }
+
+    .sidebar {
+      position: fixed; top: 0; bottom: 0; left: 0;
+      width: min(300px, 84vw);
+      z-index: 100;
+      transform: translateX(-102%);
+      transition: transform .28s ease;
+      box-shadow: 8px 0 32px rgba(0,0,0,.25);
+    }
+    .app.menu-open .sidebar { transform: translateX(0); }
+
+    .side-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 6px 10px;
+      color: var(--dim); font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .menu-close {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%;
+      color: var(--sub);
+      transition: color .15s ease, background .15s ease;
+    }
+    .menu-close:hover { color: var(--text); background: var(--row-hover); }
+
+    .sections { grid-template-columns: minmax(0, 1fr); }
+    .side-col { grid-column: auto; position: static; }
+  }
+  @media (max-width: 700px) {
+    .app { grid-template-rows: minmax(0, 1fr) 32px 18px 72px; }
+    .pod-hero { height: auto; }
+    .now-playing { padding: 0 40px 8px 8px; }
+    .pp-right { display: none; }
+    .pp-close { top: 4px; right: 4px; }
+    .now-playing { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+    .pod-hero-inner { flex-direction: column; align-items: flex-start; }
+    .ep-thumb { width: 64px; height: 64px; }
+    .pp-name { max-width: 120px; }
+    .pp-cover { width: 38px; height: 38px; }
+    .pp-wave { height: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: .01ms !important;
+      animation-duration: .01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ Mobile/tablet menu toggle + backdrop ============ -->
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+  <div class="menu-backdrop" id="menuBackdrop"></div>
+
+  <!-- ============ Sidebar ============ -->
+  <aside class="sidebar" id="sidebar" aria-label="Library">
+    <div class="side-head">
+      <span>Menu</span>
+      <button class="menu-close" id="menuClose" type="button" aria-label="Close menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <nav class="side-menu" aria-label="Main">
+      <a class="side-link active" href="#" id="homeLink">
+        <svg class="side-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8V21h14V9.8"/></svg>
+        <span>Home</span>
+      </a>
+      <a class="side-link" id="subscribeLink" href="https://www.podbean.com/site/podcatcher/index/blog/01tGdsld" target="_blank" rel="noopener noreferrer">
+        <svg class="side-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+        <span>Subscribe</span>
+      </a>
+      <button class="side-link side-toggle" id="seasonsToggle" aria-expanded="false" aria-controls="seasonMenu">
+        <svg class="side-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/></svg>
+        <span>Seasons</span>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="side-submenu" id="seasonMenu" hidden>
+        <button class="side-opt" data-season="1">Season 1</button>
+        <button class="side-opt" data-season="2">Season 2</button>
+      </div>
+      <button class="side-link side-toggle" id="tagsToggle" aria-expanded="false" aria-controls="tagsMenu">
+        <svg class="side-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+        <span>Tags</span>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="side-submenu" id="tagsMenu" hidden>
+        <button class="side-opt" data-tag="Sleep">Sleep</button>
+        <button class="side-opt" data-tag="Relaxation">Relaxation</button>
+        <button class="side-opt" data-tag="Focus">Focus</button>
+        <button class="side-opt" data-tag="Breathing">Breathing</button>
+        <button class="side-opt" data-tag="Anxiety Relief">Anxiety Relief</button>
+        <button class="side-opt" data-tag="Mindfulness">Mindfulness</button>
+        <button class="side-opt" data-tag="Morning">Morning</button>
+        <button class="side-opt" data-tag="Gratitude">Gratitude</button>
+      </div>
+      <button class="side-link" id="guestLink" type="button">
+        <svg class="side-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+        <span>Be a guest</span>
+      </button>
+      <div class="side-search" id="searchLink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><line x1="16.2" y1="16.2" x2="21" y2="21"/></svg>
+        <input type="text" id="searchInput" placeholder="Search" autocomplete="off" spellcheck="false" aria-label="Search episodes">
+        <button class="side-search-clear" id="searchClear" hidden type="button" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============ Main ============ -->
+  <div class="main">
+    <div class="content">
+
+      <!-- ============ Podcast hero ============ -->
+      <section class="pod-hero">
+        <div class="pod-hero-inner">
+          <div class="pod-cover">
+            <img src="podcastlogo.jpg" alt="Meditation for sleep well and work better cover art">
+          </div>
+          <div class="pod-info">
+            <span class="pod-kicker" id="heroKicker">Podcast</span>
+            <h1 class="pod-title" id="heroTitle">Meditation for sleep well and work better</h1>
+            <div class="pod-backlinks">
+              <button class="pod-home-link" id="heroHomeLink" hidden type="button">Meditation for sleep well and work better</button>
+              <span class="pod-backlink-sep" id="heroBackSep" hidden aria-hidden="true">·</span>
+              <button class="pod-home-link" id="heroPodLink" hidden type="button">Season 1</button>
+            </div>
+            <button class="hero-play" id="heroPlayBtn" hidden type="button" aria-label="Play episode"></button>
+            <div class="pod-author" id="podAuthor">
+              <a class="pod-author-name" href="https://www.podbean.com/user-GYlzyotMGSe7" target="_blank" rel="noopener noreferrer">Meditation Studio</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="sections">
+
+        <!-- ============ Episodes ============ -->
+        <section class="episodes" id="episodes">
+          <div class="episodes-head" id="episodesHead">
+            <h2 class="panel-title">All Episodes</h2>
+          </div>
+          <div id="episodeListWrap">
+          <div class="episode-list">
+
+            <div class="episode-row"
+               data-title="Guided Deep Sleep Meditation for Letting Go of the Day's Stress and Worries, Featuring a Gentle Body Scan and Slow Breathing"
+               data-dur="2760" data-season="1" data-tag="Sleep,Breathing">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Guided Deep Sleep Meditation for Letting Go of the Day's Stress and Worries, Featuring a Gentle Body Scan and Slow Breathing</span>
+                <span class="ep-desc">Drift off naturally with a guided body scan that moves gently from head to toe, releasing tension from every muscle group along the way. As you settle deeper into bed, follow slow, steady breathing cues that soften your nervous system and slow your heart rate. Visualize the day's stress and worries gently melting away with each exhale, until your body feels heavy, warm, and fully released. This practice is designed to ease you into deep, restorative sleep, and to meet you kindly if your thoughts wander. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Aug 19th, 2026 · 46 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Morning Mindfulness Practice to Center Your Mind Before a Focused, Productive, and Stress-Free Workday at the Office"
+               data-dur="2880" data-season="1" data-tag="Morning,Mindfulness,Focus">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Morning Mindfulness Practice to Center Your Mind Before a Focused, Productive, and Stress-Free Workday at the Office</span>
+                <span class="ep-desc">Start your day with intention, before the noise of the world rushes in. This short morning mindfulness practice guides you through a few minutes of anchored breathing and gentle body awareness, centering your mind and steadying your breath for the hours ahead. Whether you practice in bed or at your desk with your first cup of coffee, it sets a calm, focused tone that carries into your meetings and your tasks. You will finish feeling grounded, clear-headed, and genuinely ready for a productive, stress-free workday. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Aug 18th, 2026 · 48 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Breathe, Relax, and Rest: A Gentle Full-Body Relaxation Exercise to Calm Your Mind and Fall Asleep Faster Tonight"
+               data-dur="2100" data-season="1" data-tag="Relaxation,Sleep">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Breathe, Relax, and Rest: A Gentle Full-Body Relaxation Exercise to Calm Your Mind and Fall Asleep Faster Tonight</span>
+                <span class="ep-desc">Unwind with a gentle full-body relaxation exercise designed to quiet a busy mind and signal to your body that the day is over. Through slow breathing and progressive release, you will be guided to soften each part of your body, from the tension in your jaw to the weight in your shoulders and legs. The practice meets you wherever you are, whether you are wide awake or already drifting, and helps your muscles let go so sleep can come faster. By the final minutes your breath will have slowed naturally and your body will feel heavy, warm, and deeply at ease. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Aug 12th, 2026 · 35 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Five-Minute Calm: A Quick Reset for Your Nervous System Between Back-to-Back Meetings So You Can Think Clearly Again"
+               data-dur="2520" data-season="2" data-tag="Anxiety Relief,Focus">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Five-Minute Calm: A Quick Reset for Your Nervous System Between Back-to-Back Meetings So You Can Think Clearly Again</span>
+                <span class="ep-desc">Only five minutes to hit reset, even on your busiest day. This quick, guided calming practice is built for the gap between back-to-back meetings, when your shoulders are tight and your thoughts are scattered. Through paced breathing and a simple mental checklist, it lowers your physical tension and clears the mental clutter so you can think clearly again. No special setup is needed - just a chair, a few quiet minutes, and the willingness to let your nervous system settle before your next call. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Aug 5th, 2026 · 42 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Evening Wind-Down Ritual with Soft Rain Sounds, Ocean Waves, and Progressive Muscle Relaxation for the Deepest Possible Night of Sleep"
+               data-dur="2340" data-season="2" data-tag="Sleep,Relaxation">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Evening Wind-Down Ritual with Soft Rain Sounds, Ocean Waves, and Progressive Muscle Relaxation for the Deepest Possible Night of Sleep</span>
+                <span class="ep-desc">Ritualize the end of your day and create a clear boundary between waking life and sleep. This wind-down practice pairs soft rain and ocean wave soundscapes with progressive muscle relaxation, guiding you to release tension from every part of your body in a calm, unhurried sequence. As the soundscapes fade into the background, your breathing slows and your mind stops rehearsing tomorrow's to-do list. Use it each night as a signal to your body that it is safe to rest, and over time you will fall asleep faster and enjoy the deepest possible night of sleep. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Aug 4th, 2026 · 39 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Seven-Eleven Breathing for Instant Calm: A Simple Counting Technique to Slow Your Heart Rate and Quiet a Racing Mind"
+               data-dur="1800" data-season="1" data-tag="Breathing,Anxiety Relief">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Seven-Eleven Breathing for Instant Calm: A Simple Counting Technique to Slow Your Heart Rate and Quiet a Racing Mind</span>
+                <span class="ep-desc">A deceptively simple counting breath - inhale for seven, exhale for eleven - that works because it forces your exhale to last longer than your inhale, which naturally engages your calming nervous system. Within a few rounds you will feel your heart rate slow, your shoulders drop, and the volume of your thoughts turn down. It is the perfect tool when stress spikes mid-day or anxiety keeps you from falling asleep, because it requires nothing but your attention. Practice it in bed, at your desk, or in the back of a taxi, and instant calm becomes available wherever you go. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Jul 30th, 2026 · 30 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Body Scan for Deep Sleep: Melting Away Physical Tension One Muscle Group at a Time Before Bed"
+               data-dur="2580" data-season="1" data-tag="Sleep,Relaxation">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Body Scan for Deep Sleep: Melting Away Physical Tension One Muscle Group at a Time Before Bed</span>
+                <span class="ep-desc">A slow, guided body scan that moves methodically from the crown of your head to the tips of your toes, inviting each muscle group to soften and let go in turn. With every stop you will be reminded to breathe into the places where you habitually hold tension - the jaw, the neck, the lower back - until your whole body feels heavy and released. It is the perfect pre-bed ritual for anyone who carries the day's stress into the pillow, melting away physical tension and easing you into deep, undisturbed sleep. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Jul 24th, 2026 · 43 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Mindful Walking Meditation: Grounding Your Senses and Clearing Mental Clutter on Your Lunch Break"
+               data-dur="1740" data-season="1" data-tag="Mindfulness,Focus">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Mindful Walking Meditation: Grounding Your Senses and Clearing Mental Clutter on Your Lunch Break</span>
+                <span class="ep-desc">Step outside, even for ten minutes, and reset the mental clutter that has built up over the morning. This mindful walking meditation guides you to ground your senses in each step - the feel of the ground beneath your feet, the movement of air on your skin, the rhythm of your own breath. Rather than trying to empty your mind, it gives your attention somewhere simple and steady to rest. By the time you return to your desk, your head is clearer, your body has moved, and you are ready to face the afternoon with renewed focus. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Jul 18th, 2026 · 29 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Guided Visualization for Stress Relief: A Calming Mental Journey to Restore Your Inner Balance"
+               data-dur="2220" data-season="1" data-tag="Anxiety Relief,Mindfulness">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Guided Visualization for Stress Relief: A Calming Mental Journey to Restore Your Inner Balance</span>
+                <span class="ep-desc">Close your eyes and let a soothing narrative carry you to a serene inner landscape of your own making - a quiet shore, a forest path, a warm room at the end of a long day. As the imagery unfolds, you will be guided to notice the details with all of your senses, which gently draws your mind away from worry and toward rest. This visualization practice lowers stress and restores your sense of inner balance and ease, leaving you calmer, softer, and more present when you open your eyes. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Jul 12th, 2026 · 37 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Deep Sleep Rain Sounds with Soft Spoken Guidance for an Uninterrupted Night of Rest"
+               data-dur="3000" data-season="2" data-tag="Sleep">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Deep Sleep Rain Sounds with Soft Spoken Guidance for an Uninterrupted Night of Rest</span>
+                <span class="ep-desc">Steady rain against the window, layered with soft spoken guidance that gradually drifts into pure silence. The first half of this practice uses a gentle voice to slow your breathing and settle your body; the second half hands the night over to the soundscape alone, so you can simply listen and sink. It is a soothing, uncluttered soundscape designed to carry you into an uninterrupted, deeply restful night, and to keep you asleep even if you wake in the small hours. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Jul 6th, 2026 · 50 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Box Breathing for Focus: A Proven Technique to Sharpen Your Attention Before Important Work"
+               data-dur="1620" data-season="2" data-tag="Breathing,Focus">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Box Breathing for Focus: A Proven Technique to Sharpen Your Attention Before Important Work</span>
+                <span class="ep-desc">Four counts in, hold for four, four counts out, hold for four - the even, predictable rhythm of box breathing is one of the most reliable ways to steady your nervous system. This guided practice walks you through the technique slowly, giving you time to find your own comfortable pace and to notice how the steadiness spreads through your body. It is ideal before important meetings, exams, or long stretches of deep work, when you need your attention sharp and your stress dial turned down. Over time you will be able to drop into this pattern on your own, anywhere, in under a minute. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Jun 28th, 2026 · 27 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            <div class="episode-row"
+               data-title="Bedtime Gratitude Meditation: Ending the Day with Warmth, Thankfulness, and a Quiet Mind"
+               data-dur="1980" data-season="2" data-tag="Gratitude,Sleep">
+              <span class="ep-thumb"><img src="podcastlogo.jpg" alt="" loading="lazy">
+                              </span>
+              <span class="ep-info">
+                <span class="ep-title">Bedtime Gratitude Meditation: Ending the Day with Warmth, Thankfulness, and a Quiet Mind</span>
+                <span class="ep-desc">End the day on a warm note instead of replaying its frustrations. This gratitude meditation guides you to reflect on the good moments of the day - a kind exchange, a small win, a moment of quiet - and to hold each one in your awareness as you breathe. Practicing gratitude before bed helps lower the stress that keeps people awake, softening the mind and shifting your attention away from worry. It is a gentle, heartfelt way to close the day and prepare for a calm and peaceful sleep. Follow along at your own pace and come back to this episode whenever you need it - there is no wrong way to listen. Feel free to repeat the exercise a second time, or pair it with another practice from the series, so the technique slowly becomes part of your daily rhythm. However you choose to use it, let the voice and the pacing carry you, and give your mind full permission to let go.</span>
+                <span class="ep-meta-row"><span class="ep-meta">Jun 20th, 2026 · 33 min</span><button class="meta-play" aria-label="Play episode"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg></button></span>
+              </span>
+            </div>
+
+            </div><!-- /episode-list -->
+            <p class="search-empty" id="searchEmpty" hidden>No episodes match your search.</p>
+            <button class="load-more" id="loadMoreBtn" hidden type="button">Load more episodes</button>
+          </div><!-- /episodeListWrap -->
+
+          <!-- In-place episode detail (shown on row click, no navigation) -->
+          <div class="episode-detail-panel" id="episodeDetail" hidden>
+            <h3 class="ed-heading">Description</h3>
+            <p class="ed-desc" id="edDesc"></p>
+            <button class="ed-more" id="edMoreBtn" hidden type="button">Show more</button>
+            <div class="ed-stats">
+              <div class="ed-stat">
+                <svg class="ed-ico" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-6.7-4.3-9.3-8.1C.7 10.1 2 6.6 4.9 6.6c2 0 3.2 1.2 4 2.4.8-1.2 2-2.4 4-2.4 2.9 0 4.2 3.5 2.2 6.3C18.7 16.7 12 21 12 21z"/></svg>
+                <span class="ed-num" id="edLikes"></span>
+              </div>
+              <div class="ed-stat">
+                <svg class="ed-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                <span class="ed-num" id="edDownloads"></span>
+              </div>
+              <div class="ed-stat">
+                <svg class="ed-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8h16v-8"/><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/></svg>
+              </div>
+            </div>
+            <h3 class="ed-heading">Comments</h3>
+            <div class="ed-comments" id="edComments"></div>
+          </div>
+        </section>
+
+        <!-- ============ Be a guest page (shown on sidebar menu click) ============ -->
+        <div class="guest-panel" id="guestPanel" hidden>
+          <h2 class="guest-title">Be a Guest on Meditation Studio</h2>
+          <p class="guest-intro">We love sharing guided meditations, breathing exercises, and mindfulness practices with our listeners. If you are a teacher, coach, or practitioner with something valuable to offer, we would love to have you on the show.</p>
+          <h3 class="guest-h3">What we are looking for</h3>
+          <ul class="guest-list">
+            <li>Guided meditations and breathing exercises you can lead live</li>
+            <li>Practical tips on sleep, focus, or stress that listeners can use today</li>
+            <li>A calm, clear way of explaining ideas - no prior experience required to apply</li>
+          </ul>
+          <h3 class="guest-h3">How it works</h3>
+          <ol class="guest-steps">
+            <li>Tell us a little about yourself and what you would like to share.</li>
+            <li>We will schedule a short call to plan your episode together.</li>
+            <li>Record at your convenience - we handle the editing and publishing.</li>
+          </ol>
+          <p class="guest-cta">Contact us at guest@meditationstudio.com</p>
+        </div>
+
+        <!-- ============ Right column: Listen on + About ============ -->
+        <div class="side-col">
+          <section class="panel listen-panel">
+            <h2 class="panel-title">Listen on</h2>
+            <nav class="listen-list" aria-label="Listen on">
+              <a class="listen-row" href="#" target="_blank" rel="noopener noreferrer">
+                <img src="listen%20on%20logos/apple-podcast.png" alt=""><span>Apple Podcasts</span>
+              </a>
+              <a class="listen-row" href="#" target="_blank" rel="noopener noreferrer">
+                <img src="listen%20on%20logos/podbean-app.png" alt=""><span>Podbean</span>
+              </a>
+              <a class="listen-row" href="#" target="_blank" rel="noopener noreferrer">
+                <img src="listen%20on%20logos/spotify.png" alt=""><span>Spotify</span>
+              </a>
+              <a class="listen-row" href="#" target="_blank" rel="noopener noreferrer">
+                <img src="listen%20on%20logos/AmazonMusic.png" alt=""><span>Amazon Music</span>
+              </a>
+              <a class="listen-row" href="#" target="_blank" rel="noopener noreferrer">
+                <img src="listen%20on%20logos/iHeartRadio.png" alt=""><span>iHeartRadio</span>
+              </a>
+              <a class="listen-row" href="#" target="_blank" rel="noopener noreferrer">
+                <img src="listen%20on%20logos/ListenNotes.png" alt=""><span>Listen Notes</span>
+              </a>
+            </nav>
+          </section>
+          <section class="panel about-panel" id="aboutPanel">
+            <h2 class="panel-title">About</h2>
+            <p class="about-text">Meditation for sleep well and work better offers guided meditations, breathing exercises, and calming soundscapes designed to help you fall asleep faster, wake up refreshed, and stay focused and stress-free through your workday. New episodes every week - press play and give your mind a moment to rest.</p>
+            <button class="about-more" id="aboutMoreBtn" type="button" hidden>Show more</button>
+          </section>
+        </div>
+
+      </div>
+
+      <!-- ============ Main footer ============ -->
+      <footer class="main-footer">
+        <div class="footer-social">
+          <a class="footer-social-link" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.52 1.5-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.76 8.43-4.92 8.43-9.94z"/></svg>
+          </a>
+          <a class="footer-social-link" href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="X">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.68l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64z"/></svg>
+          </a>
+          <a class="footer-social-link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.2"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a class="footer-social-link" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+          </a>
+          <a class="footer-social-link" href="https://www.podbean.com/site/podcatcher/index/blog/01tGdsld" target="_blank" rel="noopener noreferrer" aria-label="RSS">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.18 17.82a2.18 2.18 0 1 1 0 4.36 2.18 2.18 0 0 1 0-4.36zM4.44 4.44A15.56 15.56 0 0 1 20 20h-2.83A12.72 12.72 0 0 0 4.44 7.27V4.44zm0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4.44 12.93v-2.83z"/></svg>
+          </a>
+        </div>
+        <p>Copyright 2026 All Rights Reserved</p>
+        <p>Podcast Powered By <a href="https://www.podbean.com/">Podbean</a></p>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- ============ Now playing bar (Podbean style) ============ -->
+  <div class="pp-caption" id="ppCaption"></div>
+  <div class="pp-wave" id="ppWave" aria-hidden="true"></div>
+  <footer class="now-playing" aria-label="Now playing">
+    <div class="pp-left">
+      <button class="pp-ctrl" id="npPrev" aria-label="Previous episode">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2.2v14H6zM20 5 9.8 12 20 19z"/></svg>
+      </button>
+      <div class="pp-meta">
+        <div class="pp-cover"><img id="npCover" src="podcastlogo.jpg" alt=""></div>
+        <div class="pp-detail">
+          <div class="pp-name" id="npTitle">Meditation for sleep well and work better</div>
+          <div class="pp-date" id="npDate"></div>
+        </div>
+      </div>
+      <button class="pp-ctrl" id="npNext" aria-label="Next episode">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.8 5H18v14h-2.2zM4 5l10.2 7L4 19z"/></svg>
+      </button>
+    </div>
+
+    <div class="pp-center">
+      <button class="pp-play" id="npPlay" aria-label="Play or pause">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg>
+      </button>
+      <span class="pp-time" id="npCur">0:00</span>
+      <div class="pp-track" id="npTrack" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="pp-fill" id="npFill"></div>
+        <div class="pp-knob" id="npKnob"></div>
+      </div>
+      <span class="pp-time" id="npTotal">-46:00</span>
+    </div>
+
+    <div class="pp-right">
+      <div class="pp-apps">
+        <button class="pp-ctrl" id="ppAppsBtn" aria-label="Listen on podcast apps" aria-expanded="false">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2a8 8 0 110 16 8 8 0 010-16zm-.75 5h1.5v4h4v1.5h-4V18h-1.5v-3.5h-4V13h4V9z"/></svg>
+          <span>Podcast Apps</span>
+        </button>
+        <div class="pp-apps-menu" id="ppAppsMenu" hidden>
+          <a href="https://podcasts.apple.com/us/search?term=Meditation%20for%20sleep%20well%20and%20work%20better" target="_blank" rel="noopener noreferrer"><img src="listen%20on%20logos/apple-podcast.png" alt="">Apple Podcasts</a>
+          <a href="https://open.spotify.com/search/Meditation%20for%20sleep%20well%20and%20work%20better" target="_blank" rel="noopener noreferrer"><img src="listen%20on%20logos/spotify.png" alt="">Spotify</a>
+          <a href="https://www.podbean.com/search?q=Meditation%20for%20sleep%20well%20and%20work%20better" target="_blank" rel="noopener noreferrer"><img src="listen%20on%20logos/podbean-app.png" alt="">Podbean</a>
+          <a href="https://music.amazon.com/search/Meditation%20for%20sleep%20well%20and%20work%20better" target="_blank" rel="noopener noreferrer"><img src="listen%20on%20logos/AmazonMusic.png" alt="">Amazon Music</a>
+          <a href="https://www.iheart.com/search/?q=Meditation%20for%20sleep%20well%20and%20work%20better" target="_blank" rel="noopener noreferrer"><img src="listen%20on%20logos/iHeartRadio.png" alt="">iHeartRadio</a>
+          <a href="https://www.listennotes.com/search/?q=Meditation%20for%20sleep%20well%20and%20work%20better" target="_blank" rel="noopener noreferrer"><img src="listen%20on%20logos/ListenNotes.png" alt="">Listen Notes</a>
+          <div class="pp-apps-sep"></div>
+          <a href="https://www.podbean.com/site/podcatcher/index/blog/01tGdsld" target="_blank" rel="noopener noreferrer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1.6" fill="currentColor" stroke="none"/></svg>RSS Feed</a>
+        </div>
+      </div>
+      <button class="pp-ctrl" aria-label="Share">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8h16v-8"/><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/></svg>
+      </button>
+    </div>
+
+    <button class="pp-close" id="ppClose" aria-label="Collapse player" aria-expanded="true">
+      <svg class="pp-ico-collapse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      <svg class="pp-ico-expand" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+    </button>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var PLAY_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg>';
+  var PAUSE_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.75 4.5v15h3.5v-15h-3.5zM13.75 4.5v15h3.5v-15h-3.5z"/></svg>';
+  var META_PLAY = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg>';
+  var META_PAUSE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.75 4.5v15h3.5v-15h-3.5zM13.75 4.5v15h3.5v-15h-3.5z"/></svg>';
+  var HERO_PLAY = '<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"/></svg>';
+  var HERO_PAUSE = '<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.75 4.5v15h3.5v-15h-3.5zM13.75 4.5v15h3.5v-15h-3.5z"/></svg>';
+
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.episode-row'));
+  var npTitle = document.getElementById('npTitle');
+  var npDate = document.getElementById('npDate');
+  var npPlay = document.getElementById('npPlay');
+  var npCur = document.getElementById('npCur');
+  var npTotal = document.getElementById('npTotal');
+  var npFill = document.getElementById('npFill');
+  var npKnob = document.getElementById('npKnob');
+  var npTrack = document.getElementById('npTrack');
+  var npPrev = document.getElementById('npPrev');
+  var npNext = document.getElementById('npNext');
+  var nowBar = document.querySelector('.now-playing');
+  var appEl = document.querySelector('.app');
+  var ppClose = document.getElementById('ppClose');
+  var ppWave = document.getElementById('ppWave');
+  var ppCaption = document.getElementById('ppCaption');
+  var ppAppsBtn = document.getElementById('ppAppsBtn');
+  var ppAppsMenu = document.getElementById('ppAppsMenu');
+
+  var currentIndex = -1;
+  var playing = false;
+  var timer = null;
+  var duration = 0;   // seconds
+  var elapsed = 0;    // seconds
+
+  function fmt(s) {
+    s = Math.max(0, Math.round(s));
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function setPlayIcon() {
+    npPlay.innerHTML = playing ? PAUSE_SVG : PLAY_SVG;
+    if (nowBar) nowBar.classList.toggle('playing', playing);
+    if (ppWave) ppWave.classList.toggle('playing', playing);
+    syncRowStates();
+    updateHeroPlay();
+  }
+
+  function updateHeroPlay() {
+    if (!heroPlayBtn) return;
+    var activeEpisode = (currentEpisodeIndex >= 0 && currentIndex === currentEpisodeIndex && playing);
+    heroPlayBtn.innerHTML = activeEpisode ? HERO_PAUSE : HERO_PLAY;
+    heroPlayBtn.setAttribute('aria-label', activeEpisode ? 'Pause episode' : 'Play episode');
+  }
+
+  function fmtRemaining(s) {
+    return '-' + fmt(s);
+  }
+
+  // decorative Podbean-style waveform strip (animated only while playing)
+  if (ppWave) {
+    var waveHTML = '';
+    for (var wi = 0; wi < 56; wi++) {
+      var wh = 26 + Math.round((Math.sin(wi * 0.9) + 1) * 14 + (wi % 5) * 5);
+      waveHTML += '<i style="height:' + Math.min(100, wh) + '%"></i>';
+    }
+    ppWave.innerHTML = waveHTML;
+  }
+
+  function syncRowStates() {
+    rows.forEach(function (r, i) {
+      var active = (i === currentIndex);
+      r.classList.toggle('is-playing', active);
+      var metaBtn = r.querySelector('.meta-play');
+      if (metaBtn) {
+        metaBtn.innerHTML = (active && playing)
+          ? META_PAUSE
+          : (metaBtn.getAttribute('data-playicon') || META_PLAY);
+      }
+    });
+  }
+
+  /* ---- In-place episode view ---- */
+  var mainScroll = document.querySelector('.main');
+  var heroKicker = document.getElementById('heroKicker');
+  var heroTitle = document.getElementById('heroTitle');
+  var heroHomeLink = document.getElementById('heroHomeLink');
+  var heroPodLink = document.getElementById('heroPodLink');
+  var heroBackSep = document.getElementById('heroBackSep');
+  var episodeListWrap = document.getElementById('episodeListWrap');
+  var episodesHead = document.getElementById('episodesHead');
+  var episodesTitle = episodesHead.querySelector('.panel-title');
+  var searchInput = document.getElementById('searchInput');
+  var searchClear = document.getElementById('searchClear');
+  var searchEmpty = document.getElementById('searchEmpty');
+  var searchLink = document.getElementById('searchLink');
+  var sectionsEl = document.querySelector('.sections');
+  var sideCol = document.querySelector('.side-col');
+  var aboutPanel = document.getElementById('aboutPanel');
+  var aboutText = document.querySelector('.about-text');
+  var aboutMoreBtn = document.getElementById('aboutMoreBtn');
+  var guestPanel = document.getElementById('guestPanel');
+  var guestLink = document.getElementById('guestLink');
+  var podCover = document.querySelector('.pod-cover');
+  var podAuthor = document.getElementById('podAuthor');
+  var heroPlayBtn = document.getElementById('heroPlayBtn');
+  var episodeDetail = document.getElementById('episodeDetail');
+  var edDesc = document.getElementById('edDesc');
+  var edMoreBtn = document.getElementById('edMoreBtn');
+  var edLikes = document.getElementById('edLikes');
+  var edDownloads = document.getElementById('edDownloads');
+  var edComments = document.getElementById('edComments');
+  var currentEpisodeIndex = -1;   // -1 = podcast view
+
+  var episodeExtra = [
+    { likes: '248', downloads: '12.4K', comments: [
+      { u: 'Ava', t: '2d ago', c: 'The body scan at the end had me asleep before it finished. Beautiful pacing.' },
+      { u: 'Leo', t: '5d ago', c: 'This is my go-to when my mind is racing. The breathing cues really help.' },
+      { u: 'Mia', t: '1w ago', c: 'Fell asleep halfway through - perfect for deep sleep.' }
+    ]},
+    { likes: '186', downloads: '9.8K', comments: [
+      { u: 'Noah', t: '3d ago', c: 'Started my workday with this and actually felt centered.' },
+      { u: 'Sofia', t: '6d ago', c: 'Short enough to do before a meeting. Great reset.' }
+    ]},
+    { likes: '132', downloads: '7.1K', comments: [
+      { u: 'Ethan', t: '4d ago', c: 'The full-body relaxation is very soothing.' },
+      { u: 'Luna', t: '1w ago', c: 'Went to sleep so much faster than usual.' }
+    ]},
+    { likes: '95', downloads: '5.3K', comments: [
+      { u: 'Zoe', t: '1d ago', c: 'Perfect for the chaos between meetings.' },
+      { u: 'Liam', t: '4d ago', c: 'Five minutes and I could think clearly again.' }
+    ]},
+    { likes: '160', downloads: '8.6K', comments: [
+      { u: 'Emma', t: '2d ago', c: 'The rain sounds plus the relaxation sequence - my new bedtime ritual.' },
+      { u: 'Oliver', t: '5d ago', c: 'So calming after a long day. Highly recommend.' }
+    ]},
+    { likes: '208', downloads: '11.2K', comments: [
+      { u: 'Chloe', t: '2d ago', c: 'The 7-11 breath genuinely calms me down fast. Keeping this one bookmarked.' },
+      { u: 'Jack', t: '4d ago', c: 'Used it before a hard conversation and my heart rate dropped noticeably.' },
+      { u: 'Nora', t: '1w ago', c: 'Simple but effective. My new panic button.' }
+    ]},
+    { likes: '174', downloads: '9.1K', comments: [
+      { u: 'Eli', t: '3d ago', c: 'Fell asleep before the scan even reached my legs.' },
+      { u: 'Ruby', t: '6d ago', c: 'So thorough and soothing. Best body scan I have tried.' }
+    ]},
+    { likes: '141', downloads: '6.8K', comments: [
+      { u: 'Theo', t: '1d ago', c: 'Perfect reset on a busy lunch break.' },
+      { u: 'Ivy', t: '5d ago', c: 'Made my walk so much more present. Lovely.' }
+    ]},
+    { likes: '119', downloads: '5.9K', comments: [
+      { u: 'Max', t: '2d ago', c: 'The imagery was beautiful and really calming.' },
+      { u: 'Zara', t: '4d ago', c: 'Exactly what I needed after a stressful week.' }
+    ]},
+    { likes: '232', downloads: '13.5K', comments: [
+      { u: 'Owen', t: '1d ago', c: 'The rain plus her voice is my new sleep soundtrack.' },
+      { u: 'Lily', t: '3d ago', c: 'Slept through the whole night for the first time in weeks.' },
+      { u: 'Adam', t: '1w ago', c: 'Rain sounds are perfect quality. No harsh noise at all.' }
+    ]},
+    { likes: '157', downloads: '8.3K', comments: [
+      { u: 'Grace', t: '2d ago', c: 'Box breathing before my big presentation - felt so steady.' },
+      { u: 'Finn', t: '6d ago', c: 'Short, clear, and effective. Great for focus.' }
+    ]},
+    { likes: '188', downloads: '10.6K', comments: [
+      { u: 'Amelia', t: '1d ago', c: 'Went to bed feeling warm and grateful. Beautiful practice.' },
+      { u: 'Henry', t: '4d ago', c: 'A lovely way to close the day.' },
+      { u: 'Stella', t: '1w ago', c: 'The thankfulness prompts were just right.' }
+    ]}
+  ];
+
+  function showEpisode(index) {
+    if (index < 0 || index >= rows.length) return;
+    currentEpisodeIndex = index;
+    var row = rows[index];
+    // entering a single-episode view also starts playback (unless this episode is already playing)
+    if (!(currentIndex === index && playing)) {
+      playRow(index);
+    }
+    heroKicker.textContent = 'Episode';
+    heroTitle.textContent = row.getAttribute('data-title');
+    heroTitle.classList.add('is-episode');
+    heroHomeLink.hidden = false;
+    guestPanel.hidden = true;
+    podCover.hidden = false;
+    podAuthor.hidden = true;
+    heroPlayBtn.hidden = false;
+    updateHeroPlay();
+    if (viewMode === 'season') {
+      heroPodLink.textContent = 'Season ' + currentSeason;
+      heroPodLink.hidden = false;
+    } else if (viewMode === 'search') {
+      heroPodLink.textContent = lastSearchRaw ? 'Search for: ' + lastSearchRaw : 'Search results';
+      heroPodLink.hidden = false;
+    } else if (viewMode === 'tag') {
+      heroPodLink.textContent = currentTag;
+      heroPodLink.hidden = false;
+    } else {
+      heroPodLink.hidden = true;
+    }
+    heroBackSep.hidden = !(viewMode === 'season' || viewMode === 'search' || viewMode === 'tag');
+    episodeListWrap.hidden = true;
+    if (episodesHead) episodesHead.style.display = 'none';
+    if (sideCol) sideCol.style.display = '';
+    if (aboutPanel) aboutPanel.style.display = 'none';
+    if (sectionsEl) sectionsEl.classList.remove('is-episode-view');
+    episodeDetail.hidden = false;
+    var descEl = row.querySelector('.ep-desc');
+    edDesc.textContent = descEl ? descEl.textContent : '';
+    edDesc.classList.remove('expanded');
+    if (edMoreBtn) {
+      edMoreBtn.textContent = 'Show more';
+      edMoreBtn.hidden = !(edDesc.scrollHeight > edDesc.clientHeight + 1);
+    }
+    var extra = episodeExtra[index];
+    edLikes.textContent = extra ? extra.likes : '0';
+    edDownloads.textContent = extra ? extra.downloads : '0';
+    edComments.innerHTML = '';
+    if (extra) {
+      extra.comments.forEach(function (cm) {
+        var el = document.createElement('div');
+        el.className = 'ed-comment';
+        el.innerHTML =
+          '<span class="ed-avatar">' + cm.u.charAt(0).toUpperCase() + '</span>' +
+          '<span class="ed-c-body">' +
+            '<span class="ed-c-head"><span class="ed-c-name"></span><span class="ed-c-time"></span></span>' +
+            '<span class="ed-c-text"></span>' +
+          '</span>';
+        el.querySelector('.ed-c-name').textContent = cm.u;
+        el.querySelector('.ed-c-time').textContent = cm.t;
+        el.querySelector('.ed-c-text').textContent = cm.c;
+        edComments.appendChild(el);
+      });
+    }
+    if (mainScroll) mainScroll.scrollTop = 0;
+  }
+
+  function showPodcastView() {
+    currentEpisodeIndex = -1;
+    heroKicker.textContent = 'Podcast';
+    heroTitle.textContent = 'Meditation for sleep well and work better';
+    heroTitle.classList.remove('is-episode');
+    heroPodLink.hidden = true;
+    heroHomeLink.hidden = true;
+    heroBackSep.hidden = true;
+    guestPanel.hidden = true;
+    podCover.hidden = false;
+    podAuthor.hidden = false;
+    heroPlayBtn.hidden = true;
+    episodeDetail.hidden = true;
+    episodeListWrap.hidden = false;
+    if (episodesHead) episodesHead.style.display = '';
+    if (sideCol) sideCol.style.display = '';
+    if (aboutPanel) aboutPanel.style.display = '';
+    if (sectionsEl) sectionsEl.classList.remove('is-episode-view');
+  }
+
+  function tick() {
+    elapsed += 0.25;
+    if (elapsed >= duration) {
+      elapsed = duration;
+      npCur.textContent = fmt(elapsed);
+      npTotal.textContent = fmtRemaining(duration - elapsed);
+      npFill.style.width = '100%';
+      stop();
+      return;
+    }
+    npCur.textContent = fmt(elapsed);
+    npTotal.textContent = fmtRemaining(duration - elapsed);
+    var pct = (elapsed / duration) * 100;
+    npFill.style.width = pct + '%';
+    npKnob.style.left = pct + '%';
+  }
+
+  function stop() {
+    playing = false;
+    currentIndex = -1;
+    setPlayIcon(); // syncs the episode list row states (all cleared)
+    if (timer) { clearInterval(timer); timer = null; }
+    stopCaptions();
+  }
+
+  // Simulated per-episode subtitle lines, rotated while playing
+  var episodeCaptions = [
+    ['Settle in and let your body soften into the bed...', 'Bring your awareness to your breath - slow, easy, unforced...', 'Allow each exhale to carry the tension of the day away...'],
+    ['Begin your day with a single, steady breath...', 'Feel the cool morning air fill your lungs...', 'Let your thoughts settle like dust in still water...'],
+    ['Notice the places your body still holds tension...', 'With each breath, let the shoulders drop and the jaw unclench...', 'Surrender fully into the warmth of this moment...'],
+    ['This is a quick reset - just five minutes, just for you...', 'Breathe in calm, breathe out the noise of the morning...', 'Your nervous system softens with every slow breath...'],
+    ['Let the sound of rain carry your thoughts away...', 'Tense, then release - feeling the wave of relaxation wash over you...', 'The evening is yours; there is nowhere else to be...'],
+    ['Inhale for seven... hold gently... exhale for eleven...', 'Long, slow exhales tell your body it is safe to rest...', 'Let the count become a rhythm, and the rhythm become calm...'],
+    ['Bring your attention to the top of your head...', 'Slowly, scan downward - the face, the neck, the shoulders...', 'Each part you release sinks deeper into the mattress...'],
+    ['Feel the ground beneath each step, steady and real...', 'Notice the rhythm of your stride, the swing of your arms...', 'The world is full of small sensations - stay with them...'],
+    ['Close your eyes and picture a place where you feel safe...', 'You are walking toward that place, slowly, at your own pace...', 'Let the image grow vivid - the light, the air, the quiet...'],
+    ['The rain falls steadily - a soft lullaby all around you...', 'Drift with the rhythm of the drops, one by one...', 'There is nothing to do now but listen and let go...'],
+    ['Inhale four... hold four... exhale four... hold four...', 'Let the square become a steady anchor for your attention...', 'With each box, your mind grows clearer and calmer...'],
+    ['Think of one small thing today you were grateful for...', 'Let that feeling warm your chest, soft and full...', 'Carry that warmth with you as you drift toward sleep...']
+  ];
+  var captionTimer = null;
+  var captionIdx = 0;
+  function startCaptions(i) {
+    if (captionTimer) { clearInterval(captionTimer); captionTimer = null; }
+    var caps = episodeCaptions[i] || [];
+    if (!ppCaption) return;
+    if (!caps.length) { ppCaption.textContent = ''; return; }
+    captionIdx = 0;
+    ppCaption.textContent = caps[0];
+    captionTimer = setInterval(function () {
+      captionIdx = (captionIdx + 1) % caps.length;
+      ppCaption.textContent = caps[captionIdx];
+    }, 4000);
+  }
+  function pauseCaptions() {
+    if (captionTimer) { clearInterval(captionTimer); captionTimer = null; }
+  }
+  function resumeCaptions() {
+    if (!ppCaption || currentIndex < 0) return;
+    var caps = episodeCaptions[currentIndex] || [];
+    if (!caps.length) return;
+    if (captionTimer) clearInterval(captionTimer);
+    if (!ppCaption.textContent) {
+      captionIdx = 0;
+      ppCaption.textContent = caps[0];
+    }
+    captionTimer = setInterval(function () {
+      captionIdx = (captionIdx + 1) % caps.length;
+      ppCaption.textContent = caps[captionIdx];
+    }, 4000);
+  }
+  function stopCaptions() {
+    if (captionTimer) { clearInterval(captionTimer); captionTimer = null; }
+    if (ppCaption) ppCaption.textContent = '';
+  }
+
+  function playRow(index, autoplay) {
+    if (index < 0 || index >= rows.length) { stop(); return; }
+    setPlayerClosed(false);
+    var row = rows[index];
+    currentIndex = index;
+    duration = parseInt(row.getAttribute('data-dur'), 10) || 1;
+    elapsed = 0;
+    npTitle.textContent = row.getAttribute('data-title');
+    var rowMeta = row.querySelector('.ep-meta');
+    if (npDate) npDate.textContent = rowMeta ? rowMeta.textContent.split(' · ')[0] : '';
+    npTotal.textContent = fmtRemaining(duration);
+    npCur.textContent = '0:00';
+    npFill.style.width = '0%';
+    npKnob.style.left = '0%';
+
+    // Load into the player without starting playback (e.g. initial state)
+    if (autoplay === false) {
+      playing = false;
+      setPlayIcon();
+      if (timer) { clearInterval(timer); timer = null; }
+      return;
+    }
+
+    if (!playing) {
+      playing = true;
+      setPlayIcon(); // syncs the episode list row states
+    } else {
+      syncRowStates();
+    }
+    startCaptions(index);
+    if (timer) clearInterval(timer);
+    timer = setInterval(tick, 250);
+  }
+
+  function togglePlay() {
+    if (playing) {
+      playing = false;
+      setPlayIcon();
+      if (timer) clearInterval(timer);
+      pauseCaptions();
+    } else if (currentIndex >= 0) {
+      playing = true;
+      setPlayIcon();
+      timer = setInterval(tick, 250);
+      resumeCaptions();
+    } else if (rows.length) {
+      playRow(0);
+    }
+  }
+
+  function seek(e) {
+    if (!duration) return;
+    var rect = npTrack.getBoundingClientRect();
+    var ratio = (e.clientX - rect.left) / rect.width;
+    ratio = Math.min(1, Math.max(0, ratio));
+    elapsed = ratio * duration;
+    npCur.textContent = fmt(elapsed);
+    npTotal.textContent = fmtRemaining(duration - elapsed);
+    npFill.style.width = (ratio * 100) + '%';
+    npKnob.style.left = (ratio * 100) + '%';
+  }
+
+  /* ---- wire up ---- */
+  rows.forEach(function (row, i) {
+    var metaBtn = row.querySelector('.meta-play');
+    if (metaBtn) {
+      metaBtn.setAttribute('data-playicon', metaBtn.innerHTML);
+      metaBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (currentIndex === i && playing) {
+          playing = false;
+          setPlayIcon();
+          if (timer) clearInterval(timer);
+          pauseCaptions();
+        } else {
+          playRow(i);
+        }
+      });
+    }
+    // clicking the row (outside the play button) switches hero + list area to this episode
+    row.addEventListener('click', function (e) {
+      e.preventDefault();
+      showEpisode(i);
+    });
+  });
+
+  npPlay.addEventListener('click', togglePlay);
+
+  npPrev.addEventListener('click', function () {
+    if (!rows.length) return;
+    playRow((currentIndex - 1 + rows.length) % rows.length);
+  });
+
+  npNext.addEventListener('click', function () {
+    if (!rows.length) return;
+    playRow((currentIndex + 1) % rows.length);
+  });
+
+  npTrack.addEventListener('click', seek);
+
+  if (heroPlayBtn) {
+    heroPlayBtn.addEventListener('click', function () {
+      if (currentEpisodeIndex < 0) return;
+      if (currentIndex === currentEpisodeIndex && playing) {
+        playing = false;
+        setPlayIcon();
+        if (timer) { clearInterval(timer); timer = null; }
+        pauseCaptions();
+      } else {
+        playRow(currentEpisodeIndex);
+      }
+    });
+  }
+
+  if (edMoreBtn) {
+    edMoreBtn.addEventListener('click', function () {
+      var expanded = edDesc.classList.toggle('expanded');
+      edMoreBtn.textContent = expanded ? 'Show less' : 'Show more';
+    });
+  }
+
+  if (aboutMoreBtn) {
+    aboutMoreBtn.addEventListener('click', function () {
+      var expanded = aboutText.classList.toggle('expanded');
+      aboutMoreBtn.textContent = expanded ? 'Show less' : 'Show more';
+    });
+  }
+  function aboutOverflowCheck() {
+    if (!aboutText || !aboutMoreBtn) return;
+    aboutMoreBtn.textContent = 'Show more';
+    aboutMoreBtn.hidden = !(aboutText.scrollHeight > aboutText.clientHeight + 1);
+  }
+  aboutOverflowCheck();
+  window.addEventListener('load', aboutOverflowCheck);
+
+  function setPlayerClosed(closed) {
+    if (appEl) appEl.classList.toggle('pp-closed', !!closed);
+    if (ppClose) {
+      ppClose.setAttribute('aria-expanded', closed ? 'false' : 'true');
+      ppClose.setAttribute('aria-label', closed ? 'Expand player' : 'Collapse player');
+    }
+  }
+  if (ppClose) {
+    ppClose.addEventListener('click', function () {
+      var closed = appEl ? appEl.classList.contains('pp-closed') : false;
+      setPlayerClosed(!closed);
+      if (ppAppsMenu) ppAppsMenu.hidden = true;
+    });
+  }
+
+  if (ppAppsBtn && ppAppsMenu) {
+    ppAppsBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = ppAppsMenu.hidden;
+      ppAppsMenu.hidden = !open;
+      ppAppsBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+    document.addEventListener('click', function () {
+      ppAppsMenu.hidden = true;
+      ppAppsBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  /* ---- hero podcast-title back wiring ---- */
+  heroPodLink.addEventListener('click', function () {
+    if (currentEpisodeIndex >= 0) {
+      // inside a single-episode view: return to the view the user came from
+      if (viewMode === 'season') {
+        showSeasonView('Season ' + currentSeason);
+        renderList();
+        updateSidebarState();
+      } else if (viewMode === 'search') {
+        showSearchView('Search for: ' + lastSearchRaw);
+        renderList();
+        updateSidebarState();
+      } else if (viewMode === 'tag') {
+        showTagView(currentTag);
+        renderList();
+        updateSidebarState();
+      } else {
+        showPodcastView();
+        viewMode = 'home';
+        updateSidebarState();
+      }
+    } else {
+      // season/search pages: the link returns to the podcast home
+      showPodcastView();
+      viewMode = 'home';
+      updateSidebarState();
+    }
+  });
+
+  // always returns to the podcast home page
+  heroHomeLink.addEventListener('click', function () {
+    currentSeason = 'all';
+    currentTag = null;
+    searchQuery = '';
+    searchInput.value = '';
+    searchClear.hidden = true;
+    seasonOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+    tagOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+    episodesTitle.textContent = 'All Episodes';
+    renderList();
+    showPodcastView();
+    viewMode = 'home';
+    updateSidebarState();
+    closeSideMenus();
+  });
+
+  /* ---- sidebar Home menu → podcast view ---- */
+  var homeLink = document.getElementById('homeLink');
+  homeLink.addEventListener('click', function (e) {
+    e.preventDefault();
+    currentSeason = 'all';
+    currentTag = null;
+    searchQuery = '';
+    searchInput.value = '';
+    searchClear.hidden = true;
+    seasonOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+    tagOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+    episodesTitle.textContent = 'All Episodes';
+    renderList();
+    showPodcastView();
+    viewMode = 'home';
+    updateSidebarState();
+    closeSideMenus();
+  });
+
+  /* ---- Seasons filter + Load more ---- */
+  var seasonsToggle = document.getElementById('seasonsToggle');
+  var seasonMenu = document.getElementById('seasonMenu');
+  var seasonOpts = Array.prototype.slice.call(document.querySelectorAll('.side-opt[data-season]'));
+  var currentSeason = 'all';
+  var tagsToggle = document.getElementById('tagsToggle');
+  var tagsMenu = document.getElementById('tagsMenu');
+  var tagOpts = Array.prototype.slice.call(document.querySelectorAll('.side-opt[data-tag]'));
+  var currentTag = null;
+  var PER_PAGE = 6;
+  var loaded = { all: PER_PAGE, '1': PER_PAGE, '2': PER_PAGE };
+  var loadMoreBtn = document.getElementById('loadMoreBtn');
+  var viewMode = 'home';
+  var searchQuery = '';
+  var lastSearchRaw = '';
+
+  function updateSidebarState() {
+    homeLink.classList.toggle('active', viewMode === 'home');
+    searchLink.classList.toggle('active', viewMode === 'search');
+    seasonsToggle.classList.toggle('active', viewMode === 'season');
+    tagsToggle.classList.toggle('active', viewMode === 'tag');
+    guestLink.classList.toggle('active', viewMode === 'guest');
+  }
+
+  function closeSideMenus() {
+    seasonMenu.hidden = true;
+    seasonsToggle.setAttribute('aria-expanded', 'false');
+    tagsMenu.hidden = true;
+    tagsToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  function seasonRows(season) {
+    return rows.filter(function (r) {
+      return season === 'all' || r.getAttribute('data-season') === season;
+    });
+  }
+
+  function rowHasTag(row, tag) {
+    var t = row.getAttribute('data-tag') || '';
+    return t.split(/\s*,\s*/).indexOf(tag) !== -1;
+  }
+
+  function tagRows(tag) {
+    return rows.filter(function (r) { return rowHasTag(r, tag); });
+  }
+
+  function rowMatches(row, q) {
+    var title = row.getAttribute('data-title') || '';
+    var descEl = row.querySelector('.ep-desc');
+    var desc = descEl ? descEl.textContent : '';
+    return (title + ' ' + desc).toLowerCase().indexOf(q) !== -1;
+  }
+
+  function activeFilterKey() {
+    if (searchQuery) return 'all';
+    if (viewMode === 'tag' && currentTag) return 'tag-' + currentTag;
+    return currentSeason;
+  }
+
+  function activeFilterCount(key) {
+    if (key === 'all') return rows.length;
+    if (key.indexOf('tag-') === 0) return tagRows(key.slice(4)).length;
+    return seasonRows(key).length;
+  }
+
+  function ensureLoaded() {
+    var k = activeFilterKey();
+    if (!(k in loaded)) loaded[k] = PER_PAGE;
+  }
+
+  function renderList() {
+    var q = searchQuery;
+    var season = q ? 'all' : currentSeason;
+    var tag = q ? null : currentTag;
+    ensureLoaded();
+    var k = activeFilterKey();
+    var shown = 0;
+    rows.forEach(function (row) {
+      var inSeason = season === 'all' || row.getAttribute('data-season') === season;
+      var inTag = !tag || rowHasTag(row, tag);
+      var matches = !q || rowMatches(row, q);
+      var show = matches && inSeason && inTag && (q || shown < loaded[k]);
+      if (matches && inSeason && inTag) shown++;
+      row.style.display = show ? '' : 'none';
+    });
+    searchEmpty.hidden = !(q && shown === 0);
+    loadMoreBtn.hidden = !!q || loaded[k] >= activeFilterCount(k);
+  }
+
+  function filterEpisodes() {
+    renderList();
+    showSeasonView('Season ' + currentSeason);
+  }
+
+  function showSeasonView(label) {
+    currentEpisodeIndex = -1;
+    heroKicker.textContent = 'Season';
+    heroTitle.textContent = label;
+    heroTitle.classList.remove('is-episode');
+    heroPodLink.hidden = true;
+    heroHomeLink.hidden = false;
+    heroBackSep.hidden = true;
+    guestPanel.hidden = true;
+    podCover.hidden = false;
+    podAuthor.hidden = true;
+    heroPlayBtn.hidden = true;
+    episodeDetail.hidden = true;
+    episodeListWrap.hidden = false;
+    if (episodesHead) episodesHead.style.display = '';
+    if (sideCol) sideCol.style.display = '';
+    if (aboutPanel) aboutPanel.style.display = 'none';
+    if (sectionsEl) sectionsEl.classList.remove('is-episode-view');
+  }
+
+  function showTagView(label) {
+    currentEpisodeIndex = -1;
+    heroKicker.textContent = 'Tag';
+    heroTitle.textContent = label;
+    heroTitle.classList.remove('is-episode');
+    heroPodLink.hidden = true;
+    heroHomeLink.hidden = false;
+    heroBackSep.hidden = true;
+    guestPanel.hidden = true;
+    podCover.hidden = false;
+    podAuthor.hidden = true;
+    heroPlayBtn.hidden = true;
+    episodeDetail.hidden = true;
+    episodeListWrap.hidden = false;
+    if (episodesHead) episodesHead.style.display = '';
+    if (sideCol) sideCol.style.display = '';
+    if (aboutPanel) aboutPanel.style.display = 'none';
+    if (sectionsEl) sectionsEl.classList.remove('is-episode-view');
+  }
+
+  loadMoreBtn.addEventListener('click', function () {
+    ensureLoaded();
+    loaded[activeFilterKey()] += PER_PAGE;
+    renderList();
+  });
+
+  renderList(); // initial state: show first PER_PAGE rows
+  updateSidebarState(); // Home active, Seasons inactive
+
+  seasonsToggle.addEventListener('click', function () {
+    var open = seasonMenu.hidden;
+    seasonMenu.hidden = !open;
+    seasonsToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    tagsMenu.hidden = true;
+    tagsToggle.setAttribute('aria-expanded', 'false');
+  });
+
+  seasonOpts.forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      currentSeason = opt.getAttribute('data-season');
+      currentTag = null;
+      searchQuery = '';
+      searchInput.value = '';
+      searchClear.hidden = true;
+      seasonOpts.forEach(function (o) { o.classList.toggle('is-selected', o === opt); });
+      tagOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+      episodesTitle.textContent = 'Episodes';
+      viewMode = 'season';
+      updateSidebarState();
+      filterEpisodes();
+    });
+  });
+
+  /* ---- Page menu (Be a guest page) ---- */
+  function showGuestView(pageTitle) {
+    currentEpisodeIndex = -1;
+    heroKicker.textContent = 'Page';
+    heroTitle.textContent = pageTitle || 'Be a guest';
+    heroTitle.classList.remove('is-episode');
+    heroPodLink.hidden = true;
+    heroHomeLink.hidden = false;
+    heroBackSep.hidden = true;
+    guestPanel.hidden = false;
+    podCover.hidden = true;
+    podAuthor.hidden = true;
+    heroPlayBtn.hidden = true;
+    episodeDetail.hidden = true;
+    episodeListWrap.hidden = true;
+    if (episodesHead) episodesHead.style.display = 'none';
+    if (sideCol) sideCol.style.display = 'none';
+    if (sectionsEl) sectionsEl.classList.add('is-episode-view');
+  }
+
+  guestLink.addEventListener('click', function () {
+    currentSeason = 'all';
+    currentTag = null;
+    searchQuery = '';
+    searchInput.value = '';
+    searchClear.hidden = true;
+    seasonOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+    tagOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+    viewMode = 'guest';
+    updateSidebarState();
+    closeSideMenus();
+    showGuestView();
+  });
+
+  /* ---- Tags menu ---- */
+  tagsToggle.addEventListener('click', function () {
+    var open = tagsMenu.hidden;
+    tagsMenu.hidden = !open;
+    tagsToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    seasonMenu.hidden = true;
+    seasonsToggle.setAttribute('aria-expanded', 'false');
+  });
+
+  tagOpts.forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      currentTag = opt.getAttribute('data-tag');
+      currentSeason = 'all';
+      searchQuery = '';
+      searchInput.value = '';
+      searchClear.hidden = true;
+      tagOpts.forEach(function (o) { o.classList.toggle('is-selected', o === opt); });
+      seasonOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+      episodesTitle.textContent = 'Episodes';
+      viewMode = 'tag';
+      updateSidebarState();
+      renderList();
+      showTagView(currentTag);
+    });
+  });
+
+  /* ---- Sidebar search input ---- */
+  function showSearchView(label) {
+    currentEpisodeIndex = -1;
+    heroKicker.textContent = 'Search';
+    heroTitle.textContent = label;
+    heroTitle.classList.add('is-episode');
+    heroPodLink.hidden = true;
+    heroHomeLink.hidden = false;
+    heroBackSep.hidden = true;
+    guestPanel.hidden = true;
+    podCover.hidden = false;
+    podAuthor.hidden = true;
+    heroPlayBtn.hidden = true;
+    episodeDetail.hidden = true;
+    episodeListWrap.hidden = false;
+    if (episodesHead) episodesHead.style.display = '';
+    if (sideCol) sideCol.style.display = 'none';
+    if (sectionsEl) sectionsEl.classList.add('is-episode-view');
+  }
+
+  function doSearch() {
+    var raw = searchInput.value.trim();
+    lastSearchRaw = raw;
+    searchQuery = raw.toLowerCase();
+    searchClear.hidden = !raw;
+    episodesTitle.textContent = raw ? 'Episodes' : 'All Episodes';
+    viewMode = raw ? 'search' : 'home';
+    updateSidebarState();
+    closeSideMenus();
+    if (raw) {
+      showSearchView('Search for: ' + raw);
+    } else {
+      currentSeason = 'all';
+      currentTag = null;
+      seasonOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+      tagOpts.forEach(function (o) { o.classList.remove('is-selected'); });
+      showPodcastView();
+    }
+    renderList();
+  }
+
+  searchInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      doSearch();
+    }
+  });
+
+  searchClear.addEventListener('click', function () {
+    searchInput.value = '';
+    doSearch();
+    searchInput.focus();
+  });
+
+  /* ---- Mobile/tablet drawer menu ---- */
+  var menuToggle = document.getElementById('menuToggle');
+  var menuClose = document.getElementById('menuClose');
+  var menuBackdrop = document.getElementById('menuBackdrop');
+  var sidebarEl = document.getElementById('sidebar');
+  function setMenu(open) {
+    if (appEl) appEl.classList.toggle('menu-open', !!open);
+    if (menuToggle) menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  if (menuToggle) menuToggle.addEventListener('click', function () { setMenu(true); });
+  if (menuClose) menuClose.addEventListener('click', function () { setMenu(false); });
+  if (menuBackdrop) menuBackdrop.addEventListener('click', function () { setMenu(false); });
+  if (sidebarEl) {
+    sidebarEl.addEventListener('click', function (e) {
+      var t = e.target && e.target.closest ? e.target.closest('button, a') : null;
+      if (!t) return;
+      if (t.closest('.side-opt') || t.id === 'homeLink' || t.id === 'guestLink' || t.id === 'subscribeLink') {
+        setMenu(false);
+      }
+    });
+  }
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 1000) setMenu(false);
+  });
+
+  // reduce motion: stop the interval churn visually (still functional)
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var orig = tick;
+    tick = function () { orig.call(this); };
+  }
+
+  // First visit: show the player by default with the first All Episodes row loaded (not playing)
+  playRow(0, false);
+})();
+</script>
+</body>
+</html>
