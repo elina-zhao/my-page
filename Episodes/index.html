@@ -94,6 +94,7 @@
   .ep-table th:first-child { width:40px;text-align:center;padding:0 8px 14px; }
   .ep-table th:first-child input[type=checkbox] { margin-top:2px; }
   .ep-table td { padding:21px 12px;font-size:14px;color:var(--text);border-bottom:1px solid #f1f5f9;vertical-align:middle; }
+  .ep-table td.no-wrap { white-space:nowrap; }
   .ep-table td:last-child { text-align:right;cursor:pointer; }
   .ep-table tr:hover td:last-child { color:var(--primary);font-weight:500;text-decoration:underline; }
   .ep-table tbody tr { cursor:pointer; }
@@ -101,6 +102,11 @@
   .ep-table tr.selected td { background:#f0f9f4; }
   .ep-table .ep-title-cell { color:var(--text); }
   .ep-table input[type=checkbox] { accent-color:var(--primary);width:15px;height:15px;cursor:pointer; }
+  .ep-table input[type=checkbox]:disabled { opacity:.4; cursor:not-allowed; }
+  .ep-table tr.ai-processing td { cursor:not-allowed; }
+  .ep-table tr.ai-processing .title-text { color:#94a3b8; }
+  .ep-table tr.ai-processing .title-text:hover { color:#94a3b8; text-decoration:none; }
+  .ep-table tr.ai-processing .row-actions { display:none; }
   /* ── Actions Popover ──────────────────── */
   .action-wrap { position:relative; }
   .btn-actions .chev { transition:transform .15s; }
@@ -128,6 +134,11 @@
   }
   .actions-section select:focus,
   .actions-section input[type=text]:focus { border-color:var(--primary); }
+  .actions-section input[type=text].has-error,
+  .actions-section input[type=text].has-error:focus { border-color:#dc2626; }
+  .field-error {
+    margin-top:6px;font-size:12px;color:#dc2626;line-height:1.4;
+  }
 
   /* ── Actions Menu ────────────────────── */
   .actions-menu-item {
@@ -141,6 +152,7 @@
   .actions-menu-item.danger:hover { background:#fef2f2; }
   .actions-menu-item.danger svg { color:#dc2626; }
   .actions-menu-item svg { color:var(--text-secondary);flex-shrink:0; }
+  .actions-menu-sep { height:1px; background:var(--border); margin:4px 8px; }
 
   /* ── Tags Selector ───────────────────── */
   .tags-wrapper { position:relative; }
@@ -165,6 +177,8 @@
     margin-bottom:16px;box-sizing:border-box;
   }
   .actions-panel-inner .tags-input-inline:focus { border-color:var(--primary); }
+  .actions-panel-inner .tags-input-inline.has-error,
+  .actions-panel-inner .tags-input-inline.has-error:focus { border-color:#dc2626; }
   .tags-dropdown {
     display:none;position:absolute;top:calc(100% + 2px);left:-1px;right:-1px;
     background:#fff;border:1px solid var(--border);border-radius:8px;
@@ -213,7 +227,7 @@
   }
   .ep-table .alt-header-bar .clear-sel:hover { color:var(--primary);text-decoration:underline; }
   .ep-table .ep-title-cell .title-text { cursor:pointer; }
-  .ep-table .ep-title-cell .title-text:hover { color:var(--primary); }
+  .ep-table .ep-title-cell .title-text:hover { text-decoration:underline; }
   .ep-table .row-actions { display:inline-flex;gap:4px;margin-left:8px;opacity:0;transition:opacity .12s;vertical-align:middle; }
   .ep-table tr:hover .row-actions { opacity:1; }
   .row-actions .act-btn {
@@ -230,6 +244,18 @@
   .badge-ai-processing { background:#fef3c7;color:#b45309; }
   .badge-ai-finished { background:#dbeafe;color:#1d4ed8; }
   .badge-ai-failed { background:#fee2e2;color:#b91c1c; }
+  /* Episodes 3: deletion countdown inline after title, swapped for row actions on hover */
+  .del-note { display:none; }
+  #epTable3 .ep-title-cell .del-note {
+    display:inline-flex;align-items:center;gap:5px;
+    margin-left:8px;vertical-align:middle;
+    font-size:12px;font-weight:500;color:var(--text-secondary);white-space:nowrap;
+  }
+  #epTable3 .ep-title-cell .del-note svg { width:13px;height:13px;flex-shrink:0; }
+  #epTable3 .ep-title-cell .del-note-urgent { color:#c2410c;font-weight:600; }
+  #epTable3 tr:hover .ep-title-cell .del-note { display:none; }
+  #epTable3 .ep-title-cell .row-actions { display:none; }
+  #epTable3 tr:hover .ep-title-cell .row-actions { display:inline-flex; }
   .badge-type { background:#f1f5f9;color:#475569; }
   .pagination { display:flex;align-items:center;justify-content:space-between;padding-top:20px;font-size:13px;color:var(--text-secondary); }
   .pagination .pages { display:flex;gap:4px; }
@@ -354,12 +380,12 @@
   .modal-ai-heading { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
   .credits-badge {
     font-size: 13px; color: var(--text-secondary); font-weight: 500;
-    margin-bottom: 16px;
+    margin-bottom: 16px; position: relative;
   }
   .credits-badge strong { font-weight: 600; color: var(--text); }
   .credits-badge .credits-dot { display: none; }
   .credits-number { position: relative; display: inline-block; }
-  .credits-tooltip-trigger { text-decoration: underline dotted; cursor: help; }
+  .credits-tooltip-trigger { position: relative; display: inline-block; text-decoration: underline dotted; cursor: help; }
   .credits-tooltip {
     visibility: hidden; opacity: 0; pointer-events: none;
     position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%);
@@ -385,6 +411,27 @@
   .credits-tooltip-footer { display: flex; flex-direction: column; gap: 4px; padding-top: 8px; border-top: 1px solid #334155; font-size: 11px; color: #94a3b8; }
   .credits-tooltip-footer a { color: #94a3b8; text-decoration: none; }
   .credits-tooltip-footer a:hover { color: #e2e8f0; }
+  .credits-warning {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412;
+    border-radius: 8px; padding: 8px 12px; font-size: 12px; line-height: 1.4;
+    margin-bottom: 14px;
+  }
+  .credits-warning strong { color: #c2410c; }
+  .credits-buy-btn {
+    padding: 5px 12px; border: none; border-radius: 6px;
+    background: #ea580c; color: #fff; font-size: 12px; font-weight: 600;
+    font-family: inherit; cursor: pointer; flex-shrink: 0; transition: background .15s;
+  }
+  .credits-buy-btn:hover { background: #c2410c; }
+  .credits-warning-success {
+    background: #f0fdf4; border-color: #bbf7d0; color: #166534;
+  }
+  .credits-warning-success strong { color: #15803d; }
+  .credits-warning-success .credits-buy-btn { display: none; }
+  .ai-proc-tip { display:none; position:fixed; z-index:600; max-width:320px; padding:10px 14px; background:#1e293b; color:#f1f5f9; font-size:12px; line-height:1.55; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.18); pointer-events:none; }
+  .ai-proc-tip::before { content:''; position:absolute; top:-5px; left:18px; width:10px; height:10px; background:#1e293b; transform:rotate(45deg); border-radius:1px; }
+  .ai-proc-tip.flip::before { top:auto; bottom:-5px; }
   .ai-section {
     background: #fff; border: 1px solid #e2e8f0;
     border-radius: 10px; padding: 14px;
@@ -429,6 +476,12 @@
     border-radius: 50%; transition: transform .2s;
   }
   .ai-toggle.on::after { transform: translateX(18px); }
+  .ai-activate-btn {
+    padding: 5px 14px; border: 1px solid var(--primary); border-radius: 20px;
+    background: #fff; color: var(--primary); font-size: 12px; font-weight: 600;
+    font-family: inherit; cursor: pointer; transition: all .15s; flex-shrink: 0;
+  }
+  .ai-activate-btn:hover { background: var(--primary); color: #fff; }
   .ai-content { transition: opacity .2s; display: flex; flex-direction: column; min-height: 0; }
   .ai-content.off { opacity: .35; pointer-events: none; }
   .ai-settings-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
@@ -504,6 +557,9 @@
   .episode-details-overlay .ed-topbar-left {
     display: flex; align-items: center; gap: 12px;
   }
+  .episode-details-overlay .ed-topbar-divider {
+    width: 1px; height: 20px; background: var(--border); flex-shrink: 0;
+  }
   .episode-details-overlay .ed-topbar-right {
     display: flex; align-items: center; gap: 10px;
   }
@@ -527,6 +583,11 @@
   .episode-details-overlay .ed-save-draft:hover { background: #f1f5f9; color: var(--text); }
   .episode-details-overlay .ed-publish-wrap {
     position: relative; display: inline-block;
+  }
+  .episode-details-overlay .ed-schedule-info {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text-secondary);
+    white-space: nowrap;
   }
   .episode-details-overlay .ed-topbar-publish {
     display: inline-flex; align-items: center;
@@ -887,6 +948,12 @@
   .ed-v2-social-icon:hover { border-color: #1a9a6c; color: #1a9a6c; background: #f0f9f4; }
   .ed-v2-social-icon.active { border-color: #1a9a6c; color: #1a9a6c; background: #f0f9f4; }
   .ed-v2-hint { font-size: 13px; color: #94a3b8; margin-top: 4px; line-height: 1.5; }
+  .ed-v2-file-placeholder { color: #94a3b8; }
+  .ed-v2-file-action {
+    margin-left: auto; font-size: 13px; color: #3b82f6; font-weight: 700;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .ed-v2-file-action:hover { color: #2563eb; }
   .ed-v2-link-display {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 14px; background: #f8fafc;
@@ -1203,6 +1270,11 @@
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M12 11l6-6"/></svg></span> Episodes 2
       </a>
 
+      <!-- Episodes 3 (Published + Draft only) -->
+      <a href="#" data-page="episodelist3">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span> Episodes 3
+      </a>
+
       <!-- Distribution -->
       <div class="nav-parent" onclick="toggleSubMenu(this);event.preventDefault();window.location.href='https://elina-zhao.github.io/my-page/Distribution/';">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span> Distribution
@@ -1342,7 +1414,7 @@
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Failed</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
                 <div id="fp-media" class="filter-panel-content">
@@ -1351,7 +1423,7 @@
                     <label><input type="checkbox" checked onchange="updatePanelFoot()"> Video</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
                 <div id="fp-season" class="filter-panel-content">
@@ -1369,7 +1441,7 @@
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 10</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
                 <div id="fp-published" class="filter-panel-content">
@@ -1387,7 +1459,7 @@
                     </div>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
               </div>
@@ -1422,9 +1494,18 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                         Set Tags
                       </div>
+                      <div class="actions-menu-item" onclick="openRemoveSeasonModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Remove All Seasons
+                      </div>
+                      <div class="actions-menu-item" onclick="openRemoveTagsModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Remove All Tags
+                      </div>
+                      <div class="actions-menu-sep"></div>
                       <div class="actions-menu-item danger" onclick="batchDeleteSelected()">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        Delete
+                        Delete Episodes
                       </div>
                     </div>
                   </div>
@@ -1485,7 +1566,7 @@
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Failed</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
                 <div id="fp-media" class="filter-panel-content">
@@ -1494,7 +1575,7 @@
                     <label><input type="checkbox" checked onchange="updatePanelFoot()"> Video</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
                 <div id="fp-season" class="filter-panel-content">
@@ -1512,7 +1593,7 @@
                     <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 10</label>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
                 <div id="fp-published" class="filter-panel-content">
@@ -1530,7 +1611,7 @@
                     </div>
                   </div>
                   <div class="filter-panel-foot">
-                    <span class="clear-link" onclick="clearCurrentPanel()">Reset</span>
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
               </div>
@@ -1565,9 +1646,18 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                         Set Tags
                       </div>
+                      <div class="actions-menu-item" onclick="openRemoveSeasonModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Remove All Seasons
+                      </div>
+                      <div class="actions-menu-item" onclick="openRemoveTagsModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Remove All Tags
+                      </div>
+                      <div class="actions-menu-sep"></div>
                       <div class="actions-menu-item danger" onclick="batchDeleteSelected()">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        Delete
+                        Delete Episodes
                       </div>
                     </div>
                   </div>
@@ -1582,6 +1672,173 @@
         <div class="pagination">
           <span>Showing 1 to 20 of 26 entries</span>
           <div class="pages"><span class="active">1</span><span>2</span></div>
+        </div>
+      </div>
+      <!-- ═══════════ Episode List 3 (Published + Draft only) ═══════════ -->
+      <div id="page-episodelist3" class="page-content" style="display:none;">
+        <!-- Free plan notice + upgrade CTA (above title) -->
+        <div style="display:flex;align-items:center;gap:14px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#92400e;">
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>Free plan — episodes are automatically deleted 90 days after creation.</span>
+            </div>
+            <!-- Deletion risk summary: shown only when Published/Draft episodes are within DELETION_RISK_DAYS of auto-deletion -->
+            <div id="delRiskSummary" style="display:none;align-items:center;gap:8px;margin-top:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span id="delRiskSummaryText"></span>
+            </div>
+          </div>
+          <a href="javascript:void(0)" onclick="promptUpgradeForDeletion()" style="display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:6px 14px;background:var(--primary);color:#fff;border-radius:50px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;">Upgrade to keep them forever →</a>
+        </div>
+        <div class="dash-header">
+          <div class="dash-title">Episodes</div>
+          <a href="#" class="btn-create" style="display:inline-flex;align-items:center;gap:5px;padding:7px 16px;background:#1e293b;color:#fff;border:none;border-radius:50px;font-size:16px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New Episode
+          </a>
+        </div>
+        <div class="table-bar">
+          <input type="text" placeholder="Search episodes">
+          <div class="filter-wrap">
+            <button class="btn-tool btn-filter" onclick="toggleFilter(event)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              Filter
+              <span class="dot"></span>
+            </button>
+            <button class="btn-filter-clear" onclick="clearFilter(this)" title="Reset all filters">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div id="filterPopover" class="popover filter-popover">
+              <div class="filter-popover-body">
+              <div class="filter-nav" style="display:flex;flex-direction:column;">
+                <div style="flex:1;">
+                  <button class="filter-nav-item active" onclick="switchFilterPanel('status',this)">Status<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('media',this)">Media Type<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('season',this)">Season<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('published',this)">Published<span class="nav-dot"></span></button>
+                </div>
+                <div class="filter-panel-foot" style="padding:8px 16px 12px;font-size:13px;justify-content:flex-start;align-items:center;min-height:36px;">
+                  <span class="clear-link" onclick="resetFilter()">Reset all</span>
+                </div>
+              </div>
+              <div class="filter-panel">
+                <div id="fp-status" class="filter-panel-content active">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="handleSelectAll(this,'fp-status')"> All Statuses</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Published</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Draft</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> Future</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Processing</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Finished</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-status')"> AI Failed</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
+                  </div>
+                </div>
+                <div id="fp-media" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="updatePanelFoot()"> Audio</label>
+                    <label><input type="checkbox" checked onchange="updatePanelFoot()"> Video</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
+                  </div>
+                </div>
+                <div id="fp-season" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="handleSelectAll(this,'fp-season')"> All Seasons</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 1</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 2</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 3</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 4</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 5</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 6</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 7</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 8</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 9</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-season')"> Season 10</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
+                  </div>
+                </div>
+                <div id="fp-published" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Select a date range</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                      <div>
+                        <div style="font-size:12px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">From</div>
+                        <input type="date" onchange="updatePanelFoot()" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;color:var(--text);">
+                      </div>
+                      <div>
+                        <div style="font-size:12px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">To</div>
+                        <input type="date" onchange="updatePanelFoot()" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;color:var(--text);">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div style="padding:12px 20px 16px;border-top:1px solid var(--border);">
+                <button class="btn-apply" onclick="applyFilter()">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <table class="ep-table" id="epTable3">
+          <thead>
+            <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th>User</th><th>Status</th><th>When</th><th>Downloads (All time)</th></tr>
+            <tr class="alt-header"><td colspan="6">
+              <div class="alt-header-bar">
+                <input type="checkbox" id="selectAllAlt" onchange="toggleSelectAllAlt(this)">
+                <span class="sel-count" id="selectCount">0</span>
+                <span>selected</span>
+                <div class="action-wrap" id="actionsWrap" style="display:none;">
+                  <button class="btn-tool btn-actions" id="actionsBtn" onclick="toggleActionsPopover(event)">
+                    Actions
+                    <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <div class="popover actions-popover" id="actionsPopover">
+                    <div class="actions-popover-body">
+                      <div class="actions-menu-item" onclick="openSeasonModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        Set Season
+                      </div>
+                      <div class="actions-menu-item" onclick="openTagsModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                        Set Tags
+                      </div>
+                      <div class="actions-menu-item" onclick="openRemoveSeasonModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Remove All Seasons
+                      </div>
+                      <div class="actions-menu-item" onclick="openRemoveTagsModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Remove All Tags
+                      </div>
+                      <div class="actions-menu-sep"></div>
+                      <div class="actions-menu-item danger" onclick="batchDeleteSelected()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        Delete Episodes
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span class="clear-sel" style="display:none;" onclick="clearSelection()">Clear selection</span>
+              </div>
+            </td></tr>
+          </thead>
+          <tbody id="epTableBody3"></tbody>
+        </table>
+
+        <div class="pagination">
+          <span id="epPage3Info">Showing 0 of 0 entries</span>
+          <div class="pages"><span class="active">1</span></div>
         </div>
       </div>
 
@@ -1609,24 +1866,39 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           </div>
           <div class="upload-title">Upload Media File</div>
-          <div class="upload-hint">Drag & drop your audio or video file here, or click to browse</div>
-          <div class="upload-formats">Supported: mp3, m4a, ogg, mp4, m4v, mpg, zip, pdf, ppt, docx, xml</div>
+          <div class="upload-hint">Drag & drop your media file here, or click to browse</div>
+          <div class="upload-formats" id="uploadFormatsHint">Supported: mp3, m4a, ogg, zip, pdf, ppt, docx, xml</div>
         </div>
-        <input type="file" id="fileInput" style="display:none;" accept="audio/*,video/*" onchange="handleFileSelect(event)">
-        <a href="#" class="upload-skip" onclick="openEpisodeDetailsModal();return false;">Skip for now →</a>
+        <div class="upload-formats" id="uploadVideoHint" style="display:none;margin-top:10px;">Video podcasting (MP4, M4V, MPG) is available on Unlimited Plus and above. <a href="javascript:void(0)" onclick="openUpgradePrompt('mp4','Unlimited Plus')" style="color:var(--primary);font-weight:600;text-decoration:underline;cursor:pointer;">Upgrade</a></div>
+        <div id="remoteFileSection" style="display:none;margin-top:14px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label style="font-size:13px;font-weight:500;color:#1e293b;white-space:nowrap;flex-shrink:0;">Or use a remote file</label>
+            <input type="text" id="remoteFileUrl" placeholder="https://example.com/audio.mp3" autocomplete="off" style="flex:1;min-width:0;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:inherit;color:#1e293b;outline:none;" onkeydown="if(event.key==='Enter')submitRemoteFile()">
+            <button onclick="submitRemoteFile()" style="padding:8px 16px;border:none;border-radius:6px;background:#1e293b;color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;flex-shrink:0;">Submit</button>
+          </div>
+        </div>
+        <input type="file" id="fileInput" style="display:none;" accept=".mp3,.m4a,.ogg,.zip,.pdf,.ppt,.docx,.xml,.mp4,.m4v,.mpg" onchange="handleFileSelect(event)">
+        <a href="#" class="upload-skip" onclick="openNewEpisodeDetails();return false;">Upload later →</a>
       </div>
       <div class="modal-right" id="modalRight">
         <div class="modal-ai-heading">AI Enhance</div>
-        <div class="credits-badge"><span class="credits-dot"></span> Remaining Credits: <strong class="credits-number"><span class="credits-tooltip-trigger">2,800</span><span class="credits-tooltip"><span class="credits-tooltip-arrow"></span><div class="credits-tooltip-content">You have <strong>2,800</strong> out of 2,800 credits left.<br>This equals roughly:</div><div class="credits-tooltip-list"><span class="credits-tooltip-item">280 minutes of AI Audio Optimization</span><span class="credits-tooltip-or">OR</span><span class="credits-tooltip-item">560 minutes of AI Content Assistant</span></div><div class="credits-tooltip-footer"><span><a href="https://www.podbean.org/podcast-ai#AI-Content-Assistant" target="_blank">AI Content Assistant</a> — 300 credits/hour</span><span><a href="https://www.podbean.org/podcast-ai#AI-Audio-Optimization" target="_blank">AI Audio Optimization</a> — 600 credits/hour</span></div></span></strong></div>
+        <div class="credits-badge"><span class="credits-dot"></span><span class="credits-tooltip-trigger">Remaining Credits: <strong class="credits-number" id="creditsNumber">2,800</strong></span><span class="credits-tooltip"><span class="credits-tooltip-arrow"></span><div class="credits-tooltip-content">You have <strong id="creditsTooltipHave">2,800</strong> out of <span id="creditsTooltipTotal">2,800</span> credits left.<br>This equals roughly:</div><div class="credits-tooltip-list"><span class="credits-tooltip-item" id="creditsTooltipAudioMin">280 minutes of AI Audio Optimization</span><span class="credits-tooltip-or">OR</span><span class="credits-tooltip-item" id="creditsTooltipContentMin">560 minutes of AI Content Assistant</span></div><div class="credits-tooltip-footer"><span><a href="https://www.podbean.org/podcast-ai#AI-Content-Assistant" target="_blank">AI Content Assistant</a> · 300 credits/hour</span><span><a href="https://www.podbean.org/podcast-ai#AI-Audio-Optimization" target="_blank">AI Audio Optimization</a> · 600 credits/hour</span></div></span></div>
+        <div class="credits-warning" id="creditsWarning" style="display:none;">
+          <div class="credits-warning-text"><span id="creditsWarningMsg">Estimated credits for this episode: <strong id="creditsWarningNeeded">3,200</strong>. You need <strong id="creditsWarningShort">400</strong> more credits.</span></div>
+          <button class="credits-buy-btn" id="creditsBuyBtn" onclick="buyCredits()">Buy more credits</button>
+        </div>
         <div class="ai-section" id="aiAudioSection">
           <div class="ai-section-row">
             <div class="ai-section-title">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
               AI Audio Optimization
             </div>
-            <div class="ai-toggle on" id="toggleAudioOpt" onclick="toggleAISection('toggleAudioOpt','aiAudioContent')"></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button class="ai-activate-btn" id="activateAudioOpt" onclick="openAIPlanUpgrade('AI Audio Optimization')" style="display:none;">Activate</button>
+              <div class="ai-toggle" id="toggleAudioOpt" onclick="toggleAISection('toggleAudioOpt','aiAudioContent')"></div>
+            </div>
           </div>
-          <div class="ai-content" id="aiAudioContent">
+          <div class="ai-content off" id="aiAudioContent">
           <div class="ai-features" id="aiAudioFeatures">
             <div class="ai-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Noise Reduction</div>
             <div class="ai-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Intelligent Leveler</div>
@@ -1648,9 +1920,12 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
               AI Content Assistant
             </div>
-            <div class="ai-toggle on" id="toggleContentAsst" onclick="toggleAISection('toggleContentAsst','aiContentAsstContent')"></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button class="ai-activate-btn" id="activateContentAsst" onclick="openAIPlanUpgrade('AI Content Assistant')" style="display:none;">Activate</button>
+              <div class="ai-toggle" id="toggleContentAsst" onclick="toggleAISection('toggleContentAsst','aiContentAsstContent')"></div>
+            </div>
           </div>
-          <div class="ai-content" id="aiContentAsstContent">
+          <div class="ai-content off" id="aiContentAsstContent">
           <div class="ai-features" id="aiContentAsstFeatures">
             <div class="ai-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Automated Title and Show Notes</div>
             <div class="ai-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Precisely Crafted Chapter Markers</div>
@@ -1717,10 +1992,14 @@
       <button class="ed-back-btn" onclick="closeEpisodeDetailsModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
         Cancel
       </button>
+      <span class="ed-topbar-divider"></span>
+      <button class="ed-save-draft" onclick="saveAsDraft()">Save as Draft</button>
     </div>
     <span class="ed-topbar-title">Publish Episode</span>
     <div class="ed-topbar-right">
-      <button class="ed-save-draft" onclick="saveAsDraft()">Save as Draft</button>
+      <div class="ed-schedule-info" id="scheduleInfo" style="display:none;">
+        <span class="ed-schedule-text" id="scheduleInfoText"></span>
+      </div>
       <div class="ed-publish-wrap">
         <button class="ed-topbar-publish" id="publishBtn" onclick="publishPublish()" disabled>
           <span id="publishBtnLabel">Publish Now</span>
@@ -1754,13 +2033,39 @@
           <!-- Left: Episode Info -->
           <div class="ep-info-left">
 
+            <div class="ed-v2-field" id="v2SubscriptionTypeField" style="display:none;">
+              <div class="ed-v2-label">Episode will be</div>
+              <select class="ed-v2-select" id="v2SubscriptionType" onchange="onSubscriptionTypeChange()">
+                <option value="Free">Free</option>
+                <option value="Ad-free">Ad-free</option>
+                <option value="Subscriber-only">Subscriber-only</option>
+                <option value="Early access">Early access</option>
+                <option value="Archive access">Archive access</option>
+              </select>
+              <div class="ed-v2-hint" id="v2SubTypeExplain" style="display:none;"></div>
+              <div id="v2SubTypeTime" style="display:none;margin-top:12px;">
+                <div class="ed-v2-label" id="v2SubTypeTimeLabel"></div>
+                <input type="datetime-local" class="ed-v2-input" id="v2SubTypeDateTime" style="width:100%;" onclick="openV2SubTypeDateTime()">
+              </div>
+            </div>
+
+            <div class="ed-v2-field" id="v2AdFreeFileField" style="display:none;">
+              <div class="ed-v2-label">File for Subscriber</div>
+              <div class="ed-v2-file-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span id="v2AdFreeFileName" class="ed-v2-file-placeholder">Please upload a file.</span>
+                <span id="v2AdFreeFileAction" class="ed-v2-file-action" onclick="document.getElementById('v2AdFreeFileInput').click()">Upload</span>
+                <input type="file" id="v2AdFreeFileInput" style="display:none" onchange="onAdFreeFileSelected(this)">
+              </div>
+            </div>
+
             <div class="ed-v2-field">
-              <div class="ed-v2-label">File Name</div>
+              <div class="ed-v2-label">Media File</div>
               <div class="ed-v2-file-row">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 <span id="v2FileName">episode-audio.mp3</span>
-                <span style="margin-left:auto;font-size:13px;color:#3b82f6;font-weight:700;cursor:pointer;flex-shrink:0;" onclick="document.getElementById('v2FileInput').click()" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#3b82f6'">Change</span>
-                <input type="file" id="v2FileInput" style="display:none" onchange="if(this.files.length>0)document.getElementById('v2FileName').textContent=this.files[0].name;updatePublishBtn()">
+                <span id="v2MediaFileAction" class="ed-v2-file-action" onclick="onMediaFileRemove()" title="Remove file">✕</span>
+                <input type="file" id="v2FileInput" style="display:none" onchange="onMediaFileSelected(this)">
               </div>
             </div>
 
@@ -1829,7 +2134,7 @@
 	    </div>
 
 	    <!-- Social -->
-	    <div>
+	    <div id="v2SocialSharing">
 	      <div style="font-size:16px;font-weight:600;color:#1e293b;margin-bottom:4px;margin-top:15px;">Social Sharing</div>
 	      <div style="font-size:13px;color:#64748b;margin-bottom:16px;">Auto-share after publishing — click icons to enable or disable.</div>
 	      <div class="ed-v2-social-icons">
@@ -2171,6 +2476,7 @@
       <button class="confirm-btn confirm-btn-secondary" onclick="closeScheduleModal()">Cancel</button>
       <button class="confirm-btn confirm-btn-primary" onclick="confirmSchedule()">Schedule</button>
     </div>
+    <div id="scheduleCurrentTime" style="font-size:12px;color:#64748b;text-align:center;margin-top:20px;border-top:1px solid #f1f5f9;padding-top:14px;">Current time: --</div>
   </div>
 </div>
 
@@ -2182,6 +2488,18 @@
     <div class="confirm-actions">
       <button class="confirm-btn confirm-btn-primary" onclick="leavePage()">Leave</button>
       <button class="confirm-btn confirm-btn-secondary" onclick="closeConfirmModal()">Stay</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ Upgrade Plan Prompt Modal ═══════════ -->
+<div class="confirm-overlay" id="upgradeModal">
+  <div class="confirm-dialog">
+    <div class="confirm-title" id="upgradeModalTitle">Upgrade Required</div>
+    <div class="confirm-desc" id="upgradeModalDesc"></div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeUpgradeModal()">Cancel</button>
+      <button class="confirm-btn confirm-btn-primary" onclick="confirmUpgrade()">Upgrade</button>
     </div>
   </div>
 </div>
@@ -2209,12 +2527,13 @@
     <div class="actions-panel-inner">
       <div class="actions-section" style="margin-bottom:16px;">
         <div class="actions-section-title">Season No.</div>
-        <input type="text" id="seasonInput" inputmode="numeric" placeholder="e.g. 1" autocomplete="off" onkeydown="if(event.key==='Enter')batchSetSeasonSelected()">
+        <input type="text" id="seasonInput" inputmode="numeric" placeholder="e.g. 1" autocomplete="off" oninput="clearSeasonError()" onkeydown="if(event.key==='Enter')batchSetSeasonSelected()">
+        <div class="field-error" id="seasonError" style="display:none;">Please enter a valid season number (e.g. 1).</div>
       </div>
     </div>
     <div class="confirm-actions">
-      <button class="confirm-btn confirm-btn-danger confirm-btn-grow" onclick="batchRemoveSeasonSelected()">Remove Season</button>
-      <button class="confirm-btn confirm-btn-primary confirm-btn-grow" onclick="batchSetSeasonSelected()">Set Season</button>
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeSeasonModal()">Cancel</button>
+      <button class="confirm-btn confirm-btn-primary" onclick="batchSetSeasonSelected()">Set Season</button>
     </div>
   </div>
 </div>
@@ -2230,16 +2549,44 @@
     <div class="actions-panel-inner">
       <div class="tags-wrapper">
         <div class="tags-selected" id="tagsSelected"></div>
-        <input type="text" class="tags-input-inline" id="tagsInputInline" placeholder="Select or type tags..." autocomplete="off" onfocus="showTagsDropdown()" oninput="filterTagsDropdown(this.value)" onkeydown="if(event.key==='Enter' && this.value.trim())addNewTag(this.value.trim());if(event.key==='Backspace' && !this.value){event.preventDefault();removeLastTag()}">
+        <input type="text" class="tags-input-inline" id="tagsInputInline" placeholder="Select or type tags..." autocomplete="off" onfocus="showTagsDropdown()" oninput="filterTagsDropdown(this.value);clearTagsError()" onkeydown="if(event.key==='Enter' && this.value.trim())addNewTag(this.value.trim());if(event.key==='Backspace' && !this.value){event.preventDefault();removeLastTag()}">
         <div class="tags-dropdown" id="tagsDropdown"></div>
       </div>
+      <div class="field-error" id="tagsError" style="display:none;">Please select at least one tag.</div>
     </div>
     <div class="confirm-actions">
-      <button class="confirm-btn confirm-btn-danger confirm-btn-grow" onclick="batchClearTagsSelected()">Remove Tags</button>
-      <button class="confirm-btn confirm-btn-primary confirm-btn-grow" onclick="batchSetTagsSelected()">Set Tags</button>
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeTagsModal()">Cancel</button>
+      <button class="confirm-btn confirm-btn-primary" onclick="batchSetTagsSelected()">Set Tags</button>
     </div>
   </div>
 </div>
+
+<!-- ═══════════ Remove All Seasons Confirm Modal ═══════════ -->
+<div class="confirm-overlay" id="removeSeasonModal">
+  <div class="confirm-dialog" style="text-align:left;">
+    <div class="confirm-title" style="text-align:center;">Remove All Seasons</div>
+    <div class="confirm-desc" style="text-align:center;" id="removeSeasonDesc">Are you sure you want to remove the season number from the selected episode(s)?</div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeRemoveSeasonModal()">Cancel</button>
+      <button class="confirm-btn confirm-btn-primary" onclick="confirmRemoveSeason()">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ Remove All Tags Confirm Modal ═══════════ -->
+<div class="confirm-overlay" id="removeTagsModal">
+  <div class="confirm-dialog" style="text-align:left;">
+    <div class="confirm-title" style="text-align:center;">Remove All Tags</div>
+    <div class="confirm-desc" style="text-align:center;" id="removeTagsDesc">Are you sure you want to remove all tags from the selected episode(s)?</div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeRemoveTagsModal()">Cancel</button>
+      <button class="confirm-btn confirm-btn-primary" onclick="confirmRemoveTags()">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- AI Processing 提示 tooltip -->
+<div class="ai-proc-tip" id="aiProcTip" role="tooltip">You cannot edit or delete the episode while it is undergoing AI processing. Please try again after the processing is complete.</div>
 
 <!-- ═══════════ Share Episode Modal ═══════════ -->
 <div class="share-overlay" id="shareModal" onclick="if(event.target===this)closeShareModal()">
@@ -2566,97 +2913,410 @@
 <script>
   // Episode data
   var episodes = [
-    {title:'英文里的"奇妙日常"：旅馆为何被拼布大会订满？',status:'Future',when:'Jun 26, 2026',dl:0,tags:['tutorial'],season:'',type:'Free'},
-    {title:'future episode',status:'Published',when:'May 15, 2026',dl:156,tags:['news'],season:'',type:'Ad-free'},
-    {title:'How to Start a Podcast in 9 Steps (2026): From Idea to Growth',status:'Draft',when:'Mar 10, 2026',dl:0,tags:['tutorial','audio'],season:'1',type:'Subscriber-only'},
-    {title:'Cómo empezar un podcast en 9 pasos: guía práctica para 2026',status:'AI Processing',when:'Mar 10, 2026',dl:0,tags:['tutorial'],season:'1',type:'Early access'},
-    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Finished',when:'Feb 28, 2026',dl:0,tags:['audio'],season:'',type:'Archive access'},
-    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Failed',when:'Feb 28, 2026',dl:0,tags:[],season:'',type:'Free'},
-    {title:'How_to_Record',status:'Published',when:'Dec 16, 2025',dl:3241,tags:['tutorial','video'],season:'2',type:'Ad-free'},
-    {title:'Hometown Heroes Expanded: Up to $35K for Florida First-Time Buyers',status:'Published',when:'Dec 16, 2025',dl:892,tags:['news'],season:'',type:'Subscriber-only'},
-    {title:'How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes',status:'AI Finished',when:'Dec 16, 2025',dl:2156,tags:['video','tutorial'],season:'2',type:'Early access'},
-    {title:'Summary',status:'AI Processing',when:'Dec 16, 2025',dl:1873,tags:['solo'],season:'',type:'Archive access'},
-    {title:'Podcasting 2025: From Idea to Launch in 10 Steps',status:'Published',when:'Dec 16, 2025',dl:510,tags:[],season:'',type:'Free'},
-    {title:'this is video episode 2',status:'Published',when:'Oct 27, 2025',dl:4632,tags:['video'],season:'',type:'Ad-free'},
-    {title:'This is a video mp4 episode',status:'AI Failed',when:'Oct 27, 2025',dl:1420,tags:['video'],season:'',type:'Subscriber-only'},
-    {title:'Renewing the Temple: Haggai\'s Call to Action',status:'Published',when:'May 14, 2025',dl:678,tags:[],season:'',type:'Early access'},
-    {title:'Born on the Seven-Mile Miracle: John John Florence',status:'Published',when:'May 13, 2025',dl:1950,tags:[],season:'',type:'Archive access'},
-    {title:'Episode Title 4903942504',status:'Draft',when:'May 12, 2025',dl:0,tags:[],season:'',type:'Free'},
-    {title:'When God Chose My Parents: A Heartfelt Ode jnw7zxim',status:'Published',when:'Feb 17, 2025',dl:345,tags:[],season:'',type:'Ad-free'},
-    {title:'Discovering Musical Landscapes',status:'Published',when:'Feb 17, 2025',dl:1178,tags:['music'],season:'',type:'Subscriber-only'},
-    {title:'Exploring the Seven Mile Mirror: A Dive into Hidden Depths',status:'Published',when:'Feb 17, 2025',dl:723,tags:['solo'],season:'',type:'Early access'},
-    {title:'Editing Your Podcast Like a Pro: Tools and Tips',status:'Published',when:'Feb 17, 2025',dl:2891,tags:['tutorial'],season:'1',type:'Archive access'}
+    {title:'English Idioms in Everyday Life: A Complete Guide to Understanding and Using Common Expressions Naturally in Conversations, Writing, and Professional Communication',status:'Future',when:'Jun 26, 2026',dl:0,tags:['tutorial'],season:'',type:'Free',schedule:'2026-06-26T14:00',created:'2026-08-24'},
+    {title:'future episode',status:'Published',when:'May 15, 2026',dl:156,tags:['news'],season:'',type:'Ad-free',created:'2026-08-25'},
+    {title:'How to Start a Podcast in 9 Steps (2026): From Idea to Growth',status:'Draft',when:'Mar 10, 2026',dl:0,tags:['tutorial','audio'],season:'1',type:'Subscriber-only',created:'2026-08-22'},
+    {title:'Cómo empezar un podcast en 9 pasos: guía práctica para 2026',status:'AI Processing',when:'Mar 10, 2026',dl:0,tags:['tutorial'],season:'1',type:'Free',created:'2026-08-10'},
+    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Finished',when:'Feb 28, 2026',dl:0,tags:['audio'],season:'',type:'Free',created:'2026-08-05'},
+    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Failed',when:'Feb 28, 2026',dl:0,tags:[],season:'',type:'Free',created:'2026-07-30'},
+    {title:'How_to_Record',status:'Published',when:'Dec 16, 2025',dl:3241,tags:['tutorial','video'],season:'2',type:'Ad-free',created:'2026-08-12'},
+    {title:'Hometown Heroes Expanded: Up to $35K for Florida First-Time Buyers',status:'Published',when:'Dec 16, 2025',dl:892,tags:['news'],season:'',type:'Subscriber-only',created:'2026-08-02'},
+    {title:'How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes',status:'AI Finished',when:'Dec 16, 2025',dl:2156,tags:['video','tutorial'],season:'2',type:'Free',created:'2026-07-20'},
+    {title:'Summary',status:'AI Processing',when:'Dec 16, 2025',dl:1873,tags:['solo'],season:'',type:'Free',created:'2026-07-10'},
+    {title:'Podcasting 2025: From Idea to Launch in 10 Steps',status:'Published',when:'Dec 16, 2025',dl:510,tags:[],season:'',type:'Free',created:'2026-07-25'},
+    {title:'this is video episode 2',status:'Published',when:'Oct 27, 2025',dl:4632,tags:['video'],season:'',type:'Ad-free',created:'2026-07-15'},
+    {title:'This is a video mp4 episode',status:'AI Failed',when:'Oct 27, 2025',dl:1420,tags:['video'],season:'',type:'Free',created:'2026-06-20'},
+    {title:'Renewing the Temple: Haggai\'s Call to Action',status:'Published',when:'May 14, 2025',dl:678,tags:[],season:'',type:'Early access',created:'2026-07-07'},
+    {title:'Born on the Seven-Mile Miracle: John John Florence',status:'Published',when:'May 13, 2025',dl:1950,tags:[],season:'',type:'Archive access',created:'2026-07-01'},
+    {title:'Episode Title 4903942504',status:'Draft',when:'May 12, 2025',dl:0,tags:[],season:'',type:'Free',created:'2026-06-25'},
+    {title:'When God Chose My Parents: A Heartfelt Ode jnw7zxim',status:'Published',when:'Feb 17, 2025',dl:345,tags:[],season:'',type:'Ad-free',created:'2026-06-17'},
+    {title:'Discovering Musical Landscapes',status:'Published',when:'Feb 17, 2025',dl:1178,tags:['music'],season:'',type:'Subscriber-only',created:'2026-06-12'},
+    {title:'Exploring the Seven Mile Mirror: A Dive into Hidden Depths',status:'Published',when:'Feb 17, 2025',dl:723,tags:['solo'],season:'',type:'Early access',created:'2026-06-07'},
+    {title:'Editing Your Podcast Like a Pro: Tools and Tips',status:'Published',when:'Feb 17, 2025',dl:2891,tags:['tutorial'],season:'1',type:'Archive access',created:'2026-06-02'}
   ];
 
+  // 系统后台是否给该用户额外开放 "Or use a remote file" 选项（仅产品文档记录该功能，演示页默认关闭）
+  var remoteFileEnabled = false;
+  // 上次发布时 AI Audio Optimization / AI Content Assistant 两个开关的状态（AI Enhance 初始默认关闭；发布时记录）
+  var lastPublishAIState = { audio: false, content: false };
+  // 升级弹窗中 "Upgrade" 按钮要升级到的目标 plan（null 表示无待升级目标，Cancel 或关闭时清空）
+  var pendingUpgradePlan = null;
+  // Credits 演示：剩余积分 / 预测本集所需积分（默认演示「不足」场景：3,200 > 2,800）
+  var creditsRemaining = 2800;
+  var creditsNeeded = 3200;
+  // 用户当前 plan（打开 New Episode 弹窗时按当前页面自动设置：Episodes 页 = Free，Episodes 2 页 = Unlimited Audio）
+  var currentPlan = 'Unlimited Audio'; // 'Free' | 'Unlimited Audio' | 'Unlimited Plus'
+  var planOrder = ['Free', 'Unlimited Audio', 'Unlimited Plus'];
+  var planFormats = {
+    'Free': ['mp3', 'm4a'],
+    'Unlimited Audio': ['mp3', 'm4a', 'ogg', 'zip', 'pdf', 'ppt', 'docx', 'xml'],
+    'Unlimited Plus': ['mp3', 'm4a', 'ogg', 'zip', 'pdf', 'ppt', 'docx', 'xml', 'mp4', 'm4v', 'mpg']
+  };
+
   var availableTags = ['interview','solo','monetization','audio','video','tutorial','news','story','music','review'];
+  // 播客时区：来自 Settings → Podcast Info → Author & Region → Timezone（控制 Current time 显示时区）
+  var podcastTimezone = 'America/New_York';
   var selectedTags = [];
 
   function badgeClass(s) {
     return 'badge-' + s.toLowerCase().replace(/\s+/g, '-');
   }
 
+  // Free plan: episodes are deleted 90 days after creation
+  var FREE_DELETION_DAYS = 90;
+  var DELETION_RISK_DAYS = 14; // Published/Draft episodes within this many days of auto-deletion are "at risk"
+  function daysUntilDeletion(ep) {
+    if (!ep || !ep.created) return null;
+    var p = ep.created.split('-');
+    var created = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    var del = new Date(created.getTime());
+    del.setDate(del.getDate() + FREE_DELETION_DAYS);
+    var now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return Math.ceil((del - now) / (24 * 60 * 60 * 1000));
+  }
+  function deletionNote(ep) {
+    var days = daysUntilDeletion(ep);
+    if (days === null) return '';
+    var label;
+    if (days < 0) label = 'Expired';
+    else if (days === 0) label = 'Will be deleted today.';
+    else if (days === 1) label = 'Will be deleted in 1 day.';
+    else label = 'Will be deleted in ' + days + ' days.';
+    var cls = (days >= 0 && days <= DELETION_RISK_DAYS) ? 'del-note del-note-urgent' : 'del-note';
+    var p = ep.created.split('-');
+    var del = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    del.setDate(del.getDate() + FREE_DELETION_DAYS);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var title = 'Deleted on ' + months[del.getMonth()] + ' ' + del.getDate() + ', ' + del.getFullYear();
+    var icon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>';
+    return '<span class="' + cls + '" title="' + title + '">' + icon + label + '</span>';
+  }
+  // Episodes 3 top-banner summary: how many Published/Draft episodes are at risk of auto-deletion
+  function updateDeletionSummary() {
+    var el = document.getElementById('delRiskSummary');
+    if (!el) return;
+    var count = 0;
+    for (var i = 0; i < episodes.length; i++) {
+      var ep = episodes[i];
+      if (ep.status === 'Published' || ep.status === 'Draft') {
+        var d = daysUntilDeletion(ep);
+        if (d !== null && d >= 0 && d <= DELETION_RISK_DAYS) count++;
+      }
+    }
+    if (count > 0) {
+      var txt = document.getElementById('delRiskSummaryText');
+      txt.textContent = count + (count === 1 ? ' episode will be deleted' : ' episodes will be deleted') + ' within ' + DELETION_RISK_DAYS + ' days.';
+      el.style.display = 'flex';
+    } else {
+      el.style.display = 'none';
+    }
+  }
+
   function buildRows() {
     var html = '';
     var html2 = '';
+    var html3 = '';
+    var count3 = 0;
     episodes.forEach(function(ep, i) {
-      var rowStart = '<tr id="epRow' + i + '" onclick="editEpisode(' + i + ')">' +
-        '<td onclick="event.stopPropagation()"><input type="checkbox" onchange="updateSelection(this)"></td>' +
+      var isProc = (ep.status === 'AI Processing');
+      // Episodes 3 only: inline deletion countdown note after the title (hidden on hover, swapped for row actions)
+      var delNote = (ep.status === 'Published' || ep.status === 'Draft') ? deletionNote(ep) : '';
+      var rowStart = '<tr id="epRow' + i + '"' + (isProc ? ' class="ai-processing" onclick="showAiProcessingTip(event,this)" onmouseenter="showAiProcessingTip(event,this)" onmouseleave="hideAiProcessingTip()"' : ' onclick="editEpisode(' + i + ')"') + '>' +
+        '<td onclick="event.stopPropagation()">' + (isProc ? '<input type="checkbox" disabled>' : '<input type="checkbox" onchange="updateSelection(this)">') + '</td>' +
         '<td class="ep-title-cell">' +
           '<span class="title-text">' + ep.title + '</span>' +
+          delNote +
           '<span class="row-actions">' +
-            '<span class="act-btn" title="Edit" onclick="event.stopPropagation();editEpisode(' + i + ')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>' +
+            '<span class="act-btn" title="Edit" onclick="event.stopPropagation();' + (isProc ? 'showAiProcessingTip(event,this)' : 'editEpisode(' + i + ')') + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>' +
             '<span class="act-btn" title="View" onclick="event.stopPropagation();viewEpisode(' + i + ')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>' +
             '<span class="act-btn share-embed" title="Share &amp; Embed" onclick="event.stopPropagation();shareEpisode(' + i + ')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>' +
           '</span>' +
         '</td>' +
-        '<td>Creator E</td>' +
-        '<td onclick="event.stopPropagation()"><span class="badge-status ' + badgeClass(ep.status) + '">' + ep.status + '</span></td>';
+        '<td class="no-wrap">Creator E</td>' +
+        '<td class="no-wrap" onclick="event.stopPropagation()"><span class="badge-status ' + badgeClass(ep.status) + '">' + ep.status + '</span></td>';
       // Episode List (no Type column)
       html += rowStart +
         '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
-        '<td onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
+        '<td class="no-wrap" onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
       '</tr>';
       // Episode List 2 (with Type column)
       html2 += rowStart +
         '<td><span class="badge-status badge-type">' + ep.type + '</span></td>' +
         '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
-        '<td onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
+        '<td class="no-wrap" onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
       '</tr>';
+      // Episode List 3 (Published + Draft only, no Type column)
+      if (ep.status === 'Published' || ep.status === 'Draft') {
+        html3 += rowStart +
+          '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
+          '<td class="no-wrap" onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
+        '</tr>';
+        count3++;
+      }
     });
     document.getElementById('epTableBody').innerHTML = html;
     var epTableBody2 = document.getElementById('epTableBody2');
     if (epTableBody2) epTableBody2.innerHTML = html2;
+    var epTableBody3 = document.getElementById('epTableBody3');
+    if (epTableBody3) {
+      epTableBody3.innerHTML = html3;
+      var pgInfo = document.getElementById('epPage3Info');
+      if (pgInfo) pgInfo.textContent = 'Showing 1 to ' + count3 + ' of ' + count3 + ' entries';
+      updateDeletionSummary();
+    }
+  }
+
+  function showAiProcessingTip(e, el) {
+    var tip = document.getElementById('aiProcTip');
+    if (!tip) return;
+    var rect = (el || e.currentTarget).getBoundingClientRect();
+    tip.classList.remove('flip');
+    tip.style.display = 'block';
+    var left = Math.max(8, rect.left + 12);
+    var top = rect.bottom + 10;
+    if (top + tip.offsetHeight > window.innerHeight - 8) {
+      top = rect.top - tip.offsetHeight - 10;
+      tip.classList.add('flip');
+    }
+    tip.style.left = left + 'px';
+    tip.style.top = Math.max(8, top) + 'px';
+  }
+  function hideAiProcessingTip() {
+    var tip = document.getElementById('aiProcTip');
+    if (tip) tip.style.display = 'none';
   }
 
   var editingIndex = -1;
+  var currentPage = 'episodelist'; // 当前可见页面：episodelist / episodelist2 / episodelist0
+  // 订阅类型字段（Episode Info 中 Media File 上方）：仅 Episodes 2 页面显示
+  function updateEpisodeTypeField() {
+    var field = document.getElementById('v2SubscriptionTypeField');
+    if (!field) return;
+    field.style.display = (currentPage === 'episodelist2') ? '' : 'none';
+    updateAdFreeFileField();
+  }
+  // Ad-free 版本文件字段：仅 Episodes 2 页面且订阅类型为 Ad-free 时显示
+  function updateAdFreeFileField() {
+    var field = document.getElementById('v2AdFreeFileField');
+    if (!field) return;
+    var typeSel = document.getElementById('v2SubscriptionType');
+    field.style.display = (currentPage === 'episodelist2' && typeSel && typeSel.value === 'Ad-free') ? '' : 'none';
+  }
+  // 上传后：Upload 变为文件名 + ✕ 删除
+  function onAdFreeFileSelected(input) {
+    var name = (input && input.files && input.files[0]) ? input.files[0].name : '';
+    if (!name) return;
+    var nameEl = document.getElementById('v2AdFreeFileName');
+    var action = document.getElementById('v2AdFreeFileAction');
+    if (nameEl) {
+      nameEl.textContent = name;
+      nameEl.classList.remove('ed-v2-file-placeholder');
+    }
+    if (action) {
+      action.textContent = '✕';
+      action.setAttribute('onclick', 'onAdFreeFileRemove()');
+      action.title = 'Remove file';
+    }
+  }
+  // ✕ 删除：清空并恢复 Upload + 提示文字
+  function onAdFreeFileRemove() {
+    var input = document.getElementById('v2AdFreeFileInput');
+    var nameEl = document.getElementById('v2AdFreeFileName');
+    var action = document.getElementById('v2AdFreeFileAction');
+    if (input) input.value = '';
+    if (nameEl) {
+      nameEl.textContent = 'Please upload a file.';
+      nameEl.classList.add('ed-v2-file-placeholder');
+    }
+    if (action) {
+      action.textContent = 'Upload';
+      action.setAttribute('onclick', "document.getElementById('v2AdFreeFileInput').click()");
+      action.removeAttribute('title');
+    }
+  }
+  // Media File 有文件状态：显示文件名 + ✕ 删除
+  function setMediaFileState(name) {
+    var nameEl = document.getElementById('v2FileName');
+    var action = document.getElementById('v2MediaFileAction');
+    if (nameEl) {
+      nameEl.textContent = name;
+      nameEl.classList.remove('ed-v2-file-placeholder');
+    }
+    if (action) {
+      action.textContent = '✕';
+      action.setAttribute('onclick', 'onMediaFileRemove()');
+      action.title = 'Remove file';
+    }
+    updatePublishBtn();
+  }
+  // 选择新文件
+  function onMediaFileSelected(input) {
+    var name = (input && input.files && input.files[0]) ? input.files[0].name : '';
+    if (!name) return;
+    setMediaFileState(name);
+  }
+  // ✕ 删除：清空并恢复 Please upload a file. + Upload
+  function onMediaFileRemove() {
+    var input = document.getElementById('v2FileInput');
+    var nameEl = document.getElementById('v2FileName');
+    var action = document.getElementById('v2MediaFileAction');
+    if (input) input.value = '';
+    if (nameEl) {
+      nameEl.textContent = 'Please upload a file.';
+      nameEl.classList.add('ed-v2-file-placeholder');
+    }
+    if (action) {
+      action.textContent = 'Upload';
+      action.setAttribute('onclick', "document.getElementById('v2FileInput').click()");
+      action.removeAttribute('title');
+    }
+    updatePublishBtn();
+  }
+  // 订阅类型联动：Early access → 公开上架时间（日期+时间）+ 解释；Archive access → 进入档案日期（仅日期）+ 解释
+  function onSubscriptionTypeChange() {
+    var typeSel = document.getElementById('v2SubscriptionType');
+    var explain = document.getElementById('v2SubTypeExplain');
+    var timeBox = document.getElementById('v2SubTypeTime');
+    var timeLabel = document.getElementById('v2SubTypeTimeLabel');
+    if (!typeSel || !explain || !timeBox || !timeLabel) return;
+    var v = typeSel.value;
+    if (v === 'Early access') {
+      explain.textContent = 'Subscribers get early access to this episode. It becomes public at the date and time below.';
+      explain.style.display = '';
+      timeLabel.textContent = 'Public release';
+      timeBox.style.display = '';
+    } else if (v === 'Archive access') {
+      explain.textContent = 'After the "Archive date" date, the episode will be available only to your Apple Podcast subscribers.';
+      explain.style.display = '';
+      timeLabel.textContent = 'Archive date';
+      timeBox.style.display = '';
+    } else if (v === 'Subscriber-only') {
+      explain.textContent = 'Apple Podcasts subscribers have exclusive access to the episode.';
+      explain.style.display = '';
+      timeBox.style.display = 'none';
+    } else if (v === 'Ad-free') {
+      explain.textContent = 'You can upload a separate file (content without ads) for Apple Podcasts subscribers.';
+      explain.style.display = '';
+      timeBox.style.display = 'none';
+    } else if (v === 'Free') {
+      explain.textContent = 'The episode will be public and available to all listeners and displayed in your podcast feed.';
+      explain.style.display = '';
+      timeBox.style.display = 'none';
+    } else {
+      explain.style.display = 'none';
+      timeBox.style.display = 'none';
+    }
+    updateAdFreeFileField();
+  }
+  // 点击 Public release / Archive date 日期时间输入框整行即弹出选择器
+  function openV2SubTypeDateTime() {
+    var input = document.getElementById('v2SubTypeDateTime');
+    if (!input) return;
+    if (typeof input.showPicker === 'function') {
+      try { input.showPicker(); } catch (e) { /* picker 已打开或浏览器不支持时忽略 */ }
+    } else {
+      input.focus();
+    }
+  }
   function editEpisode(index) {
     editingIndex = index;
     var ep = episodes[index];
-    // Adjust UI for Published vs Draft
+    if (ep.status === 'AI Processing') return; // AI 处理中的剧集不可编辑
+    // 弹窗标题始终为 Publish Episode；主按钮文案随状态变：Published→Update, Future→Schedule Publish, others→Publish Now
     var titleEl = document.querySelector('.episode-details-overlay .ed-topbar-title');
+    if (titleEl) titleEl.textContent = 'Publish Episode';
     var btnLabel = document.getElementById('publishBtnLabel');
+    var ddItem = document.querySelector('#publishDropdown .ed-publish-dropdown-item');
     if (ep.status === 'Published') {
-      if (titleEl) titleEl.textContent = 'Edit Episode';
+      publishMode = 'publish';
       if (btnLabel) btnLabel.textContent = 'Update';
+      if (ddItem) ddItem.textContent = 'Schedule Publish';
+    } else if (ep.status === 'Future') {
+      publishMode = 'schedule';
+      if (btnLabel) btnLabel.textContent = 'Schedule Publish';
+      if (ddItem) ddItem.textContent = 'Publish Now';
     } else {
-      if (titleEl) titleEl.textContent = 'Publish Episode';
+      publishMode = 'publish';
       if (btnLabel) btnLabel.textContent = 'Publish Now';
+      if (ddItem) ddItem.textContent = 'Schedule Publish';
     }
+    // 编辑已发布（Published）剧集时隐藏 Episode Info 中的 Social Sharing 功能
+    var socialSharing = document.getElementById('v2SocialSharing');
+    if (socialSharing) socialSharing.style.display = (ep.status === 'Published') ? 'none' : '';
     // Populate the V2 publish modal with episode data
     var titleInput = document.getElementById('v2EpisodeTitle');
     var descDiv = document.getElementById('v2EpisodeDesc');
-    var fileNameSpan = document.getElementById('v2FileName');
     if (titleInput) titleInput.value = ep.title;
     if (descDiv) descDiv.innerHTML = '';
-    if (fileNameSpan) fileNameSpan.textContent = ep.title + '.mp3';
+    setMediaFileState(ep.title + '.mp3');
     // Also set the simple modal fields
     updatePublishBtn();
     var simpleTitle = document.getElementById('episodeTitle');
     var simpleDesc = document.getElementById('episodeDesc');
     if (simpleTitle) simpleTitle.value = ep.title;
     if (simpleDesc) simpleDesc.value = '';
+    // 订阅类型：Episodes 2 页面预填该行 type
+    var typeSel = document.getElementById('v2SubscriptionType');
+    if (typeSel && ep.type) typeSel.value = ep.type;
+    onSubscriptionTypeChange();
+    updateEpisodeTypeField();
+    onAdFreeFileRemove(); // 每次打开重置 Ad-free 文件上传状态
     // Open the publish episode modal
+    refreshScheduleInfo();
     openEpisodeDetailsModal();
+  }
+
+  function formatSchedule(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var dateStr = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    var h = d.getHours();
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    var min = String(d.getMinutes()).padStart(2, '0');
+    return dateStr + ' ' + h + ':' + min + ' ' + ampm;
+  }
+  function formatCurrentTime(now) {
+    try {
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: podcastTimezone,
+        month: 'short', day: 'numeric', year: 'numeric',
+        hour: 'numeric', minute: '2-digit', hour12: true,
+        timeZoneName: 'short'
+      }).formatToParts(now);
+      var v = { month:'', day:'', year:'', hour:'', minute:'', dayPeriod:'', timeZoneName:'' };
+      parts.forEach(function(p) { if (p.type in v) v[p.type] = p.value; });
+      var h = parseInt(v.hour, 10) % 12; if (h === 0) h = 12;
+      return (v.month + ' ' + v.day + ', ' + v.year + ' ' + h + ':' + v.minute + ' ' + v.dayPeriod + ' ' + v.timeZoneName).trim();
+    } catch (e) {
+      var d = new Date();
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var dateStr = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+      var hh = d.getHours(), ampm = hh >= 12 ? 'PM' : 'AM';
+      hh = hh % 12; if (hh === 0) hh = 12;
+      return dateStr + ' ' + hh + ':' + String(d.getMinutes()).padStart(2, '0') + ' ' + ampm;
+    }
+  }
+  function refreshCurrentTime() {
+    var el = document.getElementById('scheduleCurrentTime');
+    if (!el) return;
+    var modal = document.getElementById('scheduleModal');
+    if (!modal || !modal.classList.contains('show')) return;
+    el.textContent = 'Current time: ' + formatCurrentTime(new Date());
+  }
+  function refreshScheduleInfo() {
+    var el = document.getElementById('scheduleInfo');
+    var text = document.getElementById('scheduleInfoText');
+    if (!el || !text) return;
+    var ep = (editingIndex >= 0) ? episodes[editingIndex] : null;
+    if (publishMode === 'schedule' && ep && ep.schedule) {
+      text.textContent = 'Scheduled for ' + formatSchedule(ep.schedule);
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
   }
 
   function viewEpisode(index) {
@@ -3039,8 +3699,13 @@
     var checks = table.querySelectorAll('tbody input[type=checkbox]');
     var count = 0;
     checks.forEach(function(cb, i) {
-      var row = table.querySelector('#epRow' + i);
+      var row = cb.closest('tr');
       if (!row) return;
+      if (cb.disabled) {
+        cb.checked = false;
+        row.classList.remove('selected');
+        return;
+      }
       if (cb.checked) {
         count++;
         row.classList.add('selected');
@@ -3051,7 +3716,8 @@
     table.querySelector('#selectCount').textContent = count;
     var actionsWrap = table.querySelector('.action-wrap');
     var clearSel = table.querySelector('.clear-sel');
-    var total = checks.length;
+    var total = 0;
+    checks.forEach(function(cb) { if (!cb.disabled) total++; });
     if (count > 0) {
       table.classList.add('alt-mode');
       if (actionsWrap) actionsWrap.style.display = '';
@@ -3088,8 +3754,9 @@
     var table = el.closest('.ep-table');
     var checks = table.querySelectorAll('tbody input[type=checkbox]');
     checks.forEach(function(cb, i) {
+      if (cb.disabled) { cb.checked = false; return; }
       cb.checked = el.checked;
-      var row = table.querySelector('#epRow' + i);
+      var row = cb.closest('tr');
       if (!row) return;
       if (el.checked) {
         row.classList.add('selected');
@@ -3155,6 +3822,7 @@
   }
 
   function navigate(page) {
+    currentPage = page;
     document.querySelector('.sidebar').classList.remove('open');
     document.querySelector('.sidebar-overlay').classList.remove('show');
     document.querySelectorAll('.page-content').forEach(function(p) { p.style.display = 'none'; });
@@ -3175,10 +3843,14 @@
     }) });
 
   function switchFilterPanel(name, btn) {
-    document.querySelectorAll('.filter-nav-item').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-    document.querySelectorAll('.filter-panel-content').forEach(function(p) { p.classList.remove('active'); });
-    document.getElementById('fp-' + name).classList.add('active');
+    var pop = btn.closest('.popover');
+    if (pop) {
+      pop.querySelectorAll('.filter-nav-item').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      pop.querySelectorAll('.filter-panel-content').forEach(function(p) { p.classList.remove('active'); });
+      var panel = pop.querySelector('#fp-' + name);
+      if (panel) panel.classList.add('active');
+    }
     updatePanelFoot();
   }
 
@@ -3193,7 +3865,8 @@
     }
   }
   function handleSelectAll(el, panelId) {
-    var panel = document.getElementById(panelId);
+    var panel = el.closest('.filter-panel-content') || document.getElementById(panelId);
+    if (!panel) return;
     var checks = panel.querySelectorAll('input[type=checkbox]');
     if (el.checked) {
       checks.forEach(function(cb, i) { if (i > 0) cb.checked = false; });
@@ -3202,7 +3875,8 @@
   }
 
   function handleSubCheck(el, panelId) {
-    var panel = document.getElementById(panelId);
+    var panel = el.closest('.filter-panel-content') || document.getElementById(panelId);
+    if (!panel) return;
     var checks = panel.querySelectorAll('input[type=checkbox]');
     var allCheck = checks[0];
     if (el.checked) {
@@ -3221,31 +3895,35 @@
 
   function updateNavDots() {
     var panels = ['fp-status','fp-media','fp-season','fp-published'];
-    var navItems = document.querySelectorAll('.filter-nav-item');
-    panels.forEach(function(pid, idx) {
-      var panel = document.getElementById(pid);
-      if (!panel) return;
-      var dirty = false;
-      if (pid === 'fp-published') {
-        var dates = panel.querySelectorAll('input[type=date]');
-        dirty = (dates[0] && dates[0].value) || (dates[1] && dates[1].value);
-      } else if (pid === 'fp-status' || pid === 'fp-season') {
-        var checks = panel.querySelectorAll('input[type=checkbox]');
-        checks.forEach(function(cb, i) {
-          if (i === 0 && !cb.checked) dirty = true;
-          if (i > 0 && cb.checked) dirty = true;
-        });
-      } else if (pid === 'fp-media') {
-        var checks = panel.querySelectorAll('input[type=checkbox]');
-        checks.forEach(function(cb) { if (!cb.checked) dirty = true; });
-      }
-      if (dirty) { navItems[idx].classList.add('dirty'); }
-      else { navItems[idx].classList.remove('dirty'); }
+    var popovers = document.querySelectorAll('#filterPopover');
+    popovers.forEach(function(pop) {
+      var navItems = pop.querySelectorAll('.filter-nav-item');
+      panels.forEach(function(pid, idx) {
+        var panel = pop.querySelector('#' + pid);
+        var navItem = navItems[idx];
+        if (!panel || !navItem) return;
+        var dirty = false;
+        if (pid === 'fp-published') {
+          var dates = panel.querySelectorAll('input[type=date]');
+          dirty = (dates[0] && dates[0].value) || (dates[1] && dates[1].value);
+        } else if (pid === 'fp-status' || pid === 'fp-season') {
+          var checks = panel.querySelectorAll('input[type=checkbox]');
+          checks.forEach(function(cb, i) {
+            if (i === 0 && !cb.checked) dirty = true;
+            if (i > 0 && cb.checked) dirty = true;
+          });
+        } else if (pid === 'fp-media') {
+          var checks = panel.querySelectorAll('input[type=checkbox]');
+          checks.forEach(function(cb) { if (!cb.checked) dirty = true; });
+        }
+        if (dirty) { navItem.classList.add('dirty'); }
+        else { navItem.classList.remove('dirty'); }
+      });
     });
   }
 
-  function clearCurrentPanel() {
-    var active = document.querySelector('.filter-panel-content.active');
+  function clearCurrentPanel(el) {
+    var active = el ? el.closest('.filter-panel-content') : document.querySelector('.filter-panel-content.active');
     if (!active) return;
     if (active.id === 'fp-status' || active.id === 'fp-season') {
       var checks = active.querySelectorAll('input[type=checkbox]');
@@ -3262,6 +3940,7 @@
     document.querySelectorAll('.btn-filter').forEach(function(b) { b.classList.add('active'); });
     document.querySelectorAll('#filterPopover').forEach(function(p) { p.classList.remove('show'); });
     document.querySelectorAll('.btn-filter-clear').forEach(function(b) { b.classList.add('show'); });
+    clearSelection();
   }
 
   function clearFilter(btn) {
@@ -3308,6 +3987,7 @@
     closeActionsPopovers();
     var inp = document.getElementById('seasonInput');
     if (inp) inp.value = '';
+    clearSeasonError();
     document.getElementById('seasonModal').classList.add('show');
     setTimeout(function() { if (inp) inp.focus(); }, 50);
   }
@@ -3315,6 +3995,7 @@
     document.getElementById('seasonModal').classList.remove('show');
     var inp = document.getElementById('seasonInput');
     if (inp) inp.value = '';
+    clearSeasonError();
   }
 
   function openTagsModal() {
@@ -3323,6 +4004,7 @@
     renderSelectedTags();
     var inp = document.getElementById('tagsInputInline');
     if (inp) inp.value = '';
+    clearTagsError();
     renderTagsDropdown('');
     document.getElementById('tagsModal').classList.add('show');
     setTimeout(function() { if (inp) inp.focus(); }, 50);
@@ -3334,6 +4016,7 @@
     renderSelectedTags();
     var inp = document.getElementById('tagsInputInline');
     if (inp) inp.value = '';
+    clearTagsError();
   }
 
   function closeActionsPopovers() {
@@ -3373,13 +4056,39 @@
     return getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked').length;
   }
 
+  function showSeasonError(msg) {
+    var el = document.getElementById('seasonError');
+    var inp = document.getElementById('seasonInput');
+    if (el) { el.textContent = msg || 'Please enter a valid season number (e.g. 1).'; el.style.display = ''; }
+    if (inp) inp.classList.add('has-error');
+  }
+  function clearSeasonError() {
+    var el = document.getElementById('seasonError');
+    var inp = document.getElementById('seasonInput');
+    if (el) el.style.display = 'none';
+    if (inp) inp.classList.remove('has-error');
+  }
+
+  function showTagsError(msg) {
+    var el = document.getElementById('tagsError');
+    var inp = document.getElementById('tagsInputInline');
+    if (el) { el.textContent = msg || 'Please select at least one tag.'; el.style.display = ''; }
+    if (inp) inp.classList.add('has-error');
+  }
+  function clearTagsError() {
+    var el = document.getElementById('tagsError');
+    var inp = document.getElementById('tagsInputInline');
+    if (el) el.style.display = 'none';
+    if (inp) inp.classList.remove('has-error');
+  }
+
   function batchSetSeasonSelected() {
     if (getSelectedCount() === 0) { showToast('No episodes selected.', 'error'); return; }
     var inp = document.getElementById('seasonInput');
     var season = inp.value.trim();
     var num = Number(season);
     if (!season || isNaN(num) || num < 1 || num % 1 !== 0) {
-      showToast('Please enter a valid season number (e.g. 1).', 'error');
+      showSeasonError('Please enter a valid season number (e.g. 1).');
       return;
     }
     season = String(num);
@@ -3397,8 +4106,17 @@
     showToast('Set ' + getSelectedCount() + ' episode(s) to Season ' + season);
   }
 
-  function batchRemoveSeasonSelected() {
+  function openRemoveSeasonModal() {
     if (getSelectedCount() === 0) { showToast('No episodes selected.', 'error'); return; }
+    closeActionsPopovers();
+    var n = getSelectedCount();
+    document.getElementById('removeSeasonDesc').textContent = 'Are you sure you want to remove the season number from ' + n + ' selected episode' + (n > 1 ? 's' : '') + '?';
+    document.getElementById('removeSeasonModal').classList.add('show');
+  }
+  function closeRemoveSeasonModal() {
+    document.getElementById('removeSeasonModal').classList.remove('show');
+  }
+  function confirmRemoveSeason() {
     var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked');
     checks.forEach(function(cb) {
       var row = cb.closest('tr');
@@ -3409,8 +4127,8 @@
         }
       }
     });
-    closeSeasonModal();
-    showToast('Removed season from ' + getSelectedCount() + ' episode(s).');
+    closeRemoveSeasonModal();
+    showToast('Removed all seasons from ' + getSelectedCount() + ' episode(s).');
   }
 
   /* ── Tags Selector ──────────────────── */
@@ -3431,6 +4149,7 @@
       chip.innerHTML = tag + '<span class="tag-remove" onclick="event.stopPropagation();removeSelectedTag(\'' + tag.replace(/'/g,"\\'") + '\')">&times;</span>';
       container.appendChild(chip);
     });
+    clearTagsError();
   }
 
   function renderTagsDropdown(filter) {
@@ -3532,7 +4251,7 @@
 
   function batchSetTagsSelected() {
     if (getSelectedCount() === 0) { showToast('No episodes selected.', 'error'); return; }
-    if (selectedTags.length === 0) { showToast('Please select at least one tag.', 'error'); return; }
+    if (selectedTags.length === 0) { showTagsError('Please select at least one tag.'); return; }
     var tagsToApply = selectedTags.slice();
     var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked');
     checks.forEach(function(cb) {
@@ -3554,8 +4273,17 @@
     showToast('Tagged ' + getSelectedCount() + ' episode(s) with: ' + tagsToApply.join(', '));
   }
 
-  function batchClearTagsSelected() {
+  function openRemoveTagsModal() {
     if (getSelectedCount() === 0) { showToast('No episodes selected.', 'error'); return; }
+    closeActionsPopovers();
+    var n = getSelectedCount();
+    document.getElementById('removeTagsDesc').textContent = 'Are you sure you want to remove all tags from ' + n + ' selected episode' + (n > 1 ? 's' : '') + '?';
+    document.getElementById('removeTagsModal').classList.add('show');
+  }
+  function closeRemoveTagsModal() {
+    document.getElementById('removeTagsModal').classList.remove('show');
+  }
+  function confirmRemoveTags() {
     var checks = getVisibleTable().querySelectorAll('tbody input[type=checkbox]:checked');
     checks.forEach(function(cb) {
       var row = cb.closest('tr');
@@ -3566,7 +4294,7 @@
         }
       }
     });
-    closeTagsModal();
+    closeRemoveTagsModal();
     buildRows();
     showToast('Cleared all tags from ' + getSelectedCount() + ' episode(s).');
   }
@@ -3600,7 +4328,118 @@
 
   /* ── New Episode Modal ──────────────────── */
   function openNewEpisodeModal() {
+    // 演示 plan 随当前页面：Episodes 页（episodelist）= Free，Episodes 2 页（episodelist2）= Unlimited Audio
+    currentPlan = (currentPage === 'episodelist2') ? 'Unlimited Audio' : 'Free';
+    updateUploadFormats();
+    // 继承上次发布时 AI Audio Optimization / AI Content Assistant 两个开关的状态
+    applyLastPublishAIState();
+    // Free plan 用户无 AI 开关，显示 Activate 按钮（点击提示升级）
+    updateAIEnhanceByPlan();
+    // 重置 credits 为「不足」演示场景并渲染（每次打开弹窗都演示不足）
+    creditsRemaining = 2800;
+    creditsNeeded = 3200;
+    renderCredits();
+    updateCreditsWarning();
+    // 系统后台开放了 remote file 选项时，显示 "Or use a remote file"，并清空上次输入的 URL
+    var remoteSection = document.getElementById('remoteFileSection');
+    if (remoteSection) remoteSection.style.display = remoteFileEnabled ? '' : 'none';
+    if (remoteFileEnabled) {
+      var urlInput = document.getElementById('remoteFileUrl');
+      if (urlInput) urlInput.value = '';
+    }
     document.getElementById('newEpisodeModal').classList.add('show');
+  }
+  // 将两个 AI 区块的开关恢复为上次发布时的状态
+  function applyLastPublishAIState() {
+    setAISectionState('toggleAudioOpt', 'aiAudioContent', lastPublishAIState.audio);
+    setAISectionState('toggleContentAsst', 'aiContentAsstContent', lastPublishAIState.content);
+  }
+  function setAISectionState(toggleId, contentId, on) {
+    var toggle = document.getElementById(toggleId);
+    if (!toggle) return;
+    toggle.classList.toggle('on', on);
+    var content = document.getElementById(contentId);
+    if (content) content.classList.toggle('off', !on);
+  }
+  // Free plan 用户在 AI Enhance 面板中没有 AI 开关，改为显示 Activate 按钮（点击提示升级）
+  function updateAIEnhanceByPlan() {
+    var isFree = (currentPlan === 'Free');
+    var audioActivate = document.getElementById('activateAudioOpt');
+    var contentActivate = document.getElementById('activateContentAsst');
+    var audioToggle = document.getElementById('toggleAudioOpt');
+    var contentToggle = document.getElementById('toggleContentAsst');
+    if (audioActivate) audioActivate.style.display = isFree ? '' : 'none';
+    if (contentActivate) contentActivate.style.display = isFree ? '' : 'none';
+    if (audioToggle) audioToggle.style.display = isFree ? 'none' : '';
+    if (contentToggle) contentToggle.style.display = isFree ? 'none' : '';
+    // Free plan 下区块内容保持禁用（不可交互），开关状态强制为关闭
+    if (isFree) {
+      setAISectionState('toggleAudioOpt', 'aiAudioContent', false);
+      setAISectionState('toggleContentAsst', 'aiContentAsstContent', false);
+    }
+  }
+  // 渲染 Remaining Credits 数字与 tooltip 内容（随 creditsRemaining 变化）
+  function renderCredits() {
+    var num = document.getElementById('creditsNumber');
+    if (num) num.textContent = creditsRemaining.toLocaleString();
+    var have = document.getElementById('creditsTooltipHave');
+    if (have) have.textContent = creditsRemaining.toLocaleString();
+    var total = document.getElementById('creditsTooltipTotal');
+    if (total) total.textContent = creditsRemaining.toLocaleString();
+    var audioMin = document.getElementById('creditsTooltipAudioMin');
+    if (audioMin) audioMin.textContent = Math.floor(creditsRemaining / 10) + ' minutes of AI Audio Optimization'; // 600 credits/hour → 10 credits/min
+    var contentMin = document.getElementById('creditsTooltipContentMin');
+    if (contentMin) contentMin.textContent = Math.floor(creditsRemaining / 5) + ' minutes of AI Content Assistant'; // 300 credits/hour → 5 credits/min
+  }
+  // 根据剩余积分与预测所需积分，显示/隐藏「积分不足」警告（默认演示不足场景）
+  function updateCreditsWarning() {
+    var warn = document.getElementById('creditsWarning');
+    if (!warn) return;
+    if (creditsRemaining >= creditsNeeded) { warn.style.display = 'none'; return; }
+    var msg = document.getElementById('creditsWarningMsg');
+    if (msg) {
+      msg.innerHTML = 'Estimated credits for this episode: <strong id="creditsWarningNeeded">' +
+        creditsNeeded.toLocaleString() + '</strong>. You need <strong id="creditsWarningShort">' +
+        (creditsNeeded - creditsRemaining).toLocaleString() + '</strong> more credits.';
+    }
+    warn.classList.remove('credits-warning-success');
+    var buy = document.getElementById('creditsBuyBtn');
+    if (buy) buy.style.display = '';
+    warn.style.display = '';
+  }
+  // 演示「购买积分」：增加积分、更新显示、提示购买完成
+  function buyCredits() {
+    var purchaseAmount = 3200; // 演示：一次购买 3,200 credits
+    creditsRemaining += purchaseAmount;
+    renderCredits();
+    var warn = document.getElementById('creditsWarning');
+    var buy = document.getElementById('creditsBuyBtn');
+    if (buy) buy.style.display = 'none';
+    if (warn) {
+      warn.classList.add('credits-warning-success');
+      var msg = document.getElementById('creditsWarningMsg');
+      if (msg) msg.innerHTML = 'Purchase complete! Credits have been added to your account.';
+      warn.style.display = '';
+      setTimeout(function() { warn.style.display = 'none'; }, 3000);
+    }
+    showToast('Purchase complete! Credits added to your account.', 'success');
+  }
+  // Free plan 用户点击 Activate：提示升级
+  function openAIPlanUpgrade(featureName) {
+    pendingUpgradePlan = 'Unlimited Audio';
+    document.getElementById('upgradeModalTitle').textContent = 'Upgrade Required';
+    document.getElementById('upgradeModalDesc').textContent =
+      featureName + ' is available on Unlimited Audio and above plans. Upgrade to activate it.';
+    document.getElementById('upgradeModal').classList.add('show');
+  }
+  // 提交远程文件 URL：跳过上传，直接进入 Publish Episode，Media File 显示该 URL
+  function submitRemoteFile() {
+    var urlInput = document.getElementById('remoteFileUrl');
+    if (!urlInput) return;
+    var url = urlInput.value.trim();
+    if (!url) return;
+    openNewEpisodeDetails();
+    setMediaFileState(url);
   }
   function closeNewEpisodeModal() {
     document.getElementById('newEpisodeModal').classList.remove('show');
@@ -3631,11 +4470,88 @@
     e.preventDefault();
     e.currentTarget.classList.remove('drag-over');
     var files = e.dataTransfer.files;
-    if (files.length > 0) goToStep2(files[0].name);
+    if (files.length > 0 && validateUploadFormat(files[0].name)) {
+      goToStep2(files[0].name);
+    }
   }
   function handleFileSelect(e) {
     var file = e.target.files[0];
-    if (file) goToStep2(file.name);
+    if (file && validateUploadFormat(file.name)) goToStep2(file.name);
+    e.target.value = '';
+  }
+  // 根据当前 plan 更新弹窗中的 Supported file formats 提示
+  function updateUploadFormats() {
+    var el = document.getElementById('uploadFormatsHint');
+    if (el) el.textContent = 'Supported: ' + (planFormats[currentPlan] || planFormats['Free']).join(', ');
+    // Free / Unlimited Audio 时显示视频升级提醒；Unlimited Plus 及以上支持视频则不显示
+    var videoHint = document.getElementById('uploadVideoHint');
+    if (videoHint) {
+      videoHint.style.display = (planFormats[currentPlan] || []).indexOf('mp4') === -1 ? '' : 'none';
+    }
+  }
+  function getFileExt(name) {
+    var i = name.lastIndexOf('.');
+    return i >= 0 ? name.substring(i + 1).toLowerCase() : '';
+  }
+  // 返回支持指定格式的最低 plan；任何 plan 都不支持时返回 null
+  function getRequiredPlanForFormat(ext) {
+    for (var i = 0; i < planOrder.length; i++) {
+      if (planFormats[planOrder[i]].indexOf(ext) !== -1) return planOrder[i];
+    }
+    return null;
+  }
+  // 校验上传格式：当前 plan 支持→放行；更高 plan 支持→提示升级；均不支持→提示不支持
+  function validateUploadFormat(fileName) {
+    var ext = getFileExt(fileName);
+    if (!ext) return true; // 无扩展名不拦截
+    if ((planFormats[currentPlan] || []).indexOf(ext) !== -1) return true;
+    var requiredPlan = getRequiredPlanForFormat(ext);
+    if (requiredPlan) {
+      openUpgradePrompt(ext, requiredPlan);
+    } else {
+      openUnsupportedFormatPrompt(ext);
+    }
+    return false;
+  }
+  function openUpgradePrompt(ext, requiredPlan) {
+    pendingUpgradePlan = requiredPlan;
+    document.getElementById('upgradeModalTitle').textContent = 'Upgrade Required';
+    document.getElementById('upgradeModalDesc').textContent =
+      'The file format .' + ext + ' is not supported on your current ' + currentPlan + ' plan. ' +
+      'Upgrade to ' + requiredPlan + ' to upload ' + ext + ' files.';
+    document.getElementById('upgradeModal').classList.add('show');
+  }
+  function openUnsupportedFormatPrompt(ext) {
+    pendingUpgradePlan = null;
+    document.getElementById('upgradeModalTitle').textContent = 'Unsupported Format';
+    document.getElementById('upgradeModalDesc').textContent =
+      'The file format .' + ext + ' is not supported. ' +
+      'Please upload a file in one of the supported formats: ' + (planFormats[currentPlan] || []).join(', ') + '.';
+    document.getElementById('upgradeModal').classList.add('show');
+  }
+  function confirmUpgrade() {
+    if (pendingUpgradePlan) {
+      currentPlan = pendingUpgradePlan;
+      pendingUpgradePlan = null;
+      // 升级成功后刷新：上传格式提示、AI Enhance 面板按新 plan 显示开关（初始关闭）
+      updateUploadFormats();
+      applyLastPublishAIState();
+      updateAIEnhanceByPlan();
+    }
+    closeUpgradeModal();
+  }
+  function closeUpgradeModal() {
+    pendingUpgradePlan = null;
+    document.getElementById('upgradeModal').classList.remove('show');
+  }
+  // Episodes 3 free-plan notice: 鼓励用户升级，避免 episode 90 天后被删除
+  function promptUpgradeForDeletion() {
+    pendingUpgradePlan = 'Unlimited Audio';
+    document.getElementById('upgradeModalTitle').textContent = 'Upgrade to keep your episodes';
+    document.getElementById('upgradeModalDesc').textContent =
+      'On the Free plan, episodes are automatically deleted 90 days after creation. ' +
+      'Upgrade to ' + pendingUpgradePlan + ' to keep your episodes forever, with more storage and no auto-deletion.';
+    document.getElementById('upgradeModal').classList.add('show');
   }
   function goToStep2(fileName) {
     document.getElementById('modalStep1').style.display = 'none';
@@ -3682,6 +4598,7 @@
       label.textContent = 'Schedule Publish';
       ddItem.textContent = 'Publish Now';
       document.getElementById('publishDropdown').classList.remove('show');
+      refreshScheduleInfo();
       openScheduleModal();
     } else {
       publishMode = 'publish';
@@ -3689,13 +4606,15 @@
       label.textContent = isPublished ? 'Update' : 'Publish Now';
       ddItem.textContent = 'Schedule Publish';
       document.getElementById('publishDropdown').classList.remove('show');
+      refreshScheduleInfo();
     }
   }
   function updatePublishBtn() {
     var title = document.getElementById('v2EpisodeTitle').value.trim();
-    var fileName = document.getElementById('v2FileName').textContent.trim();
+    var fn = document.getElementById('v2FileName');
+    var hasFile = !!fn && !fn.classList.contains('ed-v2-file-placeholder') && fn.textContent.trim();
     var btn = document.getElementById('publishBtn');
-    btn.disabled = !title || !fileName;
+    btn.disabled = !title || !hasFile;
   }
   function publishPublish() {
     if (publishMode === 'publish') {
@@ -3722,15 +4641,24 @@
     }, duration);
   }
   function openScheduleModal() {
+    var dateInput = document.getElementById('scheduleDate');
+    var timeInput = document.getElementById('scheduleTime');
     var now = new Date();
-    var y = now.getFullYear();
-    var m = String(now.getMonth() + 1).padStart(2, '0');
-    var d = String(now.getDate()).padStart(2, '0');
-    var h = String(now.getHours()).padStart(2, '0');
-    var min = String(now.getMinutes()).padStart(2, '0');
-    document.getElementById('scheduleDate').value = y + '-' + m + '-' + d;
-    document.getElementById('scheduleTime').value = h + ':' + min;
+    var prefilled = false;
+    if (editingIndex >= 0 && episodes[editingIndex] && episodes[editingIndex].schedule) {
+      var s = new Date(episodes[editingIndex].schedule);
+      if (!isNaN(s.getTime())) {
+        dateInput.value = s.getFullYear() + '-' + String(s.getMonth() + 1).padStart(2, '0') + '-' + String(s.getDate()).padStart(2, '0');
+        timeInput.value = String(s.getHours()).padStart(2, '0') + ':' + String(s.getMinutes()).padStart(2, '0');
+        prefilled = true;
+      }
+    }
+    if (!prefilled) {
+      dateInput.value = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+      timeInput.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    }
     document.getElementById('scheduleModal').classList.add('show');
+    refreshCurrentTime();
   }
   function closeScheduleModal() {
     document.getElementById('scheduleModal').classList.remove('show');
@@ -3739,6 +4667,10 @@
     var date = document.getElementById('scheduleDate').value;
     var time = document.getElementById('scheduleTime').value;
     if (!date || !time) { showToast('Please select date and time.', 'error'); return; }
+    if (editingIndex >= 0 && episodes[editingIndex]) {
+      episodes[editingIndex].schedule = date + 'T' + time;
+      refreshScheduleInfo();
+    }
     closeScheduleModal();
     closeEpisodeDetailsModal();
     showToast('Episode scheduled for ' + date + ' ' + time, 'info', 5000);
@@ -3749,6 +4681,30 @@
       dd.classList.remove('show');
     }
   });
+  // 新建剧集入口（Upload later →）：重置为"即时发布"模式（主按钮 Publish Now），清空标题/文件名避免残留旧剧集数据
+  function openNewEpisodeDetails() {
+    editingIndex = -1;
+    publishMode = 'publish';
+    var btnLabel = document.getElementById('publishBtnLabel');
+    var ddItem = document.querySelector('#publishDropdown .ed-publish-dropdown-item');
+    if (btnLabel) btnLabel.textContent = 'Publish Now';
+    if (ddItem) ddItem.textContent = 'Schedule Publish';
+    var titleInput = document.getElementById('v2EpisodeTitle');
+    if (titleInput) titleInput.value = '';
+    setMediaFileState('episode-audio.mp3');
+    // 订阅类型：新建默认 Free，Episodes 2 页面显示该字段
+    var typeSel = document.getElementById('v2SubscriptionType');
+    if (typeSel) typeSel.value = 'Free';
+    onSubscriptionTypeChange();
+    updateEpisodeTypeField();
+    onAdFreeFileRemove(); // 每次打开重置 Ad-free 文件上传状态
+    // 新建剧集时始终显示 Social Sharing
+    var socialSharing = document.getElementById('v2SocialSharing');
+    if (socialSharing) socialSharing.style.display = '';
+    refreshScheduleInfo();
+    updatePublishBtn();
+    openEpisodeDetailsModal();
+  }
   function openEpisodeDetailsModal() {
     closeNewEpisodeModal();
     document.getElementById('episodeDetailsModal').classList.add('show');
@@ -3777,6 +4733,11 @@
     showToast('Episode saved as draft!', 'info');
   }
   function publishEpisode() {
+    // 记录本次发布时两个 AI 区块的开关状态，供下次打开 New Episode 时继承
+    var audioToggle = document.getElementById('toggleAudioOpt');
+    var contentToggle = document.getElementById('toggleContentAsst');
+    lastPublishAIState.audio = audioToggle ? audioToggle.classList.contains('on') : true;
+    lastPublishAIState.content = contentToggle ? contentToggle.classList.contains('on') : true;
     closeNewEpisodeModal();
     showToast('Episode published successfully!');
     // Auto-open Share modal for the most recent episode
@@ -4223,6 +5184,9 @@
   });
 
   // Sync V2 title back to V1 on change
+  // 每秒刷新 Schedule 弹窗内的 Current time（仅在弹窗打开时写入）
+  setInterval(refreshCurrentTime, 1000);
+
   document.addEventListener('DOMContentLoaded', function() {
     var v2Title = document.getElementById('v2EpisodeTitle');
     if (v2Title) {
