@@ -1,12 +1,27 @@
 <!doctype html>
 <!--
   Podbean Reviews — platform testimonials page.
-  Structure follows the Buzzsprout /reviews page; visual language follows Podbean's
+  Structure follows a podcast-hosting provider's /reviews landing page; visual language follows Podbean's
   own brand (clean, white, bold sans, Podbean green #428200 accent).
 
   Platform stats, ratings and the intro/stat claims below are real and were supplied by
-  the user. All review quotes, names and show titles remain SAMPLE PLACEHOLDERS and must
-  be replaced with real, verifiable customer reviews before publishing.
+  the user. The review quotes and dates on this page are REAL Trustpilot reviews of
+  Podbean (exported 2026-09, spanning Aug 2024 - Aug 2026), reproduced verbatim, shown
+  anonymised. Per-card star ratings currently display 5 stars for all and should be
+  checked against each reviewer's actual rating on Trustpilot before publishing.
+  Reviewer names, profile photos and show titles are deliberately NOT displayed: under
+  section 6 of Trustpilot's guidelines (Sep 2026), marketing reuse of a review with the
+  reviewer's name or photo requires their explicit, documented consent. This page
+  therefore shows every quote fully anonymised, each with its date and individual star
+  rating, and carries the Trustpilot name and logo once per section as the attribution
+  source, per those rules.
+
+  The "Stories from the Podbean community" section directly above the review wall is NOT
+  Trustpilot reviews: it features Podbean Enterprise customer stories (Kaspersky, Lehigh
+  University, White & Case), quoted verbatim from Podbean's published case studies as
+  third-party narration, each headed by the company's own logo and linked to its source page.
+  The three logo files (kaspersky.webp, Lehigh-logo.webp, white-case-logo.webp) live beside
+  this file; the self-contained preview copy inlines them.
 -->
 <html lang="en">
 <head>
@@ -193,10 +208,10 @@
   .hero-copy .hero-cta{justify-content:flex-start}
   .hero-note{color:var(--ink-soft); font-size:.9rem; margin-top:.9rem}
 
-  /* hero visual — illustrated wall of social posts + podcast covers */
+  /* hero visual — collage of social posts, podcast covers, listener stats & mini reviews */
   .hero-visual{container-type:inline-size; position:relative; isolation:isolate}
   .hero-wall{
-    position:relative; width:100%; aspect-ratio:1/0.875;
+    position:relative; width:100%; aspect-ratio:1/0.9;
     border-radius:clamp(20px,4cqw,30px); overflow:hidden;
     background:
       radial-gradient(130cqw 90cqw at 88% -8%, rgba(66,130,0,.11), transparent 60%),
@@ -204,76 +219,75 @@
       linear-gradient(158deg,#ecf2da 0%, #f7f8ef 55%, #e4efd1 100%);
     box-shadow:inset 0 0 0 1px rgba(27,24,21,.05), 0 42px 90px -52px rgba(27,24,21,.42);
   }
-  .ghost{position:absolute; z-index:0; line-height:1; color:rgba(66,130,0,.12); font-weight:800; user-select:none; pointer-events:none; font-family:Georgia, "Times New Roman", serif}
-  .g-1{font-size:54cqw; top:-15%; right:-7%; transform:rotate(13deg)}
-  .g-2{font-size:30cqw; bottom:-11%; left:-4%; transform:rotate(-15deg)}
-  .g-3{font-size:20cqw; top:44%; left:-3%; transform:rotate(-9deg); color:rgba(139,197,62,.3)}
+  .ghost{position:absolute; z-index:0; line-height:1; color:rgba(66,130,0,.12); font-weight:800; user-select:none; pointer-events:none; font-family:Georgia,"Times New Roman",serif}
+  .g-1{font-size:56cqw; top:-16%; right:-9%; transform:rotate(13deg)}
+  .g-2{font-size:30cqw; bottom:-13%; left:-5%; transform:rotate(-15deg)}
+  .g-3{font-size:18cqw; top:46%; left:-2%; transform:rotate(-9deg); color:rgba(139,197,62,.32)}
 
   .soc-card{position:absolute; z-index:3; background:#fff; color:var(--ink)}
   .soc-card .ava{display:grid; place-items:center; width:6.9cqw; height:6.9cqw; border-radius:50%; color:#fff; font-weight:800; font-size:2.7cqw; letter-spacing:-.02em; flex:none; box-shadow:0 6px 16px -8px rgba(27,24,21,.55)}
-  .sc-top{display:flex; align-items:center; gap:2.2cqw}
-  .sc-who{min-width:0}
-  .sc-name{font-weight:800; font-size:2.95cqw; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .sc-handle{color:#978f86; font-size:2.5cqw; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .sc-brand{margin-left:auto; display:grid; place-items:center}
-  .sc-brand svg{width:3.4cqw; height:3.4cqw}
-  .sc-text{margin-top:2cqw; font-size:2.9cqw; line-height:1.52; color:#332e29}
-  .sc-text b{font-weight:800}
-  .sc-foot{display:flex; align-items:center; gap:3.8cqw; margin-top:2.2cqw}
-  .sc-act{display:inline-flex; align-items:center; gap:1.1cqw; color:#8a837c; font-weight:600; font-size:2.5cqw}
-  .sc-act svg{width:2.9cqw; height:2.9cqw}
-  .sc-act b{font-weight:800; color:#3a3530}
-  .sc-act--heart svg{fill:currentColor}
-  .sc-act--heart{color:#d1495b}
 
-  .soc-x{left:3%; top:3.2%; width:55%; padding:3.5cqw 3.7cqw 3.1cqw; border-radius:3.5cqw; transform:rotate(-3.6deg); box-shadow:0 20px 44px -24px rgba(27,24,21,.32), 0 2px 8px rgba(27,24,21,.05)}
-  .soc-x .sc-brand svg{fill:#1b1815}
 
-  .soc-ig{right:2.5%; top:2.8%; width:24%; padding:1.6cqw; border-radius:3cqw; transform:rotate(5deg); z-index:5; box-shadow:0 22px 46px -22px rgba(27,24,21,.36), 0 2px 8px rgba(27,24,21,.05)}
+  .soc-ig{right:2.5%; top:2.8%; width:27%; padding:1.6cqw; border-radius:3cqw; transform:rotate(4deg); z-index:5; box-shadow:0 22px 46px -22px rgba(27,24,21,.36), 0 2px 8px rgba(27,24,21,.05)}
   .ig-frame{border-radius:2.5cqw; background:linear-gradient(45deg,#f9ce34,#ee2a7b 55%,#6228d7); padding:1.7cqw}
-  .ig-cover{position:relative; aspect-ratio:1/1; border-radius:1.5cqw; background:linear-gradient(135deg,#8bc53e 0%,#2f6b00 72%); display:grid; place-items:center}
+  .ig-cover{position:relative; aspect-ratio:1/1; border-radius:1.4cqw; overflow:hidden; display:grid; place-items:center; background:#dce8c5}
+  .ig-cover img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
   .ig-cover::after{content:""; position:absolute; inset:0; border-radius:inherit; box-shadow:inset 0 0 0 1px rgba(255,255,255,.25); pointer-events:none}
-  .ig-cover .ig-play{display:grid; place-items:center; width:7.6cqw; height:7.6cqw; border-radius:50%; background:rgba(255,255,255,.94); color:#1b1815; box-shadow:0 6px 16px -6px rgba(0,0,0,.5)}
+  .ig-cover .ig-play{position:relative; z-index:1; display:grid; place-items:center; width:7.6cqw; height:7.6cqw; border-radius:50%; background:rgba(255,255,255,.94); color:#1b1815; box-shadow:0 6px 16px -6px rgba(0,0,0,.5)}
   .ig-cover .ig-play svg{width:3.3cqw; height:3.3cqw; fill:currentColor; transform:translateX(.3cqw)}
   .ig-bar{display:flex; align-items:center; gap:1.4cqw; padding-top:1.6cqw}
-  .ig-bar .mini-ava{width:3.8cqw; height:3.8cqw; border-radius:1.1cqw; background:linear-gradient(135deg,#8bc53e,#4d940f); display:grid; place-items:center; color:#fff; font-weight:800; font-size:2cqw}
-  .ig-nm{font-size:2.2cqw; font-weight:800; line-height:1.15}
+  .ig-bar .mini-ava{width:3.8cqw; height:3.8cqw; border-radius:50%; background:linear-gradient(135deg,#8bc53e,#4d940f); display:grid; place-items:center; color:#fff; font-weight:800; font-size:2cqw}
+  .ig-nm{font-size:2.3cqw; font-weight:800; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
   .ig-h{font-size:2cqw; color:#978f86; line-height:1.25}
   .ig-like{margin-left:auto; display:inline-flex; align-items:center; gap:.9cqw; color:#d1495b; font-weight:800; font-size:2.3cqw}
   .ig-like svg{width:2.7cqw; height:2.7cqw; fill:currentColor}
 
-  .soc-fb{left:1.6%; bottom:1.8%; width:47%; padding:3.1cqw 3.4cqw 2.7cqw; border-radius:3.3cqw; transform:rotate(2deg); z-index:2; box-shadow:0 20px 44px -24px rgba(27,24,21,.3), 0 2px 8px rgba(27,24,21,.05)}
-  .soc-fb .sc-text{font-size:2.85cqw; margin-top:1.8cqw}
-  .fb-foot{display:flex; align-items:center; gap:2.8cqw; margin-top:2cqw; color:#8a837c; font-size:2.4cqw; font-weight:600}
-  .fb-foot span{display:inline-flex; align-items:center; gap:1cqw}
-  .fb-foot svg{width:2.8cqw; height:2.8cqw; fill:#1877F2}
-  .soc-fb .sc-brand svg{fill:#1877F2}
-
-  .soc-yt{right:2.8%; top:49%; width:43%; background:#161310; color:#fff; border-radius:3.2cqw; padding:2.7cqw 2.9cqw 2.8cqw; transform:rotate(-1.8deg); z-index:4; box-shadow:0 26px 52px -24px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.3)}
-  .yt-thumb{position:relative; aspect-ratio:16/9; border-radius:2cqw; background:radial-gradient(130% 150% at 18% 0%, #79b51e 0%, #1e4c00 80%); display:grid; place-items:center; overflow:hidden}
-  .yt-tag{position:absolute; top:1.4cqw; left:1.4cqw; display:inline-flex; align-items:center; gap:.7cqw; background:#ff0033; color:#fff; font-size:2cqw; font-weight:800; letter-spacing:.02em; padding:.6cqw 1.5cqw; border-radius:999px}
-  .yt-play{display:grid; place-items:center; width:8.6cqw; height:8.6cqw; border-radius:50%; background:rgba(255,255,255,.96); color:#111; box-shadow:0 8px 18px -6px rgba(0,0,0,.55)}
+  .soc-yt{right:2.8%; top:52%; width:43%; background:#161310; color:#fff; border-radius:3.2cqw; padding:2.6cqw 2.8cqw 2.7cqw; transform:rotate(1.6deg); z-index:4; box-shadow:0 26px 52px -24px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.3)}
+  .yt-thumb{position:relative; aspect-ratio:16/9; border-radius:2cqw; overflow:hidden; display:grid; place-items:center; background:#1e4c00}
+  .yt-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+  .yt-play{position:relative; z-index:1; display:grid; place-items:center; width:8.6cqw; height:8.6cqw; border-radius:50%; background:rgba(255,255,255,.96); color:#111; box-shadow:0 8px 18px -6px rgba(0,0,0,.55)}
   .yt-play svg{width:4cqw; height:4cqw; fill:currentColor; transform:translateX(.35cqw)}
-  .yt-title{margin-top:2cqw; font-weight:800; font-size:2.8cqw; line-height:1.32; color:#fff}
-  .yt-sub{display:flex; align-items:center; gap:1.5cqw; margin-top:1.7cqw; color:#c9c1b8; font-size:2.25cqw; font-weight:600}
-  .yt-sub .mini-ava{width:3.9cqw; height:3.9cqw; border-radius:50%; background:linear-gradient(135deg,#8bc53e,#4d940f); display:grid; place-items:center; color:#fff; font-weight:800; font-size:2.1cqw}
+  .yt-title{margin-top:1.8cqw; font-weight:800; font-size:2.75cqw; line-height:1.3; color:#fff}
+  .yt-sub{display:flex; align-items:center; gap:1.5cqw; margin-top:1.5cqw; color:#c9c1b8; font-size:2.2cqw; font-weight:600}
 
-  .soc-tt{left:56.5%; top:5.5%; width:18%; background:#131313; color:#fff; border-radius:3cqw; padding:3.4cqw 2.6cqw 3cqw; transform:rotate(-4deg); z-index:1; box-shadow:0 24px 46px -22px rgba(0,0,0,.5)}
+  .soc-tt{left:56.5%; top:5.5%; width:17%; background:#131313; color:#fff; border-radius:3cqw; padding:3.2cqw 2.4cqw 2.8cqw; transform:rotate(-4deg); z-index:1; box-shadow:0 24px 46px -22px rgba(0,0,0,.5)}
   .tt-glyph{display:grid; place-items:center; width:9cqw; height:9cqw; margin-inline:auto; color:#25F4EE}
   .tt-glyph svg{width:100%; height:100%; fill:currentColor}
-  .tt-handle{margin-top:1.9cqw; font-weight:800; font-size:2.6cqw; text-align:center; white-space:nowrap}
-  .tt-views{color:#8f8983; font-size:2.15cqw; text-align:center; margin-top:.7cqw; white-space:nowrap}
-  .tt-hearts{display:flex; justify-content:center; align-items:center; gap:1cqw; margin-top:2cqw; color:#FE2C55; font-weight:800; font-size:2.5cqw}
+  .tt-handle{margin-top:1.8cqw; font-weight:800; font-size:2.5cqw; text-align:center; white-space:nowrap}
+  .tt-views{color:#8f8983; font-size:2.1cqw; text-align:center; margin-top:.7cqw; white-space:nowrap}
+  .tt-hearts{display:flex; justify-content:center; align-items:center; gap:1cqw; margin-top:1.8cqw; color:#FE2C55; font-weight:800; font-size:2.4cqw}
   .tt-hearts svg{width:3cqw; height:3cqw; fill:currentColor}
 
-  @container (max-width:420px){
-    .soc-tt, .ghost{display:none}
-    .hero-wall{aspect-ratio:1/1.02}
-  }
-  @container (max-width:330px){
-    .soc-fb{display:none}
-    .soc-yt{top:52%}
-  }
+  .duo{position:absolute; left:1.6%; bottom:1.8%; width:47%; z-index:5; background:#fff; border-radius:3.3cqw; padding:2.6cqw 3.2cqw 2.4cqw; transform:rotate(-1.4deg); box-shadow:0 22px 46px -24px rgba(27,24,21,.32), 0 2px 8px rgba(27,24,21,.05)}
+  .duo-top{display:flex; align-items:center; gap:2cqw}
+  .duo-tp{display:inline-flex; align-items:center; gap:1cqw; font-weight:800; font-size:2.4cqw; color:#191919}
+  .duo-tp .tp-ico{width:3.4cqw; height:3.4cqw; border-radius:50%; background:#00b67a; display:inline-grid; place-items:center}
+  .duo-tp .tp-ico svg{width:2cqw; height:2cqw; fill:#fff; display:block}
+  .duo-stars{margin-left:auto; color:#00b67a; letter-spacing:.16em; font-size:2.5cqw; white-space:nowrap}
+  .duo-item{padding-top:1.7cqw; margin-top:1.6cqw; border-top:1px solid var(--line)}
+  .duo-q{margin:0; font-size:2.75cqw; line-height:1.48; color:#332e29; font-weight:600}
+  .duo-d{margin-top:1.1cqw; color:#978f86; font-weight:600; font-size:2.15cqw}
+
+  .stat-pill{position:absolute; left:56.5%; top:37%; z-index:6; display:inline-flex; align-items:center; gap:1.4cqw; background:var(--brand); color:#fff; border-radius:999px; padding:1.5cqw 2.6cqw; box-shadow:0 18px 36px -16px rgba(27,24,21,.5); font-weight:800; font-size:2.6cqw; transform:rotate(1.8deg); white-space:nowrap}
+  .stat-pill .sp-num{color:#fff}
+  .stat-pill .sp-num em{font-style:normal; color:#d8f2b0}
+  /* available-on app tiles (real podcast platforms) */
+  .dir-card{position:absolute; left:2.5%; top:2.6%; width:56%; z-index:4; background:#fff; border-radius:3.6cqw; padding:3.4cqw 3.8cqw 3cqw; transform:rotate(-2.4deg); box-shadow:0 20px 44px -24px rgba(27,24,21,.3), 0 2px 8px rgba(27,24,21,.05)}
+  .dir-head{display:flex; align-items:center; gap:1.7cqw; font-weight:800; font-size:2.8cqw; letter-spacing:-.01em; color:#2c2823}
+  .dir-dot{flex:none; width:4.6cqw; height:4.6cqw; border-radius:50%; background:linear-gradient(135deg,#8bc53e,#428200); display:grid; place-items:center; color:#fff; font-size:2.4cqw; line-height:1}
+  .dir-row{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:2cqw; margin-top:2.8cqw}
+  .dir-app{display:flex; flex-direction:column; align-items:center; gap:1.3cqw; text-align:center; min-width:0}
+  .dir-ico{width:11.5cqw; height:11.5cqw; border-radius:3cqw; display:grid; place-items:center; box-shadow:inset 0 0 0 1px rgba(27,24,21,.05), 0 8px 16px -9px rgba(27,24,21,.45)}
+  .dir-ico svg{display:block; width:100%; height:100%}
+  .dir-ico--ap{background:linear-gradient(145deg,#a352e0 0%,#6f1fc0 60%,#5815a3 100%)}
+  .dir-ico--sp{background:#1DB954}
+  .dir-ico--yt{background:#ff0000}
+  .dir-app em{font-style:normal; font-weight:700; font-size:2.35cqw; color:#4a443e; white-space:nowrap}
+
+
+  @container (max-width:440px){ .soc-tt, .ghost{display:none} }
+  @container (max-width:360px){ .soc-yt{top:54%} }
+
 
   @media (max-width:980px){
     .hero{padding-block:clamp(40px,7vw,72px) clamp(40px,7vw,68px)}
@@ -300,24 +314,27 @@
     box-shadow:var(--shadow); padding:1.5rem 1.5rem 1.45rem; text-align:left;
     display:flex; flex-direction:column;
   }
-  .f-art{
-    width:52px;height:52px;border-radius:14px; object-fit:cover; display:block; flex:none;
-    box-shadow:0 10px 20px -12px rgba(27,24,21,.55);
-  }
   .f-quote{font-size:1.02rem; line-height:1.6; margin-top:.25rem; flex:1}
   .f-quote::before{content:"“"; color:var(--brand); font-weight:800}
   .f-quote::after{content:"”"; color:var(--brand); font-weight:800}
-  .f-who{margin-top:1.15rem; border-top:1px solid var(--line); padding-top:1rem; display:flex; align-items:center; gap:14px}
-  .f-meta{min-width:0}
-  .f-name{font-weight:800; font-size:.98rem; line-height:1.3}
-  .f-show{color:var(--ink-soft); font-size:.9rem; margin-top:.12rem; line-height:1.35}
-  .f-show a{color:var(--brand); text-decoration:none}
-  .f-show a:hover{text-decoration:underline}
+
+  /* customer-story card (non-Trustpilot) used alongside review cards */
+  .f-card.f-case .f-quote{margin-top:0; font-size:1.04rem; line-height:1.68}
+  .c-foot{margin-top:1.35rem; padding-top:.95rem; border-top:1px solid var(--line); display:flex; align-items:center; gap:1.1rem; line-height:1}
+  .f-card.f-case .c-logo{display:block; width:auto; height:auto; max-width:46%; max-height:28px; object-fit:contain; object-position:left center; flex:none}
+  .c-link{margin-left:auto; color:var(--brand); font-weight:700; text-decoration:none; font-size:.9rem; white-space:nowrap; display:inline-flex; align-items:center; gap:.3rem}
+  .c-link:hover{text-decoration:underline}
+  .c-link::after{content:"→"}
+
+  /* Trustpilot review meta — date + individual rating (Trustpilot attribution sits at section level) */
+  .r-meta{margin-top:1.05rem; padding-top:.9rem; border-top:1px solid var(--line); display:flex; align-items:center; flex-wrap:wrap; gap:.5rem 1.05rem; line-height:1}
+  .r-stars{display:inline-flex; gap:2px; color:#00b67a; line-height:1}
+  .r-stars svg{width:15px; height:15px; display:block; fill:currentColor}
+  .r-stars .off{color:#d9d9d9}
+  .r-date{color:var(--ink-soft); font-size:.87rem; white-space:nowrap; margin-left:auto}
   @media (max-width:900px){
     .featured-grid{grid-template-columns:1fr; max-width:520px; margin-inline:auto; row-gap:20px; column-gap:0}
   }
-  .featured-note{text-align:center; color:var(--ink-soft); font-size:.95rem; margin-top:clamp(24px,4vw,40px)}
-  .featured-note a{color:var(--brand); text-decoration:underline; text-underline-offset:2px}
 
   /* ---------- rating summary (merged into review wall) ---------- */
   .rating-strip{
@@ -329,13 +346,25 @@
   }
   .rs-score{font-size:1.85rem; font-weight:800; letter-spacing:-.03em; line-height:1; color:var(--ink)}
   .rs-score sup{font-size:.5em; color:var(--ink-soft); font-weight:600; letter-spacing:0; margin-left:.12em}
-  .rs-stars{color:var(--brand); font-size:1.3rem; letter-spacing:3px; line-height:1}
+  .rs-stars{color:#00b67a; font-size:1.3rem; letter-spacing:3px; line-height:1}
   .rs-div{width:1px; align-self:stretch; background:var(--line)}
   .rs-src{color:var(--ink-soft); font-size:.98rem; line-height:1.45}
   .rs-src strong{color:var(--ink)}
   .rs-src a{color:var(--brand); text-decoration:underline; text-underline-offset:2px}
   .rs-src a:hover{text-decoration:none}
+  .rs-src .tp-ico{width:16px; height:16px; border-radius:50%; background:#00b67a; display:inline-grid; place-items:center; vertical-align:-3px; margin-right:4px}
+  .rs-src .tp-ico svg{width:9px; height:9px; fill:#fff; display:block}
   @media (max-width:520px){ .rating-strip{border-radius:20px; text-align:center} }
+
+  /* section-level Trustpilot attribution (name + logo, instead of a badge per card) */
+  .sec-attr{display:flex; justify-content:center; margin-top:clamp(14px,2.2vw,20px)}
+  .tp-attr{display:inline-flex; align-items:center; gap:.55rem; max-width:100%; padding:.6rem 1.15rem; background:var(--card); border:1px solid var(--line); border-radius:999px; box-shadow:var(--shadow); font-size:.92rem; line-height:1.25}
+  .tp-attr .tp-ico{width:20px; height:20px; border-radius:50%; background:#00b67a; display:inline-grid; place-items:center; flex:none}
+  .tp-attr .tp-ico svg{width:12px; height:12px; fill:#fff; display:block}
+  .tp-attr-txt{color:var(--ink-soft)}
+  .tp-attr-txt a{color:#191919; font-weight:700; text-decoration:none}
+  .tp-attr-txt a:hover{text-decoration:underline}
+  @media (max-width:480px){ .tp-attr{font-size:.88rem; padding:.55rem .95rem; text-align:left} }
 
   /* ---------- review walls ---------- */
   .review-band{background:#f1f6e9; border-block:1px solid var(--line); padding-block:clamp(48px,7vw,84px)}
@@ -346,24 +375,28 @@
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
     box-shadow:var(--shadow); padding:1.5rem 1.5rem 1.3rem;
   }
-  .r-title{font-weight:800; font-size:1.06rem; letter-spacing:-.01em}
-  .r-text{margin-top:.55rem; font-size:.98rem; color:#3b3530}
-  .r-cite{display:block; margin-top:1rem; font-style:normal; font-size:.9rem; font-weight:600; color:var(--ink-soft)}
-  .r-cite b{color:var(--ink)}
+  .r-title{margin:0 0 .4rem; font-size:1.06rem; line-height:1.4; font-weight:800; letter-spacing:-.01em; color:var(--ink)}
+  .r-text{margin-top:.15rem; font-size:.98rem; color:#3b3530}
+  .r-text mark{background:linear-gradient(transparent 60%, rgba(139,197,62,.34) 0); color:inherit; padding-inline:.05em; border-radius:2px}
+  .r-text a{color:var(--brand-deep); font-weight:600; text-decoration:underline; text-decoration-color:rgba(66,130,0,.35); text-underline-offset:2px; border-radius:2px}
+  .r-text a:hover{background:rgba(66,130,0,.08); text-decoration-color:var(--brand-deep)}
+  .r-text + .r-meta{margin-top:1.15rem}
 
-  /* ---------- social posts ---------- */
-  .social-band{padding-block:clamp(48px,7vw,80px)}
-  .social-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(18px,3vw,28px); margin-top:clamp(28px,4vw,44px)}
-  @media (max-width:900px){ .social-grid{grid-template-columns:1fr; max-width:480px; margin-inline:auto} }
-  .x-card{border:1px solid var(--line); border-radius:var(--radius); padding:1.3rem 1.4rem; background:#fff}
-  .x-head{display:flex; align-items:center; gap:11px}
-  .x-avatar{width:42px;height:42px;border-radius:50%; display:grid;place-items:center; color:#fff; font-weight:800; font-size:1rem; flex:none}
-  .x-name{font-weight:800; font-size:.96rem; line-height:1.2}
-  .x-handle{color:var(--ink-soft); font-size:.86rem}
-  .x-body{margin-top:.9rem; font-size:.98rem}
+  /* ---------- customer-support band (reviews about Podbean support) ---------- */
+  .support-band{background:var(--bg); padding-block:clamp(64px,8vw,104px) clamp(8px,1.5vw,20px)}
+  .support-band .sec-head{max-width:60ch}
+  .support-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(12px,1.8vw,18px); margin-top:clamp(30px,4.5vw,48px); align-items:start}
+  @media (max-width:980px){ .support-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  @media (max-width:620px){ .support-grid{grid-template-columns:1fr} }
+  .s-card{margin:0; display:flex; gap:.85rem; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.05rem 1.15rem 1.15rem; box-shadow:0 1px 2px rgba(27,24,21,.05)}
+  .s-card .s-mark{flex:none; width:34px; height:34px; border-radius:50%; background:var(--brand); color:#fff; display:grid; place-items:center; margin-top:.05rem; box-shadow:inset 0 -2px 0 rgba(0,0,0,.12)}
+  .s-card .s-mark::before{content:"\201C"; font:700 1.4rem/0 Georgia,"Iowan Old Style","Palatino Linotype",serif; padding-bottom:.4rem}
+  .s-card .s-quote{margin:0; font-size:1.03rem; line-height:1.52; color:#2e2a24}
+  .s-card .s-quote mark{background:linear-gradient(transparent 62%, rgba(139,197,62,.42) 0); color:inherit; padding-inline:.05em; border-radius:2px}
+  .s-card .s-quote a{color:var(--brand-deep); font-weight:600; text-decoration:underline; text-decoration-color:rgba(66,130,0,.35); text-underline-offset:2px; border-radius:2px}
 
   /* ---------- numbers / support ---------- */
-  .numbers-band{background:var(--ink); color:#fff; border-radius:26px; margin-bottom:clamp(48px,7vw,84px); padding:clamp(32px,5vw,56px); text-align:center; overflow:hidden; position:relative}
+  .numbers-band{background:var(--ink); color:#fff; border-radius:26px; margin-top:clamp(60px,8vw,104px); margin-bottom:clamp(48px,7vw,84px); padding:clamp(32px,5vw,56px); text-align:center; overflow:hidden; position:relative}
   .numbers-band::before{content:""; position:absolute; inset:-40% -20% auto; height:80%; background:radial-gradient(420px 200px at 50% 0, rgba(139,197,62,.30), transparent 70%); pointer-events:none}
   .numbers-band h2{font-size:clamp(1.7rem,3.6vw,2.5rem); position:relative}
   .numbers-band .sub{color:#d9d2ca; margin-top:.7rem; max-width:52ch; margin-inline:auto; position:relative}
@@ -385,36 +418,36 @@
   .logo .logo-mark svg{width:18px;height:18px}
   .logo .logo-name{font-weight:800; font-size:1.2rem; letter-spacing:-.02em}
 
-  /* ---------- footer ---------- */
-  footer{background:#000; border-top:1px solid rgba(255,255,255,.08); padding-block:clamp(36px,5vw,60px) 30px}
-  .footer-cols{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:clamp(22px,2.6vw,38px)}
-  @media (max-width:1240px){ .footer-cols{grid-template-columns:repeat(3,minmax(0,1fr))} }
-  @media (max-width:760px){ .footer-cols{grid-template-columns:repeat(2,minmax(0,1fr))} }
-  @media (max-width:440px){ .footer-cols{grid-template-columns:1fr} }
-  footer .logo{color:#fff}
-  footer .logo-name{color:#fff}
-  .foot-col h3{font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.45); margin-bottom:.9rem; line-height:1.3}
-  .foot-col a{display:block; color:rgba(255,255,255,.62); text-decoration:none; font-size:.93rem; padding-block:.26rem; line-height:1.35}
-  .foot-col a:hover{color:#fff; text-decoration:underline}
-  .footer-bottom{border-top:1px solid rgba(255,255,255,.14); margin-top:clamp(30px,4vw,46px); padding-top:1.5rem; display:flex; justify-content:space-between; gap:22px; flex-wrap:wrap; align-items:flex-end}
-  .fb-left{max-width:360px}
-  .fb-left .logo{margin-top:0}
-  .fb-tag{color:rgba(255,255,255,.55); margin:.6rem 0 0; font-size:.9rem; line-height:1.55; max-width:32ch}
-  .fb-left .social-row{margin-top:.85rem}
-  .fb-right{text-align:right; max-width:560px}
-  .legal{list-style:none; margin:0 0 .6rem; padding:0; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:.15rem}
-  .legal li{display:inline-flex; align-items:center}
-  .legal li+li::before{content:"·"; margin:0 .55rem; color:rgba(255,255,255,.35)}
-  .legal a{color:rgba(255,255,255,.62); text-decoration:none; white-space:nowrap; font-size:.9rem}
-  .legal a:hover{color:#fff; text-decoration:underline}
-  .copy{margin:0; font-size:.88rem; color:rgba(255,255,255,.5)}
-  .copy a{color:rgba(255,255,255,.62); text-decoration:none}
-  .copy a:hover{color:#fff; text-decoration:underline}
-  .social-row{display:flex; gap:10px}
-  .social-row a{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;transition:border-color .15s, background .15s}
-  .social-row a:hover{border-color:var(--brand-bright); color:var(--brand-bright); background:rgba(255,255,255,.06); text-decoration:none}
-  .social-row a svg{display:block; fill:currentColor}
-  @media (max-width:700px){ .fb-right{text-align:left} .legal{justify-content:flex-start} }
+  /* ---------- footer (podbean.com menu structure) ---------- */
+  .footer{background:#000; border-top:1px solid rgba(255,255,255,.08); padding-block:clamp(36px,5vw,58px) 26px}
+  .footer-content{padding-bottom:clamp(28px,4vw,44px)}
+  .w1170{max-width:1170px; margin-inline:auto; padding-inline:clamp(18px,3.5vw,32px)}
+  .grid4 > ul{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:clamp(24px,2.6vw,38px)}
+  @media (max-width:1200px){ .grid4 > ul{grid-template-columns:repeat(3,minmax(0,1fr))} }
+  @media (max-width:760px){ .grid4 > ul{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  @media (max-width:460px){ .grid4 > ul{grid-template-columns:1fr} }
+  .grid4 .list{list-style:none; margin:0}
+  .sitemap-list h3{font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.45); margin:0 0 .95rem; line-height:1.4; font-weight:700}
+  .sitemap-list .empty{margin:0 0 .95rem; font-size:.78rem; line-height:1.4; visibility:hidden}
+  .sitemap-list ul{list-style:none; margin:0; padding:0}
+  .sitemap-list li{margin:0; padding:0}
+  .sitemap-list a{display:inline-block; color:rgba(255,255,255,.62); text-decoration:none; font-size:.92rem; line-height:1.35; padding-block:.26rem}
+  .sitemap-list a:hover{color:#fff; text-decoration:underline}
+  .footer-share{max-width:1170px; margin-inline:auto; padding:0 clamp(18px,3.5vw,32px); border-top:1px solid rgba(255,255,255,.14); padding-top:1.4rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px 28px}
+  .s-left ul{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:14px; align-items:center}
+  .s-left li{margin:0; padding:0; display:inline-flex}
+  .s-left a{display:inline-flex; color:#fff; line-height:0; transition:opacity .15s}
+  .s-left a:hover{opacity:.75}
+  .s-left svg{display:block; width:auto; height:17px; fill:#fff}
+  .copyright ul{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; row-gap:.45rem}
+  .copyright .list-inline-item{display:inline-flex; align-items:center; color:rgba(255,255,255,.5); font-size:.88rem}
+  .copyright .list-inline-item a{color:rgba(255,255,255,.62); text-decoration:none; white-space:nowrap; font-size:.88rem}
+  .copyright .list-inline-item a:hover{color:#fff; text-decoration:underline}
+  .copyright .list-inline-item .px-2{padding-inline:.45rem}
+  .copyright .copyright-text{padding-left:.35rem}
+  .copyright .copyright-text a{color:rgba(255,255,255,.62)}
+  .copyright .copyright-text a:hover{color:#fff}
+  @media (max-width:700px){ .copyright ul{justify-content:flex-start} }
 
   .reveal{animation:rise .7s cubic-bezier(.22,.7,.3,1) both}
   @keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
@@ -658,130 +691,115 @@
         </div>
       </div>
 
-      <div class="hero-visual" role="img" aria-label="A collage of social media posts and podcast covers from creators who love Podbean">
+      <div class="hero-visual" role="img" aria-label="Social posts, podcast cover art, listener stats and a few real reviews">
         <div class="hero-wall" aria-hidden="true">
           <span class="ghost g-1">♪</span>
           <span class="ghost g-2">@</span>
           <span class="ghost g-3">#</span>
 
-          <!-- X post -->
-          <article class="soc-card soc-x">
-            <div class="sc-top">
-              <span class="ava" style="background:linear-gradient(135deg,#79b51e,#428200)">HQ</span>
-              <div class="sc-who">
-                <div class="sc-name">The Quiet Hour</div>
-                <div class="sc-handle">@thequiethour</div>
-              </div>
-              <span class="sc-brand"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 1.2h3.7l-8.1 9.2L24 22.8h-7.5l-5.9-7.6-6.7 7.6H.2l8.6-9.8L0 1.2h7.7l5.3 7 6-7Zm-1.3 19.4h2L6.5 3.2h-2.2l13.3 17.4Z"/></svg></span>
+          <!-- available on real podcast platforms -->
+          <figure class="dir-card" aria-hidden="true">
+            <div class="dir-head"><span class="dir-dot">♪</span>Hear it on your favorite apps</div>
+            <div class="dir-row">
+              <span class="dir-app">
+                <span class="dir-ico dir-ico--ap"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="#fff"><rect x="8" y="19" width="4" height="10" rx="2"/><rect x="15" y="13" width="4" height="22" rx="2"/><rect x="22" y="8" width="4" height="32" rx="2"/><rect x="29" y="14" width="4" height="20" rx="2"/><rect x="36" y="20" width="4" height="8" rx="2"/></g></svg></span>
+                <em>Apple Podcasts</em>
+              </span>
+              <span class="dir-app">
+                <span class="dir-ico dir-ico--sp"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"><path d="M13 17.5c7-2.2 15.5-2 22 .6"/><path d="M12.5 24.2c7.6-2.3 16.8-2.1 23.8.8"/><path d="M12 31c8-2.4 17.6-2.2 25 .9"/></g></svg></span>
+                <em>Spotify</em>
+              </span>
+              <span class="dir-app">
+                <span class="dir-ico dir-ico--yt"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#fff" d="M18.5 14.5v19l16.5-9.5z"/></svg></span>
+                <em>YouTube</em>
+              </span>
             </div>
-            <p class="sc-text">New episode is live everywhere you listen. <b>Publishing with Podbean</b> is a genuinely one-tap job now.</p>
-            <div class="sc-foot">
-              <span class="sc-act sc-act--heart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.7-4.3-9.3-8.1C.9 10.3 2.4 6.6 5.8 6c1.9-.3 3.6.6 4.7 2.1L12 9.6l1.5-1.5c1.1-1.5 2.8-2.4 4.7-2.1 3.4.6 4.9 4.3 3.1 6.9C18.7 16.7 12 21 12 21Z"/></svg><b>1,284</b></span>
-              <span class="sc-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.5-5M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 5M20 20v-4h-4"/></svg><b>342</b></span>
-              <span class="sc-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg><b>89K</b></span>
-            </div>
-          </article>
+          </figure>
 
-          <!-- Instagram cover -->
-          <article class="soc-card soc-ig">
+          <!-- Instagram / cover art -->
+          <figure class="soc-card soc-ig">
             <div class="ig-frame">
-              <div class="ig-cover">
-                <span class="ig-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.9l11-7.2c.6-.4.6-1.4 0-1.8l-11-7.2c-.7-.4-1.6.1-1.6.9Z"/></svg></span>
-              </div>
+              <span class="ig-cover">
+                <img src="Podcastlogo1" alt="" width="748" height="740">
+                <span class="ig-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
             </div>
             <div class="ig-bar">
-              <span class="mini-ava">SR</span>
-              <div>
-                <div class="ig-nm">Spice Routes</div>
-                <div class="ig-h">@spiceroutes</div>
-              </div>
-              <span class="ig-like"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.7-4.3-9.3-8.1C.9 10.3 2.4 6.6 5.8 6c1.9-.3 3.6.6 4.7 2.1L12 9.6l1.5-1.5c1.1-1.5 2.8-2.4 4.7-2.1 3.4.6 4.9 4.3 3.1 6.9C18.7 16.7 12 21 12 21Z"/></svg>9,482</span>
+              <span class="mini-ava">♪</span>
+              <span class="ig-who"><span class="ig-nm">podbean</span><br><span class="ig-h">Your show, everywhere</span></span>
+              <span class="ig-like"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.7-4.35-9.33-8.11C.7 9.9 1.7 6.5 4.6 5.3c2-.83 4.2-.2 5.4 1.4L12 9l2-2.3c1.2-1.6 3.4-2.23 5.4-1.4 2.9 1.2 3.9 4.6 1.93 7.59C18.7 16.65 12 21 12 21z"/></svg>9,482</span>
             </div>
-          </article>
+          </figure>
 
-          <!-- TikTok post -->
-          <article class="soc-card soc-tt">
-            <span class="tt-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3.2v10.9a3.6 3.6 0 1 0 2.4 3.4V7.2h6.3V4H12.1V2.4L9 3.2Z"/></svg></span>
-            <div class="tt-handle">@studiovisit</div>
-            <div class="tt-views">video to podcast</div>
-            <div class="tt-hearts"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.7-4.3-9.3-8.1C.9 10.3 2.4 6.6 5.8 6c1.9-.3 3.6.6 4.7 2.1L12 9.6l1.5-1.5c1.1-1.5 2.8-2.4 4.7-2.1 3.4.6 4.9 4.3 3.1 6.9C18.7 16.7 12 21 12 21Z"/></svg>4.2K</div>
-          </article>
+          <!-- YouTube -->
+          <figure class="soc-card soc-yt">
+            <span class="yt-thumb">
+              <img src="Podcastlogo2.png" alt="" width="750" height="750">
+              <span class="yt-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+            </span>
+            <p class="yt-title">Publish once — your show is on every major listening app</p>
+            <span class="yt-sub"><svg viewBox="0 0 24 24" style="width:3.4cqw;height:3.4cqw;fill:#ff0033;border-radius:1cqw" aria-hidden="true"><path d="M23 12s-2 6.5-4 7.5c-1.6.8-12 .8-12 0C5 18.5 3 12 3 12s2-6.5 4-7.5c1.6-.8 12-.8 12 0 2 1 2 7.5 2 7.5z" opacity="0"/><path d="M10 8.5v7l6-3.5-6-3.5z"/></svg>Podbean &middot; 89K views &middot; Podcasting</span>
+          </figure>
 
-          <!-- YouTube card -->
-          <article class="soc-card soc-yt">
-            <div class="yt-thumb">
-              <span class="yt-tag">YouTube</span>
-              <span class="yt-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.9l11-7.2c.6-.4.6-1.4 0-1.8l-11-7.2c-.7-.4-1.6.1-1.6.9Z"/></svg></span>
-            </div>
-            <div class="yt-title">How we grew to 10K listeners in a year</div>
-            <div class="yt-sub">
-              <span class="mini-ava">FW</span>
-              <span>Founders at Night</span>
-            </div>
-          </article>
+          <!-- TikTok -->
+          <figure class="soc-card soc-tt">
+            <span class="tt-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.3 0 .58.05.86.13V9.4a6.33 6.33 0 0 0-5.37 10.69 6.33 6.33 0 0 0 10.86-4.43V8.64a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.01-.07z"/></svg></span>
+            <span class="tt-handle">@podbean</span>
+            <span class="tt-views">1.2M views</span>
+            <span class="tt-hearts"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.7-4.35-9.33-8.11C.7 9.9 1.7 6.5 4.6 5.3c2-.83 4.2-.2 5.4 1.4L12 9l2-2.3c1.2-1.6 3.4-2.23 5.4-1.4 2.9 1.2 3.9 4.6 1.93 7.59C18.7 16.65 12 21 12 21z"/></svg>48.2K</span>
+          </figure>
 
-          <!-- Facebook post -->
-          <article class="soc-card soc-fb">
-            <div class="sc-top">
-              <span class="ava" style="background:linear-gradient(135deg,#f0a94d,#428200)">MW</span>
-              <div class="sc-who">
-                <div class="sc-name">Marcus Webb</div>
-                <div class="sc-handle">Founders at Night</div>
-              </div>
-              <span class="sc-brand"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5h1.6V4.5c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.3H7.6V14h2.7v8h3.2Z"/></svg></span>
+          <!-- mini review duo (real Trustpilot quotes) -->
+          <div class="duo">
+            <div class="duo-top">
+              <span class="duo-tp"><span class="tp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 1.7l2.9 6.3 7 .9-5.2 4.9 1.4 6.9L12 17.5l-6.1 3.2 1.4-6.9L2.1 8.9l7-.9L12 1.7z"/></svg></span>Trustpilot</span>
+              <span class="duo-stars" aria-hidden="true">★★★★★</span>
             </div>
-            <p class="sc-text">Podbean’s listener stats changed how we plan the show. The dashboard is unreal.</p>
-            <div class="fb-foot">
-              <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.7-4.3-9.3-8.1C.9 10.3 2.4 6.6 5.8 6c1.9-.3 3.6.6 4.7 2.1L12 9.6l1.5-1.5c1.1-1.5 2.8-2.4 4.7-2.1 3.4.6 4.9 4.3 3.1 6.9C18.7 16.7 12 21 12 21Z"/></svg>214</span>
-              <span>1,030 plays this week</span>
+            <div class="duo-item">
+              <p class="duo-q">“Podbean is easy to understand and navigate, I have told several of my friends about Podbean.”</p>
+              <span class="duo-d">Apr 6, 2025 &middot; 5 stars</span>
             </div>
-          </article>
+            <div class="duo-item">
+              <p class="duo-q">“So far, the Podbean podcast launching experience has been quite convenient and reliable for our small startup consulting company.”</p>
+              <span class="duo-d">Sep 3, 2024 &middot; 5 stars</span>
+            </div>
+          </div>
 
+          <span class="stat-pill">♪ <span class="sp-num"><em>15.9B+</em></span>&nbsp;downloads</span>
         </div>
       </div>
-    </div>
-  </section>
+    </div></section>
 
   <!-- ======================= FEATURED TESTIMONIALS ======================= -->
   <section class="featured" aria-labelledby="featured-h">
     <div class="wrap">
       <div class="sec-head">
         <h2 id="featured-h">Stories from the Podbean community</h2>
-        <p>We're helping podcasters of all genres and sizes.</p>
+        <p>Real stories from podcasters and brands who host with Podbean.</p>
       </div>
-
       <div class="featured-grid">
-        <article class="f-card">
-          <blockquote class="f-quote">We moved to Podbean for the analytics and stayed for everything else. Publishing an episode takes minutes, and the listener stats genuinely changed how we plan the show.</blockquote>
-          <figcaption class="f-who">
-            <img class="f-art" src="Podcastlogo1" alt="">
-            <div class="f-meta">
-              <div class="f-name">Hannah Quinn</div>
-              <div class="f-show">Host, <a href="#">The Quiet Hour</a></div>
-            </div>
-          </figcaption>
+        <article class="f-card f-case">
+          <blockquote class="f-quote">For the listeners, the outcome of this effort is a collection of high-quality, book-markable audio documentaries hosted by PodBean.</blockquote>
+          <div class="c-foot">
+            <img class="c-logo" src="kaspersky.webp" alt="Kaspersky" width="1024" height="210">
+            <a class="c-link" href="https://www.podbean.com/enterprise/podcast-case-studies/kaspersky" target="_blank" rel="noopener">Read the story</a>
+          </div>
         </article>
 
-        <article class="f-card">
-          <blockquote class="f-quote">I monetized in my first month. Between Podbean Ads and listener support, podcasting finally pays for itself — no sponsor hunting required.</blockquote>
-          <figcaption class="f-who">
-            <img class="f-art" src="Podcastlogo2.png" alt="">
-            <div class="f-meta">
-              <div class="f-name">Marcus Webb</div>
-              <div class="f-show">Host, <a href="#">Founders at Night</a></div>
-            </div>
-          </figcaption>
+        <article class="f-card f-case">
+          <blockquote class="f-quote">It is this personal feedback and the connections created, more than numbers, that have shown the success of the podcast.</blockquote>
+          <div class="c-foot">
+            <img class="c-logo" src="Lehigh-logo.webp" alt="Lehigh University" width="605" height="165">
+            <a class="c-link" href="https://www.podbean.com/enterprise/podcast-case-studies/LehighUniversity" target="_blank" rel="noopener">Read the story</a>
+          </div>
         </article>
 
-        <article class="f-card">
-          <blockquote class="f-quote">Their support team answers like they know your show. We hit a snag an hour before a live episode and had a fix within minutes.</blockquote>
-          <figcaption class="f-who">
-            <img class="f-art" src="Podcastlogo3.png" alt="">
-            <div class="f-meta">
-              <div class="f-name">Priya Raghavan</div>
-              <div class="f-show">Host, <a href="#">Spice Routes</a></div>
-            </div>
-          </figcaption>
+        <article class="f-card f-case">
+          <blockquote class="f-quote">White &amp; Case's Andrew and Juliette are very clear that podcasting has been an excellent medium to provide information in a format that is not too slick or too corporate, but is instead, accessible and personable.</blockquote>
+          <div class="c-foot">
+            <img class="c-logo" src="white-case-logo.webp" alt="White &amp; Case" width="1350" height="106">
+            <a class="c-link" href="https://www.podbean.com/enterprise/podcast-case-studies/WhiteAndCase" target="_blank" rel="noopener">Read the story</a>
+          </div>
         </article>
       </div>
     </div>
@@ -792,135 +810,162 @@
     <div class="wrap">
       <div class="sec-head">
         <h2 id="wall-h">What podcasters tell us</h2>
-        <p>Hosts use Podbean for everything from first episodes to sold-out live shows. These are the words they share with us.</p>
+        <p>Every quote below is a verified Trustpilot review of Podbean — shown with the rating and date the reviewer originally left.</p>
         <div class="rating-strip">
           <span class="rs-score">4.4<sup>/ 5</sup></span>
           <span class="rs-stars" role="img" aria-label="4.4 out of 5 stars">★★★★☆</span>
           <span class="rs-div" aria-hidden="true"></span>
-          <span class="rs-src"><strong>Rated Excellent</strong> · based on verified reviews at <a href="https://www.trustpilot.com/review/podbean.com" target="_blank" rel="noopener">Trustpilot</a></span>
+          <span class="rs-src"><strong>Rated Excellent</strong> · based on verified reviews at <a href="https://www.trustpilot.com/review/podbean.com" target="_blank" rel="noopener"><span class="tp-ico" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.7l2.9 6.3 7 .9-5.2 4.9 1.4 6.9L12 17.5l-6.1 3.2 1.4-6.9L2.1 8.9l7-.9L12 1.7z"/></svg></span>Trustpilot</a></span>
         </div>
       </div>
 
       <div class="columns">
         <article class="r-card">
-          <h3 class="r-title">Everything, in one place</h3>
-          <p class="r-text">We used to stitch together a host, a website and a newsletter tool. With Podbean we get it all, and <mark>the episode is live everywhere before I finish my coffee</mark>.</p>
-          <cite class="r-cite"><b>Maya Lindgren</b>, Northlight Audio</cite>
+          <h3 class="r-title">A happy customer of Podbean</h3>
+          <p class="r-text">I have been using Podbean for over ten years, to publish church services, once a week. <mark>Podbean's process is smooth and reliable</mark>. I have limited familiarity with computers and posting. Podbean makes the process easy, and has quickly answered any questions I had.</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Feb 22, 2026</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">Stats that made us better</h3>
-          <p class="r-text">The listener analytics are the reason our show improved. <mark>We finally see which episodes bring new listeners in</mark>, and we plan around that every week.</p>
-          <cite class="r-cite"><b>André Silva</b>, Field Notes Podcast</cite>
+          <h3 class="r-title">Podbean is easy and intuitive, with great customer support</h3>
+          <p class="r-text">Podbean is extremely <mark>easy and intuitive to use</mark>, and if you experience any issues, they are very responsive, which is the opposite of what we all have come to expect from most companies like this. Highly recommend!</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Nov 23, 2024</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">Ads that don't feel gross</h3>
-          <p class="r-text">I was skeptical about podcast ads until Podbean matched me with sponsors that actually fit the show. <mark>Sponsorship has become a real part of our revenue</mark>.</p>
-          <cite class="r-cite"><b>Dana Okafor</b>, Tea &amp; Tech</cite>
+          <h3 class="r-title">I wish I had switched to Podbean years ago</h3>
+          <p class="r-text">I love Podbean. I wish I had switched my podcast, Riding The Wild Bubble, over to Podbean a long time ago! <mark>The platform is so user friendly and the support is excellent</mark>, if you have a question or issue.</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Jul 25, 2024</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">The easiest migration ever</h3>
-          <p class="r-text">Moving 200 episodes from another host took one afternoon. <mark>Their team walked us through it and nothing broke</mark>.</p>
-          <cite class="r-cite"><b>Jonas Meyer</b>, Backlog</cite>
+          <h3 class="r-title">Best in class!!</h3>
+          <p class="r-text">Best in class!! I have used Podbean as my primary podcasting hub since 2021. The tech support, the stability of the platform, the listening to user feedback, the ease of using the platform and <mark>the range of tools including customization tools</mark> are unmatched. I highly recommend Podbean.</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Aug 20, 2026</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">Video podcasting done right</h3>
-          <p class="r-text">We record on camera and Podbean handles video to YouTube while the audio goes everywhere else. <mark>One upload, two audiences</mark>.</p>
-          <cite class="r-cite"><b>Chloé Adams</b>, The Studio Visit</cite>
+          <h3 class="r-title">I'll be using Podbean for a long time to come!</h3>
+          <p class="r-text">Podbean is not only easy and straightforward to work with on a daily basis, but <mark>its <a href="https://www.podbean.com/podcast-academy" target="_blank" rel="noopener">learning sections</a> and support team are quick, clear ,and invaluable</mark>. I feel completely confident in hosting my podcast here for a long time to come!</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Sep 2, 2025</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">Support that actually helps</h3>
-          <p class="r-text">I asked a question at 11pm and <mark>had a thoughtful answer before breakfast</mark>. That never happened with our old host.</p>
-          <cite class="r-cite"><b>Raj Patel</b>, Startup Stories</cite>
+          <h3 class="r-title">Very easy to use this service</h3>
+          <p class="r-text">Very easy to use this service. I was able to signup to <mark><a href="https://sponsorship.podbean.com/" target="_blank" rel="noopener">advertise on multiple podcasts</a> and create an audio ad</mark>. Customer service provided excellent assistance as well.</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Aug 20, 2024</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">From hobby to habit</h3>
-          <p class="r-text">I started as a hobby and now have a loyal audience in 40+ countries. <mark>Podbean grew with me</mark> — free tier first, then painless upgrades.</p>
-          <cite class="r-cite"><b>Sana Yusuf</b>, Small Bites</cite>
+          <h3 class="r-title">If you have a Podcast, You need Podbean!</h3>
+          <p class="r-text">I switched to Podbean because it mirrored the simple workflow I had with a platform called Swell (which is no longer in service). I record only with my phone, so I needed a UI that I could feel comfortable navigating. Podbean has all the features I had with the previous platform and more! One of my favorite aspects is being able to <mark><a href="https://www.podbean.com/podcast-hosting-features#promotion" target="_blank" rel="noopener">embed my entire podcast on my website</a></mark> - it looks great, and users can see all the episodes in one place without downloading anything. Customer service is quick and friendly throughout the setup process or anytime I have questions. If you have a podcast, you need Podbean!</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Feb 18, 2026</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">AI tools save our week</h3>
-          <p class="r-text">The AI show notes and chapter markers write themselves. <mark>We publish twice a week now with less effort than we used to spend on one episode</mark>.</p>
-          <cite class="r-cite"><b>Tom Beckett</b>, Hobby Horse</cite>
+          <h3 class="r-title">I should have done this sooner.</h3>
+          <p class="r-text">I kinda thought most podcast hosting sites offered the same thing, nope. I did a lot of research before switching to Podbean. I am already happier and very impressed with the customer support. That means everything to a small podcaster. They guided me, with a real person, through the curveballs during the transfer and I do love the ability to <mark><a href="https://www.podbean.com/podcast-hosting-features#podcast-website" target="_blank" rel="noopener">customize my landing page</a></mark>. I wish I would have done this sooner.</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Aug 21, 2024</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">The live shows never drop</h3>
-          <p class="r-text">We live-stream weekly and <mark>reliability is everything</mark>. Podbean has never let us down in front of an audience.</p>
-          <cite class="r-cite"><b>Marta Kowalski</b>, Live at Five</cite>
+          <h3 class="r-title">I love how user friendly the system is…</h3>
+          <p class="r-text">I love how user friendly the system is and <mark><a href="https://www.podbean.com/podcast-academy" target="_blank" rel="noopener">all the tutorials on how to have a successful podcast</a></mark> as this is my first one</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Oct 5, 2025</span>
+          </div>
         </article>
 
         <article class="r-card">
-          <h3 class="r-title">Worth every cent</h3>
-          <p class="r-text">We compared every host out there. <mark>Podbean gave us the best value at the price</mark>, and the free plan let us test before committing.</p>
-          <cite class="r-cite"><b>David Chen</b>, Two Chairs</cite>
+          <h3 class="r-title">Podbean providing a good service.</h3>
+          <p class="r-text">To date, Podbean have proved to be a good podcast host. <mark><a href="https://www.podbean.com/podcast-hosting-features#statistics" target="_blank" rel="noopener">The stats provided for my podcast are detailed and informative</a></mark>. And Podbean responds swiftly to any questions I may have.</p>
+          <div class="r-meta">
+            <span class="r-stars" data-rating="5"></span>
+            <span class="r-date">Mar 27, 2024</span>
+          </div>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- ======================= SOCIAL POSTS ======================= -->
-  <section class="social-band" aria-labelledby="x-h">
+  <!-- ======================= CUSTOMER-SUPPORT REVIEWS ======================= -->
+  <section class="support-band" aria-labelledby="support-h">
     <div class="wrap">
       <div class="sec-head">
-        <h2 id="x-h">Podcasters on X</h2>
-        <p>A few posts from creators who publish with Podbean.</p>
+        <h2 id="support-h">Fast help from a real support team</h2>
+        <p class="sub">Real notes from podcasters about their experience with Podbean support.</p>
       </div>
 
-      <div class="social-grid">
-        <article class="x-card">
-          <div class="x-head">
-            <span class="x-avatar" style="background:linear-gradient(135deg,#79b51e,#428200)" aria-hidden="true">PR</span>
-            <div><div class="x-name">Priya Raghavan</div><div class="x-handle">@priyapods</div></div>
-          </div>
-          <p class="x-body">30 days on Podbean and our downloads are up 2×. The new analytics dashboard is everything.</p>
-        </article>
+      <div class="support-grid">
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">I've received prompt answers to my help requests, and the rep went above and beyond.</p>
+        </figure>
 
-        <article class="x-card">
-          <div class="x-head">
-            <span class="x-avatar" style="background:linear-gradient(135deg,#8bc53e,#4d940f)" aria-hidden="true">MW</span>
-            <div><div class="x-name">Marcus Webb</div><div class="x-handle">@marcw_show</div></div>
-          </div>
-          <p class="x-body">Just cashed our first Podbean Ads payout. To everyone who told me podcasting can't pay — it can.</p>
-        </article>
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">Podbean was incredibly helpful, very responsive, and kind. I highly recommend the platform and the customer service that comes along with it.</p>
+        </figure>
 
-        <article class="x-card">
-          <div class="x-head">
-            <span class="x-avatar" style="background:linear-gradient(135deg,#5aa114,#2f5c00)" aria-hidden="true">CA</span>
-            <div><div class="x-name">Chloé Adams</div><div class="x-handle">@studiovisit</div></div>
-          </div>
-          <p class="x-body">Podbean support un-stuck our RSS feed on a Sunday morning in minutes. Legends, every one of them.</p>
-        </article>
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">Podbean always responds quickly and solves the problem right away.</p>
+        </figure>
 
-        <article class="x-card">
-          <div class="x-head">
-            <span class="x-avatar" style="background:linear-gradient(135deg,#6fae1d,#356a00)" aria-hidden="true">TH</span>
-            <div><div class="x-name">Tomás Herrera</div><div class="x-handle">@herreralive</div></div>
-          </div>
-          <p class="x-body">Moved our whole back catalogue from another host in an afternoon. Podbean's team walked us through it — not a single broken episode.</p>
-        </article>
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">They got right back to me with a solution. When I procrastinated a few days, they followed up to check on my progress.</p>
+        </figure>
 
-        <article class="x-card">
-          <div class="x-head">
-            <span class="x-avatar" style="background:linear-gradient(135deg,#9bd44b,#4d940f)" aria-hidden="true">AB</span>
-            <div><div class="x-name">Aisha Bello</div><div class="x-handle">@aishabcast</div></div>
-          </div>
-          <p class="x-body">The AI show notes save me a full hour every week. I record, upload, and Podbean does the rest — publishing finally feels effortless.</p>
-        </article>
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">I had a fantastic experience with Podbean's support team. They were quick to respond and extremely helpful in resolving my issue.</p>
+        </figure>
 
-        <article class="x-card">
-          <div class="x-head">
-            <span class="x-avatar" style="background:linear-gradient(135deg,#4f8d00,#2f5c00)" aria-hidden="true">SO</span>
-            <div><div class="x-name">Sam Okafor</div><div class="x-handle">@samrecs</div></div>
-          </div>
-          <p class="x-body">Started on the free plan to test an idea. Eleven episodes in we upgraded — the listener stats alone are worth it.</p>
-        </article>
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">amazing service !! five minutes from opening the ticket and I got a response - right to the point, and solved my issue.</p>
+        </figure>
+
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">I was very impressed with how quickly customer service was able to address my issue. It took less than an hour and my feeds were once again up and running.</p>
+        </figure>
+
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">Any time I have an issue their human at a support desk responds immediately. Happy to keep opening my pods here.</p>
+        </figure>
+
+        <figure class="s-card">
+          <span class="s-mark" aria-hidden="true"></span>
+          <p class="s-quote">I quickly received a chat back with helpful information and was able to resolve my problem. And it was even a Sunday!</p>
+        </figure>
       </div>
     </div>
   </section>
@@ -951,102 +996,153 @@
 </main>
 
 <!-- ======================= FOOTER ======================= -->
-<footer>
-  <div class="wrap">
-    <div class="footer-cols">
-      <div class="foot-col">
-        <h3>Podcast Services</h3>
-        <a href="https://www.podbean.com/podcast-hosting-features">Podcast Features</a>
-        <a href="https://www.podbean.com/podcast-hosting-pricing">Pricing</a>
-        <a href="https://www.podbean.com/enterprise/enterprise-podcast-solution">Enterprise Solution</a>
-        <a href="https://www.podbean.com/enterprise/solutions/private-podcast">Private Podcast</a>
-        <a href="https://www.podbean.com/podcast-app-iphone-android-mobile">The Podcast App</a>
-        <a href="https://www.podbean.com/audio-recorder">Audio Recorder</a>
-        <a href="https://www.podbean.com/remote-podcast-recording">Remote Recording</a>
-        <a href="https://www.podbean.com/podcast-ai">Podbean AI</a>
-      </div>
-      <div class="foot-col">
-        <h3 aria-hidden="true">&nbsp;</h3>
-        <a href="https://www.podbean.com/start-podcast">Start Podcasting</a>
-        <a href="https://www.podbean.com/start-video-podcast">Start Video Podcast</a>
-        <a href="https://www.podbean.com/create-a-podcast-for-spotify">Create a Podcast for Spotify</a>
-        <a href="https://www.podbean.com/create-a-podcast-for-apple-podcasts">Create a Podcast for Apple Podcasts</a>
-        <a href="https://www.podbean.com/ai-podcast-creator">AI Podcast Creator</a>
-        <a href="https://www.podbean.com/blog-to-podcast">Blog to Podcast</a>
-        <a href="https://www.podbean.com/youtube-to-podcast">YouTube to Podcast</a>
-        <a href="https://www.podbean.com/education-podcast">Education Podcast</a>
-      </div>
-      <div class="foot-col">
-        <h3>Monetization &amp; More</h3>
-        <a href="https://sponsorship.podbean.com">Podcast Advertising</a>
-        <a href="https://podads.podbean.com">Dynamic Ads Insertion</a>
-        <a href="https://www.podbean.com/apple-podcasts-subscriptions">Apple Podcasts Subscriptions</a>
-        <a href="https://www.podbean.com/site/submitPodcast">Submit Your Podcast</a>
-        <a href="https://www.podbean.com/switch-podcast-to-podbean">Switch to Podbean</a>
-        <a href="https://apps.podbean.com" target="_blank" rel="noopener noreferrer">Podbean Plugins</a>
-        <a href="https://www.podbean.com/free-audiobooks">Free Audiobooks</a>
-        <a href="https://www.podbean.com/ambient-relaxation">Ambient Relaxation</a>
-      </div>
-      <div class="foot-col">
-        <h3>Knowledge Base</h3>
-        <a href="https://www.podbean.com/how-to-start-a-podcast" target="_blank" rel="noopener noreferrer">How to Start a Podcast</a>
-        <a href="https://www.podbean.com/how-to-monetize-a-podcast" target="_blank" rel="noopener noreferrer">How to Monetize a Podcast</a>
-        <a href="https://www.podbean.com/how-to-promote-your-podcast" target="_blank" rel="noopener noreferrer">How to Promote Your Podcast</a>
-        <a href="https://www.podbean.com/mobile-podcast-recording-guide" target="_blank" rel="noopener noreferrer">Mobile Podcast Recording Guide</a>
-        <a href="https://www.podbean.com/how-to-record-your-podcast" target="_blank" rel="noopener noreferrer">How to Use Group Recording</a>
-        <a href="https://www.podbean.com/guide-to-podcast-advertising" target="_blank" rel="noopener noreferrer">Podcast Advertising 101</a>
-        <a href="https://www.podbean.com/what-is-ambient-relaxation" target="_blank" rel="noopener noreferrer">What Is Ambient Relaxation</a>
-      </div>
-      <div class="foot-col">
-        <h3>Support</h3>
-        <a href="https://help.podbean.com" target="_blank" rel="noopener noreferrer">Support Center</a>
-        <a href="https://www.podbean.com/new-features">What's New</a>
-        <a href="https://www.podbean.com/podcast-academy/webinars">Free Webinars</a>
-        <a href="https://www.podbean.com/podcast-academy/events">Podcast Events</a>
-        <a href="https://www.podbean.com/podcast-academy">Podbean Academy</a>
-        <a href="https://podcast.podbean.com/">Podbean Amplified Podcast</a>
-        <a href="https://www.podbean.com/site/default/badges">Badges</a>
-        <a href="https://www.podbean.com/site/resources">Resources</a>
-        <a href="https://developers.podbean.com">Developers</a>
-      </div>
-      <div class="foot-col">
-        <h3>Podbean</h3>
-        <a href="https://www.podbean.com/about-us">About Us</a>
-        <a href="https://blog.podbean.com/">Podbean Blog</a>
-        <a href="https://www.podbean.com/careers">Careers</a>
-        <a href="https://www.podbean.com/press">Press and Media</a>
-        <a href="https://www.podbean.com/green-initiative">Green Initiative</a>
-        <a href="https://www.podbean.com/affiliate">Affiliate Program</a>
-        <a href="https://www.podbean.com/contact-us" target="_blank" rel="noopener noreferrer">Contact Us</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="fb-left">
-        <a class="logo" href="#">
-          <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 5.5v13a1 1 0 0 0 1.5.9l11-6.5a1 1 0 0 0 0-1.8l-11-6.5A1 1 0 0 0 6 5.5Z" fill="#fff"/></svg></span>
-          <span class="logo-name">Podbean</span>
-        </a>
-        <p class="fb-tag">The easiest way to start, grow and monetize your podcast.</p>
-        <div class="social-row">
-          <a href="https://www.facebook.com/podbeancom" aria-label="Podbean on Facebook" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 22 22"><path d="M20.786,0H1.214A1.214,1.214,0,0,0,0,1.214V20.786A1.213,1.213,0,0,0,1.214,22H11.75V13.48H8.882V10.161H11.75V7.709a4,4,0,0,1,4.271-4.386,23.711,23.711,0,0,1,2.563.129v2.97H16.823c-1.375,0-1.643.661-1.643,1.623v2.118h3.285l-.426,3.328H15.18V22h5.605A1.213,1.213,0,0,0,22,20.786V1.214A1.213,1.213,0,0,0,20.786,0"/></svg></a>
-          <a href="https://x.com/podbean" aria-label="Podbean on X" target="_blank" rel="noopener noreferrer"><svg width="15" height="14" viewBox="0 0 22 20.591"><path d="M.053,0,8.547,11.357,0,20.591H1.924l7.483-8.084,6.046,8.084H22l-8.972-12L20.984,0H19.061L12.169,7.446,6.6,0ZM2.882,1.417H5.89L19.171,19.174H16.163L2.883,1.417Z"/></svg></a>
-          <a href="https://blog.podbean.com/" aria-label="Podbean Blog" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 22 21.968"><path d="M21.943,10.569a1.461,1.461,0,0,0-.619-.894,8.929,8.929,0,0,0-1.238-.138c-1-.034-1.1-.069-1.409-.241-.481-.275-.619-.584-.619-1.444a6.351,6.351,0,0,0-1.994-4.469A7.607,7.607,0,0,0,12.833,1.39a16.621,16.621,0,0,0-3.094-.138c-3.4-.034-4.16.034-5.328.481A6.949,6.949,0,0,0,.182,6.65,34.255,34.255,0,0,0,.01,11.772c-.034,4.985,0,5.707.344,6.7A5.967,5.967,0,0,0,1.386,20.5a6.922,6.922,0,0,0,4.056,2.613c.756.1,9.694.138,10.622.034a6.534,6.534,0,0,0,4.022-2.063,6.584,6.584,0,0,0,1.719-3.06c.138-.516.172-.756.172-3.816A30.228,30.228,0,0,0,21.943,10.569ZM6.13,7.475c.378-.378.481-.413,2.888-.413,2.166,0,2.235,0,2.544.172A1.091,1.091,0,0,1,12.214,8.3,1.124,1.124,0,0,1,11.6,9.366c-.206.138-.344.138-2.475.172-1.306,0-2.338-.034-2.51-.069A1.255,1.255,0,0,1,6.13,7.475Zm9.419,9.8-.722.1-3.816.069a27.26,27.26,0,0,1-4.469-.1,1.3,1.3,0,0,1-.722-.963,1.352,1.352,0,0,1,.413-1.1c.344-.309.516-.309,4.778-.344,4.4,0,4.366,0,4.778.378a1.253,1.253,0,0,1-.241,1.959Z" transform="translate(0 -1.245)"/></svg></a>
-          <a href="https://www.youtube.com/c/Podbeancom" aria-label="Podbean on YouTube" target="_blank" rel="noopener noreferrer"><svg width="20" height="14" viewBox="0 0 28.387 20"><path d="M70.457,184.462a3.593,3.593,0,0,0-2.516-2.532c-2.21-.6-11.081-.6-11.081-.6s-8.871,0-11.1.6a3.565,3.565,0,0,0-2.516,2.532,38.139,38.139,0,0,0-.581,6.871,37.131,37.131,0,0,0,.6,6.871,3.593,3.593,0,0,0,2.516,2.532c2.21.6,11.081.6,11.081.6s8.871,0,11.1-.6a3.565,3.565,0,0,0,2.516-2.532,38.138,38.138,0,0,0,.581-6.871A37.13,37.13,0,0,0,70.457,184.462Zm-16.5,11.1v-8.452l7.419,4.226Z" transform="translate(-42.667 -181.333)"/></svg></a>
+<!-- ================= Podbean footer (as served on podbean.com) ================= -->
+<div class="footer">
+    <div class="footer-content w1170">
+        <div class="grid4">
+            <ul class="clearfix">
+                <li class="list">
+                    <div class="sitemap-list">
+                        <h3 class="h6css">Podcast Services</h3>
+                        <ul>
+                            <li><a href="https://www.podbean.com/podcast-hosting-features">Podcast Features</a></li>
+                            <li><a href="https://www.podbean.com/podcast-hosting-pricing">Pricing</a></li>
+                            <li><a href="https://www.podbean.com/enterprise/enterprise-podcast-solution">Enterprise Solution</a></li>
+                            <li><a href="https://www.podbean.com/enterprise/solutions/private-podcast">Private Podcast</a></li>
+                            <li><a href="https://www.podbean.com/podcast-app-iphone-android-mobile">The Podcast App</a></li>
+                            <li><a href="https://www.podbean.com/audio-recorder">Audio Recorder</a></li>
+                            <li><a href="https://www.podbean.com/remote-podcast-recording">Remote Recording</a></li>
+                            <li><a href="https://www.podbean.com/podcast-ai">Podbean AI</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list two-list">
+                    <div class="sitemap-list">
+                        <div class="h6css empty">&nbsp;</div>
+                        <ul class="column">
+                            <li><a href="https://www.podbean.com/start-podcast">Start Podcasting</a></li>
+                            <li><a href="https://www.podbean.com/start-video-podcast">Start Video Podcast</a></li>
+                            <li><a href="https://www.podbean.com/create-a-podcast-for-spotify">Create a Podcast for Spotify</a></li>
+                            <li><a href="https://www.podbean.com/create-a-podcast-for-apple-podcasts">Create a Podcast for Apple Podcasts</a></li>
+                            <li><a href="https://www.podbean.com/ai-podcast-creator">AI Podcast Creator</a></li>
+                            <li><a href="https://www.podbean.com/blog-to-podcast">Blog to Podcast</a></li>
+                            <li><a href="https://www.podbean.com/youtube-to-podcast">YouTube to Podcast</a></li>
+                            <li><a href="https://www.podbean.com/education-podcast">Education Podcast</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list advanced">
+                    <div class="sitemap-list">
+                        <h3 class="h6css">MONETIZATION &amp; MORE</h3>
+                        <ul>
+                            <li><a href="https://sponsorship.podbean.com">Podcast Advertising</a></li>
+                            <li><a href="https://podads.podbean.com">Dynamic Ads Insertion</a></li>
+                            <li><a href="https://www.podbean.com/apple-podcasts-subscriptions">Apple Podcasts Subscriptions</a></li>
+                            <li><a href="https://www.podbean.com/site/submitPodcast">Submit Your Podcast</a></li>
+                            <li><a href="https://www.podbean.com/switch-podcast-to-podbean">Switch to Podbean</a></li>
+                            <li><a href="https://apps.podbean.com" rel="noopener noreferrer" target="_blank">Podbean Plugins</a></li>
+                            <li><a href="https://www.podbean.com/free-audiobooks">Free Audiobooks</a></li>
+                            <li><a href="https://www.podbean.com/ambient-relaxation">Ambient Relaxation</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list">
+                    <div class="sitemap-list three-list">
+                        <h3 class="h6css"> KNOWLEDGE BASE</h3>
+                        <ul class="column">
+                            <li><a target="_blank" rel="noopener noreferrer" href="https://www.podbean.com/how-to-start-a-podcast">How to Start a Podcast</a></li>
+                            <li><a target="_blank" rel="noopener noreferrer" href="https://www.podbean.com/how-to-monetize-a-podcast">How to Monetize a Podcast</a></li>
+                            <li><a target="_blank" rel="noopener noreferrer" href="https://www.podbean.com/how-to-promote-your-podcast">How to Promote Your Podcast</a></li>
+                            <li><a target="_blank" rel="noopener noreferrer" href="https://www.podbean.com/mobile-podcast-recording-guide">Mobile Podcast Recording Guide</a></li>
+                            <li><a target="_blank" rel="noopener noreferrer" href="https://www.podbean.com/how-to-record-your-podcast">How to Use Group Recording</a></li>
+                            <li><a target="_blank" rel="noopener noreferrer" href="https://www.podbean.com/guide-to-podcast-advertising">Podcast Advertising 101</a></li>
+                            <li><a target="_blank" rel="noopener noreferrer" href="https://www.podbean.com/what-is-ambient-relaxation">What Is Ambient Relaxation</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list">
+                    <div class="sitemap-list">
+                        <h3 class="h6css">Support</h3>
+                        <ul>
+                            <li><a href="https://help.podbean.com" rel="noopener noreferrer" target="_blank">Support Center</a></li>
+                            <li><a href="https://www.podbean.com/new-features">What&#8217;s New</a></li>
+                            <li><a href="https://www.podbean.com/podcast-academy/webinars">Free Webinars</a></li>
+                            <li><a href="https://www.podbean.com/podcast-academy/events">Podcast Events</a></li>
+                            <li><a href="https://www.podbean.com/podcast-academy">Podbean Academy</a></li>
+                            <li><a href="https://podcast.podbean.com/">Podbean Amplified Podcast</a></li>
+                            <li><a href="https://www.podbean.com/site/default/badges">Badges</a></li>
+                            <li><a href="https://www.podbean.com/site/resources">Resources</a></li>
+                            <li><a href="https://developers.podbean.com">Developers</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list">
+                    <div class="sitemap-list list-right">
+                        <h3 class="h6css">Podbean</h3>
+                        <ul>
+                            <li><a href="https://www.podbean.com/about-us">About Us</a></li>
+                            <li><a href="https://blog.podbean.com/">Podbean Blog</a></li>
+                            <li><a href="https://www.podbean.com/careers">Careers</a></li>
+                            <li><a href="https://www.podbean.com/press">Press and Media</a></li>
+                            <li><a href="https://www.podbean.com/green-initiative">Green Initiative</a></li>
+                            <li><a href="https://www.podbean.com/affiliate">Affiliate Program</a></li>
+                            <li><a href="https://www.podbean.com/contact-us" rel="noopener noreferrer" target="_blank">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
-      </div>
-      <div class="fb-right">
-        <ul class="legal">
-          <li><a href="https://www.podbean.com/privacy">Privacy Policy</a></li>
-          <li><a href="https://www.podbean.com/cookies">Cookie Policy</a></li>
-          <li><a href="https://www.podbean.com/podbean-terms">Terms of Use</a></li>
-          <li><a href="#">Consent Preferences</a></li>
-        </ul>
-        <p class="copy">Copyright © 2015-2026 <a href="https://www.podbean.com">Podbean.com</a></p>
-      </div>
     </div>
-  </div>
-</footer>
+    <div class="footer-share bs2">
+        <div class="s-left">
+            <ul class="align-center">
+                <li>
+                    <a href="https://www.facebook.com/podbeancom" title="Facebook" rel="noopener noreferrer" target="_blank">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+                            <path id="Facebook" d="M20.786,0H1.214A1.214,1.214,0,0,0,0,1.214V20.786A1.213,1.213,0,0,0,1.214,22H11.75V13.48H8.882V10.161H11.75V7.709a4,4,0,0,1,4.271-4.386,23.711,23.711,0,0,1,2.563.129v2.97H16.823c-1.375,0-1.643.661-1.643,1.623v2.118h3.285l-.426,3.328H15.18V22h5.605A1.213,1.213,0,0,0,22,20.786V1.214A1.213,1.213,0,0,0,20.786,0" fill="#fff"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://x.com/podbean" title="Twitter" rel="noopener noreferrer" target="_blank">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="20.591" viewBox="0 0 22 20.591">
+                            <path id="twitter" d="M.053,0,8.547,11.357,0,20.591H1.924l7.483-8.084,6.046,8.084H22l-8.972-12L20.984,0H19.061L12.169,7.446,6.6,0ZM2.882,1.417H5.89L19.171,19.174H16.163L2.883,1.417Z" fill="#fff"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://blog.podbean.com/" title="Blog" rel="noopener noreferrer" target="_blank">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21.968" viewBox="0 0 22 21.968">
+                            <path id="blog" d="M21.943,10.569a1.461,1.461,0,0,0-.619-.894,8.929,8.929,0,0,0-1.238-.138c-1-.034-1.1-.069-1.409-.241-.481-.275-.619-.584-.619-1.444a6.351,6.351,0,0,0-1.994-4.469A7.607,7.607,0,0,0,12.833,1.39a16.621,16.621,0,0,0-3.094-.138c-3.4-.034-4.16.034-5.328.481A6.949,6.949,0,0,0,.182,6.65,34.255,34.255,0,0,0,.01,11.772c-.034,4.985,0,5.707.344,6.7A5.967,5.967,0,0,0,1.386,20.5a6.922,6.922,0,0,0,4.056,2.613c.756.1,9.694.138,10.622.034a6.534,6.534,0,0,0,4.022-2.063,6.584,6.584,0,0,0,1.719-3.06c.138-.516.172-.756.172-3.816A30.228,30.228,0,0,0,21.943,10.569ZM6.13,7.475c.378-.378.481-.413,2.888-.413,2.166,0,2.235,0,2.544.172A1.091,1.091,0,0,1,12.214,8.3,1.124,1.124,0,0,1,11.6,9.366c-.206.138-.344.138-2.475.172-1.306,0-2.338-.034-2.51-.069A1.255,1.255,0,0,1,6.13,7.475Zm9.419,9.8-.722.1-3.816.069a27.26,27.26,0,0,1-4.469-.1,1.3,1.3,0,0,1-.722-.963,1.352,1.352,0,0,1,.413-1.1c.344-.309.516-.309,4.778-.344,4.4,0,4.366,0,4.778.378a1.253,1.253,0,0,1-.241,1.959Z" transform="translate(0 -1.245)" fill="#fff"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.youtube.com/c/Podbeancom" title="YouTube" rel="noopener noreferrer" target="_blank">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28.387" height="20" viewBox="0 0 28.387 20">
+                            <path id="youtube" d="M70.457,184.462a3.593,3.593,0,0,0-2.516-2.532c-2.21-.6-11.081-.6-11.081-.6s-8.871,0-11.1.6a3.565,3.565,0,0,0-2.516,2.532,38.139,38.139,0,0,0-.581,6.871,37.131,37.131,0,0,0,.6,6.871,3.593,3.593,0,0,0,2.516,2.532c2.21.6,11.081.6,11.081.6s8.871,0,11.1-.6a3.565,3.565,0,0,0,2.516-2.532,38.138,38.138,0,0,0,.581-6.871A37.13,37.13,0,0,0,70.457,184.462Zm-16.5,11.1v-8.452l7.419,4.226Z" transform="translate(-42.667 -181.333)" fill="#fff"></path>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="copyright">
+            <ul class="list-inline">
+                <li class="list-inline-item"> <a class="px-2" href="/privacy">Privacy Policy</a></li>
+                <li class="list-inline-item"> <a class="px-2" href="/cookies">Cookie Policy</a></li>
+                <li class="list-inline-item"> <a class="px-2" href="https://www.podbean.com/podbean-terms">Terms of Use</a></li>
+                <li class="list-inline-item">
+                    <a class="px-2" href="#" onclick="CookieConsent.showPreferences(); return false;">Consent Preferences</a>
+                </li>
+                <li class="list-inline-item copyright-text">
+                    Copyright &copy; 2015-2026 <a href="https://www.podbean.com">Podbean.com</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
+<script>window.CookieConsent = window.CookieConsent || { showPreferences: function(){} };</script>
 <script>
 (function(){
   var header = document.getElementById('siteHeader');
@@ -1093,6 +1189,33 @@
         document.body.classList.remove('no-scroll');
       }
     });
+  }
+})();
+</script>
+
+<script>
+(function(){
+  var NS = 'http://www.w3.org/2000/svg';
+  var STAR = 'M12 1.7l2.9 6.3 7 .9-5.2 4.9 1.4 6.9L12 17.5l-6.1 3.2 1.4-6.9L2.1 8.9l7-.9L12 1.7z';
+  function starEl(on){
+    var s = document.createElementNS(NS, 'svg');
+    s.setAttribute('viewBox', '0 0 24 24');
+    s.setAttribute('aria-hidden', 'true');
+    if (!on) s.setAttribute('class', 'off');
+    var p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', STAR);
+    s.appendChild(p);
+    return s;
+  }
+  var stars = document.querySelectorAll('.r-stars');
+  for (var i = 0; i < stars.length; i++){
+    var box = stars[i];
+    var r = parseInt(box.getAttribute('data-rating') || '5', 10);
+    if (r < 1) r = 1;
+    if (r > 5) r = 5;
+    box.setAttribute('role', 'img');
+    box.setAttribute('aria-label', 'Rated ' + r + ' out of 5');
+    for (var n = 1; n <= 5; n++) box.appendChild(starEl(n <= r));
   }
 })();
 </script>
