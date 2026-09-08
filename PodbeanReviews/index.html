@@ -320,7 +320,9 @@
 
   /* customer-story card (non-Trustpilot) used alongside review cards */
   .f-card.f-case .f-quote{margin-top:0; font-size:1.04rem; line-height:1.68}
-  .c-foot{margin-top:1.35rem; padding-top:.95rem; border-top:1px solid var(--line); display:flex; align-items:center; gap:1.1rem; line-height:1}
+  /* uniform footer slot: logo heights vary (W&C wordmark is very wide, renders ~12px tall while others cap at 28px),
+     so pin the footer box to the same height on every case card to keep divider lines aligned */
+  .c-foot{margin-top:1.35rem; padding-top:.95rem; border-top:1px solid var(--line); display:flex; align-items:center; gap:1.1rem; line-height:1; min-height:46px}
   .f-card.f-case .c-logo{display:block; width:auto; height:auto; max-width:46%; max-height:28px; object-fit:contain; object-position:left center; flex:none}
   .c-link{margin-left:auto; color:var(--brand); font-weight:700; text-decoration:none; font-size:.9rem; white-space:nowrap; display:inline-flex; align-items:center; gap:.3rem}
   .c-link:hover{text-decoration:underline}
@@ -795,7 +797,7 @@
         </article>
 
         <article class="f-card f-case">
-          <blockquote class="f-quote">White &amp; Case's Andrew and Juliette are very clear that podcasting has been an excellent medium to provide information in a format that is not too slick or too corporate, but is instead, accessible and personable.</blockquote>
+          <blockquote class="f-quote">…an excellent medium to provide information in a format that is not too slick or too corporate, but is instead, accessible and personable.</blockquote>
           <div class="c-foot">
             <img class="c-logo" src="white-case-logo.webp" alt="White &amp; Case" width="1350" height="106">
             <a class="c-link" href="https://www.podbean.com/enterprise/podcast-case-studies/WhiteAndCase" target="_blank" rel="noopener">Read the story</a>
