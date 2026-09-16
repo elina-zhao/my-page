@@ -10,9 +10,10 @@
   anonymised. EXCEPTION: the nine tiles in the "Fast help from a real support team"
   section are PARAPHRASES of real support reviews (same reviews, same meaning, wording
   rewritten at the user's request) — treat them as rewritten copy, not literal quotes.
-  The "Loved on the App Store" section is PLACEHOLDER STRUCTURE ONLY: no App Store reviews
-  have been supplied yet, so its twelve cards carry dummy text and must be filled in before
-  publishing.
+  The "Loved on the App Store" section is FABRICATED PLACEHOLDER COPY: no App Store reviews have
+  been supplied yet, so its twelve list entries carry invented sample reviews and must be replaced
+  before publishing. Each entry shows only a star rating, a headline and the review text — no date
+  and no app version.
   Per-card star ratings currently display 5 stars for all and should be
   checked against each reviewer's actual rating on Trustpilot before publishing.
   Reviewer names, profile photos and show titles are deliberately NOT displayed: under
@@ -426,14 +427,13 @@
      the page doesn't read as "the same cards again". */
   .as-band{background:var(--bg-soft); border-block:1px solid var(--line); padding-block:clamp(48px,7vw,76px)}
   .as-band .sec-head{max-width:56ch}
-  .as-list{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:clamp(26px,4.2vw,58px); margin-top:clamp(28px,4vw,44px)}
+  .as-list{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:clamp(26px,4.2vw,58px); margin:clamp(28px,4vw,44px) 0 0; padding:0; list-style:none}
   @media (max-width:980px){ .as-list{grid-template-columns:repeat(2,minmax(0,1fr))} }
   @media (max-width:620px){ .as-list{grid-template-columns:1fr} }
-  .as-item{margin:0; display:flex; flex-direction:column; padding-block:clamp(20px,2.6vw,30px); border-top:1px solid var(--line)}
+  .as-item{margin:0; padding-block:clamp(20px,2.6vw,30px); border-top:1px solid var(--line)}
   .as-stars{display:inline-flex; gap:2px; color:#f0a92c; font-size:.98rem; line-height:1}
   .as-title{margin:.75rem 0 0; font-size:1.02rem; line-height:1.4; font-weight:800; letter-spacing:-.01em; color:var(--ink)}
-  .as-quote{margin:.5rem 0 0; flex:1; font-size:.98rem; line-height:1.6; color:#3b3530}
-  .as-meta{margin-top:1.1rem; color:var(--ink-soft); font-size:.85rem; line-height:1}
+  .as-quote{margin:.5rem 0 0; font-size:.98rem; line-height:1.6; color:#3b3530}
 
   /* ---------- numbers / support ---------- */
   .numbers-band{background:var(--ink); color:#fff; padding:clamp(44px,6vw,80px) 0; text-align:center; overflow:hidden; position:relative}
@@ -968,15 +968,18 @@
   <!-- ======================= APP STORE REVIEWS ======================= -->
   <!-- FABRICATED PLACEHOLDER CONTENT — NOT REAL APP STORE REVIEWS.
        All twelve entries below are invented sample copy written to show the layout populated:
-       the titles, review text, star ratings, dates AND app version numbers are made up. Nothing
-       here is quoted from the App Store. Replace each entry with a real App Store review — title,
-       review text, star rating, date and version exactly as shown on the app's App Store page —
-       before publishing, then delete this comment. Keep one review per entry, and keep the mix of
-       star ratings consistent with the live App Store rating shown in the hero ("4.8 in the App
-       Store"); the current mix (ten 5-star, two 4-star) averages 4.8.
-       Layout note: this section is a hairline-separated LIST (.as-list > .as-item), not a card
-       grid, on purpose — the stars sit above the title as they do in the App Store, and there is
-       no box/border/radius/shadow, so it does not look like the .r-card wall or .s-card band. -->
+       the titles, review text and star ratings are made up. Nothing here is quoted from the App
+       Store. Each entry is deliberately just stars + headline + review text: the user asked for
+       the review DATE and the app VERSION to be dropped, so there is no meta line at all.
+       Replace each entry with a real App Store review — title, review text and star rating —
+       before publishing, then delete this comment. Only add a date or version back if it is
+       wanted. Keep one review per entry, and keep the mix of star ratings consistent with the
+       live App Store rating shown in the hero ("4.8 in the App Store"); the current mix
+       (ten 5-star, two 4-star) averages 4.8.
+       Layout note: this section is a hairline-separated LIST (.as-list / .as-item, a ul of li
+       entries), not a card grid, on purpose — the stars sit above the title as they do in the
+       App Store, and there is no box/border/radius/shadow, so it does not look like the .r-card
+       wall or the .s-card band. -->
   <section class="as-band" aria-labelledby="as-h">
     <div class="wrap">
       <div class="sec-head">
@@ -984,91 +987,79 @@
         <p class="sub">What hosts and listeners say about the Podbean app — recording, publishing and listening, wherever they are.</p>
       </div>
 
-      <div class="as-list">
-        <figure class="as-item">
+      <ul class="as-list">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Recorded, published, done — from my phone</h3>
           <blockquote class="as-quote">I record the show, write the notes and publish without ever opening my laptop. It fills in the details the podcast directories need, so the episode goes live the first time.</blockquote>
-          <figcaption class="as-meta">Aug 2026 &middot; v9.8</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Uploaded two hours of audio on hotel Wi-Fi</h3>
           <blockquote class="as-quote">It kept uploading in the background while I got ready, and the episode was live before I left for the airport. Uploading picking up where it left off is why I stopped travelling with a laptop.</blockquote>
-          <figcaption class="as-meta">Jul 2026 &middot; v9.7</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">The player I actually finish episodes in</h3>
           <blockquote class="as-quote">Offline downloads, the sleep timer and adjustable speed are all exactly where I expect them to be. I listen to around fifteen hours a week and the app has never once lost my place.</blockquote>
-          <figcaption class="as-meta">Jun 2026 &middot; v9.6</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Started on the train, finished in the kitchen</h3>
           <blockquote class="as-quote">The same episode followed me from my phone to the kitchen speaker to the car without re-downloading or losing my spot. That sounds basic until you have used an app that cannot do it.</blockquote>
-          <figcaption class="as-meta">May 2026 &middot; v9.5</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">I schedule a month of episodes from the couch</h3>
           <blockquote class="as-quote">Drafts, scheduled episodes and published ones are clearly separated — a small thing, but it is what makes a whole month of episodes manageable. Release day takes me ten minutes now.</blockquote>
-          <figcaption class="as-meta">Apr 2026 &middot; v9.4</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Three years, two new phones, zero drama</h3>
           <blockquote class="as-quote">My shows, downloads and playlists came across both times I upgraded. This is the app I open more than any other on my phone.</blockquote>
-          <figcaption class="as-meta">Mar 2026 &middot; v9.3</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Recorded two interviews straight into the app</h3>
           <blockquote class="as-quote">The audio came out clean enough to publish with almost no cleanup, and the level meter is the one thing I actually watch while I am talking. Guests sound good, which is all I care about.</blockquote>
-          <figcaption class="as-meta">Feb 2026 &middot; v9.2</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Simple enough for my co-host</h3>
           <blockquote class="as-quote">She is not a tech person at all and had her own recording set up in about ten minutes. That is the highest compliment I can give a podcast app.</blockquote>
-          <figcaption class="as-meta">Dec 2025 &middot; v9.0</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Listening and hosting in the same place</h3>
           <blockquote class="as-quote">Most apps make you choose between a good player and a good publishing tool. This one does both, and my subscriber-only episodes sit in the same feed as the public ones.</blockquote>
-          <figcaption class="as-meta">Nov 2025 &middot; v8.9</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">I fix the show notes between takes</h3>
           <blockquote class="as-quote">Writing and tidying the notes inside the app means I publish from the same screen I recorded on. It has cut my release day from about an hour down to a coffee break.</blockquote>
-          <figcaption class="as-meta">Oct 2025 &middot; v8.8</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★☆</span>
           <h3 class="as-title">The numbers keep me motivated</h3>
           <blockquote class="as-quote">I check the stats after every episode more than I should admit. I would like more detail on where listeners drop off, but for a free app the reporting is generous.</blockquote>
-          <figcaption class="as-meta">Sep 2025 &middot; v8.7</figcaption>
-        </figure>
+        </li>
 
-        <figure class="as-item">
+        <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★☆</span>
           <h3 class="as-title">One app for recording, publishing and listening</h3>
           <blockquote class="as-quote">I stopped juggling three different apps to get one episode out. Docking a star only because I want the same show-note templates on my iPad that I get on my phone.</blockquote>
-          <figcaption class="as-meta">Jun 2025 &middot; v8.4</figcaption>
-        </figure>
-      </div>
+        </li>
+      </ul>
     </div>
   </section>
 
