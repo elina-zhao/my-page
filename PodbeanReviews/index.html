@@ -19,7 +19,10 @@
   unchanged ("评论的标题不要换"): four are still the reviewers' own App Store headlines and five
   were written for body-only entries by us earlier, and they are now the only quoted source text
   left in that block. Treat the nine entries as rewritten testimonials based on real App Store
-  reviews, like the support band, and do not present the bodies as quotations. No
+  reviews, like the support band, and do not present the bodies as quotations. One of the nine —
+  the first entry, on the ambient relaxation feature, added 2026-09-16 — was written from scratch
+  for this page and is not derived from any supplied review, so it is the single entry there with
+  no source review behind it. No
   star ratings came with that list, so all nine entries currently display 5 stars and should be
   corrected against the real ratings before publishing. The fourteen
   supplied reviews were cut to nine at the user's request, so the 3-column list ends on a whole
@@ -455,6 +458,14 @@
      rule rather than a text-decoration (centred copy, so a full underline looks noisy) */
   .as-band .sec-head .sub a{color:var(--brand); font-weight:700; text-decoration:none; border-bottom:1.5px solid rgba(66,130,0,.32)}
   .as-band .sec-head .sub a:hover{border-bottom-color:var(--brand)}
+  /* feature deep-links inside an App Store entry's review text — deliberately NOT brand-coloured,
+     on the user's request (2026-09-16). The anchor instead inherits the surrounding review text's
+     colour and weight and is marked only by a faint neutral underline, so a link inside a review
+     does not read as page chrome or as something the reviewer endorsed. Hover darkens the rule.
+     The tagline's store links above stay brand green: this pair is scoped to .as-quote, and the
+     divergence from the review wall's green .r-text a is intentional — do not "fix" it. */
+  .as-quote a{color:inherit; font-weight:inherit; text-decoration:underline; text-decoration-color:rgba(59,53,48,.35); text-underline-offset:2px; border-radius:2px}
+  .as-quote a:hover{background:rgba(0,0,0,.05); text-decoration-color:rgba(59,53,48,.7)}
   .as-list{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:clamp(26px,4.2vw,58px); margin:clamp(28px,4vw,44px) 0 0; padding:0; list-style:none}
   @media (max-width:980px){ .as-list{grid-template-columns:repeat(2,minmax(0,1fr))} }
   @media (max-width:620px){ .as-list{grid-template-columns:1fr} }
@@ -1025,12 +1036,21 @@
        Four entries carry the review's own App Store headline, unchanged and still verbatim as
        supplied: "easy to use", "Best podcast app of all", "Very user friendly", "Newbie". The
        other five arrived as body-only, so HEADLINES WERE WRITTEN FOR THEM BY US at the user's
-       request: "Love the time skip setting", "Picks up exactly where I left off", "Simple
+       request: "Ambient relaxation is my evening wind-down" (this one replaced the earlier
+       "Love the time skip setting" when entry 1 was rewritten — see below),
+       "Picks up exactly where I left off", "Simple
        instructions, freedom with content", "Found podcasts I couldn't get elsewhere",
        "Auto-downloads and notifications just work". Those five are OUR copy, derived from each
        review's own text — they are NOT the reviewers' own words — and the 2026-09-16 body rewrite
        did not touch any headline. Swap in the real App Store headlines for those five if they can
        be retrieved.
+       FIRST ENTRY REPLACED WHOLESALE (2026-09-16): entry 1's previous review (the skip-button one,
+       "Love the time skip setting") was removed at the user's request and replaced by a newly
+       written review of the app's ambient relaxation feature — headline AND body are both our
+       copy. So entry 1 no longer derives from any supplied App Store review and is the ONE entry
+       in this block with no source review behind it; the other eight are rewrites of supplied
+       reviews. Do not describe it as a real review, do not "restore" the time-skip wording, and
+       if a real App Store review about the same feature can be sourced, swap it in.
        The user asked for the review date and the app version to be dropped, so there is no meta
        line at all. The list was then cut from the fourteen supplied reviews to NINE, so the
        3-column grid ends on a whole third row — any count that is not a multiple of three leaves
@@ -1043,7 +1063,24 @@
        Layout note: this section is a hairline-separated LIST (.as-list / .as-item, a ul of li
        entries), not a card grid, on purpose — the stars sit above the headline as they do in the
        App Store, and there is no box/border/radius/shadow, so it does not look like the .r-card
-       wall or the .s-card band. -->
+       wall or the .s-card band.
+       Feature deep-links (2026-09-16, all three URLs supplied by the user): THREE of the nine
+       entries carry one, and they are the only links inside review bodies in this section —
+       entry 1's "ambient relaxation feature" → https://www.podbean.com/ambient-relaxation,
+       entry 2's "Starting a podcast" → Podbean's Audio Recorder page
+       (https://www.podbean.com/audio-recorder), and entry 9's "make your voice heard" → the
+       remote recording page (https://www.podbean.com/remote-podcast-recording). This is the same
+       selective in-quote linking the review wall already does; none of the three target pages is
+       reachable from this build environment, so the URLs are taken as given. THE RULE when adding
+       another: the anchor must name the feature the sentence already mentions — a "record your
+       show" link sitting inside a review about listening reads as a non-sequitur, which is why
+       the two recording links went on creator-side entries (2 and 9) while the relaxation link
+       went on entry 1, whose sentence names that very feature. So judge by the sentence, not by a
+       blanket "creator-side only" rule. Styling: the scoped .as-quote a pair, which the user asked
+       to be plain black rather than brand green (2026-09-16) — it inherits the review text's own
+       colour and is marked only by a faint neutral underline, so it is deliberately NOT styled like
+       the review wall's green .r-text a or the tagline's green store links. Keep that difference;
+       do not add a <mark> highlight behind them either. -->
   <section class="as-band" aria-labelledby="as-h">
     <div class="wrap">
       <div class="sec-head">
@@ -1054,14 +1091,14 @@
       <ul class="as-list">
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
-          <h3 class="as-title">Love the time skip setting</h3>
-          <blockquote class="as-quote">Really happy with the way this app works, particularly being able to change how far the skip button jumps. The podcast selection is great too.</blockquote>
+          <h3 class="as-title">Ambient relaxation is my evening wind-down</h3>
+          <blockquote class="as-quote">The <a href="https://www.podbean.com/ambient-relaxation" target="_blank" rel="noopener">ambient relaxation feature</a> has become part of my evenings — I put it on to wind down, and now I open the app even when I have no show lined up.</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Newbie</h3>
-          <blockquote class="as-quote">Starting a podcast had never crossed my mind until a few days ago, and I still knew nothing about how any of it worked. This app made the whole thing fairly straightforward — within two days my show was up on Apple and Spotify.</blockquote>
+          <blockquote class="as-quote"><a href="https://www.podbean.com/audio-recorder" target="_blank" rel="noopener">Starting a podcast</a> had never crossed my mind until a few days ago, and I still knew nothing about how any of it worked. This app made the whole thing fairly straightforward — within two days my show was up on Apple and Spotify.</blockquote>
         </li>
 
         <li class="as-item">
@@ -1103,7 +1140,7 @@
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Simple instructions, freedom with content</h3>
-          <blockquote class="as-quote">It's been fantastic!! The instructions are clear and they work. If you want a place to make your voice heard, this is it.</blockquote>
+          <blockquote class="as-quote">It's been fantastic!! The instructions are clear and they work. If you want a place to <a href="https://www.podbean.com/remote-podcast-recording" target="_blank" rel="noopener">make your voice heard</a>, this is it.</blockquote>
         </li>
       </ul>
     </div>
