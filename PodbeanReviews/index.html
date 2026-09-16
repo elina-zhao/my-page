@@ -10,16 +10,33 @@
   anonymised. EXCEPTION: the nine tiles in the "Fast help from a real support team"
   section are PARAPHRASES of real support reviews (same reviews, same meaning, wording
   rewritten at the user's request) — treat them as rewritten copy, not literal quotes.
-  The "Loved on the App Store" section holds REAL App Store reviews supplied by the user
-  (collected 2026-09), reproduced verbatim — including the reviewers' own spelling and punctuation
-  — and shown ANONYMISED: the reviewer names and App Store usernames from the source list are
-  deliberately not displayed, matching this page's standing rule of never naming a reviewer. No
+  The "Loved in the app stores" section (retitled 2026-09-16 from "Loved on the App Store", because
+  its heading block now quotes both stores' ratings) holds REAL App Store reviews supplied by the
+  user (collected 2026-09), shown ANONYMISED: the reviewer names and App Store usernames from the
+  source list are deliberately not displayed, matching this page's standing rule of never naming a
+  reviewer. SECOND EXCEPTION: the nine review BODIES are REWRITTEN, not verbatim — same reviews,
+  same meaning, different wording, at the user's request on 2026-09-16. The HEADLINES were left
+  unchanged ("评论的标题不要换"): four are still the reviewers' own App Store headlines and five
+  were written for body-only entries by us earlier, and they are now the only quoted source text
+  left in that block. Treat the nine entries as rewritten testimonials based on real App Store
+  reviews, like the support band, and do not present the bodies as quotations. No
   star ratings came with that list, so all nine entries currently display 5 stars and should be
-  corrected against the real ratings before publishing. Four of the entries carry the review's own
-  App Store headline; the other five were body-only as supplied, so headlines were written for
-  them here (our copy, not the reviewers' words — see the note above the section). The fourteen
+  corrected against the real ratings before publishing. The fourteen
   supplied reviews were cut to nine at the user's request, so the 3-column list ends on a whole
   third row.
+  That section's heading block also carries the app's store ratings and review counts, both
+  supplied by the user: the App Store at 4.8 and Google Play at 4.6, each rating linked to its
+  store listing (apps.apple.com/us/app/podbean-podcast-app-player/… and
+  play.google.com/store/apps/details?id=com.podbean.app.podcast).
+  The review counts are written as FLOORS — "over 50K reviews" for the App Store (54K when
+  supplied) and "over 200K" for Google Play (216K when supplied) — so the sentence stays true as
+  the numbers grow; a fixed figure would go stale and eventually false. Round down to a round
+  floor, not to a tight one, if either store's count is ever refreshed; the page already uses this
+  convention in the numbers band (119K+ / 16.2M+ / 15.9B+) and in "more than 600,000 podcasters".
+  Note the scope widening this creates: the title and rating line now cover both stores, while the
+  nine quotes below are still App Store reviews only. Like every other outbound link on this page,
+  the store links were not reachable from this environment — the figures and URLs are the user's,
+  taken as given.
   Per-card star ratings currently display 5 stars for all and should be
   checked against each reviewer's actual rating on Trustpilot before publishing.
   Reviewer names, profile photos and show titles are deliberately NOT displayed: under
@@ -225,12 +242,13 @@
   .hero-copy .lede{margin:1.1rem 0 0; max-width:30rem; font-size:clamp(1.02rem,1.5vw,1.22rem); color:var(--ink-soft); font-weight:500; text-wrap:pretty}
   .trust-strip{display:flex; justify-content:flex-start; flex-wrap:wrap; gap:10px 14px; margin-top:1.6rem}
   .trust-chip{
-    display:inline-flex; align-items:center; gap:8px;
+    display:inline-flex; flex-direction:column; align-items:flex-start; gap:3px;
     background:var(--bg-soft); border:1px solid var(--line);
-    border-radius:999px; padding:.42rem .9rem;
+    border-radius:999px; padding:.52rem .85rem;
     font-size:.92rem; font-weight:600; color:var(--ink);
   }
-  .trust-chip .stars{color:var(--brand); letter-spacing:2px; font-size:1rem}
+  /* stars sit on their own line above the label — also what lets the three chips fit one row */
+  .trust-chip .stars{color:var(--brand); letter-spacing:2px; margin-inline-end:-2px; font-size:1rem; line-height:1}
   .hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:1.9rem}
   .hero-copy .hero-cta{justify-content:flex-start}
   .hero-note{color:var(--ink-soft); font-size:.9rem; margin-top:.9rem}
@@ -433,6 +451,10 @@
      the page doesn't read as "the same cards again". */
   .as-band{background:var(--bg-soft); border-block:1px solid var(--line); padding-block:clamp(48px,7vw,76px)}
   .as-band .sec-head{max-width:56ch}
+  /* store rating links inside the section tagline — brand-coloured, underlined by a hairline
+     rule rather than a text-decoration (centred copy, so a full underline looks noisy) */
+  .as-band .sec-head .sub a{color:var(--brand); font-weight:700; text-decoration:none; border-bottom:1.5px solid rgba(66,130,0,.32)}
+  .as-band .sec-head .sub a:hover{border-bottom-color:var(--brand)}
   .as-list{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:clamp(26px,4.2vw,58px); margin:clamp(28px,4vw,44px) 0 0; padding:0; list-style:none}
   @media (max-width:980px){ .as-list{grid-template-columns:repeat(2,minmax(0,1fr))} }
   @media (max-width:620px){ .as-list{grid-template-columns:1fr} }
@@ -726,9 +748,19 @@
         <h1>Podcasters love Podbean</h1>
         <p class="lede">From first episodes to thriving shows, here is what a few of them have to say.</p>
 
+        <!-- Ratings strip — the three platform ratings this page claims. The stars are decorative
+             and identical on all three chips (a 4.4 cannot be drawn differently from a 4.8 at this
+             size), so the number is what carries the meaning. Each chip stacks its stars above the
+             label on two lines, at the user's request (2026-09-16) — that also keeps the three
+             chips to a single row in the hero's narrow left column. Figures are the user's and match the
+             rest of the page: 4.4 is the review wall's Trustpilot score, 4.8 / 4.6 are the store
+             ratings quoted in the "Loved in the app stores" tagline. Google Play was added
+             2026-09-16 on request; if a figure changes, change it here, in that tagline, and on the
+             wall together so the page never contradicts itself. -->
         <div class="trust-strip" aria-label="Ratings">
           <span class="trust-chip"><span class="stars" aria-hidden="true">★★★★★</span> 4.4 on Trustpilot</span>
-          <span class="trust-chip"><span class="stars" aria-hidden="true">★★★★★</span> 4.8 in the App Store</span>
+          <span class="trust-chip"><span class="stars" aria-hidden="true">★★★★★</span> 4.8 on the App Store</span>
+          <span class="trust-chip"><span class="stars" aria-hidden="true">★★★★★</span> 4.6 on Google Play</span>
         </div>
 
         <div class="hero-cta">
@@ -972,23 +1004,33 @@
   </section>
 
   <!-- ======================= APP STORE REVIEWS ======================= -->
-  <!-- REAL App Store reviews, supplied by the user (collected 2026-09). Nine entries,
-       reproduced VERBATIM — including the reviewers' own spelling and punctuation, e.g. "Its been
-       amazing", "your looking", "pop up adds", "I'am". Do not tidy the wording.
+  <!-- Real App Store reviews supplied by the user (collected 2026-09), nine of them, with their
+       BODIES REWRITTEN on the user's request (2026-09-16) so that they keep each review's meaning
+       and every detail it mentions but use different wording; the HEADLINES were deliberately left
+       untouched ("评论的标题不要换"). So the bodies are NOT verbatim App Store text and must not be
+       presented as quotes: treat the nine entries as rewritten testimonials based on real reviews,
+       the same status as the nine tiles in the support band — with the four real headlines listed
+       below as the one piece of quoted source text still in this block. Do not "restore" the
+       original body wording, and do not tidy it back toward the source. The reviewers' own spelling and punctuation
+       quirks ("Its been amazing", "your looking", "pop up adds", "I'am" and the original closing
+       "amazing!!Simple" run-together) are gone with the rewording — reproduce straight prose here,
+       not the source's typos.
        Shown ANONYMISED: the source list gives each reviewer either a real name or an App Store
        handle; none of them are displayed, matching this page's rule of never naming a reviewer.
        Those names are deliberately NOT reproduced anywhere in this file — not even in this
        comment — so they stay out of the shipped page source.
        No star ratings came with the list, so every entry currently shows 5 stars — correct any
        review that was rated lower, and keep the result consistent with the hero's
-       "4.8 in the App Store" chip.
-       Four entries carry the review's own App Store headline ("easy to use", "Best podcast app of
-       all", "Very user friendly", "Newbie"). The other five arrived as body-only, so HEADLINES
-       WERE WRITTEN FOR THEM BY US, at the user's request: "Love the time skip setting", "Picks up
-       exactly where I left off", "Simple instructions, freedom with content", "Found podcasts I
-       couldn't get elsewhere", "Auto-downloads and notifications just work". Those five are OUR
-       copy, derived from each review's own text — they are NOT the reviewers' own words. Swap in
-       the real App Store headlines if they can be retrieved.
+       "4.8 on the App Store" chip.
+       Four entries carry the review's own App Store headline, unchanged and still verbatim as
+       supplied: "easy to use", "Best podcast app of all", "Very user friendly", "Newbie". The
+       other five arrived as body-only, so HEADLINES WERE WRITTEN FOR THEM BY US at the user's
+       request: "Love the time skip setting", "Picks up exactly where I left off", "Simple
+       instructions, freedom with content", "Found podcasts I couldn't get elsewhere",
+       "Auto-downloads and notifications just work". Those five are OUR copy, derived from each
+       review's own text — they are NOT the reviewers' own words — and the 2026-09-16 body rewrite
+       did not touch any headline. Swap in the real App Store headlines for those five if they can
+       be retrieved.
        The user asked for the review date and the app version to be dropped, so there is no meta
        line at all. The list was then cut from the fourteen supplied reviews to NINE, so the
        3-column grid ends on a whole third row — any count that is not a multiple of three leaves
@@ -1005,63 +1047,63 @@
   <section class="as-band" aria-labelledby="as-h">
     <div class="wrap">
       <div class="sec-head">
-        <h2 id="as-h">Loved on the App Store</h2>
-        <p class="sub">What hosts and listeners say about the Podbean app — recording, publishing and listening, wherever they are.</p>
+        <h2 id="as-h">Loved in the app stores</h2>
+        <p class="sub">The Podbean app is rated <a href="https://apps.apple.com/us/app/podbean-podcast-app-player/id973361050" target="_blank" rel="noopener">4.8 on the App Store</a> from over 50K reviews, and <a href="https://play.google.com/store/apps/details?id=com.podbean.app.podcast" target="_blank" rel="noopener">4.6 on Google Play</a> from over 200K reviews.</p>
       </div>
 
       <ul class="as-list">
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Love the time skip setting</h3>
-          <blockquote class="as-quote">Very pleased with how this app works, especially being able to adjust the time skip feature. Nice selection of podcasts too.</blockquote>
+          <blockquote class="as-quote">Really happy with the way this app works, particularly being able to change how far the skip button jumps. The podcast selection is great too.</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Newbie</h3>
-          <blockquote class="as-quote">I have never thought about doing a podcast, until the other day. Honestly I feel like I was led to do it even though I know nothing about it. This app has made it relatively simple. In just a couple of days I’m already on Apple and Spotify.</blockquote>
+          <blockquote class="as-quote">Starting a podcast had never crossed my mind until a few days ago, and I still knew nothing about how any of it worked. This app made the whole thing fairly straightforward — within two days my show was up on Apple and Spotify.</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Found podcasts I couldn't get elsewhere</h3>
-          <blockquote class="as-quote">Has every podcast I've ever wanted to listen to, including Christian content that isn't usually on other platforms.</blockquote>
+          <blockquote class="as-quote">It carries every show I have ever gone looking for, including Christian podcasts you don't tend to find on other platforms.</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Picks up exactly where I left off</h3>
-          <blockquote class="as-quote">It works very well; I like that it saves the chapter you're listening to and when you open it again you can continue the story.</blockquote>
+          <blockquote class="as-quote">Works really well — it holds your place at the chapter you were listening to, so when you come back you just carry on with the story.</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">easy to use</h3>
-          <blockquote class="as-quote">I wanted to listen to a podcast and was having trouble on the main podcast app on my iphone because not all the episodes were there. I switched to Podbean and found all of them there and found that the podbean app was much easier to use.</blockquote>
+          <blockquote class="as-quote">I was trying to listen to a show on the podcast app that came with my iPhone and ran into trouble, because only some of the episodes were listed. I moved across to Podbean, found every one of them, and found the app far easier to use.</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Auto-downloads and notifications just work</h3>
-          <blockquote class="as-quote">Works flawlessly. All followed podcasts are automatically downloaded if desired, and you receive a notification.</blockquote>
+          <blockquote class="as-quote">Does exactly what it should. Every show you follow can download on its own, and you get a notification when it does.</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Very user friendly</h3>
-          <blockquote class="as-quote">A couple years ago I decided I wanted to do a podcast while driving. Super safe right? Anyways Podbean has been with me every step of the way. Definitely recommend!</blockquote>
+          <blockquote class="as-quote">A few years back I decided to start a podcast while driving. Very sensible, I know. Podbean has been alongside me the whole way since. Definitely worth recommending!</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Best podcast app of all</h3>
-          <blockquote class="as-quote">Podbean works better than other apps-giving auto play and sort options. I’m spoiled so don’t like the ones that are not as user friendly or smart.</blockquote>
+          <blockquote class="as-quote">Podbean outdoes the other apps I have used, with auto play and sorting built in. It has rather ruined me for anything less friendly or less clever.</blockquote>
         </li>
 
         <li class="as-item">
           <span class="as-stars" aria-hidden="true">★★★★★</span>
           <h3 class="as-title">Simple instructions, freedom with content</h3>
-          <blockquote class="as-quote">Its been amazing!! Simple and effective instructions. Freedom with content. If your looking to have a voice, this is the place.</blockquote>
+          <blockquote class="as-quote">It's been fantastic!! The instructions are clear and they work. If you want a place to make your voice heard, this is it.</blockquote>
         </li>
       </ul>
     </div>
