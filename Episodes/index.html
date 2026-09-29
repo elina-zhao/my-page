@@ -256,6 +256,10 @@
   #epTable3 tr:hover .ep-title-cell .del-note { display:none; }
   #epTable3 .ep-title-cell .row-actions { display:none; }
   #epTable3 tr:hover .ep-title-cell .row-actions { display:inline-flex; }
+  /* Episodes 3: long-title wrapping demo row (first row) */
+  #epTable3 tr.demo-row .title-text { cursor:default; }
+  #epTable3 tr.demo-row .title-text:hover { text-decoration:none; }
+  #epTable3 tr.demo-row:hover td { background:transparent; }
   .badge-type { background:#f1f5f9;color:#475569; }
   .pagination { display:flex;align-items:center;justify-content:space-between;padding-top:20px;font-size:13px;color:var(--text-secondary); }
   .pagination .pages { display:flex;gap:4px; }
@@ -588,6 +592,10 @@
     display: flex; align-items: center; gap: 8px;
     font-size: 12px; color: var(--text-secondary);
     white-space: nowrap;
+    cursor: pointer;
+  }
+  .episode-details-overlay .ed-schedule-info:hover .ed-schedule-text {
+    text-decoration: underline;
   }
   .episode-details-overlay .ed-topbar-publish {
     display: inline-flex; align-items: center;
@@ -855,33 +863,153 @@
   .confirm-dialog .confirm-close:hover { background: #f1f5f9; color: #334155; }
 
   /* ── V2 Layout (full-height publish page) ── */
-  .ed-layout-v2 { display: block; }
+  .ed-layout-v2 { display: flex; align-items: flex-start; }
   .ed-v2 {
+    flex: 1 1 auto; min-width: 0;
     max-width: 960px; margin: 0 auto;
     padding: 32px 40px 80px;
   }
+  /* Left side menu */
   .ed-v2-tabs {
-    display: flex; gap: 4px; flex-wrap: wrap;
-    padding: 4px; background: #fff;
-    border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 32px; position: sticky; top: 57px; z-index: 10;
+    flex: 0 0 208px;
+    align-self: flex-start;
+    position: sticky; top: 57px; z-index: 9;
+    display: flex; flex-direction: column; gap: 2px;
+    box-sizing: border-box;
+    height: calc(100vh - 57px);
+    padding: 24px 16px;
+    background: #fff;
   }
   .ed-v2-tab {
-    padding: 10px 20px; border: none; border-radius: 0;
-    font-size: 16px; font-weight: 500; font-family: inherit;
-    cursor: pointer; transition: all .15s;
+    padding: 10px 16px; font-size: 15px; font-weight: 500; font-family: inherit;
+    cursor: pointer; transition: background .15s, color .15s;
     background: transparent; color: #64748b;
-    white-space: nowrap;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+    white-space: nowrap; text-align: left;
+    border: none; border-left: 3px solid transparent; border-radius: 0 8px 8px 0;
   }
-  .ed-v2-tab:hover { background: transparent; color: #1e293b; }
-  .ed-v2-tab.active { background: transparent; color: #1e293b; font-size: 18px; font-weight: 500; border-bottom-color: #1e293b; }
-  .ed-v2-panel { display: none; }
-  .ed-v2-panel.active { display: block; }
+  .ed-v2-tab:hover { background: #f1f5f9; color: #1e293b; }
+  .ed-v2-tab.active { background: #f1f5f9; color: #1e293b; font-weight: 600; border-left-color: #1e293b; }
+  /* 四个区块同页顺序堆叠，左侧菜单作为锚点 */
+  .ed-v2-panel { display: block; scroll-margin-top: 88px; }
+  .ed-v2-panel + .ed-v2-panel {
+    margin-top: 48px; padding-top: 40px;
+    border-top: 1px solid #e2e8f0;
+  }
+  .ed-v2-section-title {
+    font-size: 22px; font-weight: 700; color: #1e293b;
+    margin: 0 0 20px;
+  }
   .ed-v2-card {
     margin-bottom: 0;
   }
+  /* ── 入口卡片（Transcripts / Chapter Markers 在弹框页只显示入口） ── */
+  .ed-v2-entry {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 20px 24px;
+    border: 1px solid #e2e8f0; border-radius: 12px;
+    background: #f8fafc;
+  }
+  .ed-v2-entry-main { display: flex; align-items: flex-start; gap: 14px; min-width: 0; }
+  .ed-v2-entry-icon {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: #e6f6ef; color: #1a9a6c;
+  }
+  .ed-v2-entry-desc { font-size: 14px; line-height: 1.55; color: #475569; }
+  /* 介绍文案只在「空状态」显示；已有内容 / 生成中只保留图标与状态 */
+  .ed-v2-entry.is-filled .ed-v2-entry-desc,
+  .ed-v2-entry.is-generating .ed-v2-entry-desc { display: none; }
+  .ed-v2-entry-empty, .ed-v2-entry-filled, .ed-v2-entry-generating {
+    display: none; align-items: center; gap: 10px; flex-shrink: 0;
+  }
+  .ed-v2-entry.is-empty .ed-v2-entry-empty { display: flex; }
+  .ed-v2-entry.is-filled .ed-v2-entry-filled { display: flex; }
+  .ed-v2-entry.is-generating .ed-v2-entry-generating { display: flex; }
+  .ed-v2-entry.is-generating { background: #f0fdf7; border-color: #bbf0d9; }
+  .ed-v2-entry-generating {
+    flex: 1 1 auto; min-width: 0; align-items: flex-start;
+    font-size: 13px; line-height: 1.5; color: #14805a; font-weight: 500;
+  }
+  .ed-v2-spinner {
+    flex-shrink: 0; width: 16px; height: 16px; margin-top: 1px;
+    border: 2px solid #bbf0d9; border-top-color: #1a9a6c; border-radius: 50%;
+    animation: edSpin .7s linear infinite;
+  }
+  @keyframes edSpin { to { transform: rotate(360deg); } }
+  /* ── AI 生成扣费确认弹框 ── */
+  .ai-credit-box {
+    border: 1px solid #e2e8f0; border-radius: 12px;
+    background: #f8fafc; padding: 18px 20px; margin-bottom: 18px;
+  }
+  .ai-credit-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; line-height: 1.55; color: #475569;
+  }
+  .ai-credit-row + .ai-credit-row { margin-top: 12px; }
+  .ai-credit-row svg { flex-shrink: 0; margin-top: 2px; color: #1a9a6c; }
+  .ai-credit-row strong { color: #1e293b; font-weight: 600; }
+  .ai-credit-note {
+    font-size: 12px; line-height: 1.5; color: #94a3b8;
+    text-align: center; margin-bottom: 22px;
+  }
+  .ed-v2-btn-ai {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 16px; border: none; border-radius: 8px;
+    background: #1a9a6c; color: #fff;
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    cursor: pointer; white-space: nowrap; transition: background .15s;
+  }
+  .ed-v2-btn-ai:hover { background: #14805a; }
+  .ed-v2-btn-ghost {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 16px; border: 1px solid #d1d5db; border-radius: 8px;
+    background: #fff; color: #1e293b;
+    font-size: 13px; font-weight: 500; font-family: inherit;
+    cursor: pointer; white-space: nowrap; transition: background .15s;
+  }
+  .ed-v2-btn-ghost:hover { background: #f1f5f9; }
+  /* 状态文案（"Transcript added" / "N chapters added"）位于卡片左侧、介绍文案的位置；
+     默认隐藏，仅「已有内容」时显示。右侧只留一个 Edit 按钮 */
+  .ed-v2-entry-status {
+    display: none; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 500; color: #1a9a6c;
+  }
+  .ed-v2-entry.is-filled .ed-v2-entry-status { display: inline-flex; }
+  .ed-v2-entry.is-filled .ed-v2-entry-main { align-items: center; }
+  /* ── 整屏工作区 overlay（Transcripts / Chapter Markers 工作区） ── */
+  .ed-ws-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 450;
+    background: #fff; overflow-y: auto;
+  }
+  .ed-ws-overlay.show { display: block; }
+  .ed-ws-topbar {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 57px; padding: 0 20px;
+    background: #fff; border-bottom: 1px solid #e2e8f0;
+  }
+  .ed-ws-close {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border: 1px solid #d1d5db; border-radius: 8px;
+    background: #fff; color: #1e293b;
+    font-size: 13px; font-weight: 500; font-family: inherit;
+    cursor: pointer; transition: background .15s;
+  }
+  .ed-ws-close:hover { background: #f1f5f9; }
+  .ed-ws-title {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 15px; font-weight: 600; color: #1e293b;
+    pointer-events: none;
+  }
+  .ed-ws-save {
+    padding: 8px 22px; border: none; border-radius: 8px;
+    background: #1e293b; color: #fff;
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: background .15s;
+  }
+  .ed-ws-save:hover { background: #0f172a; }
+  .ed-ws-body { max-width: 960px; margin: 0 auto; padding: 32px 40px 80px; }
   .ed-v2-card-title {
     font-size: 18px; font-weight: 700; color: #1e293b;
     margin-bottom: 4px;
@@ -963,7 +1091,7 @@
   .ed-v2-v-divider { height: 1px; background: #e2e8f0; margin: 24px 0; }
 
 
-  /* ── Episode Info Page refinements ── */
+  /* ── Basic Info Page refinements ── */
   .ep-info-grid {
     max-width: 960px; margin: 0 auto;
   }
@@ -1689,7 +1817,7 @@
               <span id="delRiskSummaryText"></span>
             </div>
           </div>
-          <a href="javascript:void(0)" onclick="promptUpgradeForDeletion()" style="display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:6px 14px;background:var(--primary);color:#fff;border-radius:50px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;">Upgrade to keep them forever →</a>
+          <a href="javascript:void(0)" onclick="promptUpgradeForDeletion()" style="display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:6px 14px;background:var(--primary);color:#fff;border-radius:50px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;">Upgrade to keep them →</a>
         </div>
         <div class="dash-header">
           <div class="dash-title">Episodes</div>
@@ -1884,7 +2012,7 @@
         <div class="modal-ai-heading">AI Enhance</div>
         <div class="credits-badge"><span class="credits-dot"></span><span class="credits-tooltip-trigger">Remaining Credits: <strong class="credits-number" id="creditsNumber">2,800</strong></span><span class="credits-tooltip"><span class="credits-tooltip-arrow"></span><div class="credits-tooltip-content">You have <strong id="creditsTooltipHave">2,800</strong> out of <span id="creditsTooltipTotal">2,800</span> credits left.<br>This equals roughly:</div><div class="credits-tooltip-list"><span class="credits-tooltip-item" id="creditsTooltipAudioMin">280 minutes of AI Audio Optimization</span><span class="credits-tooltip-or">OR</span><span class="credits-tooltip-item" id="creditsTooltipContentMin">560 minutes of AI Content Assistant</span></div><div class="credits-tooltip-footer"><span><a href="https://www.podbean.org/podcast-ai#AI-Content-Assistant" target="_blank">AI Content Assistant</a> · 300 credits/hour</span><span><a href="https://www.podbean.org/podcast-ai#AI-Audio-Optimization" target="_blank">AI Audio Optimization</a> · 600 credits/hour</span></div></span></div>
         <div class="credits-warning" id="creditsWarning" style="display:none;">
-          <div class="credits-warning-text"><span id="creditsWarningMsg">Estimated credits for this episode: <strong id="creditsWarningNeeded">3,200</strong>. You need <strong id="creditsWarningShort">400</strong> more credits.</span></div>
+          <div class="credits-warning-text"><span id="creditsWarningMsg">Insufficient credits to process this episode with AI.</span></div>
           <button class="credits-buy-btn" id="creditsBuyBtn" onclick="buyCredits()">Buy more credits</button>
         </div>
         <div class="ai-section" id="aiAudioSection">
@@ -1943,45 +2071,6 @@
       </div>
     </div>
 
-    <!-- ── Step 2: Episode Details ──────────── -->
-    <div class="modal-step" id="modalStep2" style="display:none;">
-      <div class="modal-left">
-        <button class="modal-back" onclick="goToStep1()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Back
-        </button>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;width:100%;max-width:420px;">
-          <div class="detail-file-info" id="detailFileName" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;margin-bottom:24px;font-size:14px;color:var(--text);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            <span id="fileNameDisplay">episode-audio.mp3</span>
-          </div>
-          <div class="detail-label" style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px;">Episode Title</div>
-          <input type="text" id="episodeTitle" placeholder="Enter episode title" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:20px;">
-          <div class="detail-label" style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px;">Description</div>
-          <textarea id="episodeDesc" placeholder="Enter episode description" style="width:100%;height:100px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);outline:none;resize:vertical;margin-bottom:24px;"></textarea>
-          <button class="btn-primary-dark" onclick="publishEpisode()" style="width:100%;padding:12px 0;font-size:15px;">Publish Episode</button>
-        </div>
-      </div>
-      <div class="modal-right">
-        <div class="modal-ai-title">Podbean AI</div>
-        <div class="modal-ai-subtitle" style="margin-bottom:20px;">AI settings for this episode</div>
-        <div id="aiStatusAudio" class="ai-status-item" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:#f8fafc;border-radius:8px;margin-bottom:12px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-          <div style="flex:1;">
-            <div style="font-size:14px;font-weight:500;color:var(--text);">AI Audio Optimization</div>
-            <div id="aiStatusAudioLabel" style="font-size:12px;color:var(--primary);">Enabled</div>
-          </div>
-        </div>
-        <div id="aiStatusContent" class="ai-status-item" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:#f8fafc;border-radius:8px;margin-bottom:12px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          <div style="flex:1;">
-            <div style="font-size:14px;font-weight:500;color:var(--text);">AI Content Assistant</div>
-            <div id="aiStatusContentLabel" style="font-size:12px;color:var(--primary);">Enabled</div>
-          </div>
-        </div>
-        <div style="font-size:13px;color:var(--text-secondary);margin-top:8px;">You can adjust AI settings before publishing.</div>
-        <a href="#" class="ai-how" onclick="goToStep1();return false;" style="margin-top:12px;display:inline-block;">← Back to AI Settings</a>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -1997,7 +2086,7 @@
     </div>
     <span class="ed-topbar-title">Publish Episode</span>
     <div class="ed-topbar-right">
-      <div class="ed-schedule-info" id="scheduleInfo" style="display:none;">
+      <div class="ed-schedule-info" id="scheduleInfo" style="display:none;" onclick="openScheduleModal()">
         <span class="ed-schedule-text" id="scheduleInfoText"></span>
       </div>
       <div class="ed-publish-wrap">
@@ -2017,20 +2106,22 @@
 
   <!-- ═══════════ V2: Publish Episode ═══════════ -->
   <div class="ed-layout-v2" id="edLayoutV2">
+
+    <!-- V2 Left Side Menu -->
+    <div class="ed-v2-tabs">
+      <button class="ed-v2-tab active" data-target="v2-details" onclick="switchV2Tab('v2-details', this)">Basic Info</button>
+      <button class="ed-v2-tab" data-target="v2-transcripts" onclick="switchV2Tab('v2-transcripts', this)">Transcripts</button>
+      <button class="ed-v2-tab" data-target="v2-chapters" onclick="switchV2Tab('v2-chapters', this)">Chapter Markers</button>
+      <button class="ed-v2-tab" data-target="v2-more" onclick="switchV2Tab('v2-more', this)">More Options</button>
+    </div>
+
     <div class="ed-v2">
 
-      <!-- V2 Tabs -->
-      <div class="ed-v2-tabs">
-        <button class="ed-v2-tab active" onclick="switchV2Tab('v2-details', this)">Episode Info</button>
-        <button class="ed-v2-tab" onclick="switchV2Tab('v2-transcripts', this)">Transcripts</button>
-        <button class="ed-v2-tab" onclick="switchV2Tab('v2-chapters', this)">Chapter Markers</button>
-        <button class="ed-v2-tab" onclick="switchV2Tab('v2-more', this)">More Options</button>
-      </div>
-
       <!-- ── Panel: Details (combined with Logo & Social) ── -->
-            <div class="ed-v2-panel active" id="v2-details">
+      <div class="ed-v2-panel active" id="v2-details">
+        <h2 class="ed-v2-section-title">Basic Info</h2>
         <div class="ep-info-grid">
-          <!-- Left: Episode Info -->
+          <!-- Left: Basic Info -->
           <div class="ep-info-left">
 
             <div class="ed-v2-field" id="v2SubscriptionTypeField" style="display:none;">
@@ -2202,129 +2293,53 @@
 
       <!-- ── Panel: Transcripts ── -->
       <div class="ed-v2-panel" id="v2-transcripts">
-        <div class="ed-v2-card">
-
-          <!-- Audio Player (shared with Chapter Markers) -->
-          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
-            <div style="display:flex;align-items:center;gap:16px;">
-              <button id="v2PlayBtnTranscripts" onclick="toggleV2Player()" style="width:44px;height:44px;border-radius:50%;border:none;background:#1a9a6c;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;" onmouseover="this.style.background='#14805a';this.style.transform='scale(1.05)'" onmouseout="this.style.background='#1a9a6c';this.style.transform='scale(1)'">
-                <svg id="v2PlayIconTranscripts" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </button>
-              <div style="flex:1;min-width:0;">
-                <div style="font-size:13px;font-weight:500;color:#1e293b;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="v2PlayerFileNameTranscripts">episode-audio.mp3</div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;font-weight:500;" id="v2PlayerCurrentTimeTranscripts">00:00</span>
-                  <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;position:relative;cursor:pointer;" onclick="seekV2Player(event)">
-                    <div id="v2PlayerProgressTranscripts" style="width:0%;height:100%;background:#1a9a6c;border-radius:3px;transition:width .1s;"></div>
-                  </div>
-                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;text-align:right;font-weight:500;" id="v2PlayerDurationTranscripts">00:00</span>
-                </div>
-              </div>
-            </div>
+        <h2 class="ed-v2-section-title">Transcripts</h2>
+        <div class="ed-v2-entry" id="transcriptEntry">
+          <div class="ed-v2-entry-main">
+            <div class="ed-v2-entry-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg></div>
+            <div class="ed-v2-entry-desc">Add a transcript to improve your SEO and let listeners read along.</div>
+            <span class="ed-v2-entry-status"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Transcript added</span>
           </div>
-
-          <div class="ed-v2-field">
-            <div class="ed-v2-label" style="display:flex;align-items:center;justify-content:space-between;">
-              <span>Episode Transcripts</span>
-              <div style="display:flex;gap:6px;">
-                <label style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:12px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  Upload SRT/VTT
-                  <input type="file" accept=".srt,.vtt" style="display:none;" onchange="uploadTranscriptFile(event)">
-                </label>
-                <div style="position:relative;">
-                  <button onclick="toggleTranscriptDownload(event)" style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:12px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;white-space:nowrap;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Download
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
-                  </button>
-                  <div id="v2TranscriptDownloadDD" style="display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:180px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:60;overflow:hidden;">
-                    <div onclick="downloadTranscript('srt')" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                      Captions (.srt)
-                    </div>
-                    <div onclick="downloadTranscript('txt')" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                      Plain Text (.txt)
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <textarea class="ed-v2-textarea" id="v2Transcript" placeholder="Paste or write your episode transcript here..." style="min-height:380px;"></textarea>
-            <div class="ed-v2-hint">Paste or type your transcript above, or upload a .srt or .vtt file.</div>
+          <div class="ed-v2-entry-empty">
+            <button class="ed-v2-btn-ai" onclick="openAIGenerateConfirm()"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7L12 2z"/></svg>Generate with Podbean AI</button>
+            <button class="ed-v2-btn-ghost" onclick="openTranscriptWorkspace('manual')">Add manually</button>
           </div>
-        </div>
-      </div>
-
-      <!-- Add Chapter Modal -->
-      <div id="v2AddChapterModal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);align-items:center;justify-content:center;" onclick="if(event.target===this)closeAddChapterModal()">
-        <div style="background:#fff;border-radius:14px;width:440px;max-width:90vw;box-shadow:0 16px 64px rgba(0,0,0,.2);padding:28px 32px 24px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-            <div style="font-size:17px;font-weight:700;color:#1e293b;">Add Chapter Marker</div>
-            <button onclick="closeAddChapterModal()" style="width:30px;height:30px;border-radius:8px;border:none;background:#f1f5f9;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:18px;">&times;</button>
+          <div class="ed-v2-entry-filled">
+            <button class="ed-v2-btn-ghost" onclick="openTranscriptWorkspace('edit')">Edit</button>
           </div>
-          <div class="ed-v2-field">
-            <div class="ed-v2-label">Start Time (mm:ss)</div>
-            <input type="text" id="v2ModalChapterTime" class="ed-v2-input" placeholder="05:30" style="font-size:15px;text-align:center;font-family:monospace;">
-          </div>
-          <div class="ed-v2-field">
-            <div class="ed-v2-label">Chapter Title</div>
-            <input type="text" id="v2ModalChapterTitle" class="ed-v2-input" placeholder="Enter chapter title..." style="font-size:15px;" onkeydown="if(event.key==='Enter')confirmAddChapter()">
-          </div>
-          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;">
-            <button onclick="closeAddChapterModal()" style="padding:9px 20px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:14px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;">Cancel</button>
-            <button onclick="confirmAddChapter()" style="padding:9px 24px;border:none;border-radius:8px;background:#1a9a6c;color:#fff;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#14805a'" onmouseout="this.style.background='#1a9a6c'">Add Chapter</button>
+          <div class="ed-v2-entry-generating">
+            <span class="ed-v2-spinner"></span>
+            <span>Generating with AI Content Assistant. It will display and applied to your episode once it is completed.</span>
           </div>
         </div>
       </div>
 
       <!-- ── Panel: Chapter Markers ── -->
       <div class="ed-v2-panel" id="v2-chapters">
-        <div class="ed-v2-card">
-
-          <!-- Audio Player -->
-          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
-            <div style="display:flex;align-items:center;gap:16px;">
-              <button id="v2PlayBtn" onclick="toggleV2Player()" style="width:44px;height:44px;border-radius:50%;border:none;background:#1a9a6c;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;" onmouseover="this.style.background='#14805a';this.style.transform='scale(1.05)'" onmouseout="this.style.background='#1a9a6c';this.style.transform='scale(1)'">
-                <svg id="v2PlayIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </button>
-              <div style="flex:1;min-width:0;">
-                <div style="font-size:13px;font-weight:500;color:#1e293b;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="v2PlayerFileName">episode-audio.mp3</div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;font-weight:500;" id="v2PlayerCurrentTime">00:00</span>
-                  <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;position:relative;cursor:pointer;" onclick="seekV2Player(event)">
-                    <div id="v2PlayerProgress" style="width:0%;height:100%;background:#1a9a6c;border-radius:3px;transition:width .1s;"></div>
-                  </div>
-                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;text-align:right;font-weight:500;" id="v2PlayerDuration">00:00</span>
-                </div>
-              </div>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;">
-              <button onclick="addChapterFromPlayer()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Chapter <span style="font-weight:600;margin-left:2px;" id="v2CurrentTimeBtnLabel">00:00</span>
-              </button>
-            </div>
+        <h2 class="ed-v2-section-title">Chapter Markers</h2>
+        <div class="ed-v2-entry" id="chaptersEntry">
+          <div class="ed-v2-entry-main">
+            <div class="ed-v2-entry-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="3.5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="3.5" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg></div>
+            <div class="ed-v2-entry-desc">Add chapter markers so listeners can jump to the moments that matter.</div>
+            <span class="ed-v2-entry-status" id="chaptersEntryStatus">Chapters added</span>
           </div>
-          <!-- Hidden audio element -->
-          <audio id="v2AudioPlayer" style="display:none;"></audio>
-
-          <!-- Chapter List -->
-          <div class="ed-v2-field">
-            <div class="ed-v2-label" style="margin-bottom:10px;">Chapters <span style="font-weight:400;color:#94a3b8;font-size:13px;" id="v2ChapterCount">0 total</span></div>
-            <div id="v2ChapterList" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
-              <div id="v2ChapterEmpty" style="padding:40px 24px;text-align:center;color:#94a3b8;font-size:14px;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 10px;display:block;color:#cbd5e1;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                No chapter markers yet. Play your episode and add chapters at key moments.
-              </div>
-            </div>
+          <div class="ed-v2-entry-empty">
+            <button class="ed-v2-btn-ai" onclick="openAIGenerateConfirm()"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7L12 2z"/></svg>Generate with Podbean AI</button>
+            <button class="ed-v2-btn-ghost" onclick="openChapterWorkspace('manual')">Add manually</button>
+          </div>
+          <div class="ed-v2-entry-filled">
+            <button class="ed-v2-btn-ghost" onclick="openChapterWorkspace('edit')">Edit</button>
+          </div>
+          <div class="ed-v2-entry-generating">
+            <span class="ed-v2-spinner"></span>
+            <span>Generating with AI Content Assistant. It will display and applied to your episode once it is completed.</span>
           </div>
         </div>
       </div>
 
       <!-- ── Panel: More Options ── -->
       <div class="ed-v2-panel" id="v2-more">
+        <h2 class="ed-v2-section-title">More Options</h2>
         <div class="ed-v2-card">
 
           <!-- Season NO. + Episode NO. -->
@@ -2386,6 +2401,140 @@
     </div>
   </div>
 </div>
+
+<!-- ═══════════ Transcripts Workspace (full-screen overlay) ═══════════ -->
+<div class="ed-ws-overlay" id="transcriptWorkspaceModal">
+  <div class="ed-ws-topbar">
+    <button class="ed-ws-close" onclick="closeTranscriptWorkspace()">Close</button>
+    <span class="ed-ws-title">Transcripts</span>
+    <button class="ed-ws-save" onclick="saveTranscriptWorkspace()">Save</button>
+  </div>
+  <div class="ed-ws-body">
+    <div class="ed-v2-card">
+
+          <!-- Audio Player (shared with Chapter Markers) -->
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+              <button id="v2PlayBtnTranscripts" onclick="toggleV2Player()" style="width:44px;height:44px;border-radius:50%;border:none;background:#1a9a6c;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;" onmouseover="this.style.background='#14805a';this.style.transform='scale(1.05)'" onmouseout="this.style.background='#1a9a6c';this.style.transform='scale(1)'">
+                <svg id="v2PlayIconTranscripts" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </button>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;color:#1e293b;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="v2PlayerFileNameTranscripts">episode-audio.mp3</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;font-weight:500;" id="v2PlayerCurrentTimeTranscripts">00:00</span>
+                  <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;position:relative;cursor:pointer;" onclick="seekV2Player(event)">
+                    <div id="v2PlayerProgressTranscripts" style="width:0%;height:100%;background:#1a9a6c;border-radius:3px;transition:width .1s;"></div>
+                  </div>
+                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;text-align:right;font-weight:500;" id="v2PlayerDurationTranscripts">00:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ed-v2-field">
+            <div class="ed-v2-label" style="display:flex;align-items:center;justify-content:space-between;">
+              <span>Episode Transcripts</span>
+              <div style="display:flex;gap:6px;">
+                <label style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:12px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Upload SRT/VTT
+                  <input type="file" accept=".srt,.vtt" style="display:none;" onchange="uploadTranscriptFile(event)">
+                </label>
+                <div style="position:relative;">
+                  <button onclick="toggleTranscriptDownload(event)" style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:12px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;white-space:nowrap;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <div id="v2TranscriptDownloadDD" style="display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:180px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:60;overflow:hidden;">
+                    <div onclick="downloadTranscript('srt')" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      Captions (.srt)
+                    </div>
+                    <div onclick="downloadTranscript('txt')" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      Plain Text (.txt)
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <textarea class="ed-v2-textarea" id="v2Transcript" placeholder="Paste or write your episode transcript here..." style="min-height:380px;"></textarea>
+            <div class="ed-v2-hint">Paste or type your transcript above, or upload a .srt or .vtt file.</div>
+          </div></div>
+  </div>
+</div>
+
+<!-- ═══════════ Chapter Markers Workspace (full-screen overlay) ═══════════ -->
+<div class="ed-ws-overlay" id="chapterWorkspaceModal">
+  <div class="ed-ws-topbar">
+    <button class="ed-ws-close" onclick="closeChapterWorkspace()">Close</button>
+    <span class="ed-ws-title">Chapter Markers</span>
+    <button class="ed-ws-save" onclick="saveChapterWorkspace()">Save</button>
+  </div>
+  <div class="ed-ws-body">
+    <div class="ed-v2-card">
+
+          <!-- Audio Player -->
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+              <button id="v2PlayBtn" onclick="toggleV2Player()" style="width:44px;height:44px;border-radius:50%;border:none;background:#1a9a6c;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;" onmouseover="this.style.background='#14805a';this.style.transform='scale(1.05)'" onmouseout="this.style.background='#1a9a6c';this.style.transform='scale(1)'">
+                <svg id="v2PlayIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </button>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;color:#1e293b;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="v2PlayerFileName">episode-audio.mp3</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;font-weight:500;" id="v2PlayerCurrentTime">00:00</span>
+                  <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;position:relative;cursor:pointer;" onclick="seekV2Player(event)">
+                    <div id="v2PlayerProgress" style="width:0%;height:100%;background:#1a9a6c;border-radius:3px;transition:width .1s;"></div>
+                  </div>
+                  <span style="font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;min-width:40px;text-align:right;font-weight:500;" id="v2PlayerDuration">00:00</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;">
+              <button onclick="addChapterFromPlayer()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:13px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Chapter <span style="font-weight:600;margin-left:2px;" id="v2CurrentTimeBtnLabel">00:00</span>
+              </button>
+            </div>
+          </div>
+          <!-- Hidden audio element -->
+          <audio id="v2AudioPlayer" style="display:none;"></audio>
+
+          <!-- Chapter List -->
+          <div class="ed-v2-field">
+            <div class="ed-v2-label" style="margin-bottom:10px;">Chapters <span style="font-weight:400;color:#94a3b8;font-size:13px;" id="v2ChapterCount">0 total</span></div>
+            <div id="v2ChapterList" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+              <div id="v2ChapterEmpty" style="padding:40px 24px;text-align:center;color:#94a3b8;font-size:14px;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 10px;display:block;color:#cbd5e1;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                No chapter markers yet. Play your episode and add chapters at key moments.
+              </div>
+            </div>
+          </div></div>
+  </div>
+</div>
+      <!-- Add Chapter Modal -->
+      <div id="v2AddChapterModal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);align-items:center;justify-content:center;" onclick="if(event.target===this)closeAddChapterModal()">
+        <div style="background:#fff;border-radius:14px;width:440px;max-width:90vw;box-shadow:0 16px 64px rgba(0,0,0,.2);padding:28px 32px 24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <div style="font-size:17px;font-weight:700;color:#1e293b;">Add Chapter Marker</div>
+            <button onclick="closeAddChapterModal()" style="width:30px;height:30px;border-radius:8px;border:none;background:#f1f5f9;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:18px;">&times;</button>
+          </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Start Time (mm:ss)</div>
+            <input type="text" id="v2ModalChapterTime" class="ed-v2-input" placeholder="05:30" style="font-size:15px;text-align:center;font-family:monospace;">
+          </div>
+          <div class="ed-v2-field">
+            <div class="ed-v2-label">Chapter Title</div>
+            <input type="text" id="v2ModalChapterTitle" class="ed-v2-input" placeholder="Enter chapter title..." style="font-size:15px;" onkeydown="if(event.key==='Enter')confirmAddChapter()">
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;">
+            <button onclick="closeAddChapterModal()" style="padding:9px 20px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:14px;font-weight:500;font-family:inherit;color:#1e293b;cursor:pointer;">Cancel</button>
+            <button onclick="confirmAddChapter()" style="padding:9px 24px;border:none;border-radius:8px;background:#1a9a6c;color:#fff;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#14805a'" onmouseout="this.style.background='#1a9a6c'">Add Chapter</button>
+          </div>
+        </div>
+      </div>
 
 <!-- ═══════════ AI Audio Optimization Settings Modal ═══════════ -->
 <div class="ai-settings-overlay" id="aiAudioSettingsModal" onclick="if(event.target===this)closeAIAudioSettingsModal()">
@@ -2581,6 +2730,32 @@
     <div class="confirm-actions">
       <button class="confirm-btn confirm-btn-secondary" onclick="closeRemoveTagsModal()">Cancel</button>
       <button class="confirm-btn confirm-btn-primary" onclick="confirmRemoveTags()">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ Generate with AI Content Assistant — credits confirm Modal ═══════════ -->
+<div class="confirm-overlay" id="aiGenerateConfirmModal" onclick="if(event.target===this)closeAIGenerateConfirm()">
+  <div class="confirm-dialog" style="text-align:left;max-width:480px;">
+    <button class="confirm-close" onclick="closeAIGenerateConfirm()" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="confirm-title" style="text-align:center;">Generate with AI Content Assistant</div>
+    <div class="confirm-desc" style="text-align:center;">AI Content Assistant will create your transcript and chapter markers in one go.</div>
+    <div class="ai-credit-box">
+      <div class="ai-credit-row">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>One run produces <strong>both Transcripts and Chapter Markers</strong> for this episode — you don't need to generate them separately.</span>
+      </div>
+      <div class="ai-credit-row">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>AI Content Assistant is billed at <strong>5 credits per minute</strong> of audio (300 credits/hour).</span>
+      </div>
+    </div>
+    <div class="ai-credit-note">Credits are deducted when generation starts. This may take a few minutes — you can keep working while it runs.</div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-secondary" onclick="closeAIGenerateConfirm()">Cancel</button>
+      <button class="confirm-btn confirm-btn-primary" onclick="confirmAIGenerate()">Confirm</button>
     </div>
   </div>
 </div>
@@ -3016,8 +3191,25 @@
   function buildRows() {
     var html = '';
     var html2 = '';
-    var html3 = '';
-    var count3 = 0;
+    // Episodes 3: demo first row showing a long episode title wrapping to multiple lines
+    var demo3 = '<tr id="epRowDemo" class="demo-row">' +
+      '<td onclick="event.stopPropagation()"><input type="checkbox" onchange="updateSelection(this)"></td>' +
+      '<td class="ep-title-cell">' +
+        '<span class="title-text">Episode 042 — How to Launch, Grow, and Monetize Your Independent Podcast: Choosing the Right Gear, Building an Editing Workflow, Growing Your Audience, and Turning It Into a Sustainable Business</span>' +
+        deletionNote({status:'Published', created:'2026-08-10'}) +
+        '<span class="row-actions">' +
+          '<span class="act-btn" title="Edit" onclick="event.stopPropagation()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>' +
+          '<span class="act-btn" title="View" onclick="event.stopPropagation()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>' +
+          '<span class="act-btn share-embed" title="Share &amp; Embed" onclick="event.stopPropagation()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>' +
+        '</span>' +
+      '</td>' +
+      '<td class="no-wrap">Podcast Team</td>' +
+      '<td class="no-wrap" onclick="event.stopPropagation()"><span class="badge-status ' + badgeClass('Published') + '">Published</span></td>' +
+      '<td onclick="event.stopPropagation()">Aug 10, 2026</td>' +
+      '<td class="no-wrap" onclick="event.stopPropagation()">1,024</td>' +
+    '</tr>';
+    var html3 = demo3;
+    var count3 = 1; // demo row included in the visible count
     episodes.forEach(function(ep, i) {
       var isProc = (ep.status === 'AI Processing');
       // Episodes 3 only: inline deletion countdown note after the title (hidden on hover, swapped for row actions)
@@ -3089,7 +3281,7 @@
 
   var editingIndex = -1;
   var currentPage = 'episodelist'; // 当前可见页面：episodelist / episodelist2 / episodelist0
-  // 订阅类型字段（Episode Info 中 Media File 上方）：仅 Episodes 2 页面显示
+  // 订阅类型字段（Basic Info 中 Media File 上方）：仅 Episodes 2 页面显示
   function updateEpisodeTypeField() {
     var field = document.getElementById('v2SubscriptionTypeField');
     if (!field) return;
@@ -3241,7 +3433,7 @@
       if (btnLabel) btnLabel.textContent = 'Publish Now';
       if (ddItem) ddItem.textContent = 'Schedule Publish';
     }
-    // 编辑已发布（Published）剧集时隐藏 Episode Info 中的 Social Sharing 功能
+    // 编辑已发布（Published）剧集时隐藏 Basic Info 中的 Social Sharing 功能
     var socialSharing = document.getElementById('v2SocialSharing');
     if (socialSharing) socialSharing.style.display = (ep.status === 'Published') ? 'none' : '';
     // Populate the V2 publish modal with episode data
@@ -3250,12 +3442,7 @@
     if (titleInput) titleInput.value = ep.title;
     if (descDiv) descDiv.innerHTML = '';
     setMediaFileState(ep.title + '.mp3');
-    // Also set the simple modal fields
     updatePublishBtn();
-    var simpleTitle = document.getElementById('episodeTitle');
-    var simpleDesc = document.getElementById('episodeDesc');
-    if (simpleTitle) simpleTitle.value = ep.title;
-    if (simpleDesc) simpleDesc.value = '';
     // 订阅类型：Episodes 2 页面预填该行 type
     var typeSel = document.getElementById('v2SubscriptionType');
     if (typeSel && ep.type) typeSel.value = ep.type;
@@ -4335,7 +4522,8 @@
     applyLastPublishAIState();
     // Free plan 用户无 AI 开关，显示 Activate 按钮（点击提示升级）
     updateAIEnhanceByPlan();
-    // 重置 credits 为「不足」演示场景并渲染（每次打开弹窗都演示不足）
+    // 重置 credits 为「不足」演示场景并渲染（每次打开弹窗都演示不足）。
+    // creditsNeeded 为「系统按之前使用情况预测的本集所需积分」（demo 固定值 3,200），真实预测条件待技术确认
     creditsRemaining = 2800;
     creditsNeeded = 3200;
     renderCredits();
@@ -4391,17 +4579,16 @@
     var contentMin = document.getElementById('creditsTooltipContentMin');
     if (contentMin) contentMin.textContent = Math.floor(creditsRemaining / 5) + ' minutes of AI Content Assistant'; // 300 credits/hour → 5 credits/min
   }
-  // 根据剩余积分与预测所需积分，显示/隐藏「积分不足」警告（默认演示不足场景）
+  // 根据剩余积分与预测所需积分，显示/隐藏「积分不足」警告（默认演示不足场景）。
+  // 注意：creditsNeeded 是「系统根据用户之前的使用情况预测的本集所需积分」——本 mockup 用固定演示值
+  // （creditsRemaining = 2,800 < creditsNeeded = 3,200）模拟不足。真实预测条件需技术核对旧版功能代码
+  // 确认（见产品说明文档第 6 节「AI Enhance」）。警告文案不展示具体所需/缺口积分，仅提示 insufficient credits。
   function updateCreditsWarning() {
     var warn = document.getElementById('creditsWarning');
     if (!warn) return;
     if (creditsRemaining >= creditsNeeded) { warn.style.display = 'none'; return; }
     var msg = document.getElementById('creditsWarningMsg');
-    if (msg) {
-      msg.innerHTML = 'Estimated credits for this episode: <strong id="creditsWarningNeeded">' +
-        creditsNeeded.toLocaleString() + '</strong>. You need <strong id="creditsWarningShort">' +
-        (creditsNeeded - creditsRemaining).toLocaleString() + '</strong> more credits.';
-    }
+    if (msg) msg.innerHTML = 'Insufficient credits to process this episode with AI.';
     warn.classList.remove('credits-warning-success');
     var buy = document.getElementById('creditsBuyBtn');
     if (buy) buy.style.display = '';
@@ -4446,7 +4633,6 @@
     document.getElementById('fileInput').value = '';
     document.getElementById('uploadZone').classList.remove('drag-over');
     document.getElementById('modalStep1').style.display = 'flex';
-    document.getElementById('modalStep2').style.display = 'none';
   }
   function toggleAISection(toggleId, contentId) {
     var toggle = document.getElementById(toggleId);
@@ -4471,13 +4657,27 @@
     e.currentTarget.classList.remove('drag-over');
     var files = e.dataTransfer.files;
     if (files.length > 0 && validateUploadFormat(files[0].name)) {
-      goToStep2(files[0].name);
+      startNewEpisodeWithFile(files[0].name);
     }
   }
   function handleFileSelect(e) {
     var file = e.target.files[0];
-    if (file && validateUploadFormat(file.name)) goToStep2(file.name);
+    if (file && validateUploadFormat(file.name)) {
+      startNewEpisodeWithFile(file.name);
+    }
     e.target.value = '';
+  }
+  // 上传文件后：判断积分是否足以 AI 处理本集，随后统一进入 V2「Publish Episode」弹窗并带入所选文件
+  function startNewEpisodeWithFile(fileName) {
+    // 系统判断剩余积分是否足以用 AI 处理本集（真实场景按文件时长等预测所需积分；
+    // mockup 复用演示预测值 3,200 > 剩余 2,800 → 不足时在 New Episode 弹窗 AI Enhance 面板显示警告）
+    evaluateCreditsForUpload();
+    openNewEpisodeDetails();
+    setMediaFileState(fileName);
+  }
+  // 上传文件后判断积分是否足以 AI 处理本集；不足时显示警告（复用 updateCreditsWarning）
+  function evaluateCreditsForUpload() {
+    updateCreditsWarning();
   }
   // 根据当前 plan 更新弹窗中的 Supported file formats 提示
   function updateUploadFormats() {
@@ -4553,37 +4753,7 @@
       'Upgrade to ' + pendingUpgradePlan + ' to keep your episodes forever, with more storage and no auto-deletion.';
     document.getElementById('upgradeModal').classList.add('show');
   }
-  function goToStep2(fileName) {
-    document.getElementById('modalStep1').style.display = 'none';
-    document.getElementById('modalStep2').style.display = 'flex';
-    document.getElementById('fileNameDisplay').textContent = fileName || 'episode-audio.mp3';
-    var audioOn = document.getElementById('toggleAudioOpt').classList.contains('on');
-    var contentOn = document.getElementById('toggleContentAsst').classList.contains('on');
-    var audioStatus = document.getElementById('aiStatusAudio');
-    var contentStatus = document.getElementById('aiStatusContent');
-    document.getElementById('aiStatusAudioLabel').textContent = audioOn ? 'Enabled' : 'Disabled';
-    document.getElementById('aiStatusAudioLabel').style.color = audioOn ? 'var(--primary)' : '#94a3b8';
-    document.getElementById('aiStatusContentLabel').textContent = contentOn ? 'Enabled' : 'Disabled';
-    document.getElementById('aiStatusContentLabel').style.color = contentOn ? 'var(--primary)' : '#94a3b8';
-    if (!audioOn) audioStatus.classList.add('disabled'); else audioStatus.classList.remove('disabled');
-    if (!contentOn) contentStatus.classList.add('disabled'); else contentStatus.classList.remove('disabled');
-  }
-  function goToStep1() {
-    document.getElementById('modalStep2').style.display = 'none';
-    document.getElementById('modalStep1').style.display = 'flex';
-  }
   /* ── Episode Details Full-page Modal ──── */
-  function rteCmd(cmd) {
-    document.execCommand(cmd, false, null);
-    document.getElementById('edEpisodeDesc').focus();
-  }
-  function rteInsertLink() {
-    var url = prompt('Enter link URL:', 'https://');
-    if (url && url.trim()) {
-      document.execCommand('createLink', false, url.trim());
-    }
-    document.getElementById('edEpisodeDesc').focus();
-  }
   function togglePublishDropdown(e) {
     e.stopPropagation();
     var dd = document.getElementById('publishDropdown');
@@ -4618,6 +4788,11 @@
   }
   function publishPublish() {
     if (publishMode === 'publish') {
+      // 记录本次发布时 New Episode 弹窗中两个 AI 区块的开关状态，供下次打开时继承
+      var audioToggle = document.getElementById('toggleAudioOpt');
+      var contentToggle = document.getElementById('toggleContentAsst');
+      lastPublishAIState.audio = audioToggle ? audioToggle.classList.contains('on') : true;
+      lastPublishAIState.content = contentToggle ? contentToggle.classList.contains('on') : true;
       closeEpisodeDetailsModal();
       var isUpdate = editingIndex >= 0 && episodes[editingIndex] && episodes[editingIndex].status === 'Published';
       showToast(isUpdate ? 'Episode updated successfully!' : 'Episode published successfully!');
@@ -4707,12 +4882,15 @@
   }
   function openEpisodeDetailsModal() {
     closeNewEpisodeModal();
-    document.getElementById('episodeDetailsModal').classList.add('show');
-    var fileName = document.getElementById('fileNameDisplay');
-    var detailsFile = document.getElementById('edFileName');
-    if (fileName && detailsFile) {
-      detailsFile.textContent = fileName.textContent;
-    }
+    var overlay = document.getElementById('episodeDetailsModal');
+    overlay.classList.add('show');
+    // 同页锚点布局：打开时回到顶部，初始化滚动联动菜单、播放器与章节列表
+    overlay.scrollTop = 0;
+    initV2ScrollSpy();
+    initV2Player();
+    renderChapterList();
+    renderV2EntryStates();
+    setV2MenuActive(V2_SECTION_IDS[0]);
   }
   function closeEpisodeDetailsModal() {
     document.getElementById('episodeDetailsModal').classList.remove('show');
@@ -4732,19 +4910,6 @@
     closeEpisodeDetailsModal();
     showToast('Episode saved as draft!', 'info');
   }
-  function publishEpisode() {
-    // 记录本次发布时两个 AI 区块的开关状态，供下次打开 New Episode 时继承
-    var audioToggle = document.getElementById('toggleAudioOpt');
-    var contentToggle = document.getElementById('toggleContentAsst');
-    lastPublishAIState.audio = audioToggle ? audioToggle.classList.contains('on') : true;
-    lastPublishAIState.content = contentToggle ? contentToggle.classList.contains('on') : true;
-    closeNewEpisodeModal();
-    showToast('Episode published successfully!');
-    // Auto-open Share modal for the most recent episode
-    var ep = episodes[episodes.length - 1];
-    if (ep) shareEpisode(episodes.length - 1);
-  }
-
   // Wire up New Episode buttons
   document.querySelectorAll('.btn-create').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
@@ -4846,15 +5011,42 @@
   });
   // V1/V2 sync removed — V2 is the only version
 
-  // ── V2 Tab switching ──
+  // ── V2 左侧菜单 = 锚点：点击滚动到对应区块，滚动时联动高亮 ──
+  var V2_SECTION_IDS = ['v2-details', 'v2-transcripts', 'v2-chapters', 'v2-more'];
   function switchV2Tab(tabId, btn) {
+    var sec = document.getElementById(tabId);
+    if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // 立即高亮所点菜单项，滚动过程中由 scrollspy 校正
     document.querySelectorAll('.ed-v2-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.ed-v2-panel').forEach(function(p) { p.classList.remove('active'); });
-    btn.classList.add('active');
-    document.getElementById(tabId).classList.add('active');
-    if (tabId === 'v2-chapters' || tabId === 'v2-transcripts') {
-      setTimeout(function() { initV2Player(); if (tabId === 'v2-chapters') renderChapterList(); }, 100);
+    if (btn) btn.classList.add('active');
+  }
+  function setV2MenuActive(currentId) {
+    document.querySelectorAll('.ed-v2-tab').forEach(function(t) {
+      t.classList.toggle('active', t.getAttribute('data-target') === currentId);
+    });
+  }
+  function syncV2MenuToScroll() {
+    var overlay = document.getElementById('episodeDetailsModal');
+    if (!overlay) return;
+    var line = overlay.getBoundingClientRect().top + 100; // 判定线：距容器顶部 100px
+    var currentId = V2_SECTION_IDS[0];
+    for (var i = 0; i < V2_SECTION_IDS.length; i++) {
+      var sec = document.getElementById(V2_SECTION_IDS[i]);
+      if (sec && sec.getBoundingClientRect().top <= line) currentId = V2_SECTION_IDS[i];
     }
+    // 内容溢出且滚到底部时，强制高亮最后一个区块（避免末段够不到判定线）
+    if (overlay.scrollHeight > overlay.clientHeight + 4 &&
+        overlay.scrollTop + overlay.clientHeight >= overlay.scrollHeight - 2) {
+      currentId = V2_SECTION_IDS[V2_SECTION_IDS.length - 1];
+    }
+    setV2MenuActive(currentId);
+  }
+  var v2ScrollSpyBound = false;
+  function initV2ScrollSpy() {
+    var overlay = document.getElementById('episodeDetailsModal');
+    if (!overlay || v2ScrollSpyBound) return;
+    v2ScrollSpyBound = true;
+    overlay.addEventListener('scroll', syncV2MenuToScroll, { passive: true });
   }
 
   // ── V2 Logo tab switching ──
@@ -4970,7 +5162,10 @@
   }
 
   // ── Chapter Markers List ──
-  var v2ChaptersList = [
+  // 默认无内容：入口卡片显示空状态（AI Content Assistant 生成 / 手动添加）
+  var v2ChaptersList = [];
+  // "Generate with AI Content Assistant" 时填入的示例章节
+  var V2_SAMPLE_CHAPTERS = [
     { time: '00:00', title: 'Introduction' },
     { time: '05:30', title: 'What is a Podcast?' },
     { time: '12:15', title: 'Choosing Your Niche' },
@@ -4981,12 +5176,146 @@
     { time: '58:20', title: 'Wrap-up & Key Takeaways' }
   ];
 
+  // ── V2 入口卡片 & 整屏工作区（Transcripts / Chapter Markers） ──
+  // 弹框内只放入口卡片；真正的播放/编辑区在整屏 overlay 工作区里。
+  // 入口卡片三态：'empty'（无内容）| 'filled'（已有内容）| 'generating'（AI 生成中）
+  function setEntryState(entryId, state) {
+    var el = document.getElementById(entryId);
+    if (!el) return;
+    el.classList.toggle('is-empty', state === 'empty');
+    el.classList.toggle('is-filled', state === 'filled');
+    el.classList.toggle('is-generating', state === 'generating');
+  }
+
+  function hasTranscriptContent() {
+    var ta = document.getElementById('v2Transcript');
+    return !!(ta && ta.value.trim());
+  }
+
+  function renderV2EntryStates() {
+    if (v2AIGenerating) {
+      // 生成中：Transcripts 与 Chapter Markers 两张卡片同时显示生成状态
+      setEntryState('transcriptEntry', 'generating');
+      setEntryState('chaptersEntry', 'generating');
+      return;
+    }
+    setEntryState('transcriptEntry', hasTranscriptContent() ? 'filled' : 'empty');
+    var n = v2ChaptersList.length;
+    var statusEl = document.getElementById('chaptersEntryStatus');
+    if (statusEl) statusEl.textContent = n + ' chapter' + (n === 1 ? '' : 's') + ' added';
+    setEntryState('chaptersEntry', n > 0 ? 'filled' : 'empty');
+  }
+
+  // ── Generate with AI Content Assistant：先确认扣费 → 生成中状态 → 完成后自动应用到 episode ──
+  var v2AIGenerating = false;
+  var v2AIGenerateTimer = null;
+  var V2_SAMPLE_TRANSCRIPT = 'Welcome to the show. In this episode we cover everything you need to know to start your own podcast.\n\n' +
+    'We begin with what a podcast actually is, then walk through choosing a niche you can stick with.\n\n' +
+    'From there we talk about the equipment that matters and the gear you can skip, plus recording best practices.\n\n' +
+    'Finally we cover editing, publishing your first episode, and the key takeaways to remember.';
+
+  function openAIGenerateConfirm() {
+    var modal = document.getElementById('aiGenerateConfirmModal');
+    if (modal) modal.classList.add('show');
+  }
+
+  function closeAIGenerateConfirm() {
+    var modal = document.getElementById('aiGenerateConfirmModal');
+    if (modal) modal.classList.remove('show');
+  }
+
+  function confirmAIGenerate() {
+    closeAIGenerateConfirm();
+    startAIGeneration();
+  }
+
+  function startAIGeneration() {
+    if (v2AIGenerating) return;
+    v2AIGenerating = true;
+    renderV2EntryStates();
+    showToast('Generating with AI Content Assistant. It will display and applied to your episode once it is completed.', 'info', 6000);
+    if (v2AIGenerateTimer) clearTimeout(v2AIGenerateTimer);
+    v2AIGenerateTimer = setTimeout(function() {
+      v2AIGenerateTimer = null;
+      v2AIGenerating = false;
+      applyAIGeneratedContent();
+    }, 5000);
+  }
+
+  // 生成完成：写入 Transcripts + Chapter Markers 并直接应用到当前剧集（无需再点 Publish）
+  function applyAIGeneratedContent() {
+    var ta = document.getElementById('v2Transcript');
+    if (ta && !ta.value.trim()) ta.value = V2_SAMPLE_TRANSCRIPT;
+    if (v2ChaptersList.length === 0) v2ChaptersList = V2_SAMPLE_CHAPTERS.slice();
+    renderChapterList();
+    if (typeof editingIndex === 'number' && editingIndex >= 0 && episodes[editingIndex]) {
+      episodes[editingIndex].transcript = ta ? ta.value : '';
+      episodes[editingIndex].chapters = v2ChaptersList.slice();
+    }
+    renderV2EntryStates();
+    showToast('AI Content Assistant is done. Transcripts and chapter markers have been applied to your episode.', 'success', 6000);
+  }
+
+  function openWorkspaceOverlay(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('show');
+    el.scrollTop = 0;
+  }
+
+  function closeWorkspaceOverlay(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  }
+
+  // ── Transcripts 工作区 ──
+  function openTranscriptWorkspace(mode) {
+    // AI 生成走独立的扣费确认弹框，不直接进工作区
+    if (mode === 'ai') { openAIGenerateConfirm(); return; }
+    openWorkspaceOverlay('transcriptWorkspaceModal');
+    if (mode === 'manual') {
+      setTimeout(function() {
+        var ta = document.getElementById('v2Transcript');
+        if (ta) ta.focus();
+      }, 120);
+    }
+  }
+
+  function closeTranscriptWorkspace() {
+    closeWorkspaceOverlay('transcriptWorkspaceModal');
+    renderV2EntryStates();
+  }
+
+  function saveTranscriptWorkspace() {
+    closeWorkspaceOverlay('transcriptWorkspaceModal');
+    renderV2EntryStates();
+    showToast('Transcript saved and applied to your episode.');
+  }
+
+  // ── Chapter Markers 工作区 ──
+  function openChapterWorkspace(mode) {
+    if (mode === 'ai') { openAIGenerateConfirm(); return; }
+    openWorkspaceOverlay('chapterWorkspaceModal');
+    renderChapterList();
+  }
+
+  function closeChapterWorkspace() {
+    closeWorkspaceOverlay('chapterWorkspaceModal');
+    renderV2EntryStates();
+  }
+
+  function saveChapterWorkspace() {
+    closeWorkspaceOverlay('chapterWorkspaceModal');
+    renderV2EntryStates();
+    showToast('Chapter markers saved and applied to your episode.');
+  }
+
   function renderChapterList() {
     var container = document.getElementById('v2ChapterList');
     var countEl = document.getElementById('v2ChapterCount');
     var emptyEl = document.getElementById('v2ChapterEmpty');
     if (!container) return;
-    if (countEl) countEl.textContent = '(' + v2ChaptersList.length + ')';
+    if (countEl) countEl.textContent = v2ChaptersList.length + ' total';
 
     if (v2ChaptersList.length === 0) {
       container.innerHTML = '<div id="v2ChapterEmpty" style="padding:32px 24px;text-align:center;color:#94a3b8;font-size:14px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 8px;display:block;color:#cbd5e1;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>No chapter markers yet. Use the player or the form above to add one.</div>';
@@ -5061,12 +5390,14 @@
     v2ChaptersList.push({ time: time, title: title });
     v2ChaptersList.sort(function(a, b) { return timeToSeconds(a.time) - timeToSeconds(b.time); });
     renderChapterList();
+    renderV2EntryStates();
     closeAddChapterModal();
   }
 
   function deleteChapter(idx) {
     v2ChaptersList.splice(idx, 1);
     renderChapterList();
+    renderV2EntryStates();
   }
 
   function seekToChapterTime(idx) {
@@ -5108,6 +5439,7 @@
     var reader = new FileReader();
     reader.onload = function(e) {
       document.getElementById('v2Transcript').value = e.target.result;
+      renderV2EntryStates();
     };
     reader.readAsText(file);
     event.target.value = '';
@@ -5183,24 +5515,8 @@
     }
   });
 
-  // Sync V2 title back to V1 on change
   // 每秒刷新 Schedule 弹窗内的 Current time（仅在弹窗打开时写入）
   setInterval(refreshCurrentTime, 1000);
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var v2Title = document.getElementById('v2EpisodeTitle');
-    if (v2Title) {
-      v2Title.addEventListener('input', function() {
-        document.getElementById('edEpisodeTitle').value = this.value;
-      });
-    }
-    var v2Desc = document.getElementById('v2EpisodeDesc');
-    if (v2Desc) {
-      v2Desc.addEventListener('input', function() {
-        document.getElementById('edEpisodeDesc').innerHTML = this.innerHTML;
-      });
-    }
-  });
 
   // Initialize page
   buildRows();
