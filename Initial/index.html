@@ -143,9 +143,15 @@ body {
   box-shadow: none;
   position: relative;
 }
-.podbean-ai-section .setup-mode { display: block; }
+/* AI 对话页：setup 列撑满一屏，聊天区自己滚动，输入区作为列的尾部固定在最下方 */
+.podbean-ai-section .setup-mode {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 180px);   /* 减去 .login-page-new 的 120px 顶 + 60px 底留白 */
+  height: calc(100dvh - 180px);  /* 移动端地址栏收起/展开时不跳 */
+}
 .podbean-ai-section .chat-area {
-  max-height: 560px; overflow-y: auto; padding: 20px 16px 0;
+  flex: 1; min-height: 0; overflow-y: auto; padding: 20px 16px 16px;
   scroll-behavior: smooth; background: var(--p-card-bg);
 }
 .podbean-ai-section .chat-area::-webkit-scrollbar { width: 4px; }
@@ -178,14 +184,14 @@ body {
 .podbean-ai-section .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
 .podbean-ai-section .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
 @keyframes pDotBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+/* 原先是 position:fixed + left/right:0：钉在「浏览器视口」底部而非对话列底部，
+   会和聊天区脱节、白底横条铺满整个窗口、并盖住最后一条消息和页面底部内容。
+   改为对话列内的弹性尾部：始终落在列的最下方，且不遮挡内容。 */
 .podbean-ai-section .input-area {
-  position: fixed;
-  bottom: 24px;
-  left: 0;
-  right: 0;
+  position: static;
+  flex: 0 0 auto;
   padding: 12px 16px 16px;
   background: var(--p-card-bg);
-  z-index: 20;
 }
 .podbean-ai-section .input-area > * {
   max-width: 780px;
@@ -875,8 +881,18 @@ body {
 (function() {
   var state = {
     step: "welcome", podcastDesc: "", category: "",
-    selectedTitle: null, selectedLogo: null, flowCompleted: false
+    selectedTitle: null, selectedLogo: null, flowCompleted: false,
+    variation: 0,        /* 每次「重新生成/重新输入」+1，保证真的换一套结果而不是原地重放 */
+    feedUrl: "",         /* 选择「导入已有播客」时用户给的 RSS 地址 */
+    importing: false     /* feed 导入中 → dashboard 显示「导入中」而不是「还没设置」 */
   };
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+  var TITLE_SUFFIX = ['', ' Weekly', ' Unplugged', ' Reimagined'];
+  var DESC_OPEN = ['A podcast that dives deep into ', 'A weekly show all about ', 'Conversations and stories about ', 'Everything you wanted to know about '];
   var progressMap = { welcome:8, choice:20, describe:35, category:50, generating:65, results:82, complete:100 };
   function setProgress(step) {
     var p = progressMap[step] || 10;
@@ -903,7 +919,7 @@ body {
   }
   function addUserMsg(t) {
     var d = document.createElement('div'); d.className = 'msg msg-user';
-    d.innerHTML = '<div class="bubble">'+t+'</div>';
+    d.innerHTML = '<div class="bubble">'+esc(t)+'</div>';
     chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
   }
   function addHTML(h) {
@@ -914,7 +930,9 @@ body {
   function clearInput() { inputArea.innerHTML = ''; }
 
   function inputBarHTML(pl) {
-    return '<div class="text-input-wrap"><input type="text" id="chatInput" placeholder="'+pl+'" autofocus><button id="sendBtn" onclick="window._pHandleTextSubmit()"><svg><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>';
+    /* placeholder 里可能出现引号，必须转义，否则属性会被截断、按钮一起被吞掉 */
+    var ph = String(pl).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    return '<div class="text-input-wrap"><input type="text" id="chatInput" placeholder="'+ph+'" autofocus><button id="sendBtn" onclick="window._pHandleTextSubmit()"><svg><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>';
   }
   function wireTextInput(onSubmit) {
     var inp = document.getElementById('chatInput');
@@ -982,25 +1000,19 @@ body {
   function restartDemo() {
     chat.innerHTML = ''; clearInput();
     document.getElementById('skipLink').classList.remove('skip-disabled');
-    document.getElementById('setupMode').style.display = 'block';
+    document.getElementById('setupMode').style.display = ''; /* 清掉内联 display，交回 CSS 的 flex 布局 */
     document.getElementById('dashMode').classList.remove('active');
-    state.step='welcome'; state.podcastDesc=''; state.category=''; state.selectedTitle=null; state.selectedLogo=null; state.flowCompleted=false;
+    state.step='welcome'; state.podcastDesc=''; state.category=''; state.selectedTitle=null; state.selectedLogo=null; state.flowCompleted=false; state.variation=0; state.feedUrl=''; state.importing=false;
     setProgress('welcome'); startFlow();
   }
 
+  /* \u70b9\u300cSkip the chat\u300d\u2192 \u76f4\u63a5\u8fdb dashboard\uff08\u672a\u8bbe\u7f6e\u72b6\u6001\uff09\uff0c\u4e0d\u505a\u4e8c\u6b21\u786e\u8ba4\u3002
+     \u6ce8\u610f\uff1a\u8fd9\u4e2a\u51fd\u6570\u88ab HTML \u7684\u5185\u8054 onclick \u8c03\u7528\uff0c\u5185\u8054\u4e8b\u4ef6\u5728\u5168\u5c40\u4f5c\u7528\u57df\u6c42\u503c\uff0c
+     \u6240\u4ee5\u5fc5\u987b\u5728\u6587\u4ef6\u672b\u5c3e\u6302\u5230 window \u4e0a\uff0c\u5426\u5219\u70b9\u51fb\u4f1a ReferenceError \u800c\u6beb\u65e0\u53cd\u5e94\u3002 */
   function confirmSkip() {
-    if(state.step==='complete') return;
-    document.getElementById('skipLink').classList.add('skip-disabled'); clearInput();
-    addBotMsg('No problem! You can <strong>skip the AI setup</strong> and configure everything later from the settings panel.'); scrollBottom();
-    setTimeout(function(){
-      var m = document.createElement('div'); m.className='msg msg-user';
-      m.innerHTML='<div class="bubble">Skip to dashboard</div>'; chat.appendChild(m); scrollBottom();
-      showActionRow('\ud83d\ude80 Yes, take me to dashboard','\u2b05\ufe0f  Go back',function(){state.flowCompleted=false;enterDashboard();},function(){
-        document.getElementById('skipLink').classList.remove('skip-disabled');
-        document.querySelectorAll('.msg-user,.action-row,.msg-bot').forEach(function(el){if(el.textContent.includes('Skip')||el.textContent.includes('skip the AI'))el.remove();});
-        scrollBottom();
-      }); scrollBottom();
-    },400);
+    if(state.step==='complete') return;   /* \u5df2\u7ecf\u5728 dashboard \u91cc\u5c31\u4e0d\u518d\u54cd\u5e94 */
+    state.flowCompleted = false;          /* \u8df3\u8fc7 AI \u8bbe\u7f6e \u2192 \u843d\u5730\u300c\u672a\u8bbe\u7f6e\u300d\u7684 dashboard */
+    enterDashboard();
   }
 
   function startFlow() {
@@ -1022,9 +1034,19 @@ body {
           addTyping(function(){
             addBotMsg('Got it! Please paste your existing podcast\'s RSS feed link, and I\'ll import everything for you.');
             showTextInput('Paste your RSS feed URL...',function(val){
+              state.feedUrl = val; state.importing = true;
               addTyping(function(){
-                addBotMsg('\u2705 Parsing your RSS feed...<br>Your podcast content has been imported successfully! Let\'s polish up your show info next.'); scrollBottom();
-                setTimeout(function(){stepCategory();},600);
+                addBotMsg('\u2705 Got it \u2014 I\'ll import everything from <strong>'+esc(val)+'</strong>.<br>Importing runs in the background, so <strong>feel free to head to the dashboard and take a look around</strong> while it finishes. \u2728'); scrollBottom();
+                /* \u63a8\u8350\u9009\u62e9\uff1a\u76f4\u63a5\u53bb dashboard \u770b\u4e00\u5708 */
+                showActionRow('\ud83d\ude80 Go to dashboard', null, function(){ enterDashboard(); });
+                /* \u5e95\u90e8\u540c\u6837\u7559\u5bf9\u8bdd\u6846\uff1a\u6253\u5b57\u8bf4 dashboard / \u786e\u8ba4 \u4e5f\u80fd\u8fc7\u53bb */
+                showTextInput('Type "dashboard" to continue...', function(v){
+                  if (isConfirm(v) || /dashboard/i.test(v)) { enterDashboard(); return; }
+                  addTyping(function(){
+                    addBotMsg('Still importing your feed \u2014 I\'ll let you know the moment it\'s done. Meanwhile you can open the <strong>dashboard</strong> to look around.'); scrollBottom();
+                  });
+                });
+                scrollBottom();
               });
             });
           });
@@ -1107,8 +1129,11 @@ body {
     return (m[cat] || ['The Podcast Lab','Audio Stories','The Frequency'])[off % 3];
   }
 
-  function generateTitle(idx) { return [catTitles(state.category,0),catTitles(state.category,1),catTitles(state.category,2)][idx]||'My Podcast'; }
-  function generateDescription() { var d = state.podcastDesc||'everything interesting under the sun'; return 'A podcast that dives deep into '+d+'. Each episode brings fresh insights, compelling stories, and practical takeaways \u2014 whether you\'re a seasoned enthusiast or just getting started, there\'s something here for you.'; }
+  function generateTitle(idx) {
+    return ([catTitles(state.category,0),catTitles(state.category,1),catTitles(state.category,2)][idx]||'My Podcast')
+           + TITLE_SUFFIX[state.variation % TITLE_SUFFIX.length];
+  }
+  function generateDescription() { var d = state.podcastDesc||'everything interesting under the sun'; return DESC_OPEN[state.variation % DESC_OPEN.length]+d+'. Each episode brings fresh insights, compelling stories, and practical takeaways \u2014 whether you\'re a seasoned enthusiast or just getting started, there\'s something here for you.'; }
 
   function stepResults() {
     state.step='results'; setProgress('results'); clearInput();
@@ -1121,8 +1146,42 @@ body {
       addBotMsg('No problem, let me generate a fresh set of options for you \ud83d\udd04');scrollBottom();
       var rc = document.querySelector('.result-card'); if(rc)rc.remove();
       var ar = document.querySelector('.action-row'); if(ar)ar.remove();
+      state.variation++;   /* \u6362\u4e00\u5957\uff0c\u522b\u53c8\u7ed9\u51fa\u4e00\u6837\u7684 */
       setTimeout(function(){stepGenerating();},600);
-    }); scrollBottom();
+    });
+    /* \u63a8\u8350\u6807\u9898/\u7b80\u4ecb/\u5c01\u9762\u7684\u4e0b\u65b9\u540c\u6837\u4fdd\u7559\u5bf9\u8bdd\u6846\uff1a\u4e0d\u6ee1\u610f\u53ef\u4ee5\u5199\u8981\u6c42\uff0c
+       \u6ee1\u610f\u4e5f\u53ef\u4ee5\u76f4\u63a5\u6253\u5b57\u786e\u8ba4\uff08looks good / confirm / \u786e\u8ba4\u2026\uff09\uff0c\u4e24\u6761\u8def\u90fd\u8d70\u300c\u8fdb dashboard\u300d */
+    showTextInput('Type "looks good" to continue, or tell me what to change...', function(val){ refineResults(val); });
+    scrollBottom();
+  }
+
+  /* \u5224\u65ad\u7528\u6237\u8fd9\u53e5\u8bdd\u662f\u4e0d\u662f\u300c\u786e\u8ba4/\u901a\u8fc7\u300d\u800c\u4e0d\u662f\u300c\u8981\u6539\u300d\u3002
+     \u5148\u6392\u9664\u5426\u5b9a\u4e0e\u4fee\u6539\u610f\u56fe\uff08no / not / change / \u6539\u2026\uff09\uff0c\u518d\u5339\u914d\u786e\u8ba4\u8bcd\u3002 */
+  function isConfirm(text) {
+    var s = String(text).toLowerCase().replace(/[^a-z\u4e00-\u9fa5\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!s) return false;
+    if (/(^|\s)(no|not|nope|dont|don|wait|hold|stop|change|rework|regenerate|instead|but)(\s|$)/.test(s)) return false;
+    if (/(\u4e0d\u884c|\u4e0d\u662f|\u4e0d\u8981|\u4e0d\u5bf9|\u7b49\u7b49|\u6539|\u6362|\u91cd\u65b0|\u4f46\u662f|\u4e0d\u8fc7)/.test(s)) return false;
+    if (/(looks? good|good to go|all good|sounds good|go ahead|do it|let s go|lets go|ship it|lgtm|\u786e\u8ba4|\u53ef\u4ee5|\u597d\u7684|\u4e0d\u9519|\u6ca1\u95ee\u9898|\u5c31\u8fd9\u6837|\u5f00\u59cb)/.test(s)) return true;
+    /* \u5355\u72ec\u4e00\u4e2a\u80af\u5b9a\u8bcd\u624d\u7b97\u786e\u8ba4\uff0c"good, but change the title" \u8fd9\u7c7b\u4e0a\u9762\u5df2\u88ab\u5426\u5b9a\u8bcd\u62e6\u4e0b */
+    return /^(yes|yep|yeah|yup|sure|ok|okay|confirm|confirmed|start|continue|proceed|next|done|good|great|perfect|fine|go|\u63d0\u4ea4|\u786e\u5b9a)$/.test(s);
+  }
+
+  /* \u7ed3\u679c\u6b65\u9aa4\u91cc\u7528\u6237\u76f4\u63a5\u6253\u5b57\uff1a\u662f\u786e\u8ba4\u5c31\u8fdb dashboard\uff0c\u5426\u5219\u5f53\u6210\u4fee\u6539\u610f\u89c1\u91cd\u51fa\u4e00\u5957 */
+  function refineResults(text) {
+    var confirmed = isConfirm(text);
+    addTyping(function(){
+      if (confirmed) {
+        addBotMsg('Awesome! \ud83c\udf89 Your show is all set \u2014 taking you to your <strong>dashboard</strong>\u2026'); scrollBottom();
+        setTimeout(function(){ state.flowCompleted = true; enterDashboard(); }, 700);
+        return;
+      }
+      addBotMsg('Got it \u2014 let me rework the recommendations with <strong>"'+esc(text)+'"</strong> in mind \u270d\ufe0f'); scrollBottom();
+      var rc = document.querySelector('.result-card'); if(rc) rc.remove();
+      var ar = document.querySelector('.action-row'); if(ar) ar.remove();
+      state.variation++;
+      setTimeout(function(){ stepGenerating(); }, 600);
+    });
   }
 
   window._pSelectTitle = function(idx){state.selectedTitle=idx;document.querySelectorAll('.title-card').forEach(function(e,i){e.classList.toggle('selected',i===idx);});};
@@ -1130,14 +1189,36 @@ body {
 
   function enterDashboard() {
     state.step='complete'; setProgress('complete');
+    clearInput();   /* 收掉对话输入区，避免隐藏的 autofocus 输入框还留在 DOM 里 */
     document.getElementById('setupMode').style.display='none';
+    /* dashboard 里「Skip the chat」不该还是个能点的活控件（点了也是 no-op），置灰掉 */
+    document.getElementById('skipLink').classList.add('skip-disabled');
     document.getElementById('dashMode').classList.add('active');
     renderDashboard();
   }
 
   function renderDashboard() {
     var c = document.getElementById('dashContent');
-    c.innerHTML = state.flowCompleted ? buildCompletedDashboard() : buildSkippedDashboard();
+    c.innerHTML = state.importing ? buildImportingDashboard()
+                                  : (state.flowCompleted ? buildCompletedDashboard() : buildSkippedDashboard());
+  }
+
+  /* 「feed 导入中」的 dashboard：用户是被 AI 在导入过程中请过来看一圈的，
+     所以这里不能显示「你还没有设置节目」那种空状态，否则和上一条消息自相矛盾 */
+  function buildImportingDashboard() {
+    var feed = String(state.feedUrl || '').replace(/^https?:\/\//, '');
+    if (feed.length > 52) feed = feed.substring(0, 52) + '…';
+    return '<h2 class="page-title">Dashboard</h2>' +
+      '<div class="widget-card"><div class="widget-body"><div class="podcast-summary"><div class="ps-thumb" style="background:linear-gradient(135deg,#8FC31F,#A8D84D);">📥</div><div class="ps-info"><h4>Importing your podcast…</h4><div class="ps-meta">' + esc(feed) + '</div></div><span class="ps-badge">Importing</span></div>' +
+      '<div class="guide-progress-row" style="margin-top:16px;"><div class="gp-bar"><div class="gp-fill" style="width:35%"></div></div><span class="gp-label">Importing</span></div>' +
+      '<p style="font-size:13px;color:var(--p-text-secondary);line-height:1.6;margin-top:12px;">We\'re pulling your episodes, artwork and show info from the feed. This runs in the background — feel free to look around, everything will show up here on its own.</p></div></div>' +
+      '<div class="widget-card"><div class="widget-body"><div class="stats-grid"><div class="stat-box"><div class="stat-num">—</div><div class="stat-label">Episodes</div></div><div class="stat-box"><div class="stat-num">—</div><div class="stat-label">Total Listens</div></div><div class="stat-box"><div class="stat-num">—</div><div class="stat-label">Subscribers</div></div></div></div></div>' +
+      '<div class="widget-card"><div class="widget-header"><h3>🚀 Getting Started Guide</h3></div><div class="widget-body"><div class="guide-progress-row"><div class="gp-bar"><div class="gp-fill" style="width:20%"></div></div><span class="gp-label">1 / 5</span></div><div class="guide-steps-list">' +
+      '<div class="guide-step-row"><div class="gs-dot current"><div class="gs-inner"></div></div><span class="gs-text"><strong>Import Feed</strong> — importing in progress</span></div>' +
+      '<div class="guide-step-row"><div class="gs-dot"></div><span class="gs-text"><strong>Review Show Info</strong> — title, description &amp; category</span></div>' +
+      '<div class="guide-step-row"><div class="gs-dot"></div><span class="gs-text"><strong>First Episode</strong> — record or upload</span></div>' +
+      '<div class="guide-step-row"><div class="gs-dot"></div><span class="gs-text"><strong>Distribution</strong> — submit to Apple/Spotify</span></div>' +
+      '<div class="guide-step-row"><div class="gs-dot"></div><span class="gs-text"><strong>Website</strong> — set up your podcast site</span></div></div></div></div>';
   }
 
   function buildCompletedDashboard() {
@@ -1177,6 +1258,8 @@ body {
   }
 
   window._pRestartDemo = restartDemo;
+  /* HTML 里是 onclick="confirmSkip()"，内联处理器走全局作用域，必须挂出去 */
+  window.confirmSkip = confirmSkip;
   window._pStartOnboarding = function() {
     document.getElementById('landingPage').style.display = 'none';
     document.getElementById('registerPage').style.display = 'none';
