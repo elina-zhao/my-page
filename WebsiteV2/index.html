@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+<link rel="icon" id="siteFavicon" href="podbean.svg">
 <style>
 /* ══════════════════════════════════════════════════
    RESET & BASE
@@ -3405,6 +3406,102 @@ body.dark ._feat-search-item._selected { background: #1a1a2e; }
 }
 .css-editor-textarea:focus { border-color: #111; background: #fff; }
 
+/* ── Advanced: accordion groups ── */
+.adv-group { margin-bottom: 2px; }
+.adv-group:last-child { margin-bottom: 0; }
+.adv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background .15s;
+  font-size: 16px;
+  font-weight: 500;
+  color: #010101;
+  user-select: none;
+}
+.adv-header:hover { background: #f5f5f5; }
+.adv-header-label { flex: 1; min-width: 0; }
+.adv-header-hint { color: #999; font-weight: 400; font-size: 14px; }
+.adv-chevron {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform .2s ease, background .15s, color .15s;
+  transform: rotate(90deg);
+}
+.adv-header:hover .adv-chevron { background: #e8e8e8; color: #333; }
+.adv-chevron.open { transform: rotate(-90deg); }
+
+.adv-body {
+  display: none;
+  padding: 4px 16px 18px;
+}
+.adv-body.open { display: block; animation: advBodyIn .15s ease; }
+@keyframes advBodyIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Favicon ── */
+.favicon-thumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.favicon-thumb:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+
+.favicon-tile {
+  width: 64px;
+  height: 64px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color .15s, background .15s;
+}
+.favicon-thumb:hover .favicon-tile { border-color: #c8c8c8; background: #f4f4f4; }
+.favicon-thumb.dragover .favicon-tile { border-color: #111; background: #ededed; }
+
+.favicon-tile-img {
+  max-width: 64px;
+  max-height: 64px;
+  object-fit: contain;
+  display: block;
+}
+
+.favicon-field-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #010101;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #d0d0d0;
+  transition: text-decoration-color .15s;
+}
+.favicon-thumb:hover .favicon-field-label { text-decoration-color: #010101; }
+
+body.dark .favicon-tile { background: #161616; border-color: #333; }
+body.dark .favicon-thumb:hover .favicon-tile { background: #1c1c1c; border-color: #4a4a4a; }
+body.dark .favicon-field-label { color: #f0f0f0; }
+
 /* ══════════════════════════════════════════════════
    RESPONSIVE
    ══════════════════════════════════════════════════ */
@@ -3817,8 +3914,8 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
           <span>Footer</span>
           <span class="menu-arrow">&#8250;</span>
         </div>
-        <div class="menu-item" onclick="showMenuView('css')">
-          <span>CSS editor</span>
+        <div class="menu-item" onclick="showMenuView('advanced')">
+          <span>Advanced</span>
           <span class="menu-arrow">&#8250;</span>
         </div>
 
@@ -3827,6 +3924,41 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
         <div class="panel-section panel-section-settings" style="border:none;padding:0;margin:0;">
           <div class="settings-note">
             Update your podcast title, description, artwork, and copyright information in <a href="#">Settings</a>.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ ADVANCED ═══ -->
+      <div id="menuView-advanced" class="menu-view" style="display:none;">
+        <button class="menu-back" onclick="showMenuMain()">&larr; CUSTOMIZATIONS</button>
+        <div class="panel-label">Advanced</div>
+
+        <!-- Favicon -->
+        <div class="adv-group">
+          <div class="adv-header" data-adv="favicon">
+            <span class="adv-header-label">Favicon <span class="adv-header-hint">(32 &times; 32 px)</span></span>
+            <button class="adv-chevron" data-adv="favicon" title="Expand/Collapse">&gt;</button>
+          </div>
+          <div class="adv-body" data-adv-body="favicon">
+            <div class="favicon-thumb" id="faviconThumb" role="button" tabindex="0" aria-label="Select image">
+              <span class="favicon-tile">
+                <img class="favicon-tile-img" id="faviconPreviewImg" src="podbean.svg" alt="Current favicon">
+              </span>
+              <span class="favicon-field-label">Select image</span>
+            </div>
+            <input type="file" id="faviconInput" accept="image/png,image/jpeg,image/svg+xml,image/x-icon,image/vnd.microsoft.icon" style="display:none;">
+          </div>
+        </div>
+
+        <!-- CSS editor -->
+        <div class="adv-group">
+          <div class="adv-header" data-adv="css">
+            <span class="adv-header-label">CSS editor</span>
+            <button class="adv-chevron" data-adv="css" title="Expand/Collapse">&gt;</button>
+          </div>
+          <div class="adv-body" data-adv-body="css">
+            <textarea class="css-editor-textarea" placeholder="Add custom CSS to style your podcast website..."></textarea>
+            <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.6;">Custom CSS will be applied to your live podcast website. Use with caution. <a href="#" style="color:inherit;text-decoration:underline;transition:color .15s;" onmouseover="this.style.color='#333'" onmouseout="this.style.color='inherit'">Read more</a></p>
           </div>
         </div>
       </div>
@@ -3962,14 +4094,6 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- ═══ CSS EDITOR ═══ -->
-      <div id="menuView-css" class="menu-view" style="display:none;">
-        <button class="menu-back" onclick="showMenuMain()">&larr; CUSTOMIZATIONS</button>
-        <div class="panel-label">CSS editor</div>
-        <textarea class="css-editor-textarea" placeholder="Add custom CSS to style your podcast website..."></textarea>
-        <p style="font-size:12px;color:#888;margin-top:8px;line-height:1.6;">Custom CSS will be applied to your live podcast website. Use with caution. <a href="#" style="color:inherit;text-decoration:underline;transition:color .15s;" onmouseover="this.style.color='#333'" onmouseout="this.style.color='inherit'">Read more</a></p>
       </div>
 
       <!-- ═══ HOME SECTIONS ═══ -->
@@ -4246,6 +4370,8 @@ Join us as we explore topics like overcoming creative blocks, building sustainab
   function showMenuView(view) {
     document.getElementById('menuMainView').style.display = 'none';
     document.getElementById('menuView-' + view).style.display = 'block';
+    // Collapse Advanced accordion panels each time the view is opened
+    if (view === 'advanced') closeAdvancedPanels(null);
     // Scroll preview to relevant section based on menu
     if (view === 'color-font' || view === 'navigation') {
       scrollPreviewToNav();
@@ -4685,6 +4811,99 @@ const _cssEditor = document.querySelector('.css-editor-textarea');
 if (_cssEditor) {
   _cssEditor.addEventListener('input', _setDirty);
 }
+
+// ── FAVICON ──
+// Two states: 'default' (the Podbean logo) or a custom data URL.
+var _faviconDefaultSrc = 'podbean.svg';
+var _faviconState = 'default';   // 'default' | dataURL
+
+function _applyFavicon(state) {
+  var src = (state === 'default' || !state) ? _faviconDefaultSrc : state;
+
+  var link = document.getElementById('siteFavicon');
+  if (link) link.href = src;
+
+  var img = document.getElementById('faviconPreviewImg');
+  if (img) img.src = src;
+}
+
+function _setFaviconState(state) {
+  _faviconState = state;
+  _applyFavicon(_faviconState);
+  _setDirty();
+}
+
+function _handleFaviconFile(file) {
+  if (!file) return;
+  if (!/^image\//.test(file.type)) {
+    alert('That file is not an image. Please choose a PNG, JPG or SVG file.');
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    _setFaviconState(e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+(function setupFavicon() {
+  var input = document.getElementById('faviconInput');
+  var thumb = document.getElementById('faviconThumb');
+  if (!input || !thumb) return;
+
+  thumb.addEventListener('click', function() { input.click(); });
+  thumb.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+
+  input.addEventListener('change', function() {
+    if (this.files && this.files[0]) _handleFaviconFile(this.files[0]);
+    this.value = '';
+  });
+
+  ['dragenter', 'dragover'].forEach(function(ev) {
+    thumb.addEventListener(ev, function(e) { e.preventDefault(); e.stopPropagation(); thumb.classList.add('dragover'); });
+  });
+  ['dragleave', 'drop'].forEach(function(ev) {
+    thumb.addEventListener(ev, function(e) { e.preventDefault(); e.stopPropagation(); thumb.classList.remove('dragover'); });
+  });
+  thumb.addEventListener('drop', function(e) {
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files[0]) _handleFaviconFile(dt.files[0]);
+  });
+
+  _applyFavicon(_faviconState);
+})();
+
+// ── ADVANCED: accordion (CSS editor / Favicon expand under their own name) ──
+function closeAdvancedPanels(exceptKey) {
+  var bodies = document.querySelectorAll('#menuView-advanced .adv-body');
+  for (var i = 0; i < bodies.length; i++) {
+    if (bodies[i].dataset.advBody !== exceptKey) bodies[i].classList.remove('open');
+  }
+  var chevs = document.querySelectorAll('#menuView-advanced .adv-chevron');
+  for (var j = 0; j < chevs.length; j++) {
+    if (chevs[j].dataset.adv !== exceptKey) chevs[j].classList.remove('open');
+  }
+}
+
+(function setupAdvancedAccordion() {
+  var headers = document.querySelectorAll('#menuView-advanced .adv-header');
+  if (!headers.length) return;
+
+  for (var i = 0; i < headers.length; i++) {
+    headers[i].addEventListener('click', function() {
+      var key = this.dataset.adv;
+      var body = document.querySelector('#menuView-advanced .adv-body[data-adv-body="' + key + '"]');
+      var chev = document.querySelector('#menuView-advanced .adv-chevron[data-adv="' + key + '"]');
+      if (!body) return;
+      var opening = !body.classList.contains('open');
+      if (opening) closeAdvancedPanels(key);
+      body.classList.toggle('open', opening);
+      if (chev) chev.classList.toggle('open', opening);
+    });
+  }
+})();
   var homeSections = document.getElementById('previewContent').querySelectorAll('.pc-nav, .pc-hero-wrap, .pc-hero-off-indicator, .pc-section, .pc-footer');
   var episodesPage = document.getElementById('episodesPage');
 
@@ -5788,6 +6007,24 @@ if (_cssEditor) {
       });
     }
 
+    // Bind style change → toggle image field & update preview immediately
+    var styles = _panel.querySelectorAll('._inp-style');
+    for (var i = 0; i < styles.length; i++) {
+      styles[i].addEventListener('change', function() {
+        var f = this.closest('.cs-edit-form');
+        var id = f.dataset.csId;
+        var val = this.value;
+        // Show/hide the image field
+        var imgField = f.querySelector('.cs-edit-image-field');
+        if (imgField) imgField.style.display = (val === 'text') ? 'none' : '';
+        // Update the preview card class live
+        var card = _preview.querySelector('.cs-dynamic-preview[data-cs-id="' + id + '"] .cs-card');
+        if (card) {
+          card.className = card.className.replace(/style-[a-z-]+/, 'style-' + val);
+        }
+      });
+    }
+
     // Helper: close all edit forms (featured + custom sections)
     function _closeAllEditForms(excludeId) {
       // Close featured edit form
@@ -6360,7 +6597,8 @@ if (_cssEditor) {
       cookieToggle: document.getElementById('cookieToggle').checked,
       cookieContent: document.getElementById('cookieEditorContent').innerHTML,
       navItems: JSON.parse(JSON.stringify(navItems)),
-      cssEditor: document.querySelector('.css-editor-textarea')?.value || ''
+      cssEditor: document.querySelector('.css-editor-textarea')?.value || '',
+      favicon: _faviconState
     };
     _clearDirty();
   }
@@ -6396,6 +6634,10 @@ if (_cssEditor) {
 
     // Mode
     if (s.mode === 'dark') { previewContent.classList.add('dark'); } else { previewContent.classList.remove('dark'); }
+
+    // Favicon
+    _faviconState = s.favicon || 'default';
+    _applyFavicon(_faviconState);
     bgOptions.forEach(function(o) { o.classList.toggle('active', o.dataset.bg === s.mode); });
 
     // Colors
