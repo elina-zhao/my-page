@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>可复用顶部导航组件 · 一步调用 Demo</title>
+
+<!-- 字体按需引入；项目里若有统一字体可删 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* 以下只是本 Demo 页的展示样式，不属于组件 */
+.demo { font-family: "Roboto","PingFang SC","Microsoft YaHei",Arial,sans-serif; margin:0; background:#fff; color:#1C1D21; }
+.demo-hero {
+  background: radial-gradient(1200px 600px at 85% -10%, #2E541B 0%, #1B3310 45%, #0E160A 100%);
+  color:#fff; padding-bottom:56px; transition: background .4s;
+}
+.demo--light .demo-hero { background: linear-gradient(180deg,#F4F9EA 0%,#ffffff 100%); color:#1C1D21; }
+.demo-hero-inner { max-width:1120px; margin:0 auto; padding:34px 40px 0; }
+.demo-hero-inner h1 { font-size:42px; margin:26px 0 8px; letter-spacing:-1px; }
+.demo-hero-inner p { font-size:17px; opacity:.75; margin:0 0 10px; max-width:520px; }
+.demo-theme-switch { display:flex; gap:10px; justify-content:flex-end; margin-top:-8px; }
+.demo-theme-switch button{
+  font-family:inherit; font-size:13px; font-weight:600; cursor:pointer;
+  border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.08); color:#fff;
+  padding:7px 16px; border-radius:50px; transition:all .2s;
+}
+.demo-theme-switch button:hover{ background:rgba(255,255,255,.18); }
+.demo-theme-switch button.active{ background:#8FC31F; border-color:#8FC31F; color:#fff; }
+.demo--light .demo-theme-switch button{ border-color:#cbd5e1; background:#fff; color:#334155; }
+.demo--light .demo-theme-switch button.active{ background:#8FC31F; border-color:#8FC31F; color:#fff; }
+.demo-doc { max-width:1120px; margin:0 auto; padding:34px 40px 60px; line-height:1.7; }
+.demo-doc h2 { font-size:22px; margin-bottom:14px; }
+.demo-doc h3 { font-size:16px; margin:22px 0 8px; }
+.demo-doc code { background:#F1F5F9; border-radius:6px; padding:1px 7px; font-size:13px; color:#0F766E; }
+.demo-doc pre{
+  background:#0F172A; color:#E2E8F0; border-radius:14px; padding:16px 18px;
+  font-size:13px; line-height:1.65; overflow:auto; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+.demo-doc pre .cm{ color:#64748B; }
+.demo-doc pre .hl{ color:#FBBF24; }
+.demo-doc .step { background:#F9FAFB; border:1px solid #E5E7EB; border-radius:14px; padding:14px 18px; margin-bottom:10px; }
+</style>
+</head>
+<body class="demo">
+
+<!-- ====================== DEMO 演示区 ====================== -->
+<div class="demo-hero" id="demoHero">
+  <div id="topnav"></div>
+  <div class="demo-hero-inner">
+    <div class="demo-theme-switch">
+      <button data-theme="dark" class="active">深色导航</button>
+      <button data-theme="light">浅色导航</button>
+    </div>
+    <h1>Start your own podcast in minutes.</h1>
+    <p>这是演示用 Hero 区域。实际使用把 <code style="color:inherit">&lt;div id="topnav"&gt;</code> 放到你页面 Hero 之上即可。</p>
+  </div>
+</div>
+
+<section class="demo-doc">
+  <h2>一步调用（就两步）</h2>
+
+  <div class="step"><b>1.</b> 把 <code>top-nav.js</code> 拷进你的项目，页面里引入（组件会自动注入自己的样式，不用再复制 CSS）。</div>
+  <div class="step"><b>2.</b> 一行 <code>TopNav.mount({...})</code>，菜单/文案/Logo/主题全在这个对象里配置。</div>
+
+  <pre><code><span class="cm">&lt;!-- 引入组件（自带样式） --&gt;</span>
+&lt;script src="top-nav.js"&gt;&lt;/script&gt;
+<span class="cm">&lt;!-- 挂载点（可选，不写会自动插到页面顶部） --&gt;</span>
+&lt;div id="topnav"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+<span class="hl">TopNav.mount</span>({
+  theme: 'dark',              <span class="cm">// 'dark' | 'light'</span>
+  mountTo: '#topnav',         <span class="cm">// 挂到上面这个容器；可省</span>
+  logo: { type:'text', badge:'P', text:'Podbean', href:'#' },
+                              <span class="cm">// 图片版：{ type:'image', src:'logo.png', href:'#' }</span>
+  navLinks: [
+    { label:'Pricing', href:'#' },
+    { label:'Podcasting', dropdown:true, columns:[
+        { title:'Podcast Features', links:[
+            { label:'Podcast Hosting', desc:'一句话说明', href:'#' },
+            { label:'Podbean AI',      href:'#' }   <span class="cm">// 不带 desc = 分类样式</span>
+        ]}
+    ]}
+  ],
+  search:  { show:true, placeholder:'Search' },
+  actions:{ login:{ label:'Log in', href:'#' },
+            cta:{   label:'Sign up free', href:'#', style:'primary' } }
+});
+&lt;/script&gt;</code></pre>
+
+  <h3>换品牌 / 换主题</h3>
+  <div class="step">换配色不用动代码：在页面 CSS 里覆盖 <code>.twnav{ --twn-c-accent: #你的品牌色; }</code> 等 <code>--twn-*</code> 变量即可（完整变量清单见 top-nav.js 文件顶部注释）。</div>
+  <div class="step">浅色页面：把 <code>theme</code> 改成 <code>'light'</code>，或对根元素加 <code>.twnav--light</code>。</div>
+  <div class="step">不想要搜索框：<code>search:{ show:false }</code>；按钮要描边样式：<code>cta:{ style:'ghost' }</code>。</div>
+</section>
+
+<!-- ★ 引入组件（自带样式） -->
+<script src="top-nav.js"></script>
+<script>
+/* ===== 你的导航配置：从这里到 TopNav.mount() 就是要带走的部分 ===== */
+var NAV_CONFIG = {
+  theme: 'dark',
+  mountTo: '#topnav',
+  logo: {
+    type: 'image',       /* 用官方字标 logopodbean.svg（与此 html 同目录） */
+    src: 'logopodbean.svg',
+    alt: 'Podbean',
+    href: '#'
+  },
+  navLinks: [
+    {
+      label: 'Podcasting', dropdown: true,
+      columns: [
+        {
+          title: 'Podcast Features',
+          links: [
+            { label: 'Podcast Hosting', desc: 'Start your podcast with all the features you need.', href: '#' },
+            { label: 'Podbean AI', desc: 'AI-Enhanced Audio Quality and Content Generation.', href: '#' },
+            { label: 'Blog to Podcast', desc: 'Repurpose your blog into an engaging podcast.', href: '#' },
+            { label: 'Video to Podcast', desc: 'Convert YouTube playlists to podcasts, videos to audios.', href: '#' }
+          ]
+        },
+        {
+          title: 'Monetization',
+          links: [
+            { label: 'Ads Marketplace', desc: 'Join Ads Marketplace to earn through podcast sponsorships.', href: '#' },
+            { label: 'PodAds', desc: 'Manage your ads with dynamic ad insertion capability.', href: '#' },
+            { label: 'Apple Podcasts Subscriptions Integration', desc: 'Monetize with Apple Podcasts Subscriptions via Podbean.', href: '#' }
+          ]
+        },
+        {
+          title: 'Podbean App',
+          links: [
+            { label: 'Podcast Studio', desc: 'Easy-to-use audio recorder app.', href: '#' },
+            { label: 'Podcast App', desc: 'The best podcast player & podcast app.', href: '#' }
+          ]
+        }
+      ]
+    },
+    { label: 'Advertisers', href: '#' },
+    { label: 'Enterprise', href: '#' },
+    { label: 'Pricing', href: '#' },
+    {
+      label: 'Resources', dropdown: true,
+      columns: [
+        {
+          title: 'Help and Support',
+          links: [
+            { label: 'Help Center', desc: 'Get the answers and support you need.', href: '#' },
+            { label: 'Podbean Academy', desc: 'Resources and guides to launch, grow, and monetize podcast.', href: '#' },
+            { label: 'Podbean Blog', desc: 'Stay updated with the latest podcasting tips and trends.', href: '#' },
+            { label: 'What’s New', desc: 'Check out our newest and recently released features!', href: '#' },
+            { label: 'Podcasting Smarter', desc: 'Podcast interviews, best practices, and helpful tips.', href: '#' }
+          ]
+        },
+        {
+          title: 'Popular Topics',
+          links: [
+            { label: 'How to Start a Podcast', desc: 'The step-by-step guide to start your own podcast.', href: '#' },
+            { label: 'How to Monetize a Podcast', desc: 'Tips on making the decision to monetize your podcast.', href: '#' },
+            { label: 'How to Promote Your Podcast', desc: 'The best ways to get more eyes and ears on your podcast.', href: '#' },
+            { label: 'Podcast Advertising 101', desc: 'Everything you need to know about podcast advertising.', href: '#' },
+            { label: 'Mobile Podcast Recording Guide', desc: 'The ultimate guide to recording a podcast on your phone.', href: '#' },
+            { label: 'How to Use Group Recording', desc: 'Steps to set up and use group recording in the Podbean app.', href: '#' }
+          ]
+        }
+      ]
+    },
+    {
+      label: 'Discover', dropdown: true,
+      columns: [
+        { links: [{ label: 'All', href: '#' }, { label: 'Arts', href: '#' }, { label: 'Business', href: '#' }, { label: 'Comedy', href: '#' }, { label: 'Education', href: '#' }] },
+        { links: [{ label: 'Fiction', href: '#' }, { label: 'Government', href: '#' }, { label: 'Health & Fitness', href: '#' }, { label: 'History', href: '#' }, { label: 'Kids & Family', href: '#' }] },
+        { links: [{ label: 'Leisure', href: '#' }, { label: 'Music', href: '#' }, { label: 'News', href: '#' }, { label: 'Religion & Spirituality', href: '#' }, { label: 'Science', href: '#' }] },
+        { links: [{ label: 'Society & Culture', href: '#' }, { label: 'Sports', href: '#' }, { label: 'Technology', href: '#' }, { label: 'True Crime', href: '#' }, { label: 'TV & Film', href: '#' }] }
+      ]
+    }
+  ],
+  search: { show: true, placeholder: 'Search' },
+  actions: {
+    login: { label: 'Log in', href: '#' },
+    cta:   { label: 'Sign up free', href: '#', style: 'primary' }
+  }
+};
+
+/* ===== 一步调用 ===== */
+var navRoot = window.TopNav.mount(NAV_CONFIG);
+
+/* ============ 以下为本 Demo 页专属：深/浅主题切换，正式使用时删掉 ============ */
+var themeBtns = document.querySelectorAll('.demo-theme-switch button');
+themeBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var theme = btn.getAttribute('data-theme');
+    themeBtns.forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.body.classList.toggle('demo--light', theme === 'light');
+    var root = document.getElementById('topnav');
+    root.classList.toggle('twnav-root--light', theme === 'light');
+    root.querySelector('.twnav').classList.toggle('twnav--light', theme === 'light');
+  });
+});
+</script>
+</body>
+</html>
