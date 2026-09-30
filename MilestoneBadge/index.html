@@ -41,13 +41,23 @@
        MERGE TOKENS (fill at send time - all appear in href only):
          {{podcast_url}}           public podcast page  -> share target
          {{share_text}}            URL-encoded share copy
-         {{grow_audience_url}}     {{analytics_url}}     {{monetization_url}}
          {{unsubscribe_url}}       per-recipient endpoint, e.g.
                                    https://www.podbean.org/site/user/unsubscribe
                                    ?code=...&email=...&mh=...
                                    &module=achievements_badge
                                    &nsid=podcastPublishedEpisodesBadgeEmail
                                    (module + nsid are fixed for this campaign)
+       THE THREE "KEEP THE MOMENTUM GOING" LINKS are literal, not tokens -
+       they point at fixed Podcast Academy articles that read the same for
+       every recipient, so there is nothing per-recipient to fill:
+         Grow your audience        -> /podcast-academy/podcast-growth-promotion
+         Understand your analytics -> /podcast-academy/podcast-statistics
+         Explore monetization      -> /podcast-academy/podcast-monetization
+       (They used to carry the grow_audience_url / analytics_url /
+       monetization_url tokens. If the ESP is expected to substitute its own
+       destinations after all, re-tokenise these three hrefs - click tracking
+       is unaffected either way, since they sit inside the same <a> as the
+       copy.)
        THE CARD IMAGE is the only local placeholder left for a hosted asset -
        swap it before sending:
          src="Badge10.png"  -> hosted card URL for this milestone
@@ -318,7 +328,7 @@
                                 </table>
                               </td>
                               <td valign="middle" align="left">
-                                <a href="{{grow_audience_url}}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <a href="https://www.podbean.com/podcast-academy/podcast-growth-promotion" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                                   <p style="margin: 0 0 3px 0; font-size: 15px; line-height: 1.3; font-weight: 700; color: #07192d;">Grow your audience</p>
                                   <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #64748b;">Learn strategies for reaching more listeners.</p>
                                 </a>
@@ -367,7 +377,7 @@
                                 </table>
                               </td>
                               <td valign="middle" align="left">
-                                <a href="{{analytics_url}}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <a href="https://www.podbean.com/podcast-academy/podcast-statistics" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                                   <p style="margin: 0 0 3px 0; font-size: 15px; line-height: 1.3; font-weight: 700; color: #07192d;">Understand your analytics</p>
                                   <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #64748b;">See how your audience is listening.</p>
                                 </a>
@@ -397,7 +407,7 @@
                                 </table>
                               </td>
                               <td valign="middle" align="left">
-                                <a href="{{monetization_url}}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <a href="https://www.podbean.com/podcast-academy/podcast-monetization" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                                   <p style="margin: 0 0 3px 0; font-size: 15px; line-height: 1.3; font-weight: 700; color: #07192d;">Explore monetization</p>
                                   <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #64748b;">Discover ways to start earning from your podcast.</p>
                                 </a>
