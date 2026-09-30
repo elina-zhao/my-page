@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no" />
+  <title>You&rsquo;ve published 10 episodes! &#127881;</title>
+
+  <!-- ==========================================================================
+       PODBEAN MILESTONE EMAIL  |  "celebrate first, share immediately"
+       ==========================================================================
+       Structure (adapted from the Buzzsprout approach, Podbean content kept):
+         Hero  ->  Achievement badge card  ->  Share Your Milestone (primary CTA)
+               ->  Download badge text link  ->  Keep the momentum going
+               ->  Footer
+       ---------------------------------------------------------------------
+       REUSE FOR THE NEXT MILESTONE (50 / 100 / 250 ...) change these:
+         * the subject line, and the preheader line below it
+         * Hero headline  "You've Published 10 Episodes!"
+         * the huge badge numeral  10             (class "pod-badge-num")
+         * the Outlook VML fallback numeral  10   (inside the [if mso] block)
+         * Card line "10 episodes and counting"
+         * Share section line "the next 10 episodes"
+         * achievement-badge-XX.png reference in the download link
+       ---------------------------------------------------------------------
+       MERGE TOKENS (fill at send time - all appear in href only):
+         {{podcast_url}}           public podcast page  -> share target
+         {{share_text}}            URL-encoded share copy
+         {{grow_audience_url}}     {{analytics_url}}     {{monetization_url}}
+         {{unsubscribe_url}}       per-recipient endpoint, e.g.
+                                   https://www.podbean.org/site/user/unsubscribe
+                                   ?code=...&email=...&mh=...
+                                   &module=achievements_badge
+                                   &nsid=podcastPublishedEpisodesBadgeEmail
+                                   (module + nsid are fixed for this campaign)
+       TWO LOCAL FILES stand in for hosted assets - swap both before sending:
+         src="sample-artwork.png"          -> the podcast's cover art URL
+         href="achievement-badge-10.png"   -> the hosted badge for this milestone
+       ---------------------------------------------------------------------
+       NOTES
+         - Social row + compliance block use the production Podbean footer
+           exactly (8 icons; unsubscribe sentence at 15px #a5a5a5 in Roboto;
+           mailing address + contact@podbean.com). Do not trim these - the
+           unsubscribe link and postal address are CAN-SPAM requirements.
+         - The ESP rewrites every footer href with per-recipient click
+           tracking; the hrefs here are the plain destinations.
+         - The badge is CSS-drawn (no image) so it still shows with images off;
+           Outlook gets a VML roundrect fallback.
+         - The logo is local for preview; swap src to your hosted logo URL.
+         - "The Daily Rundown" / sample-artwork.png are placeholders: replace
+           with the real podcast name and cover art per send.
+       ========================================================================== -->
+
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:AllowPNG/>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <style>
+    table { border-collapse: collapse; }
+    td, p, a, div { font-family: Arial, Helvetica, sans-serif; }
+  </style>
+  <![endif]-->
+
+  <style type="text/css">
+    /* Reset */
+    body, table, td, p, a, li, blockquote {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    table, td {
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+    a { text-decoration: none; }
+
+    /* Responsive */
+    @media only screen and (max-width: 600px) {
+      .pod-email-container { width: 100% !important; }
+      .pod-outer-pad { padding: 12px 8px !important; }
+      .pod-header-td { padding: 28px 20px !important; }
+      .pod-hero-td { padding: 32px 20px 20px 20px !important; }
+      .pod-headline { font-size: 27px !important; line-height: 1.3 !important; }
+      .pod-subhead { font-size: 16px !important; }
+      .pod-card-td { padding: 28px 20px 30px 20px !important; }
+      .pod-share-cell { display: block !important; width: 100% !important; padding: 0 0 12px 0 !important; }
+      .pod-share-cell-last { padding-bottom: 0 !important; }
+      .pod-share-btn { display: block !important; width: 100% !important; }
+      .pod-section-td { padding: 30px 20px !important; }
+      .pod-grow-td { padding: 16px !important; }
+      .pod-grow-arrow { display: none !important; }
+      .pod-body-p { font-size: 15px !important; }
+      .pod-footer-td { padding: 22px 20px !important; }
+    }
+    @media only screen and (max-width: 400px) {
+      .pod-outer-pad { padding: 8px 6px !important; }
+      .pod-header-td { padding: 22px 16px !important; }
+      .pod-hero-td { padding: 26px 16px 16px 16px !important; }
+      .pod-headline { font-size: 23px !important; }
+      .pod-card-td { padding: 24px 16px 26px 16px !important; }
+      .pod-section-td { padding: 24px 16px !important; }
+      .pod-footer-td { padding: 18px 16px !important; }
+      .pod-badge-num { font-size: 46px !important; }
+      .pod-logo { width: 110px !important; }
+    }
+  </style>
+</head>
+
+<body style="margin: 0; padding: 0; width: 100%; background-color: #f0f4f2; font-family: 'Segoe UI', Arial, Helvetica, sans-serif; color: #07192d;">
+
+  <!-- Preheader -->
+  <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all;">
+    You&rsquo;ve published 10 episodes &mdash; that&rsquo;s worth celebrating. Share your milestone with your listeners.
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+  </div>
+
+  <!--[if mso]>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0f4f2;">
+  <tr><td align="center">
+  <![endif]-->
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f0f4f2;">
+    <tr>
+      <td class="pod-outer-pad" align="center" style="padding: 24px 12px;">
+
+        <!-- ============================ Container ============================ -->
+        <table role="presentation" class="pod-email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="width: 600px; max-width: 100%; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(6, 27, 50, 0.06);">
+
+          <!-- ============================ Header ============================ -->
+          <tr>
+            <td class="pod-header-td" align="left" valign="middle" style="background-color: #ffffff; padding: 34px 32px 26px 32px;">
+              <img class="pod-logo" src="Podbean%20email%20logo.png" alt="Podbean" width="125" style="display: block; border: 0; outline: none; height: auto;" />
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 32px; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td style="border-top: 1px solid #e2e8f0; height: 1px; line-height: 1px; font-size: 1px;">&nbsp;</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ============================ Hero ============================ -->
+          <tr>
+            <td class="pod-hero-td" align="center" style="padding: 40px 32px 24px 32px; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center">
+                    <p style="margin: 0 0 10px 0; font-size: 34px; line-height: 1.2;">&#127881;</p>
+                    <h1 class="pod-headline" style="margin: 0 0 12px 0; font-size: 32px; line-height: 1.28; font-weight: 700; color: #07192d; letter-spacing: -0.5px;">
+                      You&rsquo;ve Published 10 Episodes!
+                    </h1>
+                    <p class="pod-subhead" style="margin: 0; font-size: 17px; line-height: 1.6; color: #475569;">
+                      <strong style="color: #07192d; font-weight: 700;">The Daily Rundown</strong> just reached an exciting milestone.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ==================== Achievement badge card ==================== -->
+          <tr>
+            <td style="padding: 0 32px 8px 32px; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #07192d; border-radius: 16px;">
+                <tr>
+                  <td class="pod-card-td" align="center" style="padding: 34px 32px 30px 32px;">
+
+                    <p style="margin: 0 0 22px 0; font-size: 11px; line-height: 1; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8FBF7A;">
+                      Milestone Reached
+                    </p>
+
+                    <!-- Badge (CSS-drawn; shows even with images blocked) -->
+                    <!--[if !mso]><!-->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                      <tr>
+                        <td width="172" height="172" align="center" valign="middle" bgcolor="#4A9E3F" style="width: 172px; height: 172px; border-radius: 50%; background-color: #4A9E3F;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                            <tr>
+                              <td width="140" height="140" align="center" valign="middle" bgcolor="#07192d" style="width: 140px; height: 140px; border-radius: 50%; background-color: #07192d; text-align: center;">
+                                <p class="pod-badge-num" style="margin: 0; font-size: 58px; line-height: 1; font-weight: 700; color: #ffffff; letter-spacing: -2px;">10</p>
+                                <p style="margin: 8px 0 0 0; font-size: 11px; line-height: 1; font-weight: 700; letter-spacing: 2.5px; color: #8FBF7A;">EPISODES</p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                    <!--<![endif]-->
+                    <!--[if mso]>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                      <tr>
+                        <td align="center" valign="middle">
+                          <v:roundrect arcsize="50%" fillcolor="#07192d" strokecolor="#4A9E3F" strokeweight="16px" style="width:172px;height:172px;">
+                            <v:textbox inset="0,0,0,0">
+                              <div style="font-family:Arial,sans-serif;font-size:52px;line-height:58px;font-weight:bold;color:#ffffff;text-align:center;padding-top:30px;">10</div>
+                              <div style="font-family:Arial,sans-serif;font-size:11px;line-height:14px;font-weight:bold;color:#8FBF7A;text-align:center;letter-spacing:2px;">EPISODES</div>
+                            </v:textbox>
+                          </v:roundrect>
+                        </td>
+                      </tr>
+                    </table>
+                    <![endif]-->
+
+                    <!-- Podcast identity -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 26px auto 0 auto;">
+                      <tr>
+                        <td valign="middle" style="padding-right: 12px;">
+                          <img src="sample-artwork.png" alt="The Daily Rundown cover art" width="56" height="56" style="display: block; width: 56px; height: 56px; border-radius: 12px; border: 0; outline: none;" />
+                        </td>
+                        <td valign="middle" align="left">
+                          <p style="margin: 0 0 4px 0; font-size: 16px; line-height: 1.3; font-weight: 700; color: #ffffff;">The Daily Rundown</p>
+                          <p style="margin: 0; font-size: 13px; line-height: 1.3; color: #93A6B8;">10 episodes and counting</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ============ Primary CTA: share immediately, no extra click ============ -->
+          <tr>
+            <td class="pod-section-td" align="center" style="padding: 34px 32px 30px 32px; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center">
+                    <h2 style="margin: 0 0 8px 0; font-size: 23px; line-height: 1.3; font-weight: 700; color: #07192d; letter-spacing: -0.3px;">
+                      Share Your Milestone
+                    </h2>
+                    <p class="pod-body-p" style="margin: 0 0 22px 0; font-size: 15px; line-height: 1.6; color: #475569;">
+                      Tell your listeners the news &mdash; and bring them along for the next 10 episodes.
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td class="pod-share-cell" width="50%" align="center" valign="top" style="padding: 0 7px 0 0;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" bgcolor="#1877F2" style="border-radius: 28px; background-color: #1877F2;">
+                                <a class="pod-share-btn" href="https://www.facebook.com/sharer/sharer.php?u={{podcast_url}}" target="_blank" rel="noopener noreferrer" style="display: block; padding: 15px 18px; font-size: 15px; line-height: 1.2; font-weight: 700; color: #ffffff; text-decoration: none; border-radius: 28px;">
+                                  Share on Facebook
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td class="pod-share-cell pod-share-cell-last" width="50%" align="center" valign="top" style="padding: 0 0 0 7px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" bgcolor="#07192d" style="border-radius: 28px; background-color: #07192d;">
+                                <a class="pod-share-btn" href="https://twitter.com/intent/tweet?url={{podcast_url}}&amp;text={{share_text}}" target="_blank" rel="noopener noreferrer" style="display: block; padding: 15px 18px; font-size: 15px; line-height: 1.2; font-weight: 700; color: #ffffff; text-decoration: none; border-radius: 28px;">
+                                  Share on X
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding-top: 20px;">
+                    <a href="achievement-badge-10.png" target="_blank" rel="noopener noreferrer" style="font-size: 14px; line-height: 1.5; color: #07192d; text-decoration: underline; font-weight: 600;">
+                      Download your achievement badge
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ============================ Divider ============================ -->
+          <tr>
+            <td style="padding: 0 32px; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td style="border-top: 1px solid #e2e8f0; height: 1px; line-height: 1px; font-size: 1px;">&nbsp;</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ================= Secondary: Keep the momentum going ================= -->
+          <tr>
+            <td class="pod-section-td" align="left" style="padding: 34px 32px 36px 32px; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+
+                <tr>
+                  <td align="left" style="padding-bottom: 6px;">
+                    <h2 style="margin: 0; font-size: 21px; line-height: 1.3; font-weight: 700; color: #07192d; letter-spacing: -0.3px;">
+                      Keep the momentum going
+                    </h2>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left" style="padding-bottom: 20px;">
+                    <p class="pod-body-p" style="margin: 0; font-size: 15px; line-height: 1.6; color: #475569;">
+                      Here are a few ways to take your podcast further:
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Grow your audience -->
+                <tr>
+                  <td style="padding-bottom: 10px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f7faf8; border-radius: 12px;">
+                      <tr>
+                        <td class="pod-grow-td" style="padding: 16px 18px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td width="44" valign="middle" style="padding-right: 14px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                                  <tr>
+                                    <td width="40" height="40" align="center" valign="middle" bgcolor="#e8f3e4" style="width: 40px; height: 40px; border-radius: 50%; background-color: #e8f3e4; font-family: Arial, sans-serif; font-size: 19px; font-weight: 700; color: #3E8E36;">&#8599;</td>
+                                  </tr>
+                                </table>
+                              </td>
+                              <td valign="middle" align="left">
+                                <a href="{{grow_audience_url}}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                  <p style="margin: 0 0 3px 0; font-size: 15px; line-height: 1.3; font-weight: 700; color: #07192d;">Grow your audience</p>
+                                  <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #64748b;">Learn strategies for reaching more listeners.</p>
+                                </a>
+                              </td>
+                              <td class="pod-grow-arrow" width="24" valign="middle" align="right" style="font-family: Arial, sans-serif; font-size: 18px; color: #94a3b8;">&rsaquo;</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Understand your analytics -->
+                <tr>
+                  <td style="padding-bottom: 10px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f7faf8; border-radius: 12px;">
+                      <tr>
+                        <td class="pod-grow-td" style="padding: 16px 18px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td width="44" valign="middle" style="padding-right: 14px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                                  <tr>
+                                    <td width="40" height="40" align="center" valign="middle" bgcolor="#e8f3e4" style="width: 40px; height: 40px; border-radius: 50%; background-color: #e8f3e4;">
+                                      <!-- bar chart drawn with table cells: renders in every client, no icon font.
+                                           Each bar sits in its own bottom-aligned wrapper so the cells do not
+                                           stretch to a common row height. -->
+                                      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                                        <tr>
+                                          <td width="4" valign="bottom" style="width: 4px; font-size: 1px; line-height: 1px;">
+                                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="4" height="8" bgcolor="#7FB86A" style="width: 4px; height: 8px; font-size: 1px; line-height: 8px;">&nbsp;</td></tr></table>
+                                          </td>
+                                          <td width="4" style="width: 4px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                          <td width="4" valign="bottom" style="width: 4px; font-size: 1px; line-height: 1px;">
+                                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="4" height="14" bgcolor="#4A9E3F" style="width: 4px; height: 14px; font-size: 1px; line-height: 14px;">&nbsp;</td></tr></table>
+                                          </td>
+                                          <td width="4" style="width: 4px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                          <td width="4" valign="bottom" style="width: 4px; font-size: 1px; line-height: 1px;">
+                                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="4" height="20" bgcolor="#3E8E36" style="width: 4px; height: 20px; font-size: 1px; line-height: 20px;">&nbsp;</td></tr></table>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                              <td valign="middle" align="left">
+                                <a href="{{analytics_url}}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                  <p style="margin: 0 0 3px 0; font-size: 15px; line-height: 1.3; font-weight: 700; color: #07192d;">Understand your analytics</p>
+                                  <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #64748b;">See how your audience is listening.</p>
+                                </a>
+                              </td>
+                              <td class="pod-grow-arrow" width="24" valign="middle" align="right" style="font-family: Arial, sans-serif; font-size: 18px; color: #94a3b8;">&rsaquo;</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Explore monetization -->
+                <tr>
+                  <td>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f7faf8; border-radius: 12px;">
+                      <tr>
+                        <td class="pod-grow-td" style="padding: 16px 18px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td width="44" valign="middle" style="padding-right: 14px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                                  <tr>
+                                    <td width="40" height="40" align="center" valign="middle" bgcolor="#e8f3e4" style="width: 40px; height: 40px; border-radius: 50%; background-color: #e8f3e4; font-family: Arial, sans-serif; font-size: 19px; font-weight: 700; color: #3E8E36;">$</td>
+                                  </tr>
+                                </table>
+                              </td>
+                              <td valign="middle" align="left">
+                                <a href="{{monetization_url}}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                  <p style="margin: 0 0 3px 0; font-size: 15px; line-height: 1.3; font-weight: 700; color: #07192d;">Explore monetization</p>
+                                  <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #64748b;">Discover ways to start earning from your podcast.</p>
+                                </a>
+                              </td>
+                              <td class="pod-grow-arrow" width="24" valign="middle" align="right" style="font-family: Arial, sans-serif; font-size: 18px; color: #94a3b8;">&rsaquo;</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- ============================ Footer ============================ -->
+          <tr>
+            <td class="pod-footer-td" align="center" style="padding: 24px 32px 24px 32px; background-color: #ffffff; border-top: 1px solid #dedede;">
+              <!-- Social row (matches the production Podbean footer: 8 icons, 30px, 0 10px margins) -->
+              <div style="padding: 0 0 20px 0;">
+                <a style="margin: 0 10px; text-decoration: none;" href="https://www.instagram.com/podbean/" target="_blank" rel="noopener noreferrer"><img width="30" src="https://pbcdn1.podbean.com/site/images/emails/footer/instagram.png" alt="Instagram" style="display: inline-block; border: 0; outline: none;"></a>
+                <a style="margin: 0 10px; text-decoration: none;" href="https://twitter.com/podbean" target="_blank" rel="noopener noreferrer"><img width="30" src="https://pbcdn1.podbean.com/site/images/emails/footer/twitter.png" alt="Twitter" style="display: inline-block; border: 0; outline: none;"></a>
+                <a style="margin: 0 10px; text-decoration: none;" href="https://www.linkedin.com/company/podbean" target="_blank" rel="noopener noreferrer"><img width="30" src="https://pbcdn1.podbean.com/site/images/emails/footer/linkedin.png" alt="Linkedin" style="display: inline-block; border: 0; outline: none;"></a>
+                <a style="margin: 0 10px; text-decoration: none;" href="https://www.facebook.com/podbean" target="_blank" rel="noopener noreferrer"><img width="30" src="https://pbcdn1.podbean.com/site/images/emails/footer/facebook.png" alt="Facebook" style="display: inline-block; border: 0; outline: none;"></a>
+                <a style="margin: 0 10px; text-decoration: none;" href="https://www.youtube.com/podbean" target="_blank" rel="noopener noreferrer"><img width="30" src="https://pbcdn1.podbean.com/site/images/emails/footer/youtube.png" alt="Youtube" style="display: inline-block; border: 0; outline: none;"></a>
+                <a style="margin: 0 10px; text-decoration: none;" href="https://www.facebook.com/groups/podbean/" target="_blank" rel="noopener noreferrer"><img width="30" src="https://pbcdn1.podbean.com/site/images/emails/footer/podbeanfacebook.png" alt="Podbeanfacebook" style="display: inline-block; border: 0; outline: none;"></a>
+                <a style="margin: 0 10px; text-decoration: none;" href="https://blog.podbean.com/" target="_blank" rel="noopener noreferrer"><img width="30" src="https://pbcdn1.podbean.com/site/images/emails/footer/blog.png" alt="Blog" style="display: inline-block; border: 0; outline: none;"></a>
+                <a style="margin: 0 10px; text-decoration: none;" href="https://podcast.podbean.com/" target="_blank" rel="noopener noreferrer"><img width="30" src="https://pbcdn1.podbean.com/site/images/emails/footer/podbean.png" alt="Podbean" style="display: inline-block; border: 0; outline: none;"></a>
+              </div>
+
+              <!-- Compliance block (production text/palette - keep as is) -->
+              <div style="font-family: Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #a5a5a5; padding-bottom: 15px;">
+                If you would like to unsubscribe and stop receiving these emails click <a href="{{unsubscribe_url}}" target="_blank" style="color: #a5a5a5; text-decoration: underline;">here</a>
+              </div>
+              <p style="margin: 0; font-family: Roboto, Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #a5a5a5;">
+                Podbean Inc<br />
+                5940 S Rainbow Blvd Ste 400 #56077, Las Vegas, NV, 89118-2507, <a href="mailto:contact@podbean.com" style="color: #a5a5a5; text-decoration: underline;">contact@podbean.com</a>
+              </p>
+              <p style="margin: 8px 0 0 0; font-family: Roboto, Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #a5a5a5;">
+                &copy; Copyright 2026 <a href="https://www.podbean.com" target="_blank" rel="noopener noreferrer" style="color: #a5a5a5; text-decoration: underline;">www.podbean.com</a>. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Container -->
+
+      </td>
+    </tr>
+  </table>
+
+  <!--[if mso]>
+  </td></tr></table>
+  <![endif]-->
+
+</body>
+</html>
