@@ -620,7 +620,43 @@
     transition: background .15s;
   }
   .episode-details-overlay .ed-topbar-publish:hover { background: #334155; }
+  /* 这条只在有人「真的把按钮 disabled 掉」时兜底（现在的流程不用它 —— 缺内容也不禁用）。 */
   .episode-details-overlay .ed-topbar-publish:disabled { background: #94a3b8; cursor: not-allowed; opacity: 0.7; }
+  /* Apple Podcast Subscription 剧集的入口（2026-10-09 v2.91）：勾选行 + 展开的设置块 */
+  .ed-v2-check-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 600; color: #1e293b;
+    cursor: pointer; user-select: none;
+  }
+  .ed-v2-check-row input[type=checkbox] {
+    accent-color: var(--primary); width: 16px; height: 16px; margin: 0; flex-shrink: 0; cursor: pointer;
+  }
+  .ed-v2-apple-settings { margin-top: 16px; }
+  /* 2026-10-09（v2.92）：整块加淡灰底，和 Basic Info 其它字段区分开。
+     底色用 #f1f5f9（调色板里已有的一档灰，侧栏激活项同色）——**不能用 #f8fafc**，
+     那是 .ed-v2-input / .ed-v2-select 静默态的底色，块内控件会跟底块融成一片、等于消失。
+     所以块内控件反过来改白底（见下一条），白控件压在淡灰底上，是常规的表单分区观感。 */
+  #v2SubscriptionTypeField {
+    background: #f1f5f9; border-radius: 12px; padding: 16px;
+  }
+  #v2SubscriptionTypeField .ed-v2-input,
+  #v2SubscriptionTypeField .ed-v2-select { background-color: #fff; }
+  /* 2026-10-09（v2.93）：File for Subscriber 搬进这块之后，它的上传行也改白底（同一条道理） */
+  #v2SubscriptionTypeField .ed-v2-file-row { background: #fff; }
+
+  /* 必填项的错误态：红描边（Title 输入框 / Media File 行 / Schedule 弹框的日期时间共用一套观感） */
+  .ed-v2-input.is-error { border-color: #dc2626; }
+  .ed-v2-input.is-error:hover { border-color: #dc2626; }
+  .ed-v2-input.is-error:focus { border-color: #dc2626; background-color: #fff; box-shadow: 0 0 0 3px rgba(220,38,38,.1); }
+  .ed-v2-file-row.is-error { border-color: #dc2626; }
+  /* Schedule 弹框那两个输入框：原先是各写一份行内样式，抽成一个类才能挂 .is-error */
+  .confirm-field-input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid #d1d5db; border-radius: 8px;
+    font-size: 15px; font-family: inherit; color: #1e293b;
+    outline: none; background: #fff; box-sizing: border-box;
+  }
+  .confirm-field-input.is-error { border-color: #dc2626; }
   .episode-details-overlay .ed-publish-arrow {
     display: inline-flex; align-items: center; justify-content: center;
     width: 22px; height: 22px; border-radius: 50%;
@@ -2937,7 +2973,12 @@
         <span class="ed-schedule-text" id="scheduleInfoText"></span>
       </div>
       <div class="ed-publish-wrap">
-        <button class="ed-topbar-publish" id="publishBtn" onclick="publishPublish()" disabled>
+        <!-- 2026-10-09（v2.87 起，v2.88 定稿）：**按钮永远是黑的、永远可点** —— 缺必填内容
+             时不再变灰（那样用户看不出自己缺什么，还以为是页面坏了），而是点了之后**就地把
+             缺的那一项标红并滚过去**（见 publishBlockingField / showPublishBlock）。
+             注意：**不要**给它加回 disabled 属性 —— 禁用元素连点击事件都不派发，
+             这条「点一下就知道缺什么」的路径会整个失效。 -->
+        <button class="ed-topbar-publish" id="publishBtn" onclick="publishPublish()">
           <span id="publishBtnLabel">Publish Now</span>
           <span style="width:1px;height:20px;background:rgba(255,255,255,.25);flex-shrink:0;"></span>
           <span class="ed-publish-arrow" onclick="event.stopPropagation();togglePublishDropdown(event)">
@@ -2972,35 +3013,53 @@
           <!-- Left: Basic Info -->
           <div class="ep-info-left">
 
+            <!-- 2026-10-09（v2.91）：原来是「Episode will be」五选一下拉（Free/Ad-free/…）。
+                 问题是：① 全页没说这是 **Apple** 的功能，四个陌生词得靠猜；
+                 ② 下拉暗示「必须在五个里选一个」，但其实绝大多数剧集根本不属于这个功能。
+                 现在改成**顶部一个勾选框**（默认不勾 = 普通剧集），勾上才展开订阅类型那几项设置。
+                 勾选框是「是否属于 Apple 订阅剧集」的**唯一来源**，下拉里**不再有 Free**
+                 （不勾就等于 Free）—— 所以「最终类型」要读 currentSubscriptionType()。 -->
             <div class="ed-v2-field" id="v2SubscriptionTypeField" style="display:none;">
-              <div class="ed-v2-label">Episode will be</div>
-              <select class="ed-v2-select" id="v2SubscriptionType" onchange="onSubscriptionTypeChange()">
-                <option value="Free">Free</option>
-                <option value="Ad-free">Ad-free</option>
-                <option value="Subscriber-only">Subscriber-only</option>
-                <option value="Early access">Early access</option>
-                <option value="Archive access">Archive access</option>
-              </select>
-              <div class="ed-v2-hint" id="v2SubTypeExplain" style="display:none;"></div>
-              <div id="v2SubTypeTime" style="display:none;margin-top:12px;">
-                <div class="ed-v2-label" id="v2SubTypeTimeLabel"></div>
-                <input type="datetime-local" class="ed-v2-input" id="v2SubTypeDateTime" style="width:100%;" onclick="openV2SubTypeDateTime()">
-              </div>
-            </div>
+              <label class="ed-v2-check-row">
+                <input type="checkbox" id="v2AppleSubscription" onchange="toggleAppleSubscription(this.checked)">
+                Apple Podcast Subscription
+              </label>
 
-            <div class="ed-v2-field" id="v2AdFreeFileField" style="display:none;">
-              <div class="ed-v2-label">File for Subscriber</div>
-              <div class="ed-v2-file-row">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span id="v2AdFreeFileName" class="ed-v2-file-name ed-v2-file-placeholder">Please upload a file.</span>
-                <span id="v2AdFreeFileAction" class="ed-v2-file-action" onclick="document.getElementById('v2AdFreeFileInput').click()">Upload</span>
-                <input type="file" id="v2AdFreeFileInput" style="display:none" onchange="onAdFreeFileSelected(this)">
+              <div class="ed-v2-apple-settings" id="v2AppleSubscriptionSettings" style="display:none;">
+                <div class="ed-v2-label">Episode will be</div>
+                <select class="ed-v2-select" id="v2SubscriptionType" onchange="onSubscriptionTypeChange()">
+                  <option value="Ad-free">Ad-free</option>
+                  <option value="Subscriber-only" selected>Subscriber-only</option>
+                  <option value="Early access">Early access</option>
+                  <option value="Archive access">Archive access</option>
+                </select>
+                <div class="ed-v2-hint" id="v2SubTypeExplain" style="display:none;"></div>
+                <div id="v2SubTypeTime" style="display:none;margin-top:12px;">
+                  <div class="ed-v2-label" id="v2SubTypeTimeLabel"></div>
+                  <input type="datetime-local" class="ed-v2-input" id="v2SubTypeDateTime" style="width:100%;" onclick="openV2SubTypeDateTime()">
+                </div>
+
+                <!-- 2026-10-09（v2.93）：File for Subscriber 也属于 Apple 订阅剧集的内容，
+                     所以从 Media File 上方那个独立字段搬进订阅设置块里，跟着淡灰底一起走。
+                     它仍然排在 Media File 前面（#v2MediaFileRow 一律按 id 取，见 v2.89 注记）。 -->
+                <div class="ed-v2-field" id="v2AdFreeFileField" style="display:none;margin-top:16px;">
+                  <div class="ed-v2-label">File for Subscriber</div>
+                  <div class="ed-v2-file-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <span id="v2AdFreeFileName" class="ed-v2-file-name ed-v2-file-placeholder">Please upload a file.</span>
+                    <span id="v2AdFreeFileAction" class="ed-v2-file-action" onclick="document.getElementById('v2AdFreeFileInput').click()">Upload</span>
+                    <input type="file" id="v2AdFreeFileInput" style="display:none" onchange="onAdFreeFileSelected(this)">
+                  </div>
+                </div>
               </div>
             </div>
 
             <div class="ed-v2-field">
               <div class="ed-v2-label">Media File</div>
-              <div class="ed-v2-file-row">
+              <!-- 2026-10-09（v2.89）：**必须给 id** —— 页面上有两个 .ed-v2-file-row（另一个是
+                   仅 Ad-free 时显示的 File for Subscriber，且排在它前面），按类取会取到那个隐藏的
+                   （红框加在看不见的地方、点了像没反应）。 -->
+              <div class="ed-v2-file-row" id="v2MediaFileRow">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 <span id="v2FileName" class="ed-v2-file-name"><span class="v2-fn-base">episode-audio</span><span class="v2-fn-ext">.mp3</span></span>
                 <!-- 2026-10-09（v2.86）：AI Finished 剧集时出现 Preview（弹框里对比原始 / 优化后音频） -->
@@ -3017,10 +3076,12 @@
                    输入框加 padding-right 给它让位，所以输入框的静默态一律不动。 -->
               <div class="ed-v2-label">Title</div>
               <div class="ed-v2-title-suggest">
-                <input type="text" class="ed-v2-input" id="v2EpisodeTitle" placeholder="Enter episode title" value="" oninput="updatePublishBtn()">
+                <input type="text" class="ed-v2-input" id="v2EpisodeTitle" placeholder="Enter episode title" value="" oninput="onPublishFormChanged()">
                 <span class="ed-v2-ai-more" id="v2TitleMore" onclick="toggleTitleSuggestions(event)">More</span>
                 <div class="ed-v2-suggest-popover" id="v2TitleSuggestions"></div>
               </div>
+              <!-- 2026-10-09（v2.87）：只在「点了发布却发现缺标题」之后才出现，不是一进页面就飘红 -->
+              <div class="field-error" id="v2TitleError" style="display:none;">Add a title to publish this episode.</div>
             </div>
 
             <div class="ed-v2-field">
@@ -3586,13 +3647,17 @@
   <div class="confirm-dialog" style="text-align:left;">
     <div class="confirm-title" style="text-align:center;">Schedule Publish</div>
     <div class="confirm-desc" style="text-align:center;">Choose the date and time to publish this episode.</div>
+    <!-- 2026-10-09（v2.88）：与发布按钮同一套处理 —— 缺什么就在这里标红、滚过来，
+         不再弹 toast（见 confirmSchedule / clearScheduleErrors）。 -->
     <div style="margin-bottom:20px;">
       <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:6px;">Date</div>
-      <input type="date" id="scheduleDate" style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;font-family:inherit;color:#1e293b;outline:none;background:#fff;box-sizing:border-box;">
+      <input type="date" class="confirm-field-input" id="scheduleDate" onchange="clearScheduleErrors()">
+      <div class="field-error" id="scheduleDateError" style="display:none;">Select a date to schedule this episode.</div>
     </div>
     <div style="margin-bottom:24px;">
       <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:6px;">Time</div>
-      <input type="time" id="scheduleTime" style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;font-family:inherit;color:#1e293b;outline:none;background:#fff;box-sizing:border-box;">
+      <input type="time" class="confirm-field-input" id="scheduleTime" onchange="clearScheduleErrors()">
+      <div class="field-error" id="scheduleTimeError" style="display:none;">Select a time to schedule this episode.</div>
     </div>
     <div class="confirm-actions">
       <button class="confirm-btn confirm-btn-secondary" onclick="closeScheduleModal()">Cancel</button>
@@ -3889,7 +3954,7 @@
       '</tr>';
       // Episode List 2 (with Type column)
       html2 += rowStart +
-        '<td><span class="badge-status badge-type">' + ep.type + '</span></td>' +
+        '<td><span class="badge-status badge-type">' + epTypeLabel(ep.type) + '</span></td>' +
         '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
         '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
         menuCell +
@@ -3954,8 +4019,7 @@
   function updateAdFreeFileField() {
     var field = document.getElementById('v2AdFreeFileField');
     if (!field) return;
-    var typeSel = document.getElementById('v2SubscriptionType');
-    field.style.display = (currentPage === 'episodelist2' && typeSel && typeSel.value === 'Ad-free') ? '' : 'none';
+    field.style.display = (currentPage === 'episodelist2' && currentSubscriptionType() === 'Ad-free') ? '' : 'none';
   }
   // 上传后：Upload 变为文件名 + ✕ 删除
   function onAdFreeFileSelected(input) {
@@ -3992,7 +4056,7 @@
   // 把文件名写进上传行：拆成 base + ext 两个 span，让超长名字在**扩展名之前**截断。
   // CSS 的 text-overflow:ellipsis 只能截末尾，会把 ".mp3" 一起吃掉，所以要自己拆。
   // 没有扩展名（或点号在结尾，如占位文案 "Please upload a file."）时整串当 base。
-  // 注意：容器 textContent 仍等于完整文件名，updatePublishBtn() / initV2Player() 照旧可读。
+  // 注意：容器 textContent 仍等于完整文件名，onPublishFormChanged() / initV2Player() 照旧可读。
   function renderFileNameInto(el, name) {
     if (!el) return;
     var dot = String(name).lastIndexOf('.');
@@ -4022,7 +4086,7 @@
       action.setAttribute('onclick', 'onMediaFileRemove()');
       action.title = 'Remove file';
     }
-    updatePublishBtn();
+    onPublishFormChanged();
   }
   // 选择新文件
   function onMediaFileSelected(input) {
@@ -4045,8 +4109,54 @@
       action.setAttribute('onclick', "document.getElementById('v2FileInput').click()");
       action.removeAttribute('title');
     }
-    updatePublishBtn();
+    onPublishFormChanged();
   }
+  // ── Apple Podcast Subscription 剧集：勾选框 ↔ 订阅类型（2026-10-09 v2.91）─────────
+  // 勾选框 `#v2AppleSubscription` 是「是否属于 Apple 订阅剧集」的唯一来源；
+  // 下拉 `#v2SubscriptionType` 只放那 4 个非 Free 的类型（不勾就等于 Free）。
+  // 所以**别直接读 `typeSel.value`** —— 一律走 currentSubscriptionType()。
+  var V2_APPLE_DEFAULT_TYPE = 'Subscriber-only';
+
+  function isAppleSubscriptionEpisode() {
+    var cb = document.getElementById('v2AppleSubscription');
+    return !!(cb && cb.checked);
+  }
+
+  // 这一集**最终**的订阅类型（写进 ep.type / 列表页 Type 列用的就是这个）
+  function currentSubscriptionType() {
+    if (!isAppleSubscriptionEpisode()) return 'Free';
+    var sel = document.getElementById('v2SubscriptionType');
+    return (sel && sel.value) || V2_APPLE_DEFAULT_TYPE;
+  }
+
+  // 列表 Type 列的**显示文案**（2026-10-09 v2.95）：数据里非 Apple 剧集存的是 'Free'，
+  // 列表里显示成 'Public'。**只改显示，不动 ep.type** —— 所有判断仍以 'Free' 为准。
+  // 理由：这套界面里「Free」已经被 Free plan（定价计划）占用了，同一处再指「剧集类型」会撞车；
+  // 另外那四个 Apple 类型说的都是「谁能听 / 订阅者多拿到什么」，只有 Free 说的是钱。
+  function epTypeLabel(type) {
+    return (!type || type === 'Free') ? 'Public' : type;
+  }
+
+  function toggleAppleSubscription(on) {
+    var settings = document.getElementById('v2AppleSubscriptionSettings');
+    var sel = document.getElementById('v2SubscriptionType');
+    if (settings) settings.style.display = on ? '' : 'none';
+    // 勾上时如果下拉还没值（或残留 Free）就落到默认类型
+    if (sel && on && (!sel.value || sel.value === 'Free')) sel.value = V2_APPLE_DEFAULT_TYPE;
+    onSubscriptionTypeChange();
+    updateAdFreeFileField();
+  }
+
+  // 按剧集的 type 回填勾选框与下拉：'Free' / 没有 type → 不勾
+  function syncAppleSubscriptionFromType(type) {
+    var cb = document.getElementById('v2AppleSubscription');
+    var sel = document.getElementById('v2SubscriptionType');
+    var isSub = !!type && type !== 'Free';
+    if (sel && isSub) sel.value = type;
+    if (cb) cb.checked = isSub;
+    toggleAppleSubscription(isSub);
+  }
+
   // 订阅类型联动：Early access → 公开上架时间（日期+时间）+ 解释；Archive access → 进入档案日期（仅日期）+ 解释
   function onSubscriptionTypeChange() {
     var typeSel = document.getElementById('v2SubscriptionType');
@@ -4123,14 +4233,13 @@
     // Populate the V2 publish modal with episode data
     var titleInput = document.getElementById('v2EpisodeTitle');
     if (titleInput) titleInput.value = ep.title;
+    clearTitleError();   // 2026-10-09（v2.87）：别把上一次的红框带进来
     // 2026-10-09（v2.86）：AI Finished 的剧集要带上 AI 写的 Description / Transcripts / Chapters，
     // Media File 显示优化后的音频并给出 Preview；其它状态由同一个函数**整套复位**。
     applyAiFinishedContent(ep);
-    updatePublishBtn();
-    // 订阅类型：Episodes 2 页面预填该行 type
-    var typeSel = document.getElementById('v2SubscriptionType');
-    if (typeSel && ep.type) typeSel.value = ep.type;
-    onSubscriptionTypeChange();
+    onPublishFormChanged();
+    // 订阅类型：Episodes 2 页面按该行 type 回填「是不是 Apple 订阅剧集」+ 具体类型
+    syncAppleSubscriptionFromType(ep.type);
     updateEpisodeTypeField();
     onAdFreeFileRemove(); // 每次打开重置 Ad-free 文件上传状态
     // Open the publish episode modal
@@ -4234,7 +4343,7 @@
     var input = document.getElementById('v2EpisodeTitle');
     if (input) { input.value = s.text; }
     hideTitleSuggestions();
-    updatePublishBtn();
+    onPublishFormChanged();
   }
 
   // 按状态铺内容：AI Finished 填 AI 内容，其它状态整套复位（弹框是复用的，必须复位）
@@ -6214,14 +6323,110 @@
       refreshScheduleInfo();
     }
   }
-  function updatePublishBtn() {
+  // 表单有改动时调一下：必填项补上了就把它的错误态撤掉（不用等下次点发布）。
+  // 2026-10-09（v2.88）：按钮不再有「禁用态」要更新，所以这个函数只剩清错误这件事，
+  // 名字也从 updatePublishBtn 改成 onPublishFormChanged。
+  function onPublishFormChanged() {
     var title = document.getElementById('v2EpisodeTitle').value.trim();
+    if (title) clearTitleError();
     var fn = document.getElementById('v2FileName');
     var hasFile = !!fn && !fn.classList.contains('ed-v2-file-placeholder') && fn.textContent.trim();
-    var btn = document.getElementById('publishBtn');
-    btn.disabled = !title || !hasFile;
+    if (hasFile) clearMediaFileError();
+  }
+
+  // 两个必填项在**页面上从上到下**的顺序（2026-10-09 v2.90）。
+  // 用 DOM 位置判断而不是写死顺序 —— 以后表单里把它俩调个个儿，这里自动跟着变。
+  function publishFieldOrder() {
+    var row = document.getElementById('v2MediaFileRow');
+    var titleInput = document.getElementById('v2EpisodeTitle');
+    if (row && titleInput && row.compareDocumentPosition) {
+      // 标题在文件行**之后** → 文件行更靠上
+      if (row.compareDocumentPosition(titleInput) & Node.DOCUMENT_POSITION_FOLLOWING) {
+        return ['file', 'title'];
+      }
+      return ['title', 'file'];
+    }
+    return ['file', 'title'];   // 拿不到位置时按当前页面的实际顺序兜底
+  }
+
+  // 缺的**第一个**必填项 —— 「第一个」按**页面上从上往下**算（用户要求）：
+  // 两个都缺时报更靠上的那个（当前是 Media File），而不是标题。
+  function publishBlockingField() {
+    var titleInput = document.getElementById('v2EpisodeTitle');
+    var fn = document.getElementById('v2FileName');
+    var hasTitle = !!(titleInput && titleInput.value.trim());
+    var hasFile = !!fn && !fn.classList.contains('ed-v2-file-placeholder') && !!fn.textContent.trim();
+    if (hasTitle && hasFile) return '';
+    if (!hasTitle && !hasFile) return publishFieldOrder()[0];
+    return hasTitle ? 'file' : 'title';
+  }
+
+  function clearTitleError() {
+    var err = document.getElementById('v2TitleError');
+    if (err) err.style.display = 'none';
+    var input = document.getElementById('v2EpisodeTitle');
+    if (input) input.classList.remove('is-error');
+  }
+
+  function clearMediaFileError() {
+    var row = document.getElementById('v2MediaFileRow');
+    if (row) row.classList.remove('is-error');
+  }
+
+  // 缺内容时的反馈：**就地标红 + 滚到第一个出错的位置**，不弹 toast
+  //（2026-10-09 v2.88：用户要求去掉 toast —— 提示就落在出问题的那个控件上）。
+  // 返回 true 表示被拦下了，调用方直接 return。
+  function showPublishBlock() {
+    var missing = publishBlockingField();
+    if (!missing) return false;
+    var target = null;
+    if (missing === 'title') {
+      var input = document.getElementById('v2EpisodeTitle');
+      var err = document.getElementById('v2TitleError');
+      if (input) { input.classList.add('is-error'); target = input; }
+      if (err) err.style.display = '';
+    } else {
+      // 按 **id** 取：这个类有两个使用者，按类取会命中隐藏的那一行
+      var row = document.getElementById('v2MediaFileRow');
+      if (row) { row.classList.add('is-error'); target = row; }
+    }
+    if (target) {
+      if (target.scrollIntoView) target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      if (target.focus) target.focus();
+    }
+    return true;
+  }
+
+  // ── Schedule 弹框：与发布按钮同一套处理（v2.88） ─────────────────────────────
+  // 原来是 `if (!date || !time) showToast('Please select date and time.', 'error')` ——
+  // 现在改成：缺的那个（或两个）标红 + 显示各自的错误行 + 滚到**第一个**缺失的字段。
+  function clearScheduleErrors() {
+    ['Date', 'Time'].forEach(function (k) {
+      var input = document.getElementById('schedule' + k);
+      var err = document.getElementById('schedule' + k + 'Error');
+      if (input) input.classList.remove('is-error');
+      if (err) err.style.display = 'none';
+    });
+  }
+
+  function showScheduleBlock(dateOk, timeOk) {
+    var pairs = [['Date', dateOk], ['Time', timeOk]];
+    var first = null;
+    pairs.forEach(function (pair) {
+      if (pair[1]) return;
+      var input = document.getElementById('schedule' + pair[0]);
+      var err = document.getElementById('schedule' + pair[0] + 'Error');
+      if (input) { input.classList.add('is-error'); if (!first) first = input; }
+      if (err) err.style.display = '';
+    });
+    if (first) {
+      if (first.scrollIntoView) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      if (first.focus) first.focus();
+    }
   }
   function publishPublish() {
+    // 2026-10-09（v2.87）：缺标题 / 缺文件时**不再默默无反应** —— 给提示、指到字段上。
+    if (showPublishBlock()) return;
     if (publishMode === 'publish') {
       // 记录本次发布时 New Episode 弹窗中两个 AI 区块的开关状态，供下次打开时继承
       var audioToggle = document.getElementById('toggleAudioOpt');
@@ -6248,7 +6453,6 @@
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var d = new Date();
     var titleInput = document.getElementById('v2EpisodeTitle');
-    var typeSel = document.getElementById('v2SubscriptionType');
     episodes.push({
       title: (titleInput && titleInput.value.trim()) || 'Untitled episode',
       status: 'Published',
@@ -6256,7 +6460,7 @@
       dl: 0,
       tags: [],
       season: '',
-      type: (typeSel && typeSel.value) || 'Free',
+      type: currentSubscriptionType(),   // 2026-10-09（v2.91）：走统一读取口（不勾 = Free）
       created: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
     });
     // 列表是初始化/排序/筛选时才 buildRows()，所以新条目要主动重渲一次，
@@ -6295,6 +6499,7 @@
       dateInput.value = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
       timeInput.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     }
+    clearScheduleErrors();   // 2026-10-09（v2.88）：别把上次的红框带进来
     document.getElementById('scheduleModal').classList.add('show');
     refreshCurrentTime();
   }
@@ -6304,7 +6509,8 @@
   function confirmSchedule() {
     var date = document.getElementById('scheduleDate').value;
     var time = document.getElementById('scheduleTime').value;
-    if (!date || !time) { showToast('Please select date and time.', 'error'); return; }
+    // 2026-10-09（v2.88）：不再弹 toast —— 缺的字段就地标红并滚过去（与发布按钮一致）
+    if (!date || !time) { showScheduleBlock(!!date, !!time); return; }
     if (editingIndex >= 0 && episodes[editingIndex]) {
       episodes[editingIndex].schedule = date + 'T' + time;
       refreshScheduleInfo();
@@ -6333,11 +6539,10 @@
     if (ddItem) ddItem.textContent = 'Schedule Publish';
     var titleInput = document.getElementById('v2EpisodeTitle');
     if (titleInput) titleInput.value = '';
+    clearTitleError();   // 2026-10-09（v2.87）：新建剧集也不带上次的红框
     setMediaFileState('episode-audio.mp3');
-    // 订阅类型：新建默认 Free，Episodes 2 页面显示该字段
-    var typeSel = document.getElementById('v2SubscriptionType');
-    if (typeSel) typeSel.value = 'Free';
-    onSubscriptionTypeChange();
+    // 订阅类型：新建默认不是 Apple 订阅剧集（勾选框不勾 = Free）
+    syncAppleSubscriptionFromType('Free');
     updateEpisodeTypeField();
     onAdFreeFileRemove(); // 每次打开重置 Ad-free 文件上传状态
     // 2026-10-09（v2.86）：新建剧集走「复位」分支，清掉上一集可能留下的 AI 内容
@@ -6345,7 +6550,7 @@
     // 新剧集还没发布 → Social Sharing 显示可点的 icons（Published 变体只在编辑已发布剧集时出现）
     setSocialSharingVariant('Draft');
     refreshScheduleInfo();
-    updatePublishBtn();
+    onPublishFormChanged();
     openEpisodeDetailsModal();
   }
   function openEpisodeDetailsModal() {

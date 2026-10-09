@@ -1,7 +1,7 @@
 # Episodes 菜单功能说明文档
 
 > 适用范围：`index.html`（Podbean Admin — Episodes）
-> 文档版本：v2.86
+> 文档版本：v2.95
 > 说明：本文档为**功能 mockup**，逐页、逐控件描述 Episodes 菜单下的功能与交互逻辑。UI 文案保留英文原样。具体视觉样式由设计师另行确定，不在本文档范围内。
 
 ---
@@ -226,9 +226,9 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 与 Episodes 列表页面结构基本一致，区别在于：
 
 - 表格多一列 **Type**，列顺序为：复选框 → Title → User → Type → Status → When → Downloads → 行操作（「3个点」，无表头）。
-- Type 值为每行剧集数据的订阅类型字段（如 Free、Ad-free、Subscriber-only、Early access、Archive access）。
-- 状态为 **AI Processing**、**AI Finished** 或 **AI Failed** 的剧集，其数据的 **type 字段即为 Free**（列表 Type 列与编辑弹窗预填均为 Free）。
-- 在此页面点击行编辑或新建剧集时，Publish Episode 弹窗的 **Basic Info** 区块在 **Media File 上方**多显示一个 **Episode will be（订阅类型）** 下拉，编辑时预填该行 Type 值、新建默认 Free；订阅类型选 **Ad-free** 时，**Episode will be 下方**还会出现 **File for Subscriber** 上传字段（详见 7.2）。
+- Type 值为每行剧集数据的订阅类型字段：Apple 的四种订阅类型（`Ad-free`、`Subscriber-only`、`Early access`、`Archive access`）照原样显示；**非 Apple 订阅剧集显示为 Public**（2026-10-09 v2.95 —— 数据里存的仍是 `Free`，只有列表这一格的显示文案换成 Public）。
+- 状态为 **AI Processing**、**AI Finished** 或 **AI Failed** 的剧集，其数据的 **type 字段即为 Free**（列表 Type 列显示 **Public**；编辑弹窗里对应的**勾选行不勾选**）。
+- 在此页面点击行编辑或新建剧集时，Publish Episode 弹窗的 **Basic Info** 区块在最上方（**Media File 上方**）多显示一行 **Apple Podcast Subscription** 勾选框；**勾选后**才展开订阅相关设置（Episode will be 下拉 + 解释文字 + 按需的日期时间，选 **Ad-free** 时再加一个 **File for Subscriber** 上传字段——都在这同一块里）；编辑时按该行 Type 回填（Type 为 Free / 无值的剧集**不勾**），新建默认不勾（等于 Free）。详见 7.2。
 
 工具栏、筛选弹窗、Actions 弹窗（含 Delete，位于表格选中条）、分页等与 Episodes 列表相同；其中 **Set Tags / Remove All Tags** 入口同样仅对**已安装 Tags app** 的用户显示。
 
@@ -373,7 +373,11 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 规则：
 
-- 标题或文件名未填时，Publish 按钮为禁用态。
+- **必填内容没填时，Publish 按钮仍是黑的、也点得动（2026-10-09 v2.88；v2.87 曾做成「灰底禁用外观 + 错误 Toast」，已被本版推翻）**。理由：变灰只会让人看不出缺什么、还以为页面坏了；而**用 `disabled` 属性连点击事件都不派发**，做不出「点一下就知道缺什么」。所以改成**点了就地报错**：
+  - **缺的字段就地标红**：标题缺 → 输入框红色描边 + 下面一行 `Add a title to publish this episode.`（复用站内 `.field-error` 样式）；文件缺 → **Media File 那一行**变红（右侧同时是 `Upload` 链接，可再选一个文件）。⚠️ 这一行必须**按 id**（`#v2MediaFileRow`）取 —— 页面上有**两个** `.ed-v2-file-row`（另一个是仅 Ad-free 时显示的 File for Subscriber，且排在它**前面**），按类取会命中那个隐藏的行，红框就加在看不见的地方（详见 v2.89 注记）。
+  - **滚动到第一个出错的位置并聚焦** —— 「第一个」按**页面上从上到下**的位置算（2026-10-09 v2.90）：两处都缺时报**更靠上**的那个，当前即 **Media File**（它在 Basic Info 里排在 Title **上方**）。顺序是**用 DOM 位置判断**的（`compareDocumentPosition`），不是写死「先文件后标题」，所以以后表单把这两个字段调个个儿，这里会自动跟着变。
+  - **不弹 Toast**（同日要求去掉）—— 提示就落在出问题的控件上，不另开一处告诉用户。
+  - 缺的那一项补上后，红框与那行小字**立刻撤掉**（不用等下次点发布）；打开弹窗（编辑 / 新建）时会先清一次，免得带上次的红框进来。
 - **新建剧集**（New Episode → Upload later）打开弹窗时**默认即为 Publish Now（即时发布模式）**，下拉项为 Schedule Publish；可切换为定时发布。
 - 点击 "Schedule Publish" 后按钮文案切换为 "Schedule Publish"，再次点击主按钮会打开 Schedule Publish 弹窗（见 9.1）。
 - **Future** 状态的剧集打开弹窗时**默认即为 Schedule Publish**（主按钮直接显示 Schedule Publish，下拉项变为 Publish Now，可切回即时发布）。
@@ -384,6 +388,51 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
   - **Schedule**（预约发布）→ Toast `Episode scheduled successfully!`（原 `Episode scheduled for <日期> <时间>`），并**回到进入前的那个列表页**。
   - **「进入前的那个列表页」**在打开弹窗时记下（`publishReturnPage`）：从 Episodes / Episodes (apple) / Episodes (free plan) 哪个列表进来就回哪个；若弹窗是在 **Share & Embed 页**上打开的，则再往回退一层到它记着的那个列表（与 Share 页的 `shareReturnPage` 同一套做法）。
 
+> **2026-10-09（v2.95）：列表 Type 列里非 Apple 剧集改显示 Public（数据仍存 Free）。** 用户问「如果 episode 不是 apple 的类型，那么在 episode list 列表中 type 命名为 public 是不是更合理？」判断是**更合理**，理由：① 这套界面里 **Free 已经被 Free plan（定价计划）占用**（还专门有一个 Episodes (free plan) 演示页），同一个词再指「剧集类型」会撞车；② 另外四个值说的是「谁能听 / 什么时候能听」（`Subscriber-only` / `Early access` / `Archive access`）或「订阅者多拿到什么」（`Ad-free`），只有 `Free` 说的是钱，在一列叫 Type 的东西里是异类；③ v2.91 之后下拉里已经没有 Free 这个选项了，列表是唯一还在露 Free 的地方，改成 Public 正好和「不勾 = 不是订阅剧集」对齐。落地：**只改显示** —— 新增 `epTypeLabel(type)`（`!type || type === 'Free'` → `'Public'`，其余原样），Type 列那一格由渲染 `ep.type` 改成渲染 `epTypeLabel(ep.type)`；**`ep.type` 数据值不动**，`type !== 'Free'` 那些判断、26 条样本数据、AI 行的 type 全没碰。**已知偏离**：Podbean 线上那个「Episode will be」下拉里就是 Free，这里是有意偏离。
+> **校验**：把真实的 `epTypeLabel` 抠出来在 Node 里跑过样本里出现过的全部 type 值 —— `Free` → `Public`、另外四个原样；整段内联 `<script>` 过 node --check；`epTypeLabel` 全文只有「定义 + Type 列」两处；没有别处再渲染 `ep.type`。文首版本号 → **v2.95**。
+>
+> **2026-10-09（v2.94）：勾选框文案去掉 "Episode"。** 用户：「名字 Apple podcast subscription episode 里面，把 Episode 去掉」。勾选框由 **Apple Podcast Subscription Episode** 改成 **Apple Podcast Subscription** —— 只动那一行可见文字，`#v2AppleSubscription` / `.ed-v2-check-row` / 所有 id 与 JS 逻辑都没碰。去掉之后它和这个功能本身的名字（文档里一直叫 **Apple Podcast Subscription**）统一了：多出来的那个 "Episode" 读起来像在说「一集」，而它标的是**功能**。
+> **校验**：`index.html` 里旧串全文为 0；文档里旧串只剩 v2.91 那条历史记录，且**不加反引号**（历史引文若加反引号，会被 doc/ui 一致性校验当成「必须在 index.html 里出现的界面串」而假失败）。文首版本号 → **v2.94**。
+>
+> **2026-10-09（v2.93）：File for Subscriber 搬进订阅设置块 —— 它也算 Apple 订阅剧集的内容。** 用户：「当选择 ad-free 的时候，File for Subscriber 也是 Apple podcast subscription episode 中的内容」。原来它是 Media File 上方的一个**独立字段**（`#v2AdFreeFileField`），落在淡灰底**外面**；现在整段 DOM **移进 `#v2AppleSubscriptionSettings`**、排在 `#v2SubTypeTime` 之后，于是它跟着订阅块落在**同一个淡灰底**里，位置也正好接在那句 `You can upload a separate file (content without ads) for Apple Podcasts subscribers.` 下面，读起来就是「一句话 + 一个动作」。**零 JS 改动**：显隐仍由 `updateAdFreeFileField()` 按「勾选且 Ad-free」控制（未勾时父容器 `display:none`，本来就看不到）。它挪窝后**仍在 Media File 前面**，而 Media File 那一行一直是按 `#v2MediaFileRow` 取（v2.89 的教训），所以不受影响。
+> 顺带把块内的上传行也纳入白底覆盖：`.ed-v2-file-row` 自身是 `#f8fafc`，不覆盖同样会跟淡灰底融色。
+> **校验**：迁移后 `#v2AdFreeFileField` 全文仍**只有一处**、`.ed-v2-file-row` 仍是**两个**（Ad-free 那个 + Media File 那个）、`<div>` 开闭配平（701/701）、全文没有按类取 `.ed-v2-file-row` 的写法。文首版本号 → **v2.93**。
+>
+> **2026-10-09（v2.92）：给订阅块加淡灰底，和 Basic Info 其它字段区分开。** 用户：「Apple podcast subscription episode 的内容，能否加个背景色或线框之类的，和其他 basic info 的内容做一些区分？」给了四种做法并各自标了成本（**左侧竖色条**最轻 / **淡色底块** / **1px 描边卡片**最重、与 v2.18「弹框框太多」的收敛方向相反 / **独立成一个区块**最一致但要额外做「非 apple 页隐藏菜单项」），用户选 **淡色底块**。落地：`#v2SubscriptionTypeField`（勾选行 + 展开设置块整块）加淡灰底 `#f1f5f9` + 圆角 + 内边距；**块内的 `.ed-v2-input` / `.ed-v2-select` 改白底**。坑：底色**不能用 `#f8fafc`** —— 那是这两个控件静默态的底色，同色会融成一片、等价于控件消失；选 `#f1f5f9` 是因为它本来就在调色板里（侧栏激活项用的就是它）。整体刻意做得比一张实心卡片轻，不抢 Title / Description / Media File 的视觉重量（「看起来最重的要是最重要的」）。
+> **校验**：把真实 CSS 抄进一个静态预览页，渲染「勾选态 / 默认不勾态」×「有底 / 无底」四格做对比 —— 浅灰底与块内白控件两个方向都分得开；未勾选时是一条只有勾选框的淡灰条。文首版本号 → **v2.92**。
+>
+> **2026-10-09（v2.91）：订阅类型入口由「五选一下拉」改为「顶部勾选框 + 展开设置块」。** 用户：「在 Publish Episode 页面会有一块内容询问 Episode will be，能否改为进入 Publish Episode 后顶部显示一个 **Apple Podcast Subscription Episode** 勾选框，勾选后再展示相关 settings」，并问这样是否比现在更友好、更明确。给的判断是**确实更清楚**，三条原因：① 原来那个五选一下拉（`Free` / `Ad-free` / `Subscriber-only` / `Early access` / `Archive access`）**全篇没出现 "Apple" 字样**，用户得自己知道这几个词是 Apple Podcasts 订阅专有的；② 下拉暗示「每集都得在五个里挑一个」，而绝大多数剧集并非订阅剧集，把 `Free` 也做成选项之一，反而让「普通」看起来像一个必须主动做的选择；③ 默认态只剩一行，不订阅的人根本不用理解那四个词。落地：
+> ① **新增勾选行** `#v2AppleSubscription`（label 用 `.ed-v2-check-row`，文案 **Apple Podcast Subscription Episode**），仍是 **Basic Info 的第一个字段、Media File 上方**，仍**仅 Episodes (apple) 页**显示（`updateEpisodeTypeField()` 里判 `currentPage === 'episodelist2'`）。
+> ② **下拉收进展开块** —— 原 `#v2SubscriptionType` 现在包在 `#v2AppleSubscriptionSettings` 里（默认 `display:none`），**并去掉了 `Free` 选项**，只剩 `Ad-free` / `Subscriber-only`（默认选中）/ `Early access` / `Archive access`。
+> ③ **状态推导统一收口** —— 新增 `isAppleSubscriptionEpisode()`（读勾选框）与 `currentSubscriptionType()`（**不勾 = `Free`**，否则读下拉）；保存写 `ep.type`、列表 Type 列都改走 `currentSubscriptionType()`，**不再有地方把下拉的 value 直接当最终类型**。
+> ④ **回填** —— 编辑调 `syncAppleSubscriptionFromType(ep.type)`（`type !== 'Free'` 才勾并选中该类型）；新建 `openNewEpisodeDetails()` 传 `'Free'` → 不勾。`toggleAppleSubscription(on)` 负责切展开块显隐、勾上时把空值兜底成默认类型，并刷新 File for Subscriber 的显隐。
+> ⑤ **`File for Subscriber`（`#v2AdFreeFileField`）的显隐判据**随之改成「**勾选且类型为 `Ad-free`**」。
+> **已知遗留（不在本次范围）**：`onSubscriptionTypeChange()` 里那段 `else if (v === 'Free')` 分支、与 `toggleAppleSubscription(on)` 里 `sel.value === 'Free'` 的兜底判断，在「下拉已无 Free」之后都属于**走不到的死代码**，本次保留未删。
+> **校验**：核对 index.html 里勾选框 / 下拉 / 两个显隐函数 / 保存与回填四处接线，并同步第 4 章与 7.2 的 ①③。文首版本号 → **v2.91**。
+>
+> **2026-10-09（v2.90）：两个都缺时，报**页面上更靠上**的那个。** 用户：「media file 和 title 同时缺少的时候，按照内容从上往下的位置报错」。v2.88/2.89 时是写死「标题优先」，于是两个都缺时红框会落在**下面**的 Title 上，而上方空着的 Media File 没反应 —— 与「从上往下」相悖。改成新增 **`publishFieldOrder()`**：用 `compareDocumentPosition` 比这两个字段在 DOM 里的先后，返回 `['file','title']` 或 `['title','file']`，两个都缺时取第一个。**当前页面 Media File 在 Title 上方**，所以现在报 Media File；顺序若改，这里自动跟着走（拿不到 DOM 位置时有兜底）。
+>
+> **校验**：把 `publishBlockingField()` / `showPublishBlock()` 抽出来配桩 DOM 真跑，四种输入——只缺文件 / 只缺标题 / **两个都缺** / **把 DOM 顺序反过来**——分别确认返回的字段与红框落点（反序那次返回 `title`，证明它真的跟着 DOM 走）。文首版本号 → **v2.90**。
+>
+> **2026-10-09（v2.89）：修一个静默 bug —— Media File 为空时点发布毫无反应。** 用户报「media file 为空的时候，点击 publish 没有报错」。查下来是 v2.88 埋的：`showPublishBlock()` 里用 `document.querySelector('.ed-v2-file-row')` 找那一行，但**页面上有两个 `.ed-v2-file-row`** —— 另一个是仅 Ad-free 时显示的 **File for Subscriber**，而且它**排在 Media File 前面**；`querySelector` 取的是第一个，正是那个平时 `display:none` 的行。于是红框加在看不见的地方，`scrollIntoView` 对隐藏元素也无效 —— 表现就是「点了像什么都没发生」。而标题那条路径用的是 `#v2EpisodeTitle`（按 id），所以只有缺文件这一路是坏的。
+>
+> **修法**：给 Media File 那一行加 `id="v2MediaFileRow"`，`showPublishBlock()` 与 `clearMediaFileError()` 都改成按 id 取，全篇不再有按类取 `.ed-v2-file-row` 的写法。**教训：一个类被两处共用时，`querySelector` 会静默地取到第一个 —— 这类错误不报错、只是「没反应」，所以在这种地方一律按 id 取。**
+>
+> **校验**：把 `showPublishBlock()` 抽出来在 Node 里配桩 DOM **真跑**了一遍（桩里故意让按类取返回「另一行」），确认三种输入下红框分别落在 Media File 行 / 标题输入框 / 不拦；`check_v288.js` 里也钉住了「必须按 id 取」这条。文首版本号 → **v2.89**。
+>
+> **2026-10-09（v2.88）：缺必填内容时的处理改成「按钮保持黑色 + 就地标红」，并去掉 Toast。** 用户看 v2.87 的成品后要求：「schedule 按钮和 publish 按钮应该都是同样处理，如果有必填的内容没有填写的时候，按钮的颜色也为黑色。点击的时候在输入的位置红框报错，并且滑动到第一个错误的位置，不需要 toast 报错」。三处改动：
+> ① **按钮不再变灰** —— 缺内容时也是**常态黑底**（`is-disabled` 类与其 CSS 一并删掉；只留 `:disabled` 那条作兜底）。也就是说按钮**永远可点**，「缺什么」全靠点了之后的红框回答。
+> ② **去掉错误 Toast** —— 顺手清掉 `publishBlockReason()` 里那三条 message（toast 一去它们就没有去处了），函数改成只返回缺的字段名（`publishBlockingField()`）。
+> ③ **Schedule 弹框同款** —— `confirmSchedule()` 里原来那句 `showToast('Please select date and time.', 'error')` 换成 `showScheduleBlock(!!date, !!time)`：缺哪个标哪个、各自一行红字、滚到并聚焦**第一个**缺的（先日期后时间）。为让这两个输入框能挂错误态，把它们**各写一份的长行内样式抽成了 `.confirm-field-input` 类**（否则行内 `border` 会盖过类）。
+>
+> **顺带改名**：`updatePublishBtn()` → **`onPublishFormChanged()`** —— 按钮不再有「禁用态」要更新，它现在只负责「必填项补上了就清掉红框」，旧名字已名不副实。
+>
+> **2026-10-09（v2.87，已被 v2.88 部分推翻）：缺标题 / 缺文件时给出反馈，不再默默无反应。** 用户问「没填 title 时发布按钮是灰的，怎么更好地提醒用户」——先指出一个关键事实：**`disabled` 的按钮不触发点击事件，所以用户点它连一点反馈都没有**；而且当时按钮被**两个**条件卡着（缺标题 || 缺文件），界面只对缺文件那件事有可见提示（文件名位置的灰字 `Please upload a file.`），**缺标题完全没信号**。给的建议里用户选了 **① 点一下就给反馈 + ② 就地报错**。
+>
+> 落地：把按钮的 `disabled` 属性换成 **`is-disabled` 类**（`updatePublishBtn()` 里 `classList.toggle`），外观与之前一模一样（灰底 + `not-allowed`）但**能接住点击**；新增 **`publishBlockReason()`**（缺什么返回什么，标题优先、文案随发布/预约模式变）与 **`showPublishBlock()`**（错误 toast + 标题红框 + `.field-error` 小字 + `scrollIntoView` + `focus`），在 `publishPublish()` 开头拦一道；标题输入框补上内容时 `clearTitleError()` 自动撤掉红框，打开弹窗时也清一次。
+>
+> **为什么用类而不是「外面套一层透明容器接住点击」**：`disabled` 元素的事件在多数浏览器里**根本不会派发**，连父容器的 click 也收不到，所以套容器是无效的；换类是最直接的解法（代价是语义上不再是 disabled，键盘用户按 Enter 也会走到这条提示——但那恰恰是更好的反馈）。**这条值得记：想让「看起来禁用」的按钮给出解释，就不能真的禁用。**
+>
 > **2026-10-09（v2.83）：三个动作的去向与 toast 文案统一。** 用户要求：「如果点击了 publish now，那么页面要跳转到 Share & Embed 页面。如果是 draft 或 schedule，则返回 episode list 列表，显示 toast 消息」。动手前确认了三件事（都按建议定）：**toast 用 `saved` / `scheduled`** 两种句式、**draft / schedule 回到「进来的那个列表」**、**新建剧集的 Publish Now 也要跳 Share 页**。
 >
 > **改了什么**：① **新建剧集也跳 Share & Embed** —— 以前 `publishPublish()` 里是 `if (editingIndex >= 0) shareEpisode(...)`，新建的剧集（`editingIndex === -1`）没有 index 可用、就留在原地；现在先调 `createEpisodeFromForm()` 按表单内容（标题取 `#v2EpisodeTitle`、`type` 取订阅类型下拉）**补一条 `episodes` 数据**再跳，于是它**发布后也会出现在列表里**（比原来更贴近真实行为）。② **存草稿 / 预约发布都回到列表**（以前都不跳转），返回页记在 **`publishReturnPage`**（在 `openEpisodeDetailsModal()` 里记，新建与编辑两条路都经过它；逻辑与 Share 页的 `shareReturnPage` 完全一致，含「若在 Share 页打开则再退一层」）。③ **两条 toast 文案**：`Episode saved as draft!` → **`Episode saved successfully!`**、`Episode scheduled for <日期> <时间>` → **`Episode scheduled successfully!`**；两者同时**由 `info` 改成默认的 `success`**（文案既然写 successfully，图标就该是绿勾，与 published / updated 一致）。**Publish Now 的两条 toast 未动**。
@@ -406,20 +455,23 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 > 原「Episode Info」，2026-09-29 改名为 **Basic Info**（左侧菜单项与该区块标题同步改名）。
 
-**① Episode will be（订阅类型）**
+**① Apple Podcast Subscription（订阅剧集入口）**
 
-- 位于 **Media File 上方**（本区块第一个字段）的下拉选择器；**仅 Episodes (apple) 页面**（开通 Apple Podcast Subscription 的演示页）显示。
-- 选项为订阅类型：`Free`、`Ad-free`、`Subscriber-only`、`Early access`、`Archive access`。
-- 编辑剧集时预填该行剧集数据的 **Type** 值；新建剧集默认 `Free`。
+- 位于 **Basic Info 最上方**（本区块第一个字段、**Media File 上方**）的一行**勾选框** `Apple Podcast Subscription`；**仅 Episodes (apple) 页面**（开通 Apple Podcast Subscription 的演示页）显示。
+- **整块带淡灰底**（2026-10-09 v2.92 / v2.93）：勾选行 + 展开的设置块（以及 Ad-free 时的 **File for Subscriber**）**整块**包在一层淡灰底里（底色 `#f1f5f9`、圆角、内边距），用来和 Basic Info 其它字段区分开；块**内**的输入框 / 下拉 / 上传行都改成**白底**（否则它们静默态的浅灰底 `#f8fafc` 会跟底块融成一片）。未勾选时也带这层底，所以默认态是一条只有勾选框的淡灰条。
+- **不勾（默认）**：只显示这一行，下方**不展开**任何订阅设置 —— 该集按 `Free` 处理；新建剧集默认不勾。
+- **勾选**：下方展开订阅设置块，里面是 `Episode will be` 下拉、随类型变化的解释文字、以及按需出现的日期时间输入。
+- 下拉 **`Episode will be`** 的选项为四个订阅类型：`Ad-free`、`Subscriber-only`（**默认选中**）、`Early access`、`Archive access` —— **不再含 `Free`**（取消勾选即等于 `Free`）。
+- 该勾选框是「是否属于 Apple 订阅剧集」的**唯一来源**；保存时写入剧集 Type 的值由「勾选状态 + 下拉」共同决定（取消了勾选就是 `Free`）。
+- 编辑剧集时按该行剧集数据的 **Type** 值回填：Type 为 `Free` 或无值时**不勾**；其余类型勾上并选中对应项。
 - 在 Episodes 列表页（无订阅）打开弹窗时不显示此字段。
 - 选择 **Early access** 时，下方显示解释文字 `Subscribers get early access to this episode. It becomes public at the date and time below.`，并出现 **Public release（公开上架时间）** 输入（单个日期 + 时间控件，datetime-local）。
 - 选择 **Archive access** 时，下方显示解释文字 `After the "Archive date" date, the episode will be available only to your Apple Podcast subscribers.`，并出现 **Archive date（进入档案日期）** 输入（单个日期 + 时间控件，datetime-local，与 Early access 相同）。
 - 上述 **Public release / Archive date** 输入框，**点击整行**（输入框任意位置）即通过 `showPicker()` 弹出时间选择器；浏览器不支持 `showPicker()` 时退化为聚焦输入框。
-- 选择 **Subscriber-only** 时，下方显示解释文字 `Apple Podcasts subscribers have exclusive access to the episode.`（无时间输入）。
+- 选择 **Subscriber-only**（默认选中）时，下方显示解释文字 `Apple Podcasts subscribers have exclusive access to the episode.`（无时间输入）。
 - 选择 **Ad-free** 时，下方显示解释文字（无时间输入）：
   - `You can upload a separate file (content without ads) for Apple Podcasts subscribers.`
-  - 同时 **Episode will be 下方**（Media File 上方）多显示一个 **File for Subscriber** 上传字段（见 ③）。
-- 选择 **Free** 时，下方显示解释文字 `The episode will be public and available to all listeners and displayed in your podcast feed.`（无时间输入；新建剧集默认为此选项）。
+  - 同时在订阅设置块**里**（Episode will be 那一组下面）多显示一个 **File for Subscriber** 上传字段（见 ③）。
 
 **② Media File**
 
@@ -431,7 +483,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 **③ File for Subscriber（订阅者版本文件）**
 
-- **仅当订阅类型为 Ad-free 时**显示，位于 **Episode will be 下方**（Media File 上方）。
+- **仅当勾选 `Apple Podcast Subscription` 且订阅类型为 Ad-free 时**显示；2026-10-09（v2.93）起它**就在订阅设置块里面**（排在 Episode will be 那一组之后、跟着淡灰底走），不再是块外的独立字段。
 - 行样式与 **Media File** 一致（文件图标 + 文件名 + 右侧操作链接），文件名同样单行显示、超长时在扩展名前截断。
 - 未上传时，文件名位置显示提示文字 `Please upload a file.`（灰色），右侧操作链接为 **Upload**，点击选择本地音频文件。
 - 选择文件后：提示文字变为该文件名，右侧操作链接变为 **✕**（删除）；点击 ✕ 清除文件并恢复 `Please upload a file.` + Upload。
@@ -704,7 +756,7 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 - **Current time 参考行**：位于 **Cancel / Schedule 按钮下方**（弹窗底部，以细分隔线隔开），显示 `Current time: …`（如 `Current time: Aug 14, 2026 9:41 PM EDT`），实时显示当前时间（每秒更新，仅弹窗打开时刷新）；时区由 **Settings → Podcast Info → Author & Region → Timezone** 控制。
 - **Date**（日期输入框）、**Time**（时间输入框）：打开时预填**当前排定值**（编辑 Future 剧集时，从该剧集的 schedule 数据读取）；否则预填**当前时间**。
 - 按钮：Cancel / **Schedule**。
-- 未填日期或时间时 Toast 报错 `Please select date and time.`（**不跳转**）；成功则**关闭弹窗、回到进入前的那个列表页**，并 Toast 显示 `Episode scheduled successfully!`。
+- 未填日期或时间时**就地标红**（同发布按钮那一套，2026-10-09 v2.88 起）：缺哪个标哪个，两条红色小字分别是 `Select a date to schedule this episode.` / `Select a time to schedule this episode.`，**滚到并聚焦第一个缺的字段**（先日期后时间）；**不弹 Toast**，也**不跳转**。两个输入框一改动就清掉红框。成功则**关闭弹窗、回到进入前的那个列表页**，并 Toast 显示 `Episode scheduled successfully!`。
 
 ### 9.2 Unsaved Changes（未保存修改确认）
 
@@ -1008,7 +1060,7 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 | 更新成功 | `Episode updated successfully!` |
 | 保存草稿 | `Episode saved successfully!` |
 | 定时成功 | `Episode scheduled successfully!` |
-| 表单校验失败 | `Please select date and time.` |
+| 表单校验失败 | ~~`Please select date and time.`~~ **（2026-10-09 v2.88 起改为就地标红，不再用 Toast）** |
 | 批量设置季数 | `Set N episode(s) to Season X` |
 | 批量清除季数 | `Removed all seasons from N episode(s).` |
 | 批量设置标签 | `Tagged N episode(s) with: <标签列表>` |
@@ -1022,7 +1074,7 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 
 ### 11.1 数据源
 
-- 剧集数据为前端硬编码数组 `episodes`（26 条模拟数据），字段：`title`、`status`、`when`、`dl`（下载量）、`tags`、`season`、`type`、`created`（创建时间，YYYY-MM-DD，用于 Free plan 删除倒计时与风险摘要计算）。
+- 剧集数据为前端硬编码数组 `episodes`（26 条模拟数据），字段：`title`、`status`、`when`、`dl`（下载量）、`tags`、`season`、`type`、`created`（创建时间，YYYY-MM-DD，用于 Free plan 删除倒计时与风险摘要计算）。其中 `type` 为非 Apple 剧集时存 `Free`，但**列表里显示成 `Public`**（2026-10-09 v2.95，见第 4 节）。
 - 可用标签列表：`interview, solo, monetization, audio, video, tutorial, news, story, music, review`（运行时可新增）。
 
 ### 11.2 状态与数据流
