@@ -91,13 +91,37 @@
     border-bottom:1px solid var(--border);
   }
   .ep-table th:last-child { text-align:right; }
+  /* 2026-10-09（v2.103）：When 表头可排序 —— 表头变成一颗按钮，右侧跟一对小三角。
+     未排序时两个三角都淡显（提示「这列能排」），排过之后只留对应那一个、标签与箭头一起加深
+     （顺带标出「现在按这列排」）。用 <button> 而不是给 th 挂 onclick：键盘可达、读屏也能念。 */
+  .ep-sort-btn {
+    display:inline-flex;align-items:center;gap:5px;
+    border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer;
+    transition:color .12s;
+  }
+  .ep-sort-btn:hover { color:var(--text-secondary); }
+  .ep-sort-ic { display:inline-flex;flex-direction:column;align-items:center;gap:2px; }
+  .ep-sort-ic svg { display:block;width:9px;height:5px; }
+  .ep-sort-ic .ic-up, .ep-sort-ic .ic-down { opacity:.4; }
+  .ep-sort-btn.is-asc .ic-down,
+  .ep-sort-btn.is-desc .ic-up { display:none; }
+  .ep-sort-btn.is-asc .ic-up,
+  .ep-sort-btn.is-desc .ic-down { opacity:1; }
+  .ep-sort-btn.is-asc,
+  .ep-sort-btn.is-desc { color:var(--text-secondary); }
   .ep-table th:first-child { width:40px;text-align:center;padding:0 8px 14px; }
   .ep-table th:first-child input[type=checkbox] { margin-top:2px; }
   .ep-table td { padding:21px 12px;font-size:14px;color:var(--text);border-bottom:1px solid #f1f5f9;vertical-align:middle; }
   .ep-table td.no-wrap { white-space:nowrap; }
   /* Downloads 列不再是最右列（最右是「3个点」操作列），所以不能再用 :last-child 选中它。
      原来 :last-child 上挂着「整行可点击 → 最后一列悬停变主色+下划线」的暗示，这里改用类名原样保留。 */
-  .ep-table th.ep-dl-head { text-align:right; }
+  /* 2026-10-09（v2.99）：Downloads 表头不换行（原来会折成两行）。
+     这一条顺带就把 Title 列收窄了：auto 布局下，Title 是唯一「允许换行、能吸收富余宽度」的列，
+     表头 nowrap 之后 Downloads 列的最小宽度变成整串文字，多占的那点只能由 Title 让出来。 */
+  .ep-table th.ep-dl-head { text-align:right; white-space:nowrap; }
+  /* 2026-10-09（v2.102）：这个「pointer + 悬停变主色加下划线」**现在是真的** ——
+     点数字会跳到 Statistics → Episodes（openEpisodeStats()）；此前它只挂 event.stopPropagation()，
+     看着能点、点了什么都不发生（连整行打开编辑都被它拦掉）。 */
   .ep-table td.ep-dl-cell { text-align:right;cursor:pointer; }
   .ep-table tr:hover td.ep-dl-cell { color:var(--primary);font-weight:500;text-decoration:underline; }
   .ep-table tbody tr { cursor:pointer; }
@@ -235,16 +259,23 @@
   /* ── 行操作「3个点」列 ─────────────────────
      Edit / View / Share & Embed 三个行内图标已收进最右列的下拉菜单（2026-09-30）。
      菜单用 .popover 基类（absolute + 白底 + 阴影），这里只覆盖对齐方式：靠右展开。 */
-  .ep-table td.ep-actions-cell { width:52px;text-align:right;padding:21px 16px 21px 4px;cursor:default; }
+  /* 2026-10-09（v2.102）：左边距由 4px 加到 12px、列宽 52→58px ——
+     数字那格是「可点」的（pointer + 悬停变主色加下划线），点这格也真能点（开菜单），
+     两者之间原来只有 16px（Downloads 右内边距 12 + 这里左内边距 4），太挤、容易点错。
+     现在数字与点之间 24px。右边距保持 16px 不动 —— 右侧只有表格边缘，没有可点对象。 */
+  .ep-table td.ep-actions-cell { width:58px;text-align:right;padding:21px 16px 21px 12px;cursor:default; }
   .row-menu-wrap { position:relative;display:inline-block; }
+  /* 2026-10-09（v2.101）：常态颜色由 --text-tertiary(#94a3b8) 提到 --text-secondary(#64748b)。
+     原来那档在白底上只有 2.56:1，低于 WCAG 对「非文字 UI 元件」要求的 3:1 —— 不只是不够显眼，是踩线。
+     连带的：原来的「行悬停色」正是这一档，提升后就没变化了，所以行悬停那档一并提到 --text。 */
   .row-menu-btn {
     width:30px;height:30px;border:1px solid transparent;border-radius:var(--radius-sm);
-    background:none;color:var(--text-tertiary);cursor:pointer;
+    background:none;color:var(--text-secondary);cursor:pointer;
     display:inline-flex;align-items:center;justify-content:center;
     transition:background .12s,border-color .12s,color .12s;
   }
   /* 平时是浅灰，行悬停或菜单已展开时加深，让这一列在表里可见但不抢注意力 */
-  .ep-table tr:hover .row-menu-btn { color:var(--text-secondary);border-color:var(--border);background:#fff; }
+  .ep-table tr:hover .row-menu-btn { color:var(--text);border-color:var(--border);background:#fff; }
   .row-menu-btn:hover { background:#f8fafc;border-color:#cbd5e1;color:var(--text); }
   .row-menu-btn.open { background:#f1f5f9;border-color:#cbd5e1;color:var(--text); }
   .row-menu-popover { left:auto;right:0;width:208px;padding:6px; }
@@ -254,10 +285,22 @@
   .ep-table .badge-status { display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:500; }
   .badge-published { background:#f0f9f4;color:#14805a; }
   .badge-draft { background:#f1f5f9;color:#64748b; }
+  /* 2026-10-09（v2.100）：When 列改用「小色点 + 文字」，于是两种蓝回到调色板 ——
+     v2.99 曾把 Future / AI Finished 改灰，那是为了给**药丸**减噪；色点的音量低得多，不必再牺牲颜色。
+     现在五种状态各有自己的墨色，`.badge-*` 的浅底（background）在 When 列里已用不到，留着给别处备用。 */
   .badge-future { background:#eff6ff;color:#3b82f6; }
   .badge-ai-processing { background:#fef3c7;color:#b45309; }
   .badge-ai-finished { background:#dbeafe;color:#1d4ed8; }
   .badge-ai-failed { background:#fee2e2;color:#b91c1c; }
+  /* When 列的小色点：形状在这里定，**颜色继承 `.badge-*` 的文字色**（currentColor）——
+     所以本规则**必须排在 `.badge-*` 之后**，否则 background 会被它们的浅底盖掉。
+     好处是颜色仍然只有一处定义，改 `.badge-*` 就能同时改药丸与色点。 */
+  .ep-when-dot {
+    display:inline-block;width:7px;height:7px;border-radius:50%;padding:0;
+    margin-right:7px;vertical-align:middle;background:currentColor;
+  }
+  /* Future 的时间：与状态词用固定间距分开，读作前半句的附注 */
+  .ep-when-date { margin-left:6px; }
   /* Episodes 3: deletion countdown inline after title, swapped for row actions on hover */
   .del-note { display:none; }
   #epTable3 .ep-title-cell .del-note {
@@ -274,6 +317,11 @@
   #epTable3 tr.demo-row .title-text:hover { text-decoration:none; }
   #epTable3 tr.demo-row:hover td { background:transparent; }
   .badge-type { background:#f1f5f9;color:#475569; }
+  /* 2026-10-09（v2.96）：Apple 订阅类型的徽标给一个区分色（Public 保持中性灰）——
+     扫的时候先按「Public / Apple」分成两类，细看才是具体类型。
+     紫色是刻意的：六个 Status 徽标已经占掉绿/灰/蓝/琥珀/红，紫色和它们都不撞，
+     也呼应 Apple Podcasts Subscriptions 的配色。 */
+  .badge-type.is-apple { background:#f5f3ff;color:#6d28d9; }
   .pagination { display:flex;align-items:center;justify-content:space-between;padding-top:20px;font-size:13px;color:var(--text-secondary); }
   .pagination .pages { display:flex;gap:4px; }
   .pagination .pages span {
@@ -2009,6 +2057,7 @@
                   <button class="filter-nav-item" onclick="switchFilterPanel('media',this)">Media Type<span class="nav-dot"></span></button>
                   <button class="filter-nav-item" onclick="switchFilterPanel('season',this)">Season<span class="nav-dot"></span></button>
                   <button class="filter-nav-item" onclick="switchFilterPanel('published',this)">Published<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('user',this)">User<span class="nav-dot"></span></button>
                 </div>
                 <div class="filter-panel-foot" style="padding:8px 16px 12px;font-size:13px;justify-content:flex-start;align-items:center;min-height:36px;">
                   <span class="clear-link" onclick="resetFilter()">Reset all</span>
@@ -2074,6 +2123,16 @@
                     <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
+                <div id="fp-user" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="handleSelectAll(this,'fp-user')"> All Users</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-user')"> Creator E</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-user')"> Podcast Team</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
+                  </div>
+                </div>
               </div>
               </div>
               <div style="padding:12px 20px 16px;border-top:1px solid var(--border);">
@@ -2085,8 +2144,8 @@
 
         <table class="ep-table" id="epTable">
           <thead>
-            <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th>User</th><th>Status</th><th>When</th><th class="ep-dl-head">Downloads (All time)</th><th></th></tr>
-            <tr class="alt-header"><td colspan="7">
+            <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th aria-sort="none"><button type="button" class="ep-sort-btn" onclick="toggleWhenSort()" aria-label="Sort by episode date">When<span class="ep-sort-ic"><svg class="ic-up" viewBox="0 0 10 6" fill="currentColor"><path d="M5 0l5 6H0z"/></svg><svg class="ic-down" viewBox="0 0 10 6" fill="currentColor"><path d="M5 6L0 0h10z"/></svg></span></button></th><th class="ep-dl-head">Total Downloads</th><th></th></tr>
+            <tr class="alt-header"><td colspan="5">
               <div class="alt-header-bar">
                 <input type="checkbox" id="selectAllAlt" onchange="toggleSelectAllAlt(this)">
                 <span class="sel-count" id="selectCount">0</span>
@@ -2161,6 +2220,7 @@
                   <button class="filter-nav-item" onclick="switchFilterPanel('media',this)">Media Type<span class="nav-dot"></span></button>
                   <button class="filter-nav-item" onclick="switchFilterPanel('season',this)">Season<span class="nav-dot"></span></button>
                   <button class="filter-nav-item" onclick="switchFilterPanel('published',this)">Published<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('user',this)">User<span class="nav-dot"></span></button>
                 </div>
                 <div class="filter-panel-foot" style="padding:8px 16px 12px;font-size:13px;justify-content:flex-start;align-items:center;min-height:36px;">
                   <span class="clear-link" onclick="resetFilter()">Reset all</span>
@@ -2226,6 +2286,16 @@
                     <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
+                <div id="fp-user" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="handleSelectAll(this,'fp-user')"> All Users</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-user')"> Creator E</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-user')"> Podcast Team</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
+                  </div>
+                </div>
               </div>
               </div>
               <div style="padding:12px 20px 16px;border-top:1px solid var(--border);">
@@ -2237,8 +2307,8 @@
 
         <table class="ep-table" id="epTable">
           <thead>
-            <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th>User</th><th>Status</th><th>Type</th><th>When</th><th class="ep-dl-head">Downloads (All time)</th><th></th></tr>
-            <tr class="alt-header"><td colspan="8">
+            <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th>Type</th><th aria-sort="none"><button type="button" class="ep-sort-btn" onclick="toggleWhenSort()" aria-label="Sort by episode date">When<span class="ep-sort-ic"><svg class="ic-up" viewBox="0 0 10 6" fill="currentColor"><path d="M5 0l5 6H0z"/></svg><svg class="ic-down" viewBox="0 0 10 6" fill="currentColor"><path d="M5 6L0 0h10z"/></svg></span></button></th><th class="ep-dl-head">Total Downloads</th><th></th></tr>
+            <tr class="alt-header"><td colspan="6">
               <div class="alt-header-bar">
                 <input type="checkbox" id="selectAllAlt" onchange="toggleSelectAllAlt(this)">
                 <span class="sel-count" id="selectCount">0</span>
@@ -2328,6 +2398,7 @@
                   <button class="filter-nav-item" onclick="switchFilterPanel('media',this)">Media Type<span class="nav-dot"></span></button>
                   <button class="filter-nav-item" onclick="switchFilterPanel('season',this)">Season<span class="nav-dot"></span></button>
                   <button class="filter-nav-item" onclick="switchFilterPanel('published',this)">Published<span class="nav-dot"></span></button>
+                  <button class="filter-nav-item" onclick="switchFilterPanel('user',this)">User<span class="nav-dot"></span></button>
                 </div>
                 <div class="filter-panel-foot" style="padding:8px 16px 12px;font-size:13px;justify-content:flex-start;align-items:center;min-height:36px;">
                   <span class="clear-link" onclick="resetFilter()">Reset all</span>
@@ -2393,6 +2464,16 @@
                     <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
                   </div>
                 </div>
+                <div id="fp-user" class="filter-panel-content">
+                  <div class="filter-panel-options">
+                    <label><input type="checkbox" checked onchange="handleSelectAll(this,'fp-user')"> All Users</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-user')"> Creator E</label>
+                    <label><input type="checkbox" onchange="handleSubCheck(this,'fp-user')"> Podcast Team</label>
+                  </div>
+                  <div class="filter-panel-foot">
+                    <span class="clear-link" onclick="clearCurrentPanel(this)">Reset</span>
+                  </div>
+                </div>
               </div>
               </div>
               <div style="padding:12px 20px 16px;border-top:1px solid var(--border);">
@@ -2404,8 +2485,8 @@
 
         <table class="ep-table" id="epTable3">
           <thead>
-            <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th>User</th><th>Status</th><th>When</th><th class="ep-dl-head">Downloads (All time)</th><th></th></tr>
-            <tr class="alt-header"><td colspan="7">
+            <tr class="normal-header"><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th>Title</th><th aria-sort="none"><button type="button" class="ep-sort-btn" onclick="toggleWhenSort()" aria-label="Sort by episode date">When<span class="ep-sort-ic"><svg class="ic-up" viewBox="0 0 10 6" fill="currentColor"><path d="M5 0l5 6H0z"/></svg><svg class="ic-down" viewBox="0 0 10 6" fill="currentColor"><path d="M5 6L0 0h10z"/></svg></span></button></th><th class="ep-dl-head">Total Downloads</th><th></th></tr>
+            <tr class="alt-header"><td colspan="5">
               <div class="alt-header-bar">
                 <input type="checkbox" id="selectAllAlt" onchange="toggleSelectAllAlt(this)">
                 <span class="sel-count" id="selectCount">0</span>
@@ -3828,6 +3909,22 @@
     return 'badge-' + s.toLowerCase().replace(/\s+/g, '-');
   }
 
+  // 2026-10-09（v2.97）：Status 列合并进 When 列后，这一格的内容统一由它生成。
+  //  · Published → 只显示发布时间（日期本身就说明「已上线」，再挂一个 Published 徽标是同一句话说两遍）
+  //  · Future    → 蓝色 Future 徽标 + 排定时间（光有日期分不出是「还没到」还是「已经发过」）
+  //  · 其余（Draft / AI Processing / AI Finished / AI Failed）→ 只显示彩色徽标，不显示日期
+  //    —— 它们还没有「发布时间」，那个日期是占位；Share 页对未发布也一律显示 --/--/----
+  // 2026-10-09（v2.100）：由「药丸」改成「小色点 + 文字」—— 一列里混着三种形状（纯文字 / 药丸+文字 /
+  // 只有药丸）是这列"乱"的主因；变成一行文字后形状统一，而色块由"面"缩成"点"，音量低到**可以把五种颜色都留下**。
+  // 色点不写死颜色：它照样套 badgeClass() 那些 `.badge-*` 类，靠 `.ep-when-dot` 的 `background:currentColor`
+  // 取那一类自己的**文字色**（墨色）—— 颜色仍然只有一处定义。
+  function epWhenCell(ep) {
+    if (ep.status === 'Published') return ep.when;
+    var dot = '<span class="ep-when-dot ' + badgeClass(ep.status) + '"></span>';
+    return (ep.status === 'Future') ? dot + ep.status + '<span class="ep-when-date">· ' + ep.when + '</span>'
+                                    : dot + ep.status;
+  }
+
   // Free plan: episodes are deleted 90 days after creation
   var FREE_DELETION_DAYS = 90;
   var DELETION_RISK_DAYS = 14; // Published/Draft episodes within this many days of auto-deletion are "at risk"
@@ -3879,6 +3976,35 @@
     }
   }
 
+  // 2026-10-09（v2.103）：When 列可排序。null = 不排（用 episodes 的原顺序）｜'asc' ｜ 'desc'
+  var whenSort = null;
+
+  // 'Jun 26, 2026' → 时间戳。解析不出来给 0（不影响可用性）
+  function whenTime(ep) {
+    var t = Date.parse((ep && ep.when) || '');
+    return isNaN(t) ? 0 : t;
+  }
+
+  // 两态切换：没排过 → 升序（早→晚，改动最直观），再点 → 降序
+  function toggleWhenSort() {
+    whenSort = (whenSort === 'asc') ? 'desc' : 'asc';
+    applyWhenSortIcons();
+    buildRows();
+    // 重排后整行会被重建，勾选本来就丢了；把计数与 Actions 条一并复位（与 applyFilter 同一套处理）
+    clearSelection();
+  }
+
+  // 三个列表页各有一颗 When 排序按钮（同一份 markup），一起改；
+  // aria-sort 挂在 th 上（读屏要用，不是挂在按钮上）
+  function applyWhenSortIcons() {
+    document.querySelectorAll('.ep-sort-btn').forEach(function(b) {
+      b.classList.toggle('is-asc', whenSort === 'asc');
+      b.classList.toggle('is-desc', whenSort === 'desc');
+      var th = b.closest('th');
+      if (th) th.setAttribute('aria-sort', whenSort === 'asc' ? 'ascending' : (whenSort === 'desc' ? 'descending' : 'none'));
+    });
+  }
+
   function buildRows() {
     var html = '';
     var html2 = '';
@@ -3905,7 +4031,8 @@
       return '<td class="ep-actions-cell" onclick="event.stopPropagation()">' +
         '<div class="row-menu-wrap">' +
           '<button type="button" class="row-menu-btn" title="More actions" aria-label="More actions" onclick="toggleRowMenu(event,this)">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>' +
+            // 2026-10-09（v2.101）：图标 16→18px、点的半径 1.7→2.2 —— 16px 下每颗点只有 2.27px，太细；现在 3.30px。
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/></svg>' +
           '</button>' +
           '<div class="popover row-menu-popover">' +
             // 2026-10-09（v2.85）：菜单文案由 `Edit` / `View` 改成 `Edit Details` / `View Episode Page`（用户要求）
@@ -3924,15 +4051,22 @@
         '<span class="title-text">Episode 042 — How to Launch, Grow, and Monetize Your Independent Podcast: Choosing the Right Gear, Building an Editing Workflow, Growing Your Audience, and Turning It Into a Sustainable Business</span>' +
         deletionNote({status:'Published', created:'2026-08-10'}) +
       '</td>' +
-      '<td class="no-wrap">Podcast Team</td>' +
-      '<td class="no-wrap" onclick="event.stopPropagation()"><span class="badge-status ' + badgeClass('Published') + '">Published</span></td>' +
-      '<td onclick="event.stopPropagation()">Aug 10, 2026</td>' +
-      '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation()">1,024</td>' +
+      '<td class="no-wrap" onclick="event.stopPropagation()">Aug 10, 2026</td>' +
+      '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation();openEpisodeStats()">1,024</td>' +
       rowMenuCell(null) +
     '</tr>';
     var html3 = demo3;
     var count3 = 1; // demo row included in the visible count
-    episodes.forEach(function(ep, i) {
+    // 2026-10-09（v2.103）：按 When 排序时**只改渲染顺序** —— 行上的动作（编辑 / 查看 / 分享 / 行菜单）
+    // 用的都是剧集在 `episodes` 里的**原始下标** i，所以先把下标排好序、再按顺序取 ep 与 i。
+    // **别把 i 换成排序后的位置**，否则点哪行都会打开别的集。Episodes 3 那条 demo 行固定在最前，不参与排序。
+    var order = episodes.map(function(_, idx) { return idx; });
+    if (whenSort) {
+      var dir = (whenSort === 'asc') ? 1 : -1;
+      order.sort(function(a, b) { return (whenTime(episodes[a]) - whenTime(episodes[b])) * dir; });
+    }
+    order.forEach(function(i) {
+      var ep = episodes[i];
       var isProc = (ep.status === 'AI Processing');
       // Episodes 3 only: inline deletion countdown note after the title（原来悬停时会藏起来给行内图标腾位置，图标搬走后已不再隐藏）
       var delNote = (ep.status === 'Published' || ep.status === 'Draft') ? deletionNote(ep) : '';
@@ -3941,29 +4075,29 @@
         '<td class="ep-title-cell">' +
           '<span class="title-text">' + ep.title + '</span>' +
           delNote +
-        '</td>' +
-        '<td class="no-wrap">Creator E</td>' +
-        '<td class="no-wrap" onclick="event.stopPropagation()"><span class="badge-status ' + badgeClass(ep.status) + '">' + ep.status + '</span></td>';
+        // 2026-10-09（v2.98）：User 列已去掉 —— 用户是「用来收窄列表的维度」，放进筛选弹层的 User 面板
+        // （与 Season / Media Type 同一类：只活在筛选里、不占列）。v2.97 起 Status 也并进了 When。
+        '</td>';
       // AI Processing 行不给菜单：CSS 里 .ai-processing .row-menu-wrap 是 display:none（对应原来隐藏行内图标的行为）
       var menuCell = rowMenuCell(i);
       // Episode List (no Type column)
       html += rowStart +
-        '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
-        '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
+        '<td class="no-wrap" onclick="event.stopPropagation()">' + epWhenCell(ep) + '</td>' +
+        '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation();openEpisodeStats()">' + ep.dl.toLocaleString('en-US') + '</td>' +
         menuCell +
       '</tr>';
       // Episode List 2 (with Type column)
       html2 += rowStart +
-        '<td><span class="badge-status badge-type">' + epTypeLabel(ep.type) + '</span></td>' +
-        '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
-        '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
+        '<td><span class="badge-status badge-type' + (isAppleSubscriptionType(ep.type) ? ' is-apple' : '') + '">' + epTypeLabel(ep.type) + '</span></td>' +
+        '<td class="no-wrap" onclick="event.stopPropagation()">' + epWhenCell(ep) + '</td>' +
+        '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation();openEpisodeStats()">' + ep.dl.toLocaleString('en-US') + '</td>' +
         menuCell +
       '</tr>';
       // Episode List 3 (Published + Draft only, no Type column)
       if (ep.status === 'Published' || ep.status === 'Draft') {
         html3 += rowStart +
-          '<td onclick="event.stopPropagation()">' + ep.when + '</td>' +
-          '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation()">' + ep.dl.toLocaleString('en-US') + '</td>' +
+          '<td class="no-wrap" onclick="event.stopPropagation()">' + epWhenCell(ep) + '</td>' +
+          '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation();openEpisodeStats()">' + ep.dl.toLocaleString('en-US') + '</td>' +
           menuCell +
         '</tr>';
         count3++;
@@ -4006,6 +4140,8 @@
   // 2026-09-30：Share & Embed 是「从列表页点进来」的子页面，左侧菜单里没有它的条目。
   // 记住进来之前那一页，返回按钮据此回到正确的列表（Episodes / Episodes 2 / Episodes 3）。
   var shareReturnPage = 'episodelist';
+  // 2026-10-09（v2.102）：Statistics Episodes 同样没有自己的菜单项，进去时用它记住来源列表页
+  var statsReturnPage = 'episodelist';
   // 2026-10-09（v2.83）：存草稿 / 预约发布之后要回到的列表页（打开 Publish 弹框时记下）
   var publishReturnPage = 'episodelist';
   // 订阅类型字段（Basic Info 中 Media File 上方）：仅 Episodes 2 页面显示
@@ -4137,6 +4273,12 @@
     return (!type || type === 'Free') ? 'Public' : type;
   }
 
+  // 是不是 Apple 的订阅类型（有值且不是 Free）—— 列表给这类徽标加区分色用。
+  // 与 epTypeLabel() 是同一件事的两面，也供 syncAppleSubscriptionFromType() 复用。
+  function isAppleSubscriptionType(type) {
+    return !!type && type !== 'Free';
+  }
+
   function toggleAppleSubscription(on) {
     var settings = document.getElementById('v2AppleSubscriptionSettings');
     var sel = document.getElementById('v2SubscriptionType');
@@ -4151,7 +4293,7 @@
   function syncAppleSubscriptionFromType(type) {
     var cb = document.getElementById('v2AppleSubscription');
     var sel = document.getElementById('v2SubscriptionType');
-    var isSub = !!type && type !== 'Free';
+    var isSub = isAppleSubscriptionType(type);
     if (sel && isSub) sel.value = type;
     if (cb) cb.checked = isSub;
     toggleAppleSubscription(isSub);
@@ -5430,6 +5572,17 @@
     }
   }
 
+  // 2026-10-09（v2.102）：列表里 Downloads 那格的数字是真链接 —— 点它去看这集的数据。
+  // 落点是本地那个 Statistics → Episodes 占位页（page-statsepisodes）。
+  // **注意**：侧栏的 Statistics 是跳到**外部**站点（window.location.href = .../Stats/），
+  // 这里刻意留在原型内；要跟侧栏一致，把下面那一行换成同样的 location.href 即可。
+  function openEpisodeStats() {
+    // 这一页在侧栏没有自己的菜单项（与 Share & Embed 同类），所以记下「从哪个列表进来的」，
+    // 让那个列表项保持高亮 —— 否则进去之后侧栏全灭（Share 页当初就是因为这个才加的 shareReturnPage）。
+    statsReturnPage = currentListPage();
+    navigate('statsepisodes');
+  }
+
   function navigate(page) {
     currentPage = page;
     document.querySelector('.sidebar').classList.remove('open');
@@ -5437,8 +5590,10 @@
     document.querySelectorAll('.page-content').forEach(function(p) { p.style.display = 'none'; });
     var target = document.getElementById('page-' + page);
     if (target) target.style.display = '';
-    // Share & Embed 没有自己的菜单项，左侧保留来源列表页的高亮（否则进页面后侧栏全灭）
-    var navKey = (page === 'shareembed') ? (shareReturnPage || 'episodelist') : page;
+    // Share & Embed 与 Statistics Episodes 都没有自己的菜单项，左侧保留来源列表页的高亮（否则进页面后侧栏全灭）
+    var navKey = (page === 'shareembed') ? (shareReturnPage || 'episodelist')
+               : (page === 'statsepisodes') ? (statsReturnPage || 'episodelist')
+               : page;
     document.querySelectorAll('.sidebar-nav a').forEach(function(a) {
       a.classList.remove('active');
       if (a.dataset.page === navKey) a.classList.add('active');
@@ -5505,7 +5660,7 @@
   }
 
   function updateNavDots() {
-    var panels = ['fp-status','fp-media','fp-season','fp-published'];
+    var panels = ['fp-status','fp-media','fp-season','fp-published','fp-user'];
     var popovers = document.querySelectorAll('#filterPopover');
     popovers.forEach(function(pop) {
       var navItems = pop.querySelectorAll('.filter-nav-item');
@@ -5517,7 +5672,7 @@
         if (pid === 'fp-published') {
           var dates = panel.querySelectorAll('input[type=date]');
           dirty = (dates[0] && dates[0].value) || (dates[1] && dates[1].value);
-        } else if (pid === 'fp-status' || pid === 'fp-season') {
+        } else if (pid === 'fp-status' || pid === 'fp-season' || pid === 'fp-user') {
           var checks = panel.querySelectorAll('input[type=checkbox]');
           checks.forEach(function(cb, i) {
             if (i === 0 && !cb.checked) dirty = true;
@@ -5536,7 +5691,7 @@
   function clearCurrentPanel(el) {
     var active = el ? el.closest('.filter-panel-content') : document.querySelector('.filter-panel-content.active');
     if (!active) return;
-    if (active.id === 'fp-status' || active.id === 'fp-season') {
+    if (active.id === 'fp-status' || active.id === 'fp-season' || active.id === 'fp-user') {
       var checks = active.querySelectorAll('input[type=checkbox]');
       checks.forEach(function(cb, i) { cb.checked = (i === 0); });
     } else if (active.id === 'fp-media') {
@@ -5565,7 +5720,7 @@
 
   function resetFilter() {
     document.querySelectorAll('#filterPopover').forEach(function(pop) {
-      ['fp-status','fp-season'].forEach(function(pid) {
+      ['fp-status','fp-season','fp-user'].forEach(function(pid) {
         var panel = pop.querySelector('#' + pid);
         if (panel) {
           var checks = panel.querySelectorAll('input[type=checkbox]');

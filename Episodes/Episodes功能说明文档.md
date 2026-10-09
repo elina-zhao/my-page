@@ -1,7 +1,7 @@
 # Episodes 菜单功能说明文档
 
 > 适用范围：`index.html`（Podbean Admin — Episodes）
-> 文档版本：v2.95
+> 文档版本：v2.104
 > 说明：本文档为**功能 mockup**，逐页、逐控件描述 Episodes 菜单下的功能与交互逻辑。UI 文案保留英文原样。具体视觉样式由设计师另行确定，不在本文档范围内。
 
 ---
@@ -93,7 +93,7 @@
 
 **② Filter 按钮 + 筛选弹窗**
 
-点击 Filter 按钮弹出筛选面板。筛选器按类别分为 4 个子面板，通过左侧导航切换：
+点击 Filter 按钮弹出筛选面板。筛选器按类别分为 5 个子面板，通过左侧导航切换：
 
 | 子面板 | 筛选内容 | 选项 |
 |---|---|---|
@@ -101,6 +101,7 @@
 | **Media Type（媒体类型）** | 音频/视频 | Audio、Video |
 | **Season（季数）** | 所属季 | All Seasons + 用户已创建的 Seasons（数量根据用户创建的 seasons 动态生成，如 Season 1、Season 2……） |
 | **Published（发布日期）** | 日期范围 | From / To 两个日期输入框 |
+| **User（用户）** | 发布者 | All Users + 该播客下的用户（如 Creator E、Podcast Team）。**2026-10-09 v2.98 新增** —— 替代了原来表格里的 **User 列**（见 3.1 列说明） |
 
 交互规则：
 
@@ -172,15 +173,23 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 |---|---|
 | 复选框 | 用于多选（列头为全选复选框） |
 | Title | 剧集标题（标题过长时**自动换行、完整显示**，行高随标题行数变长；不做单行/多行截断） |
-| User | 用户（显示 **Settings → Podcast Info → Author & Region** 中 **Author** 的值） |
-| Status | 状态徽章 |
-| When | 发布时间 |
-| Downloads (All time) | 累计下载量 |
+| When | 发布时间 / 状态（2026-10-09 v2.97 起 **Status 列已并入本列**；**表头可点击排序**，见下方说明） |
+| Total Downloads | 累计下载量。**数字是链接**（2026-10-09 v2.102）：平时是普通文字，整行悬停时变主色 + 下划线，**点击跳 Statistics → Episodes**（列头 2026-10-09 v2.104 由 **Downloads (All time)** 改名） |
 | （无表头） | 行操作列，表格最右侧，放 **「3个点」** 按钮（见下方「行操作菜单」，2026-09-30 新增） |
 
-- **User / Status / Downloads (All time)** 三列的值保持**单行不换行**，列宽按内容保证；仅 **Title** 列允许换行完整显示。
+- **When / Total Downloads** 两列的值保持**单行不换行**，列宽按内容保证；仅 **Title** 列允许换行完整显示。
 
 **状态值：** Published、Draft、Future、AI Processing、AI Finished、AI Failed。
+
+**When 列（原 Status + When 合并，2026-10-09 v2.97）：**
+
+- **Published** → 只显示发布时间（如 `Dec 16, 2025`）。日期本身就说明「已上线」，不再另挂一个 Published 徽标。
+- **Future** → **色点 + `Future` + `· 排定时间`**（如 `● Future · Jun 26, 2026`）—— 光有日期分不出「还没到」还是「已经发过」。
+- **Draft / AI Processing / AI Finished / AI Failed** → **色点 + 状态词**，不显示日期（它们还没有「发布时间」，数据里的 `when` 只是占位；Share 页对未发布也一律显示 `--/--/----`）。
+- **形状 =「小色点 + 文字」（2026-10-09 v2.100 定稿）**：整列统一成一行文字，颜色交给色点。此前是**药丸**，而"乱"的主因正是**一列里混着三种形状**（纯文字 / 药丸+文字 / 只有药丸）、且药丸宽度参差。v2.99 试过"等宽药丸 + 颜色收敛到两种"，**当天即被这一版取代**：色点把色块由"面"缩成"点"，音量低到**可以把五种颜色全留下** —— 比收敛版信息更全、观感更安静，而且**不再需要 `min-width`**（v2.99 那 30px 的宽度代价随之消失）。五种色点：Draft `#64748b` / Future `#3b82f6` / AI Processing `#b45309` / AI Finished `#1d4ed8` / AI Failed `#b91c1c`。
+- **实现**：色点**不写死颜色** —— 它套的还是 `.badge-*` 那套类，靠 `.ep-when-dot` 的 `background:currentColor` 取该状态自己的**文字色**（墨色），所以颜色仍只有一处定义；**`.ep-when-dot` 必须排在 `.badge-*` 之后**，否则会被它们的浅底盖掉。
+- **表头可排序（2026-10-09 v2.103）**：`When` 表头是一颗 `<button>`（不是给 `th` 挂 onclick，这样键盘可达、读屏能念），**标签右侧跟一对小三角** —— 未排序时两个都淡显（提示"这列能排"），排过之后只留对应那一个、标签与箭头一起加深（顺带标出"现在按这列排"）。点一下 = **升序（早→晚）**，再点 = **降序**（**两态**切换，没有"回到默认顺序"的第三态）。三个列表页共用**同一个**排序状态；**排序只改渲染顺序** —— 行上动作仍按剧集在数据里的**原始下标**走，所以排完序点某行打开的仍是那一集（这是最容易写错的地方）。重排会重建整行，于是**顺带清空勾选**（与 Apply 筛选同一套处理）；Episodes (free plan) 页那条固定在最前的 demo 行**不参与**排序。
+- **表头仍叫 When**（已知代价，用户明确选择保持）：合并后这一列里会出现 `AI Failed` 之类的状态词，表头与内容不再严格对应。
 
 **行交互：**
 
@@ -204,6 +213,8 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 - 点击「3个点」与菜单项都**不会**冒泡触发行点击，因此不会误打开编辑弹窗；选中菜单项会先收起菜单再执行动作。
 - 菜单项**不切换页面**，仅触发上述三个动作。
 - **AI Processing 行的「3个点」不显示**（该行整体不可编辑，与复选框禁用一致）。
+- **按钮的可见度（2026-10-09 v2.101）**：常态就看得见 —— 常态色 `#64748b`（对比度 4.76:1）、图标 18px（每颗点直径 3.30px）；**行悬停**时再加深一档（`--text`）并给它白底 + 描边，**按钮自身悬停 / 菜单已展开**时底色与描边再重一点。此前常态是 `#94a3b8`（2.56:1）、图标 16px（点 2.27px），几乎看不见。
+- **它与 Downloads 列之间留出间距（2026-10-09 v2.102）**：操作列的左内边距 4 → 12px、列宽 52 → 58px，于是「数字 ↔ 3个点」由 **16px 加到 24px**。理由不是审美：**两边都是可点的东西**（Downloads 的数字是链接，见上表；3个点开菜单），16px 之间挤着两个可点目标容易点错。右侧内边距 16px 不动 —— 右侧只有表格边缘，没有可点对象。
 
 > **2026-10-09（v2.85）：行操作菜单两项改名。** 用户：「episode 列表页面 3个点里面的 **Edit 改为 Edit Details**，**View 改为 View Episode Page**」。改的是 `rowMenuCell()` 里那两行的文字（图标 `MENU_ICONS.edit` / `MENU_ICONS.view` 与接线 `editEpisode()` / `viewEpisode()` **都没动**），所以**三处列表页（Episodes / Episodes (apple) / Episodes (free plan)）同时生效**——它们共用同一个 `rowMenuCell()`。**注意区别**：Transripts / Chapter Markers 工作区里那两颗 `Edit` 按钮**不是**行菜单项，**没有改**（仍是 `Edit`）。
 - 标题列不再有任何操作图标；标题的悬停下划线（点击行的暗示）保留。
@@ -225,8 +236,9 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 与 Episodes 列表页面结构基本一致，区别在于：
 
-- 表格多一列 **Type**，列顺序为：复选框 → Title → User → Type → Status → When → Downloads → 行操作（「3个点」，无表头）。
+- 表格多一列 **Type**，列顺序为：复选框 → Title → Type → When → Downloads → 行操作（「3个点」，无表头）。
 - Type 值为每行剧集数据的订阅类型字段：Apple 的四种订阅类型（`Ad-free`、`Subscriber-only`、`Early access`、`Archive access`）照原样显示；**非 Apple 订阅剧集显示为 Public**（2026-10-09 v2.95 —— 数据里存的仍是 `Free`，只有列表这一格的显示文案换成 Public）。
+- Type 徽标按「是不是 Apple 订阅类型」分两种颜色（2026-10-09 v2.96）：Apple 的四种类型用**紫色徽标**（`.badge-type.is-apple`），**Public 保持中性灰**。这样扫列表时先按「Public / Apple」分成两类，定睛看才是具体类型 —— 具体类型**始终显示**，不做 hover 提示（hover 在表格里一次只能看一行，而且截图里看不到）。紫色是刻意的：六个 Status 徽标已占掉绿/灰/蓝/琥珀/红，紫色与它们都不撞。
 - 状态为 **AI Processing**、**AI Finished** 或 **AI Failed** 的剧集，其数据的 **type 字段即为 Free**（列表 Type 列显示 **Public**；编辑弹窗里对应的**勾选行不勾选**）。
 - 在此页面点击行编辑或新建剧集时，Publish Episode 弹窗的 **Basic Info** 区块在最上方（**Media File 上方**）多显示一行 **Apple Podcast Subscription** 勾选框；**勾选后**才展开订阅相关设置（Episode will be 下拉 + 解释文字 + 按需的日期时间，选 **Ad-free** 时再加一个 **File for Subscriber** 上传字段——都在这同一块里）；编辑时按该行 Type 回填（Type 为 Free / 无值的剧集**不勾**），新建默认不勾（等于 Free）。详见 7.2。
 
@@ -247,7 +259,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 ### 5.2 表格与删除倒计时
 
-列结构与 Episodes 列表页一致：复选框 → Title → User → Status → When → Downloads (All time) → 行操作（「3个点」，无表头）；仅渲染 **Published / Draft** 状态的剧集。
+列结构与 Episodes 列表页一致：复选框 → Title → When → Total Downloads → 行操作（「3个点」，无表头）；仅渲染 **Published / Draft** 状态的剧集。
 
 **Title 列 —— 删除倒计时内联展示：**
 
@@ -388,6 +400,56 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
   - **Schedule**（预约发布）→ Toast `Episode scheduled successfully!`（原 `Episode scheduled for <日期> <时间>`），并**回到进入前的那个列表页**。
   - **「进入前的那个列表页」**在打开弹窗时记下（`publishReturnPage`）：从 Episodes / Episodes (apple) / Episodes (free plan) 哪个列表进来就回哪个；若弹窗是在 **Share & Embed 页**上打开的，则再往回退一层到它记着的那个列表（与 Share 页的 `shareReturnPage` 同一套做法）。
 
+> **2026-10-09（v2.104）：列头 **Downloads (All time)** 改名 `Total Downloads`。** 用户问「**Downloads (All time)** 改为 **All Time Downloads** 合理么」。判断：方向（去掉括号限定）可以理解，但**按他写的样子不合理** —— ① **缺连字符**：all-time 在这里是**定语形容词**（all-time high / all-time record 就是这个用法），放名词前必须连起来，否则 **All Time Downloads** 会变成三个并排的名词；② 它把限定词挪到最前，**列头的第一个词不再是名词**，破坏表头的扫读节奏；而且**房规本来就是「名词 + 括号限定」** —— 全站另一个带括号限定的可见文案是章节工作区里的 `Start Time (mm:ss)`。于是给了三条路（保留原样 / **All-Time Downloads** / **Total Downloads**），用户选 **`Total Downloads`**。
+> **口径说明（已向用户点明）**：`Total` 与 all time 严格说不是一个意思 —— 前者是**合计**、后者是**统计范围（建站以来）**；本页这列本来就是「这一集自建站以来的总下载」，所以 `Total Downloads` 是**简化说法**、不是精确改写。用户确认采用。
+> 落地：三个列表页的表头各改一处（`<th class="ep-dl-head">Total Downloads</th>`）；**类名 `ep-dl-head` / `ep-dl-cell` 不动**（从 downloads 派生，与文案无关）；v2.99 给它加的 `white-space:nowrap` 照旧 —— 新文案比原来短约 10%，正好少占一点 Title 的宽度。
+> **校验**：html 里 all time 的残留已为 0（原来 3 处都在表头）；文档 3 处引用（列说明 / 单行不换行那条 / free plan 列结构）同步改名，**旧名一律用粗体、不加反引号**（加了会被文档/代码的字面校验当成「必须在 index.html 里出现的界面串」而假失败）。文首版本号 → **v2.104**。
+>
+> **2026-10-09（v2.103）：When 表头可排序，标签右侧加一对小三角。** 用户：「列表中 when 可以排序，在表头右侧加箭头」。落地：`When` 表头由纯文本变成一颗按钮（`class="ep-sort-btn"`）—— **不给 `th` 挂 onclick**，用 `<button>` 是为了键盘可达、读屏能念；`aria-sort` 按规范挂在 `th` 上（`none` / `ascending` / `descending`）。标签右侧是 `.ep-sort-ic`，里面上下两颗小三角：未排序时都淡显（`opacity:.4`，提示「这列能排」），排过之后只留对应那一个、标签与箭头一起加深到 `--text-secondary`（顺带标出「现在按这列排」）。**两态**切换：第一下**升序**（早→晚）—— 原数组顺序本来就接近「新→旧」，第一下若给降序会看着像「点了没反应」；再点降序。没有「回到默认顺序」的第三态。
+> **最容易写错的一处**：行上的动作（`editEpisode` / `viewEpisode` / `shareEpisode` / 行菜单）用的都是剧集在 `episodes` 里的**原始下标**，所以排序**只能改渲染顺序** —— 实现是先算出 `order`（存原始下标）再 `order.forEach` 取 `ep` 与 `i`，**绝不能把下标换成排序后的位置**，否则点哪行都会打开别的集。
+> 连带：重排会重建整行 → 勾选本来就丢了，所以 `toggleWhenSort()` 在 `buildRows()` 之后调 `clearSelection()` 把计数与 Actions 条复位（与 `applyFilter()` 同一套处理）。三个列表页的 When 表头是**逐字相同的 markup**，一次 replace_all 改完；排序状态**三页共用**。Episodes (free plan) 页那条固定在最前的 demo 行**不参与**排序。
+> **没做**：Downloads 列没加排序（用户只点了 When）—— 同样的模式复制一份即可，但那是右对齐的数字列，箭头该放哪儿要另定。
+> **校验**：抽真实 `buildRows()` 配桩 DOM，用四条不同日期的剧集跑「不排序 / 升序 / 降序」三遍 —— 日期顺序正确，**并且每一行 `id` 里的下标与该行渲染出的标题仍然指向同一条数据**（三遍都成立，说明排序没把索引串掉）；`class="ep-sort-btn"` 恰好 3 个、`aria-sort="none"` 3 个；内联脚本过 node --check。文首版本号 → **v2.103**。
+>
+> **2026-10-09（v2.102）：Downloads 与「3个点」之间加宽 + 把 Downloads 那格的假链接做成真链接。**
+> ① 用户：「最右侧的 3 个点 和 downloads 这一类的距离是不是可以大一点」。量出来现状是：数字到点 = Downloads 右内边距 12 + 操作列左内边距 4 = **16px**；而点到表格右缘 = 操作列右内边距 **16px** —— 两边刚好一样。理由不是审美：**两边都是可点的东西**（数字那格有 `cursor:pointer` + 悬停变主色加下划线，点那格开菜单），16px 之间挤着两个可点目标容易点错。落地：操作列左内边距 4 → 12px、列宽 52 → 58px，**只加左边**（右侧只有表格边缘，没有可点对象），间距 16 → **24px**。代价照旧：这 6px 从 Title 拿（auto 布局里 Title 就是让位的列）—— 这是今天第三次动 Title 的宽度。
+> ② **顺带发现一处假的「可点」暗示**：Downloads 那格 `cursor` 是 pointer、整行悬停还会变主色 + 加下划线，但它的 onclick **只有 `event.stopPropagation()`** —— 点了什么都不发生，连「点整行打开编辑」都被它拦掉；而标题那格同样悬停出下划线，点它**确实**会打开编辑。**用户的选择是「保留下划线、让它真的可点」**（不是去掉那个暗示），于是新增 `openEpisodeStats()`，点数字跳 **Statistics → Episodes**。
+> **落点说明**：落在**本地**那个 `page-statsepisodes` 占位页（内容是「Statistics Episodes content coming soon.」），**刻意留在原型内** —— 侧栏的 Statistics 走的是 `window.location.href` 跳到**外部**站点；要跟侧栏一致，只改 `openEpisodeStats()` 里那一行。连带：这一页在侧栏没有自己的菜单项，所以照 Share & Embed 的老办法加了 `statsReturnPage`，`navigate()` 里让它保持**来源列表页**的高亮，否则进去之后侧栏全灭。
+> **没做**：那一格仍是 `<td onclick>`，**键盘不可达**（不是 `<a>` / `<button>`）—— 与行内其它可点格子一致，要真做无障碍得换元素，本次未动。
+> **校验**：`openEpisodeStats` 全文 6 处（1 处定义 + 4 处 DL 格调用 + 1 处 CSS 注释提及）；DL 格上的旧 `onclick="event.stopPropagation()"` 已为 0；操作列新 padding / width 已生效、旧 52px 无残留；落点页 `page-statsepisodes` 存在；内联脚本过 node --check。文首版本号 → **v2.102**。
+>
+> **2026-10-09（v2.101）：「3个点」行菜单按钮提可见度 —— 问题不在方向。** 用户问「最右侧的 3 个点，怎么能更明显一些？换成横着的 3 个点会更好么」。量出两个实打实的原因：① **点太小** —— 图标按 16px 渲染 24 viewBox、`r=1.7`，**每颗点直径只有 2.27px**；② **常态颜色太浅** —— 用的是 `--text-tertiary`(#94a3b8)，在白底上对比度 **2.56:1**，**低于 WCAG 对「非文字 UI 元件」要求的 3:1** —— 不只是不够显眼，是踩线。**方向不是杠杆**：竖点 ⋮ 是行内操作菜单的通行做法（Material `more_vert` / Gmail / GitHub / Linear / Notion 的行操作都是竖的），横点 ⋯ 更多用在顶栏、工具条的溢出；用户据此选了**保持竖点**。
+> 落地两步（都不新增装饰）：常态色 `--text-tertiary` → `--text-secondary`（2.56:1 → 4.76:1）；图标 16→18px、`r` 1.7→2.2（每颗点 2.27px → 3.30px，约 +45%）。**连带**：原来的「行悬停色」正好就是 `--text-secondary` 这一档，提升之后行悬停就没有颜色变化了，所以那档一并提到 `--text`。
+> **没做**：① 常态给浅底 + 描边（最显眼，但等于给每一行加一个可见方块，与「静默、删装饰」的取向相反）；② `:focus-visible`（键盘 Tab 到这个按钮目前没有任何视觉反馈）—— 已在对话里点出，等用户定。
+> **校验**：SVG 的 width/height/r 已换、全文无 16px 与 r1.7 的残留；常态色与行悬停色两条规则已改；内联脚本过 node --check；另把真实按钮样式抄进静态预览页，渲了「常态 / 行悬停 / 按钮悬停」×「改前 / 改后」六格比对（改前的常态确实几乎看不见）。文首版本号 → **v2.101**。
+>
+> **2026-10-09（v2.100）：When 列由「药丸」改成「小色点 + 文字」，并把五种颜色全留下。** 承接 v2.99 的减噪：当时诊断出这列"乱"的三个来源，**最主要的是「一列里混着三种形状」**（纯文字 / 药丸+文字 / 只有药丸），我给了「只减噪」与「统一形状」两条路，用户先选减噪；随后要我把「统一形状」里的**色点 + 文字**版渲出来对比，看到结果后选了它，并选了**保留五种色**。
+> 关键判断：**「颜色收敛」当初是被药丸逼出来的** —— 一大块饱和色填满格子、音量太高；色点把色块由"面"缩成"点"，音量低得多，于是不必再牺牲颜色，信息反而比 v2.99 更全。**顺带**：色点版不需要 `min-width:104px`，v2.99 那 30px 的宽度代价（与「收窄 Title」冲突的那笔）自动消失。
+> 落地：`epWhenCell(ep)` 里把 `badge` 换成 `dot`；`.badge-future` / `.badge-ai-finished` 的颜色**恢复**为蓝；删掉 `.ep-table td.ep-when-cell .badge-status { min-width… }` 与 `ep-when-cell` 这个类；新增 `.ep-when-dot`。**注意：v2.99 的「颜色收敛」当天即被本版回退** —— 药丸那条减噪路线整个换成了色点。
+> **实现要点**：色点不写死颜色 —— 它套的还是 `badgeClass(s)` 的 `.badge-*` 类，靠 `.ep-when-dot` 的 `background:currentColor` 取该状态自己的文字色；**该规则必须排在 `.badge-*` 之后**（同为单类选择器，排在后面才能盖掉它们的浅底）。这样颜色仍只有一处定义。
+> **校验**：抽真实的 `epWhenCell(ep)` 跑过六种状态逐条核对（Published 裸日期；Future = 点 + 词 + `· 日期`；其余 = 点 + 词）；`ep-when-cell` 与 `min-width:104px` 均已清 0；`.ep-when-dot` 只定义一次、且位置在 `.badge-*` 之后；整段内联脚本过 node --check。文首版本号 → **v2.100**（继续往下走，不是 v2.1）。
+>
+> **2026-10-09（v2.99）：表格两处收尾 —— Downloads 表头不换行（顺带收窄 Title）+ When 列减噪。**
+> ① 用户：「Title 这一列所占的宽度可以减少一点吧，当 downloads 这个表头可以不用换行」→ 只加了一条 `white-space:nowrap` 到 `.ep-table th.ep-dl-head`。**auto 布局下 Title 是唯一「能换行、能吸收富余宽度」的列**，所以表头不许断行之后，Downloads 列的最小宽度变成整串文字，多占的那点只能从 Title 让出来 —— 一条规则同时满足两件事。**没有**给 Title 另写宽度：auto 布局下给某一列设百分比不会「省下」空间，只会摊到其它自动列上。（真要钉死 Title 的量，得整表改 `table-layout:fixed`，是大一号的改动，先不做。）
+> ② 用户：「when 这一列里面的内容有点乱，你有什么建议」→ 先诊断出三个来源：**一列里混了三种形状**（纯文字 / 药丸+文字 / 只有药丸）、**药丸宽度参差**（Draft 约 52px vs AI Processing 约 106px）、**颜色太集中**（Status 并入后，这一列成了全表颜色最重的地方）。给了两条路：**只减噪**（不动已定规则）与**统一形状**（全用药丸 / 全用色点+文字）；用户选**先减噪**。落地三件：药丸 `min-width:104px` + 居中（按 `td.ep-when-cell` 下钻，**不能改 `.badge-status` 基类** —— 它与 Type 列共用）；颜色收敛（Future、AI Finished 由蓝改灰，只留琥珀 / 红）；Future 的日期包一个 `.ep-when-date` 加固定间距，读作药丸的附注。**已知代价**：等宽那条把这列撑宽约 30px，宽度从 Title 拿 —— 与 ① 的「收窄 Title」方向相反，用户已知情（要撤就是删一条 CSS）。
+> **校验**：把真实的 `epWhenCell(ep)` 配桩跑过六种状态，逐条核对输出（Published 裸日期；Future = 徽标 + `.ep-when-date` 包裹的日期；其余四种只有徽标）；`ep-when-cell` 恰好 3 个 td + 1 条 CSS；`.badge-future` / `.badge-ai-finished` 已改灰，并确认这两个类**只被 When 列用**（`badgeClass` 只在 `epWhenCell(ep)` 里调用）；内联脚本过 node --check。文首版本号 → **v2.99**。
+>
+> **2026-10-09（v2.98）：去掉 User 列，改为筛选弹层里的 User 子面板。** 用户：「将 User 这一列也去掉，如果用户有多个发布者的话，可以在 filter 里面增加 filter 去检索 episode」。判断是**赞成**，理由：① 这套原型里**已经有现成先例** —— **Season 与 Media Type 就是「只活在筛选里、不占表格列」的维度**，User 与它们同类（取值很少、用来把列表收窄，而不是逐行要去比较的事实）；② 这条列今天**每一行都是同一个值**（`Creator E`，只有 demo 行是 `Podcast Team`），一列全是重复内容就是纯噪声。
+> **动手前必须说清的一件事**：这套原型的筛选**不会真的筛行** —— `applyFilter()` 只做「给按钮加 active、关弹层、点亮 ×、清空选中」四件事，`episodes` 一行都没动。所以这次加的 User 面板与现有四个一样是**装饰性**的；用户确认接受这点（要真筛是另一件大得多的事：得让 `buildRows()` 按筛选状态过滤，还得顺带把 Status / Season / Media Type / Published 一起做成真的，否则只有 User 能筛会很怪，并会牵到选中条批量与 N selected）。
+> 落地：① 三个列表的 **User 列**去掉（3 个表头、3 条 `colspan`、行模板 `rowStart`、Episodes 3 的 demo 行），`colspan` 由 6/7/6 变 **5/6/5**；② 三个筛选弹层各加一颗 **User 导航项 + `#fp-user` 面板**（`All Users` / `Creator E` / `Podcast Team`，沿用 Season 那套「All 与子项互斥」写法）；③ **把 `fp-user` 接进三处 JS** —— `updateNavDots()` 的面板清单（**顺序必须与导航项的 DOM 顺序一致，它是按下标取 navItem 的**）、它的 dirty 判定分支、`clearCurrentPanel(el)` 的重置分支、`resetFilter()` 的清单 —— 少接任何一处，这个面板要么没有 dirty 点、要么 Reset / Reset all 清不掉它。
+> **已知**：筛选弹层在三个列表页里**各有一份副本**，所以这是「一个面板改三遍」；这三个副本的对应片段逐字相同，用 replace_all 一次改完。
+> **校验**：把真实的 `buildRows()` 配桩 DOM 跑三个列表，每行 `<td>` 数为 **5 / 6 / 5**、与表头 `<th>` 数一致，并逐格打印确认第 3 格已是 When、User 已无；`colspan` 5/6/5；`id="fp-user"` 与 `switchFilterPanel('user',this)` 各 3 处、五个导航项的顺序 status→media→season→published→user 三个弹层一致；`Creator E` / `Podcast Team` 现在**只出现在筛选面板里**（行模板中已无）；整段内联脚本过 node --check。文首版本号 → **v2.98**。
+>
+> **2026-10-09（v2.97）：Status 列合并进 When 列。** 用户：「episode 列表中的 status 这一列，能不能合并到 When 里面呢？如果是 published 则显示发布时间，如果是 future 则显示 future 加时间，如果是 draft / AI Processing / AI finished / AI failed 则直接显示这些词」。判断是**赞成**，而且代码本身就站在这一边：`shareEpisode` 里那句 `var date = isPublished ? (ep.when || '--/--/----') : '--/--/----'` 说明 **`ep.when` 一直是被当「发布时间」用的、只在已发布时才有意义** —— 反倒是列表给 Draft / AI Processing 也照着一个日期显示，**列表和 Share 页本来就自相矛盾**，这次一并统一。另外核过三件事：这套原型**没有列排序**（grep sortColumn / sortBy 之类无结果），所以不存在「合并后按哪列排」的问题；**也没有任何按 `<td>` 下标取值的代码**（`cells[]` / `children[]` / `nth-child` 全无），删一列不会带崩别处；「Published + Dec 16, 2025」今天是把同一句话说两遍，而一屏里大多是已发布、一列同款绿徽标本来就不携带信息。
+> 落地：`rowStart` 里那个状态 `<td>` 删掉，三个列表变体（Episodes / Episodes (apple) / Episodes (free plan) 共用同一份行模板）里的 When 格改由一个函数 `epWhenCell(ep)` 生成 —— **Published** 返回 `ep.when`；**Future** 返回 **Future 徽标 + 日期**；**其余四种只返回彩色徽标**。**五种非 Published 状态全部保留原有徽标色**（Draft 灰 / Future 蓝 / AI Processing 琥珀 / AI Finished 蓝 / AI Failed 红），所以「一眼扫出异常」的能力没丢，只有已发布那一片安静下来。
+> 连带改的：三个表头去掉 `<th>Status</th>`、三条选中条 `alt-header` 的 `colspan` 各减一（7/8/7 → 6/7/6）、Episodes 3 那条 demo 行也去掉状态格。
+> **已知代价（用户明确选择接受）**：这一列表头**仍叫 When**。合并后列里会出现 `AI Failed` 这类状态词，表头与内容不再严格对应。
+> **校验**：把真实的 `buildRows()`（连同 `badgeClass` / `epWhenCell` / `epTypeLabel` / `isAppleSubscriptionType`）抽出来配桩 DOM 真跑，用覆盖全部六种状态的剧集渲染三个列表 —— 每行 `<td>` 数与表头 `<th>` 数一致（6 / 7 / 6），六行 When 格的**实际输出**逐条核对无误；`colspan` 已是 6 / 7 / 6；整段内联脚本过 node --check。文首版本号 → **v2.97**。
+>
+> **2026-10-09（v2.96）：Type 列里 Apple 订阅类型的徽标加区分色（Public 保持中性灰）。** 用户问「如果是 apple 类型的 episode，是不是 type 就写 Apple，鼠标移上去再显示具体类型，你觉得哪种好？」—— 判断是**不建议改成 Apple + hover**，四条理由：① hover 在表格里是「一次看一行」，而列表的价值是**扫**和**比**；② 信息**净减少** —— 具体类型本身就包含「它是 Apple 剧集」这层意思，换成 Apple 等于把最该看的藏起来；③ **hover 出来的东西截不到图** —— 这套原型要拿去评审、贴进文档，tooltip 在静态图里永远不出现；④ 整页就是讲 Apple 订阅，「Apple」这个词几乎不携带信息。但**用户直觉指向的病根是对的**：`.badge-type` 今天所有值共用同一个中性灰徽标，而紧邻的 Status 列是**按状态上色**的 —— 这一列确实没有任何视觉线索能分出两类。所以用户选了「**具体类型 + 视觉标记**」。
+> 落地：**只加了一个颜色** —— 新增 `.badge-type.is-apple`（`#f5f3ff` 底 / `#6d28d9` 字），Type 列那格按 `isAppleSubscriptionType(ep.type)` 决定挂不挂 `is-apple`；**文字仍是具体类型**。**紫色是刻意的**：六个 Status 徽标已经占掉绿/灰/蓝/琥珀/红，紫色与它们都不撞，也呼应 Apple Podcasts Subscriptions 的配色。顺带把「是不是 Apple 类型」收成一个函数 `isAppleSubscriptionType(type)`，`syncAppleSubscriptionFromType(type)` 里那句内联判断也改用它（同一判断原来在两处各写了一遍）。
+> **校验**：把真实的两个函数抠出来在 Node 里跑过样本里出现过的全部 type 值 —— `Free` → Public / 中性灰，四个 Apple 类型 → 各自文字 / `is-apple`，空值 → Public；CSS 里 `.badge-type.is-apple` 排在 `.badge-type` 之后（同优先级后者胜）；整段内联脚本过 node --check。文首版本号 → **v2.96**。
+>
 > **2026-10-09（v2.95）：列表 Type 列里非 Apple 剧集改显示 Public（数据仍存 Free）。** 用户问「如果 episode 不是 apple 的类型，那么在 episode list 列表中 type 命名为 public 是不是更合理？」判断是**更合理**，理由：① 这套界面里 **Free 已经被 Free plan（定价计划）占用**（还专门有一个 Episodes (free plan) 演示页），同一个词再指「剧集类型」会撞车；② 另外四个值说的是「谁能听 / 什么时候能听」（`Subscriber-only` / `Early access` / `Archive access`）或「订阅者多拿到什么」（`Ad-free`），只有 `Free` 说的是钱，在一列叫 Type 的东西里是异类；③ v2.91 之后下拉里已经没有 Free 这个选项了，列表是唯一还在露 Free 的地方，改成 Public 正好和「不勾 = 不是订阅剧集」对齐。落地：**只改显示** —— 新增 `epTypeLabel(type)`（`!type || type === 'Free'` → `'Public'`，其余原样），Type 列那一格由渲染 `ep.type` 改成渲染 `epTypeLabel(ep.type)`；**`ep.type` 数据值不动**，`type !== 'Free'` 那些判断、26 条样本数据、AI 行的 type 全没碰。**已知偏离**：Podbean 线上那个「Episode will be」下拉里就是 Free，这里是有意偏离。
 > **校验**：把真实的 `epTypeLabel` 抠出来在 Node 里跑过样本里出现过的全部 type 值 —— `Free` → `Public`、另外四个原样；整段内联 `<script>` 过 node --check；`epTypeLabel` 全文只有「定义 + Type 列」两处；没有别处再渲染 `ep.type`。文首版本号 → **v2.95**。
 >
@@ -1098,4 +1160,6 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 | 批量设置季数/标签 | 勾选多行 → **Actions** → Set Season / Set Tags（标签相关入口需已安装 Tags app） |
 | 分享单集 | 行尾 **「3个点」** → Share & Embed → Share / Embed Player |
 | 设置 AI 参数 | New Episode → AI Enhance 区 → 对应 **Settings** 链接 |
+| 查看某集的数据 | 列表 **Downloads** 那格的数字 → **Statistics → Episodes**（2026-10-09 v2.102） |
+| 按发布时间排序 | 列表 **When** 表头 → 点击切换 升序 / 降序（2026-10-09 v2.103） |
 | 查看 Free plan 剧集删除倒计时 | 侧边栏 **Episodes (free plan)** → 顶部风险摘要 / 标题后倒计时 |
