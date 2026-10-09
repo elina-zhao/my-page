@@ -1101,6 +1101,10 @@
     font-size: 16px; font-weight: 600; color: #1e293b;
     margin-bottom: 6px;
   }
+  /* 2026-10-09（v2.105）：必填标记 —— 只给**真正拦发布**的两项（Title / Media File）挂一个 `*`，
+     其余字段一律无标记 = 可选。
+     **不采用「给可选块挂 (Optional)」**：那样会反过来暗示其余是必填，而那是假的（2026-09-30 试过、当天即撤）。 */
+  .ed-v2-req { color:#dc2626; margin-left:3px; font-weight:600; }
   /* 输入框 / 下拉：静默态（2026-10-08「弹框里框太多」的优化）
      平时只有浅灰底、不画描边 —— hover 才浮出一条很浅的线，focus 才变成绿色描边 + 白底 + 光晕。
      这样一屏里十来个输入控件在「没在看它」时几乎不占视觉重量。
@@ -3136,7 +3140,7 @@
             </div>
 
             <div class="ed-v2-field">
-              <div class="ed-v2-label">Media File</div>
+              <div class="ed-v2-label">Media File<span class="ed-v2-req" title="Required" aria-label="required">*</span></div>
               <!-- 2026-10-09（v2.89）：**必须给 id** —— 页面上有两个 .ed-v2-file-row（另一个是
                    仅 Ad-free 时显示的 File for Subscriber，且排在它前面），按类取会取到那个隐藏的
                    （红框加在看不见的地方、点了像没反应）。 -->
@@ -3155,7 +3159,7 @@
               <!-- 2026-10-09（v2.86 内再一轮）：More 由「标签右侧」挪进**输入框内部右端**（用户要求，
                    与 Media File 行里 Preview 的位置语言一致）。绝对定位钉在输入框右端，
                    输入框加 padding-right 给它让位，所以输入框的静默态一律不动。 -->
-              <div class="ed-v2-label">Title</div>
+              <div class="ed-v2-label">Title<span class="ed-v2-req" title="Required" aria-label="required">*</span></div>
               <div class="ed-v2-title-suggest">
                 <input type="text" class="ed-v2-input" id="v2EpisodeTitle" placeholder="Enter episode title" value="" oninput="onPublishFormChanged()">
                 <span class="ed-v2-ai-more" id="v2TitleMore" onclick="toggleTitleSuggestions(event)">More</span>
