@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Episode Filter 方案对照 — 现状 vs 你的方案</title>
+<style>
+  :root{
+    --primary:#1a9a6c; --text:#1e293b; --text-secondary:#64748b; --text-tertiary:#94a3b8;
+    --border:#e2e8f0; --amber:#b45309;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;padding:24px 26px 44px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:#f1f5f9;color:var(--text);-webkit-font-smoothing:antialiased;
+  }
+  h1{font-size:19px;font-weight:700;margin:0 0 4px;}
+  .sub{font-size:13px;color:var(--text-secondary);margin:0 0 20px;line-height:1.6;max-width:1100px;}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+  .card{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .card-head{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+  .card-head h2{font-size:14.5px;font-weight:700;margin:0;}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:5px;background:#f1f5f9;color:var(--text-secondary);}
+  .tag.now{background:#eef2f7;color:#475569;}
+  .tag.prop{background:#e6f6ef;color:var(--primary);}
+  .card-body{padding:16px 18px 18px;}
+
+  .form{width:398px;max-width:100%;}
+
+  /* ---- real row styles (mirrors index.html) ---- */
+  .ep-row-item{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:12px 0;}
+  .ep-row-label{font-size:15px;font-weight:500;color:var(--text);flex-shrink:0;min-width:100px;padding-top:2px;}
+  .ep-row-control{flex:1;min-width:0;}
+  .ep-row-hint{font-size:12px;line-height:1.4;color:var(--text-tertiary);margin-top:6px;}
+  input[type="date"],input[type="number"],select.ctl{
+    width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;
+    font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;
+  }
+  select.ctl{
+    cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;
+  }
+  .ep-filter-option{margin:2px 0 6px;padding-left:16px;border-left:2px solid var(--border);}
+  .ep-filter-option .ep-row-item{padding:9px 0;}
+  .ep-filter-option .ep-row-label{font-size:14px;color:var(--text-secondary);min-width:92px;}
+  .hidden{display:none !important;}
+
+  /* tag picker */
+  .tagpick{display:flex;flex-direction:column;gap:8px;padding:8px 0 4px;}
+  .tagpick label{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text);cursor:pointer;}
+  .tagpick input{accent-color:var(--primary);width:15px;height:15px;margin:0;cursor:pointer;flex-shrink:0;}
+  .tagpick .cnt{color:var(--text-tertiary);font-size:11.5px;font-variant-numeric:tabular-nums;}
+
+  /* ---- result ---- */
+  .result-label{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-tertiary);margin:18px 0 9px;padding-top:14px;border-top:1px dashed var(--border);}
+  .list{display:flex;flex-wrap:wrap;gap:6px;}
+  .ep{
+    display:flex;flex-direction:column;gap:3px;
+    border:1px solid var(--border);border-radius:7px;padding:6px 9px;
+    font-size:12px;background:#fff;max-width:296px;
+  }
+  .ep .top{display:flex;align-items:center;gap:6px;min-width:0;}
+  .ep .n{font-weight:700;color:var(--text-tertiary);font-variant-numeric:tabular-nums;}
+  .ep .t{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .ep .s{font-size:10px;color:var(--text-tertiary);background:#f8fafc;border-radius:4px;padding:1px 5px;flex-shrink:0;}
+  .ep .tg{font-size:10.5px;color:var(--text-tertiary);}
+  .ep.first{border-color:#cbd5e1;background:#f8fafc;}
+  .count-note{font-size:12px;color:var(--text-tertiary);margin-top:8px;}
+  .warn{font-size:12px;color:var(--amber);margin-top:8px;line-height:1.5;}
+
+  .try{margin-top:20px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#78350f;line-height:1.7;}
+  .try b{font-weight:700;}
+
+  .verdict{margin-top:20px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .verdict h3{font-size:13px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-tertiary);}
+  .table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .table th,.table td{text-align:left;padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top;}
+  .table th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-tertiary);font-weight:700;}
+  .table td:first-child{color:var(--text-secondary);white-space:nowrap;}
+  .ok{color:var(--primary);font-weight:600;}
+  .no{color:#c0392b;font-weight:600;}
+</style>
+</head>
+<body>
+
+  <h1>Episode Filter / No. of Episodes —— 现状 vs 你的方案</h1>
+  <p class="sub">左右两栏都可交互，改任意一侧都会实时重算下方的剧集列表。演示数据：12 集（num 1 最旧 / 12 最新；Season 1 = 7 集，Season 2 = 3 集），并已给每集打上 <b>Technology / Business / Health / Science / Culture</b> 标签（num 1 故意不打标签）。剧集卡片第二行就是它的标签。</p>
+
+  <div class="cols">
+
+    <!-- ============ 现状 ============ -->
+    <div class="card">
+      <div class="card-head"><h2>现状</h2><span class="tag now">当前实现</span></div>
+      <div class="card-body">
+        <div class="form">
+          <div class="ep-row-item">
+            <div class="ep-row-label">Display Order</div>
+            <div class="ep-row-control"><select class="ctl" id="c-order"><option value="episodic">Episodic (From New to Old)</option><option value="serial">Serial (From Old to New)</option></select></div>
+          </div>
+          <div class="ep-row-item">
+            <div class="ep-row-label">No. of Episodes</div>
+            <div class="ep-row-control">
+              <input type="number" id="c-n" value="3" min="1" max="300">
+            </div>
+          </div>
+          <div class="ep-row-item">
+            <div class="ep-row-label">Episode Filter</div>
+            <div class="ep-row-control"><select class="ctl" id="c-filter">
+              <option value="none">All</option>
+              <option value="pt">Publish Time</option>
+              <option value="season">Season NO.</option>
+              <option value="tags">Tags</option>
+            </select></div>
+          </div>
+          <div class="ep-filter-option hidden" id="c-pt">
+            <div class="ep-row-item"><div class="ep-row-label">Start Date</div><div class="ep-row-control"><input type="date" value="2026-05-01"></div></div>
+            <div class="ep-row-item"><div class="ep-row-label">End Date</div><div class="ep-row-control"><input type="date" value="2026-06-30"></div></div>
+          </div>
+          <div class="ep-filter-option hidden" id="c-season">
+            <div class="ep-row-item"><div class="ep-row-label">Season</div><div class="ep-row-control"><select class="ctl" id="c-seasonval"><option value="all">All Seasons</option><option value="1">Season 1</option><option value="2">Season 2</option></select></div></div>
+          </div>
+          <div class="ep-filter-option hidden" id="c-tags">
+            <div class="tagpick" id="c-tagpick"></div>
+          </div>
+        </div>
+
+        <div class="result-label">实际结果</div>
+        <div class="list" id="c-list"></div>
+        <div class="count-note" id="c-note"></div>
+      </div>
+    </div>
+
+    <!-- ============ 你的方案 ============ -->
+    <div class="card">
+      <div class="card-head"><h2>你的方案</h2><span class="tag prop">待评估</span></div>
+      <div class="card-body">
+        <div class="form">
+          <div class="ep-row-item">
+            <div class="ep-row-label">Episode Filter</div>
+            <div class="ep-row-control"><select class="ctl" id="p-filter">
+              <option value="latest">Latest N Episodes</option>
+              <option value="earliest">Earliest N Episodes</option>
+              <option value="pt">Publish Time</option>
+              <option value="season">Season NO.</option>
+              <option value="tags">Tags</option>
+            </select></div>
+          </div>
+          <div class="ep-filter-option" id="p-n-wrap">
+            <div class="ep-row-item"><div class="ep-row-label">No. of Episodes</div><div class="ep-row-control"><input type="number" id="p-n" value="3" min="1" max="300"></div></div>
+          </div>
+          <div class="ep-filter-option hidden" id="p-pt">
+            <div class="ep-row-item"><div class="ep-row-label">Start Date</div><div class="ep-row-control"><input type="date" value="2026-05-01"></div></div>
+            <div class="ep-row-item"><div class="ep-row-label">End Date</div><div class="ep-row-control"><input type="date" value="2026-06-30"></div></div>
+          </div>
+          <div class="ep-filter-option hidden" id="p-season">
+            <div class="ep-row-item"><div class="ep-row-label">Season</div><div class="ep-row-control"><select class="ctl" id="p-seasonval"><option value="all">All Seasons</option><option value="1">Season 1</option><option value="2">Season 2</option></select></div></div>
+          </div>
+          <div class="ep-filter-option hidden" id="p-tags">
+            <div class="tagpick" id="p-tagpick"></div>
+          </div>
+          <div class="ep-row-item">
+            <div class="ep-row-label">Display Order</div>
+            <div class="ep-row-control"><select class="ctl" id="p-order"><option value="episodic">Episodic (From New to Old)</option><option value="serial">Serial (From Old to New)</option></select></div>
+          </div>
+        </div>
+
+        <div class="result-label">实际结果</div>
+        <div class="list" id="p-list"></div>
+        <div class="count-note" id="p-note"></div>
+        <div class="warn" id="p-warn"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="try">
+    <b>建议试两下：</b>
+    ① 把两边的 Episode Filter 都切到 <b>Tags</b>，勾选 Technology + Health —— 现状那边还能用 No. of Episodes 再截短，你的方案那边数量框会消失，命中的剧集全部显示。<br>
+    ② 再切到 <b>Season NO.</b> → Season 1，同样能看出"能不能再截短"的差别。<br>
+    ③ 顺便试试点满所有标签，或只勾一个标签：现状那边因为数量框固定在 3，永远只会给你 3 集，标签筛出多少你都看不出来。
+  </div>
+
+  <div class="verdict">
+    <h3>逐项对比</h3>
+    <table class="table">
+      <tr><th>对比项</th><th>现状</th><th>你的方案</th></tr>
+      <tr><td>「全部」与「10 条」并存的矛盾</td><td class="no">All + 10 并存，只有一行说明兜着</td><td class="ok">结构性消失</td></tr>
+      <tr><td>截取方向（取最新还是最旧）</td><td class="no">藏在 Display Order 里</td><td class="ok">写在选项名里</td></tr>
+      <tr><td>Serial「从第 1 集开始」能力</td><td>有，但是隐含的</td><td class="ok">有，且名字直白</td></tr>
+      <tr><td>筛选 + 数量 组合（标签/Tags 取 5 条）</td><td class="ok">支持</td><td class="no">不支持</td></tr>
+      <tr><td>控件数量</td><td>3 个顶层控件</td><td class="ok">2 个顶层控件</td></tr>
+      <tr><td>下拉里选项的性质</td><td>全是筛选条件</td><td class="no">"取几条"和"按什么筛"混在一起</td></tr>
+      <tr><td>与真实 Podbean 一致性</td><td class="ok">两个设置分开，与线上一致</td><td class="no">合并成一个，偏离线上</td></tr>
+    </table>
+  </div>
+
+<script>
+  var EPS = [
+    {num:12,title:'The Future of AI in Everyday Life',season:1,tags:['Technology','Science']},
+    {num:11,title:'Interview with Startup Founders',season:1,tags:['Business']},
+    {num:10,title:'Understanding Blockchain Technology',season:1,tags:['Technology','Business']},
+    {num:9, title:'Healthy Living Tips for Busy Professionals',season:1,tags:['Health']},
+    {num:8, title:'Deep Dive: Climate Change Solutions',season:1,tags:['Science','Culture']},
+    {num:7, title:'Remote Work Best Practices',season:1,tags:['Business','Culture']},
+    {num:6, title:'Exploring Space: The Next Frontier',season:1,tags:['Science']},
+    {num:5, title:'Mental Health Awareness Special',season:2,tags:['Health','Culture']},
+    {num:4, title:'Cryptocurrency Market Trends',season:2,tags:['Technology','Business']},
+    {num:3, title:'The Art of Storytelling in Podcasting',season:2,tags:['Culture']},
+    {num:2, title:'Behind the Scenes: Episode Production',season:0,tags:['Business']},
+    {num:1, title:'Welcome to Our Podcast',season:0,tags:[]}
+  ];
+  var TAGS = ['Technology','Business','Health','Science','Culture'];
+  var byDesc = function(a,b){ return b.num - a.num; };
+  var byAsc  = function(a,b){ return a.num - b.num; };
+  var $ = function(id){ return document.getElementById(id); };
+  function show(el, on){ el.classList.toggle('hidden', !on); }
+  function orderList(list, order){ list.sort(order === 'serial' ? byAsc : byDesc); return list; }
+  function take(list, n){ return list.slice(0, Math.max(1, n)); }
+
+  function tagCount(t){ var c = 0; EPS.forEach(function(e){ if (e.tags.indexOf(t) >= 0) c++; }); return c; }
+  function buildTagPick(el, prefix){
+    el.innerHTML = '';
+    TAGS.forEach(function(t, i){
+      var l = document.createElement('label');
+      l.innerHTML = '<input type="checkbox" id="' + prefix + '-tag-' + i + '"' + (t === 'Technology' ? ' checked' : '') + '>' +
+                    '<span>' + t + '</span><span class="cnt">' + tagCount(t) + ' 集</span>';
+      el.appendChild(l);
+      l.querySelector('input').addEventListener('change', prefix === 'c' ? renderCurrent : renderProposal);
+    });
+  }
+  function selectedTags(prefix){
+    return TAGS.filter(function(t, i){ return $('' + prefix + '-tag-' + i).checked; });
+  }
+  function byTags(sel){
+    if (!sel.length) return [];
+    return EPS.filter(function(e){
+      return e.tags.some(function(t){ return sel.indexOf(t) >= 0; });
+    });
+  }
+
+  function renderList(el, list){
+    el.innerHTML = '';
+    if (!list.length){ el.innerHTML = '<span class="count-note">（无结果 —— 请至少勾选一个标签）</span>'; return; }
+    list.forEach(function(e, i){
+      var d = document.createElement('div');
+      d.className = 'ep' + (i === 0 ? ' first' : '');
+      d.innerHTML =
+        '<span class="top"><span class="n">' + e.num + '</span>' +
+        '<span class="t">' + e.title + '</span>' +
+        '<span class="s">S' + (e.season || '–') + '</span></span>' +
+        '<span class="tg">' + (e.tags.length ? e.tags.join(' · ') : '无标签') + '</span>';
+      el.appendChild(d);
+    });
+  }
+
+  // ---------- 现状 ----------
+  function renderCurrent(){
+    var f = $('c-filter').value, o = $('c-order').value, n = parseInt($('c-n').value,10) || 1;
+    show($('c-pt'), f === 'pt');
+    show($('c-season'), f === 'season');
+    show($('c-tags'), f === 'tags');
+
+    var list = EPS.slice();
+    if (f === 'pt') list = list.filter(function(e){ return e.num >= 6 && e.num <= 12; });
+    else if (f === 'season'){ var s = $('c-seasonval').value; if (s !== 'all') list = list.filter(function(e){ return e.season === parseInt(s,10); }); }
+    else if (f === 'tags') list = byTags(selectedTags('c'));
+    // 'none' → 不过滤
+
+    list = orderList(list, o);
+    var total = list.length;
+    list = take(list, n);
+
+    renderList($('c-list'), list);
+    var label = f === 'none' ? '全部 ' : (f === 'pt' ? '该时间段 ' : (f === 'season' ? '该季 ' : '所选标签 '));
+    $('c-note').textContent = label + total + ' 集 → 显示 ' + list.length + ' 集（' +
+      (o === 'serial' ? 'Serial：取最旧的 ' + n + ' 条' : 'Episodic：取最新的 ' + n + ' 条') + '）';
+  }
+
+  // ---------- 你的方案 ----------
+  function renderProposal(){
+    var f = $('p-filter').value, o = $('p-order').value, n = parseInt($('p-n').value,10) || 1;
+    show($('p-n-wrap'), f === 'latest' || f === 'earliest');
+    show($('p-pt'), f === 'pt');
+    show($('p-season'), f === 'season');
+    show($('p-tags'), f === 'tags');
+
+    var list, note, warn = '';
+    if (f === 'latest' || f === 'earliest'){
+      var base = EPS.slice().sort(f === 'latest' ? byDesc : byAsc);
+      list = orderList(take(base, n), o);
+      note = '取' + (f === 'latest' ? '最新' : '最旧') + ' ' + n + ' 集 → 显示 ' + list.length + ' 集';
+    } else if (f === 'pt'){
+      list = orderList(EPS.filter(function(e){ return e.num >= 6 && e.num <= 12; }), o);
+      note = '该时间段共 ' + list.length + ' 集，全部显示';
+      warn = '数量框在此分支不存在 —— 无法把时间段再截短。';
+    } else if (f === 'season'){
+      var s = $('p-seasonval').value;
+      list = orderList(EPS.filter(function(e){ return s === 'all' || e.season === parseInt(s,10); }), o);
+      note = '该季共 ' + list.length + ' 集，全部显示';
+      warn = '数量框在此分支不存在 —— 无法把一季再截短。';
+    } else {
+      var sel = selectedTags('p');
+      list = orderList(byTags(sel), o);
+      note = sel.length ? ('所选标签（' + sel.join(' + ') + '）共 ' + list.length + ' 集，全部显示') : '未勾选标签';
+      warn = '数量框在此分支不存在 —— 无法把标签结果再截短。';
+    }
+    renderList($('p-list'), list);
+    $('p-note').textContent = note;
+    $('p-warn').textContent = warn;
+  }
+
+  ['c-order','c-filter','c-n','c-seasonval'].forEach(function(id){
+    $(id).addEventListener('change', renderCurrent); $(id).addEventListener('input', renderCurrent);
+  });
+  ['p-order','p-filter','p-n','p-seasonval'].forEach(function(id){
+    $(id).addEventListener('change', renderProposal); $(id).addEventListener('input', renderProposal);
+  });
+  buildTagPick($('c-tagpick'), 'c');
+  buildTagPick($('p-tagpick'), 'p');
+  renderCurrent(); renderProposal();
+</script>
+</body>
+</html>
