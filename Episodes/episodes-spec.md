@@ -1,7 +1,7 @@
 # Episodes 菜单功能说明文档
 
 > 适用范围：`index.html`（Podbean Admin — Episodes）
-> 文档版本：v2.109
+> 文档版本：v2.110
 > 说明：本文档为**功能 mockup**，逐页、逐控件描述 Episodes 菜单下的功能与交互逻辑。UI 文案保留英文原样。具体视觉样式由设计师另行确定，不在本文档范围内。
 
 ---
@@ -124,7 +124,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
   - **Remove All Seasons** / **Remove All Tags**（普通色）→ 打开对应的**确认弹窗**（与 Delete 确认弹窗同套路）
   - **Delete Episodes**（危险操作，红色显示）→ 打开 **Delete** 确认弹窗；与前一组操作以一条分隔线隔开
 - **Tags app 依赖**：**Set Tags** 与 **Remove All Tags** 两个入口仅对**已安装 Tags app** 的用户显示；未安装的用户，Actions 菜单中不出现这两项（菜单仅剩 Set Season / Remove All Seasons / Delete Episodes）。
-- **Set Season** / **Set Tags** / **Delete Episodes** / **Remove All Seasons** / **Remove All Tags** 弹出的对话框均为**模态弹窗**，与 Delete 确认弹窗同一套样式（居中卡片、遮罩层、底部操作按钮）；打开弹窗时自动收起 Actions 菜单。
+- **Set Season** / **Set Tags** / **Delete Episodes** / **Remove All Seasons** / **Remove All Tags** 弹出的对话框均为**模态弹窗** —— 遮罩挡住整页、必须先回应才能继续操作（与 Actions 那种「点外面就收起」的纯菜单不是一回事），与 Delete 确认弹窗同一套样式（居中卡片、遮罩层、底部操作按钮）；打开弹窗时自动收起 Actions 菜单；**点遮罩空白处可关闭**，等同取消（2026-10-12 v2.110 起五个一并如此）。
 
 **Delete 确认弹窗：**
 
@@ -1251,3 +1251,6 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 > **几条刻意的判断**：① **Media Type 两个都不勾 ＝ 空结果**（这个面板没有 All 项，两个都勾才等于不筛；都不勾就是「一个也不要」）；② **日期区间只认 When 列里看得见日期的行**（Published / Future）—— 与 When 列「按看得见的东西排序」是同一条原则，Draft 与四种 AI 状态的 `when` 是占位、不拿来当发布日期；③ **「To」含当天**（按当天 0 点 + 1 天比较）；④ **筛选与 Free plan 页自身的限制叠加**，不是覆盖。
 > **校验**：两个脚本 —— `outputs/check_v2109.js`（48 条：接线点 ＋ 把真实数据与真实引擎抠出来跑单面板 / 组合 / 日期区间，逐项对条数）与 `outputs/check_v2109_render.js`（20 条：抠 `buildRows` 配桩 DOM 跑真实渲染，数行数 / colspan / 分页文案，并确认行上的 id 仍是**数据里的原始下标**、Video 条件筛出来的 6 行标题与数据对得上）。v2.108 那套 21 条回归重跑通过（**其中两处切分边界得跟着 `applyFilter()` → `applyFilter(btn)` 一起改**）。**踩坑**：三次断言写错全出在我自己对数据的口算上 —— Season 传了剥离后的数字而不是面板上的文案（`Season 1`）、`Audio + Podcast Team + Published` 少算一行（实际 5 不是 4）、把空态行也当成数据行来数（空态本身也是一个 `<tr>`）。**结论还是那条：别口算，去数。**
 > **同日追加**：按用户要求，§3.2 里那一小节的**领句、那张「按什么筛 / 匹配规则」表、以及前三条 bullet（取交集 / 全局 / 与 Free plan 叠加）已删除**，只留下「筛完的收尾」与「演示数据能筛出什么」两条；Apply 那条里的「规则见上表」指向也跟着去掉了。**随后又把「筛完的收尾」里关于「分页文案改成真实条数、收起那两颗假分页标签、free plan 页演示行不出现」的那几句删掉**，该条现在只剩「0 条时表格里显示一行 `No episodes match the current filters.`」。**再之后连「（跨整行）」与整条「演示数据能筛出什么」也删掉了** —— §3.2 现在只剩五个子面板的选项表（含默认勾选那一列）、这一条说明、以及交互规则。**功能一行没动。**
+
+> **版本 v2.110**（2026-10-12）：**三个弹窗补上「点遮罩关闭」**。用户看 §3.2 那句「…均为**模态弹窗**」时问「模态弹窗是什么意思」，顺手核查时发现这五个弹窗的遮罩行为**不一致** —— `Set Season` / `Set Tags` 的 markup 上挂着 `onclick="if(event.target===this)closeXxxModal()"`（点遮罩能关），而 `Delete Episodes` / `Remove All Seasons` / `Remove All Tags` **点了没反应**，看起来是漏写的、不是刻意决定。用户要求后三个也改成点遮罩关闭，遂统一。三处各加一个行内 `onclick`（调用各自的 `closeDeleteConfirmModal()` / `closeRemoveSeasonModal()` / `closeRemoveTagsModal()`）。**安全性核对过**：三个关闭函数都只做 `classList.remove('show')`，不碰别的弹窗；删除与移除动作的确认路径是「点确认时才重新读勾选行」（`confirmDeleteSelected()` / `confirmRemoveSeason()` / `confirmRemoveTags()`），所以遮罩关闭（＝取消）不会留下脏状态、也不会误删。**顺带**在那条 bullet 里把「模态弹窗」的含义补了一句（遮罩挡整页、必须先回应；与纯菜单对照），免得下一个人再问。**留档（本次刻意没做）**：这五个弹窗仍**没有** `role="dialog"` / `aria-modal="true"`、没有焦点锁定、也没接 `Esc`（整个文件里 Esc 只绑在行菜单与音频预览弹框上）—— 用户这次只要遮罩行为，键盘与无障碍那部分要另开一轮。文首版本号 → **v2.110**。
+> **校验**：`outputs/check_v2110.js`（26 条全过）—— 五个弹窗各自的遮罩 onclick 指向正确的关闭函数、每个关闭函数只关自己那一层、没有「一次关掉全部 overlay」的粗暴写法、三个确认按钮仍在、以及**断言本次没有顺手加 Esc**（范围控制）。

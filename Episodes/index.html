@@ -3780,7 +3780,8 @@
 </div>
 
 <!-- ═══════════ Delete Episodes Confirm Modal ═══════════ -->
-<div class="confirm-overlay" id="deleteConfirmModal">
+<!-- 2026-10-12（v2.110）：点遮罩关闭补到这三个破坏性/批量弹窗上，跟 Set Season / Set Tags 对齐 -->
+<div class="confirm-overlay" id="deleteConfirmModal" onclick="if(event.target===this)closeDeleteConfirmModal()">
   <div class="confirm-dialog" style="text-align:left;">
     <div class="confirm-title" style="text-align:center;" id="deleteConfirmTitle">Delete selected episode</div>
     <div class="confirm-desc" style="text-align:center;">Are you sure you want to delete the selected episode(s)? This action cannot be undone and will also permanently delete the attached media files.</div>
@@ -3837,7 +3838,7 @@
 </div>
 
 <!-- ═══════════ Remove All Seasons Confirm Modal ═══════════ -->
-<div class="confirm-overlay" id="removeSeasonModal">
+<div class="confirm-overlay" id="removeSeasonModal" onclick="if(event.target===this)closeRemoveSeasonModal()">
   <div class="confirm-dialog" style="text-align:left;">
     <div class="confirm-title" style="text-align:center;">Remove All Seasons</div>
     <div class="confirm-desc" style="text-align:center;" id="removeSeasonDesc">Are you sure you want to remove the season number from the selected episode(s)?</div>
@@ -3849,7 +3850,7 @@
 </div>
 
 <!-- ═══════════ Remove All Tags Confirm Modal ═══════════ -->
-<div class="confirm-overlay" id="removeTagsModal">
+<div class="confirm-overlay" id="removeTagsModal" onclick="if(event.target===this)closeRemoveTagsModal()">
   <div class="confirm-dialog" style="text-align:left;">
     <div class="confirm-title" style="text-align:center;">Remove All Tags</div>
     <div class="confirm-desc" style="text-align:center;" id="removeTagsDesc">Are you sure you want to remove all tags from the selected episode(s)?</div>
