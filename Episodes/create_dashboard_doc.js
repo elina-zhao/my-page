@@ -821,6 +821,6 @@ const doc = new Document({
 });
 
 Packer.toBuffer(doc).then(buffer => {
-  fs.writeFileSync("/Users/zgy/Code/Episodes/Podcast_Dashboard_功能说明文档.docx", buffer);
+  fs.writeFileSync("/Users/zgy/Code/Episodes/podcast-dashboard-spec.docx", buffer);
   console.log("Document created successfully!");
 });

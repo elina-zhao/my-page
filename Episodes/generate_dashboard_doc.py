@@ -465,6 +465,6 @@ run2.font.name = 'Microsoft YaHei'
 run2.element.rPr.rFonts.set(qn('w:eastAsia'), 'Microsoft YaHei')
 
 # ── Save ──
-output_path = "/sessions/magical-peaceful-mendel/mnt/Episodes/Podcast_Dashboard_功能说明文档.docx"
+output_path = "/Users/zgy/Code/Episodes/podcast-dashboard-spec.docx"
 doc.save(output_path)
 print(f"Document saved to: {output_path}")
