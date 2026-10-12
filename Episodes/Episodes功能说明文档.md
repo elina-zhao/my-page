@@ -101,19 +101,6 @@
 | **Published（发布日期）** | 日期范围 | From / To 两个日期输入框 | **两个都留空**（不按日期筛） |
 | **User（用户）** | 发布者 | All Users + 该账号下的 **author / admin**（演示页为 Creator E、Podcast Team） | **All Users**（两个子项全不勾） |
 
-**筛选是真的会筛行（2026-10-12 v2.109 起）** —— 勾完点 Apply，列表当场只剩符合条件的剧集；此前它只做外观，一行都不动。
-
-| 面板 | 按什么筛 | 匹配规则 |
-|---|---|---|
-| Status | 剧集状态 | 勾中的几个状态取**并集**；勾着 `All Statuses` 就不限制 |
-| Media Type | `mediaType`（Audio / Video） | 两个都勾＝不限制；只勾一个＝只要那一种；**两个都不勾＝一条都不要**（这个面板没有 All 项，空结果是会出现的） |
-| Season | 所属季 | 只留勾中的季；**没有归属季的剧集**（数据里 `season` 为空）不会被任何季选中 |
-| Published | When 列里那个日期 | 日期区间只认 **When 列里看得见日期**的行（**Published / Future**）；Draft 与四种 AI 状态的 `when` 是占位、不当作发布日期，设了区间就一律不出现。`To` **含当天** |
-| User | 发布者 | 只留勾中的发布者 |
-
-- **面板之间取交集**：例如 Status 勾 Published、Media Type 只勾 Video，剩下的就是「已发布且是视频」的那几条。
-- **筛选状态是全局的**：三个列表页共用一套条件（与 When 排序的 `whenSort` 同一套做法），Apply 之后三页一起变。
-- **与 Free plan 页自己的限制叠加**：那一页本来就只显示 Published / Draft，筛选在它之上再收一层 —— 所以在那一页筛 **Future** 会得到 0 条。
 - **筛完的收尾**：0 条时表格里显示一行 **No episodes match the current filters.**（跨整行）；有筛选时分页那句改成真实条数（形如 **Showing 1 to 6 of 6 entries**）并**收起那两颗假的分页标签**；Episodes (free plan) 页最前面那条演示行（**Episode 042 — …**）**不出现** —— 它不对应 `episodes` 里的数据，没法参与筛选。
 - **演示数据能筛出什么**：Status 六种状态都有（Published 11 / Draft 2 / Future 1 / AI Processing 2 / AI Finished 2 / AI Failed 2 条）；Media Type Video 6 条、Audio 14 条；Season 1 有 3 条、Season 2 有 2 条（**Season 3–10 没有数据，正好演示空态**）；User 两个各 10 条；发布日期跨 2025-02 → 2026-06。另外 **Video + Status=Future 是刻意留下的一个空组合**。
 
@@ -124,7 +111,7 @@
 - **上表的「默认勾选」就是弹层刚打开时的状态**，也是 `Reset` 与 `Reset all` 之后回到的状态 —— 侧边导航里那颗 `dirty` 标记以它为「不亮」的基准（偏离默认才点亮）。
 - 老版 AI generator 的 **Pending / Pending Review** 状态在新后台不再适用，已删除，筛选器与剧集数据中均不再出现。
 - 已修改但未应用的筛选项，其导航项会显示 dirty 标记。
-- 点击底部 **Apply** 按钮应用筛选（**Apply 起会真的筛行**，规则见上表），Filter 按钮进入激活状态；应用筛选时会**清空当前选中态**（若有勾选的剧集则取消勾选、收起 Actions 菜单），避免筛选后可见行变化导致选中项被隐藏的困惑。
+- 点击底部 **Apply** 按钮应用筛选（**Apply 起会真的筛行**），Filter 按钮进入激活状态；应用筛选时会**清空当前选中态**（若有勾选的剧集则取消勾选、收起 Actions 菜单），避免筛选后可见行变化导致选中项被隐藏的困惑。
 - **关闭弹层 = 取消（2026-10-12 v2.108）**：点弹层外面、或**再点一次 Filter 按钮**，都会**丢弃还没 Apply 的改动**、回到上次应用的状态（`dirty` 点随之熄灭）。想留下改动只有点 **Apply** 一条路；弹层里那两处 `Reset` 是「回默认」，与这里「回上次应用」不是一回事。
 - **快速清除筛选**：Apply 后 Filter 按钮旁出现 `×` 清除按钮，点击一键将所有筛选重置为默认并关闭筛选弹窗（无需重新打开弹窗），同时 Filter 按钮退出激活状态。
 
@@ -1264,3 +1251,4 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 > **代码层**：新增一组筛选引擎 —— `appliedFilters`（null ＝ 不筛；**全局一份**，三个列表页共用，做法与 `whenSort` 一致）＋ `checkedOptionLabels()` / `firstCheckbox()` / `readFilterConstraints()`（把弹层里的勾选读成条件）/ `filterTime()` / `episodeMatchesFilters()` / `emptyRowHTML()` / `renderListPagination()`。`buildRows()` 在 `order.forEach` 里加一句「不匹配就 return」；三页各自计数，0 条时补一行跨整行的空态；Episodes (free plan) 页那条演示行在有筛选时不出现。三颗 Apply 按钮改成 `applyFilter(this)`，好知道该读哪一份弹层。分页：第 1、2 页原来那句 `Showing 1 to 20 of 26 entries` 是**静态写死的**，现在加了 id，筛选时改成真实条数并收起那两颗假的分页标签（不筛时保持原样，连那个「26」的演示说法一起留着）。
 > **几条刻意的判断**：① **Media Type 两个都不勾 ＝ 空结果**（这个面板没有 All 项，两个都勾才等于不筛；都不勾就是「一个也不要」）；② **日期区间只认 When 列里看得见日期的行**（Published / Future）—— 与 When 列「按看得见的东西排序」是同一条原则，Draft 与四种 AI 状态的 `when` 是占位、不拿来当发布日期；③ **「To」含当天**（按当天 0 点 + 1 天比较）；④ **筛选与 Free plan 页自身的限制叠加**，不是覆盖。
 > **校验**：两个脚本 —— `outputs/check_v2109.js`（48 条：接线点 ＋ 把真实数据与真实引擎抠出来跑单面板 / 组合 / 日期区间，逐项对条数）与 `outputs/check_v2109_render.js`（20 条：抠 `buildRows` 配桩 DOM 跑真实渲染，数行数 / colspan / 分页文案，并确认行上的 id 仍是**数据里的原始下标**、Video 条件筛出来的 6 行标题与数据对得上）。v2.108 那套 21 条回归重跑通过（**其中两处切分边界得跟着 `applyFilter()` → `applyFilter(btn)` 一起改**）。**踩坑**：三次断言写错全出在我自己对数据的口算上 —— Season 传了剥离后的数字而不是面板上的文案（`Season 1`）、`Audio + Podcast Team + Published` 少算一行（实际 5 不是 4）、把空态行也当成数据行来数（空态本身也是一个 `<tr>`）。**结论还是那条：别口算，去数。**
+> **同日追加**：按用户要求，§3.2 里那一小节的**领句、那张「按什么筛 / 匹配规则」表、以及前三条 bullet（取交集 / 全局 / 与 Free plan 叠加）已删除**，只留下「筛完的收尾」与「演示数据能筛出什么」两条；Apply 那条里的「规则见上表」指向也跟着去掉了。**功能一行没动。**

@@ -126,6 +126,9 @@
   .ep-table tr:hover td.ep-dl-cell { color:var(--primary);font-weight:500;text-decoration:underline; }
   .ep-table tbody tr { cursor:pointer; }
   .ep-table tr:hover td { background:#f8fafc; }
+  /* 2026-10-12（v2.109）：真筛选之后可能出现 0 行 —— 给一句空态，别留一张空表 */
+  .ep-table tr.ep-empty-row td { padding:40px 16px; text-align:center; color:var(--text-secondary); font-size:14px; cursor:default; }
+  .ep-table tr.ep-empty-row:hover td { background:transparent; }
   .ep-table tr.selected td { background:#f0f9f4; }
   .ep-table .ep-title-cell { color:var(--text); }
   .ep-table input[type=checkbox] { accent-color:var(--primary);width:15px;height:15px;cursor:pointer; }
@@ -2140,7 +2143,7 @@
               </div>
               </div>
               <div style="padding:12px 20px 16px;border-top:1px solid var(--border);">
-                <button class="btn-apply" onclick="applyFilter()">Apply</button>
+                <button class="btn-apply" onclick="applyFilter(this)">Apply</button>
               </div>
             </div>
           </div>
@@ -2193,8 +2196,8 @@
         </table>
 
         <div class="pagination">
-          <span>Showing 1 to 20 of 26 entries</span>
-          <div class="pages"><span class="active">1</span><span>2</span></div>
+          <span id="epPageInfo1">Showing 1 to 20 of 26 entries</span>
+          <div class="pages" id="epPages1"><span class="active">1</span><span>2</span></div>
         </div>
       </div>
       <!-- ═══════════ Episode List ═══════════ -->
@@ -2303,7 +2306,7 @@
               </div>
               </div>
               <div style="padding:12px 20px 16px;border-top:1px solid var(--border);">
-                <button class="btn-apply" onclick="applyFilter()">Apply</button>
+                <button class="btn-apply" onclick="applyFilter(this)">Apply</button>
               </div>
             </div>
           </div>
@@ -2356,8 +2359,8 @@
         </table>
 
         <div class="pagination">
-          <span>Showing 1 to 20 of 26 entries</span>
-          <div class="pages"><span class="active">1</span><span>2</span></div>
+          <span id="epPageInfo2">Showing 1 to 20 of 26 entries</span>
+          <div class="pages" id="epPages2"><span class="active">1</span><span>2</span></div>
         </div>
       </div>
       <!-- ═══════════ Episode List 3 (Published + Draft only) ═══════════ -->
@@ -2481,7 +2484,7 @@
               </div>
               </div>
               <div style="padding:12px 20px 16px;border-top:1px solid var(--border);">
-                <button class="btn-apply" onclick="applyFilter()">Apply</button>
+                <button class="btn-apply" onclick="applyFilter(this)">Apply</button>
               </div>
             </div>
           </div>
@@ -2535,7 +2538,7 @@
 
         <div class="pagination">
           <span id="epPage3Info">Showing 0 of 0 entries</span>
-          <div class="pages"><span class="active">1</span></div>
+          <div class="pages" id="epPages3"><span class="active">1</span></div>
         </div>
       </div>
 
@@ -3046,7 +3049,7 @@
 <div class="episode-details-overlay" id="episodeDetailsModal">
   <div class="ed-topbar">
     <div class="ed-topbar-left">
-      <button class="ed-back-btn" onclick="closeEpisodeDetailsModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
+      <button class="ed-back-btn" onclick="backFromDetailsModal()" style="border:none;background:none;color:#64748b;padding:0;font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#64748b'">
         Cancel
       </button>
       <span class="ed-topbar-divider"></span>
@@ -3864,26 +3867,26 @@
 <script>
   // Episode data
   var episodes = [
-    {title:'English Idioms in Everyday Life: A Complete Guide to Understanding and Using Common Expressions Naturally in Conversations, Writing, and Professional Communication',status:'Future',when:'Jun 26, 2026',dl:0,tags:['tutorial'],season:'',type:'Free',schedule:'2026-06-26T14:00',created:'2026-08-24',socials:['facebook','linkedin','youtube']},
-    {title:'future episode',status:'Published',when:'May 15, 2026',dl:156,tags:['news'],season:'',type:'Ad-free',created:'2026-08-25',socials:['facebook','tumblr','linkedin','youtube']},
-    {title:'How to Start a Podcast in 9 Steps (2026): From Idea to Growth',status:'Draft',when:'Mar 10, 2026',dl:0,tags:['tutorial','audio'],season:'1',type:'Subscriber-only',created:'2026-08-22'},
-    {title:'Cómo empezar un podcast en 9 pasos: guía práctica para 2026',status:'AI Processing',when:'Mar 10, 2026',dl:0,tags:['tutorial'],season:'1',type:'Free',created:'2026-08-10'},
-    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Finished',when:'Feb 28, 2026',dl:0,tags:['audio'],season:'',type:'Free',created:'2026-08-05'},
-    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Failed',when:'Feb 28, 2026',dl:0,tags:[],season:'',type:'Free',created:'2026-07-30'},
-    {title:'How_to_Record',status:'Published',when:'Dec 16, 2025',dl:3241,tags:['tutorial','video'],season:'2',type:'Ad-free',created:'2026-08-12',socials:['facebook','linkedin']},
-    {title:'Hometown Heroes Expanded: Up to $35K for Florida First-Time Buyers',status:'Published',when:'Dec 16, 2025',dl:892,tags:['news'],season:'',type:'Subscriber-only',created:'2026-08-02',socials:[]},
-    {title:'How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes',status:'AI Finished',when:'Dec 16, 2025',dl:2156,tags:['video','tutorial'],season:'2',type:'Free',created:'2026-07-20'},
-    {title:'Summary',status:'AI Processing',when:'Dec 16, 2025',dl:1873,tags:['solo'],season:'',type:'Free',created:'2026-07-10'},
-    {title:'Podcasting 2025: From Idea to Launch in 10 Steps',status:'Published',when:'Dec 16, 2025',dl:510,tags:[],season:'',type:'Free',created:'2026-07-25'},
-    {title:'this is video episode 2',status:'Published',when:'Oct 27, 2025',dl:4632,tags:['video'],season:'',type:'Ad-free',created:'2026-07-15'},
-    {title:'This is a video mp4 episode',status:'AI Failed',when:'Oct 27, 2025',dl:1420,tags:['video'],season:'',type:'Free',created:'2026-06-20'},
-    {title:'Renewing the Temple: Haggai\'s Call to Action',status:'Published',when:'May 14, 2025',dl:678,tags:[],season:'',type:'Early access',created:'2026-07-07'},
-    {title:'Born on the Seven-Mile Miracle: John John Florence',status:'Published',when:'May 13, 2025',dl:1950,tags:[],season:'',type:'Archive access',created:'2026-07-01'},
-    {title:'Episode Title 4903942504',status:'Draft',when:'May 12, 2025',dl:0,tags:[],season:'',type:'Free',created:'2026-06-25'},
-    {title:'When God Chose My Parents: A Heartfelt Ode jnw7zxim',status:'Published',when:'Feb 17, 2025',dl:345,tags:[],season:'',type:'Ad-free',created:'2026-06-17'},
-    {title:'Discovering Musical Landscapes',status:'Published',when:'Feb 17, 2025',dl:1178,tags:['music'],season:'',type:'Subscriber-only',created:'2026-06-12'},
-    {title:'Exploring the Seven Mile Mirror: A Dive into Hidden Depths',status:'Published',when:'Feb 17, 2025',dl:723,tags:['solo'],season:'',type:'Early access',created:'2026-06-07'},
-    {title:'Editing Your Podcast Like a Pro: Tools and Tips',status:'Published',when:'Feb 17, 2025',dl:2891,tags:['tutorial'],season:'1',type:'Archive access',created:'2026-06-02'}
+    {title:'English Idioms in Everyday Life: A Complete Guide to Understanding and Using Common Expressions Naturally in Conversations, Writing, and Professional Communication',status:'Future',when:'Jun 26, 2026',dl:0,tags:['tutorial'],season:'',mediaType:'Audio',user:'Creator E',type:'Free',schedule:'2026-06-26T14:00',created:'2026-08-24',socials:['facebook','linkedin','youtube']},
+    {title:'future episode',status:'Published',when:'May 15, 2026',dl:156,tags:['news'],season:'',mediaType:'Audio',user:'Podcast Team',type:'Ad-free',created:'2026-08-25',socials:['facebook','tumblr','linkedin','youtube']},
+    {title:'How to Start a Podcast in 9 Steps (2026): From Idea to Growth',status:'Draft',when:'Mar 10, 2026',dl:0,tags:['tutorial','audio'],season:'1',mediaType:'Audio',user:'Creator E',type:'Subscriber-only',created:'2026-08-22'},
+    {title:'Cómo empezar un podcast en 9 pasos: guía práctica para 2026',status:'AI Processing',when:'Mar 10, 2026',dl:0,tags:['tutorial'],season:'1',mediaType:'Audio',user:'Podcast Team',type:'Free',created:'2026-08-10'},
+    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Finished',when:'Feb 28, 2026',dl:0,tags:['audio'],season:'',mediaType:'Audio',user:'Creator E',type:'Free',created:'2026-08-05'},
+    {title:'How to Start a Podcast: Define Your Concept, Audience, and Schedule',status:'AI Failed',when:'Feb 28, 2026',dl:0,tags:[],season:'',mediaType:'Audio',user:'Podcast Team',type:'Free',created:'2026-07-30'},
+    {title:'How_to_Record',status:'Published',when:'Dec 16, 2025',dl:3241,tags:['tutorial','video'],season:'2',mediaType:'Video',user:'Creator E',type:'Ad-free',created:'2026-08-12',socials:['facebook','linkedin']},
+    {title:'Hometown Heroes Expanded: Up to $35K for Florida First-Time Buyers',status:'Published',when:'Dec 16, 2025',dl:892,tags:['news'],season:'',mediaType:'Audio',user:'Podcast Team',type:'Subscriber-only',created:'2026-08-02',socials:[]},
+    {title:'How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes',status:'AI Finished',when:'Dec 16, 2025',dl:2156,tags:['video','tutorial'],season:'2',mediaType:'Video',user:'Creator E',type:'Free',created:'2026-07-20'},
+    {title:'Summary',status:'AI Processing',when:'Dec 16, 2025',dl:1873,tags:['solo'],season:'',mediaType:'Video',user:'Podcast Team',type:'Free',created:'2026-07-10'},
+    {title:'Podcasting 2025: From Idea to Launch in 10 Steps',status:'Published',when:'Dec 16, 2025',dl:510,tags:[],season:'',mediaType:'Audio',user:'Creator E',type:'Free',created:'2026-07-25'},
+    {title:'this is video episode 2',status:'Published',when:'Oct 27, 2025',dl:4632,tags:['video'],season:'',mediaType:'Video',user:'Podcast Team',type:'Ad-free',created:'2026-07-15'},
+    {title:'This is a video mp4 episode',status:'AI Failed',when:'Oct 27, 2025',dl:1420,tags:['video'],season:'',mediaType:'Video',user:'Creator E',type:'Free',created:'2026-06-20'},
+    {title:'Renewing the Temple: Haggai\'s Call to Action',status:'Published',when:'May 14, 2025',dl:678,tags:[],season:'',mediaType:'Audio',user:'Podcast Team',type:'Early access',created:'2026-07-07'},
+    {title:'Born on the Seven-Mile Miracle: John John Florence',status:'Published',when:'May 13, 2025',dl:1950,tags:[],season:'',mediaType:'Audio',user:'Creator E',type:'Archive access',created:'2026-07-01'},
+    {title:'Episode Title 4903942504',status:'Draft',when:'May 12, 2025',dl:0,tags:[],season:'',mediaType:'Video',user:'Podcast Team',type:'Free',created:'2026-06-25'},
+    {title:'When God Chose My Parents: A Heartfelt Ode jnw7zxim',status:'Published',when:'Feb 17, 2025',dl:345,tags:[],season:'',mediaType:'Audio',user:'Creator E',type:'Ad-free',created:'2026-06-17'},
+    {title:'Discovering Musical Landscapes',status:'Published',when:'Feb 17, 2025',dl:1178,tags:['music'],season:'',mediaType:'Audio',user:'Podcast Team',type:'Subscriber-only',created:'2026-06-12'},
+    {title:'Exploring the Seven Mile Mirror: A Dive into Hidden Depths',status:'Published',when:'Feb 17, 2025',dl:723,tags:['solo'],season:'',mediaType:'Audio',user:'Creator E',type:'Early access',created:'2026-06-07'},
+    {title:'Editing Your Podcast Like a Pro: Tools and Tips',status:'Published',when:'Feb 17, 2025',dl:2891,tags:['tutorial'],season:'1',mediaType:'Audio',user:'Podcast Team',type:'Archive access',created:'2026-06-02'}
   ];
 
   // 系统后台是否给该用户额外开放 "Or use a remote file" 选项（仅产品文档记录该功能，演示页默认关闭）
@@ -4009,6 +4012,102 @@
     });
   }
 
+  // ── 真筛选（2026-10-12 v2.109）──────────────────────────────────────
+  // 五个面板以前只是外观 —— applyFilter() 只点亮按钮、关弹层，episodes 一行都不动。
+  // 现在勾完点 Apply 会真的筛行：条件读进 appliedFilters，null 表示不筛。
+  // **它是全局的**：三个列表页共用一套条件（与 whenSort 同一套做法），所以 Apply 之后三页一起变。
+  // free plan 页自己那条「只显示 Published / Draft」的限制仍在，两者**叠加**（先过那条、再过这里）。
+  var appliedFilters = null;
+
+  // 读一个面板里勾中的选项文案；skipFirst = 跳过第一项「All …」
+  function checkedOptionLabels(panel, skipFirst) {
+    var out = [];
+    if (!panel) return out;
+    panel.querySelectorAll('input[type=checkbox]').forEach(function(cb, i) {
+      if (skipFirst && i === 0) return;
+      if (!cb.checked) return;
+      var lab = cb.closest('label');
+      out.push(lab ? lab.textContent.trim() : '');
+    });
+    return out;
+  }
+
+  function firstCheckbox(panel) {
+    return panel ? panel.querySelector('input[type=checkbox]') : null;
+  }
+
+  // 把一份弹层里的勾选读成一组条件；一条都没有时返回 null（= 不筛）
+  function readFilterConstraints(pop) {
+    if (!pop) return null;
+    var f = { status:null, media:null, mediaNone:false, season:null, users:null, from:'', to:'' };
+    var sp = pop.querySelector('#fp-status');
+    if (sp && !firstCheckbox(sp).checked) f.status = checkedOptionLabels(sp, true);
+    var mp = pop.querySelector('#fp-media');
+    if (mp) {
+      var picked = checkedOptionLabels(mp, false);
+      // 这个面板**没有** All 项：两个都勾 = 不筛，两个都不勾 = 一个也不要（空结果）
+      if (!picked.length) f.mediaNone = true;
+      else if (picked.length < mp.querySelectorAll('input[type=checkbox]').length) f.media = picked;
+    }
+    var sep = pop.querySelector('#fp-season');
+    if (sep && !firstCheckbox(sep).checked) {
+      f.season = checkedOptionLabels(sep, true).map(function(v) { return v.replace(/^Season\s*/i, ''); });
+    }
+    var up = pop.querySelector('#fp-user');
+    if (up && !firstCheckbox(up).checked) f.users = checkedOptionLabels(up, true);
+    var pp = pop.querySelector('#fp-published');
+    if (pp) {
+      var dts = pp.querySelectorAll('input[type=date]');
+      if (dts.length === 2) { f.from = dts[0].value || ''; f.to = dts[1].value || ''; }
+    }
+    var active = !!(f.status || f.media || f.mediaNone || f.season || f.users || f.from || f.to);
+    return active ? f : null;
+  }
+
+  // 日期输入框的值按**本地 0 点**解析，与 whenTime() 读 'Dec 16, 2025' 的口径一致
+  function filterTime(value) {
+    return value ? new Date(value + 'T00:00:00').getTime() : 0;
+  }
+
+  function episodeMatchesFilters(ep, f) {
+    if (!f) return true;
+    if (f.mediaNone) return false;
+    if (f.status && f.status.indexOf(ep.status) < 0) return false;
+    if (f.media && f.media.indexOf(ep.mediaType || '') < 0) return false;
+    if (f.season && f.season.indexOf(String(ep.season || '')) < 0) return false;
+    if (f.users && f.users.indexOf(ep.user || '') < 0) return false;
+    if (f.from || f.to) {
+      // 日期区间只认 When 列里**看得见日期**的行（Published / Future）；
+      // 其余四种状态的 `when` 是占位，不拿它冒充发布日期。
+      if (ep.status !== 'Published' && ep.status !== 'Future') return false;
+      var t = whenTime(ep);
+      if (!t) return false;
+      if (f.from && t < filterTime(f.from)) return false;
+      if (f.to && t >= filterTime(f.to) + 86400000) return false;   // To 含当天
+    }
+    return true;
+  }
+
+  function emptyRowHTML(colspan) {
+    return '<tr class="ep-empty-row"><td colspan="' + colspan + '">No episodes match the current filters.</td></tr>';
+  }
+
+  // 筛选生效时把「Showing … of …」改成真实的条数，并收起那两颗假的分页标签
+  function renderListPagination(count1, count2, count3) {
+    [
+      { info:'epPageInfo1', pages:'epPages1', n:count1, base:'Showing 1 to 20 of 26 entries' },
+      { info:'epPageInfo2', pages:'epPages2', n:count2, base:'Showing 1 to 20 of 26 entries' },
+      { info:'epPage3Info', pages:'epPages3', n:count3, base:'' }   // 第 3 页本来就是动态的
+    ].forEach(function(d) {
+      var info = document.getElementById(d.info);
+      if (!info) return;
+      var dynamic = 'Showing 1 to ' + d.n + ' of ' + d.n + ' entries';
+      info.textContent = appliedFilters ? dynamic : (d.base || dynamic);
+      var pages = document.getElementById(d.pages);
+      if (pages) pages.style.display = appliedFilters ? 'none' : '';
+    });
+  }
+
   function buildRows() {
     var html = '';
     var html2 = '';
@@ -4059,8 +4158,11 @@
       '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation();openEpisodeStats()">1,024</td>' +
       rowMenuCell(null) +
     '</tr>';
-    var html3 = demo3;
-    var count3 = 1; // demo row included in the visible count
+    var filtering = !!appliedFilters;
+    var html3 = filtering ? '' : demo3;   // 有筛选时这条演示行不出现（它不对应 episodes 数据、没法参与筛选）
+    var count3 = filtering ? 0 : 1;      // demo row included in the visible count
+    var count1 = 0;
+    var count2 = 0;
     // 2026-10-09（v2.103）：按 When 排序时**只改渲染顺序** —— 行上的动作（编辑 / 查看 / 分享 / 行菜单）
     // 用的都是剧集在 `episodes` 里的**原始下标** i，所以先把下标排好序、再按顺序取 ep 与 i。
     // **别把 i 换成排序后的位置**，否则点哪行都会打开别的集。Episodes 3 那条 demo 行固定在最前，不参与排序。
@@ -4071,6 +4173,8 @@
     }
     order.forEach(function(i) {
       var ep = episodes[i];
+      // 2026-10-12（v2.109）：真的筛行 —— 不匹配的整条不渲染（i 仍是数据里的**原始下标**，行上的动作照旧）
+      if (!episodeMatchesFilters(ep, appliedFilters)) return;
       var isProc = (ep.status === 'AI Processing');
       // Episodes 3 only: inline deletion countdown note after the title（原来悬停时会藏起来给行内图标腾位置，图标搬走后已不再隐藏）
       var delNote = (ep.status === 'Published' || ep.status === 'Draft') ? deletionNote(ep) : '';
@@ -4090,7 +4194,9 @@
         '<td class="ep-dl-cell no-wrap" onclick="event.stopPropagation();openEpisodeStats()">' + ep.dl.toLocaleString('en-US') + '</td>' +
         menuCell +
       '</tr>';
+      count1++;
       // Episode List 2 (with Type column)
+      count2++;
       html2 += rowStart +
         '<td><span class="badge-status badge-type' + (isAppleSubscriptionType(ep.type) ? ' is-apple' : '') + '">' + epTypeLabel(ep.type) + '</span></td>' +
         '<td class="no-wrap" onclick="event.stopPropagation()">' + epWhenCell(ep) + '</td>' +
@@ -4107,16 +4213,15 @@
         count3++;
       }
     });
-    document.getElementById('epTableBody').innerHTML = html;
+    document.getElementById('epTableBody').innerHTML = html + (count1 ? '' : emptyRowHTML(5));
     var epTableBody2 = document.getElementById('epTableBody2');
-    if (epTableBody2) epTableBody2.innerHTML = html2;
+    if (epTableBody2) epTableBody2.innerHTML = html2 + (count2 ? '' : emptyRowHTML(6));
     var epTableBody3 = document.getElementById('epTableBody3');
     if (epTableBody3) {
-      epTableBody3.innerHTML = html3;
-      var pgInfo = document.getElementById('epPage3Info');
-      if (pgInfo) pgInfo.textContent = 'Showing 1 to ' + count3 + ' of ' + count3 + ' entries';
+      epTableBody3.innerHTML = html3 + (count3 ? '' : emptyRowHTML(5));
       updateDeletionSummary();
     }
+    renderListPagination(count1, count2, count3);
   }
 
   function showAiProcessingTip(e, el) {
@@ -5632,6 +5737,11 @@
     if (wasClosed) {
       // Close Actions popover when Filter opens
       closeActionsPopovers();
+      // 首次打开时，页面上这份就是初始的「已应用」状态（2026-10-12 v2.108）
+      if (!appliedFilterState) captureAppliedFilterState();
+    } else {
+      // 再点一次 Filter 也是「关闭」，与点弹层外面是同一套语义：取消没 Apply 的改动（2026-10-12 v2.108）
+      restoreAppliedFilterState();
     }
   }
   function handleSelectAll(el, panelId) {
@@ -5706,11 +5816,63 @@
     updatePanelFoot();
   }
 
-  function applyFilter() {
+  // ── 筛选弹层的「已应用」快照（2026-10-12 v2.108）─────────────────────
+  // 这个弹层是「暂存编辑 + Apply 提交」的结构：勾选只有点了 Apply 才算生效。
+  // 于是给「点弹层外面关闭」补上缺失的那一半语义 —— **关闭 = 取消**，把没 Apply 的改动丢掉、
+  // 回到上次应用的状态（与「Filter 按钮点亮 / × 出现」那套已应用的表达保持一致）。
+  // 三个列表页各有一份弹层副本，所以快照按 popover 逐个存、逐个还原。
+  var appliedFilterState = null;
+
+  function readFilterState(pop) {
+    var state = {};
+    ['fp-status','fp-media','fp-season','fp-published','fp-user'].forEach(function(pid) {
+      var panel = pop.querySelector('#' + pid);
+      if (!panel) return;
+      var checks = panel.querySelectorAll('input[type=checkbox]');
+      if (checks.length) {
+        state[pid] = Array.prototype.map.call(checks, function(cb) { return cb.checked; });
+      } else {
+        state[pid] = Array.prototype.map.call(panel.querySelectorAll('input[type=date]'), function(d) { return d.value; });
+      }
+    });
+    return state;
+  }
+
+  function writeFilterState(pop, state) {
+    Object.keys(state).forEach(function(pid) {
+      var panel = pop.querySelector('#' + pid);
+      if (!panel) return;
+      var values = state[pid];
+      var checks = panel.querySelectorAll('input[type=checkbox]');
+      if (checks.length) {
+        checks.forEach(function(cb, i) { cb.checked = values[i]; });
+      } else {
+        panel.querySelectorAll('input[type=date]').forEach(function(d, i) { d.value = values[i]; });
+      }
+    });
+  }
+
+  function captureAppliedFilterState() {
+    appliedFilterState = Array.prototype.map.call(document.querySelectorAll('#filterPopover'), readFilterState);
+  }
+
+  function restoreAppliedFilterState() {
+    if (!appliedFilterState) return;
+    document.querySelectorAll('#filterPopover').forEach(function(pop, i) {
+      if (appliedFilterState[i]) writeFilterState(pop, appliedFilterState[i]);
+    });
+    updateNavDots();
+  }
+
+  function applyFilter(btn) {
+    // 2026-10-12（v2.109）：Apply 现在真的筛行 —— 读你点的那份弹层里的勾选（一条都没有 = null = 不筛）
+    if (btn) appliedFilters = readFilterConstraints(btn.closest('.filter-wrap').querySelector('#filterPopover'));
     document.querySelectorAll('.btn-filter').forEach(function(b) { b.classList.add('active'); });
     document.querySelectorAll('#filterPopover').forEach(function(p) { p.classList.remove('show'); });
     document.querySelectorAll('.btn-filter-clear').forEach(function(b) { b.classList.add('show'); });
+    buildRows();
     clearSelection();
+    captureAppliedFilterState();   // Apply 之后，当前这份就是「已应用」的基准
   }
 
   function clearFilter(btn) {
@@ -5723,6 +5885,7 @@
   }
 
   function resetFilter() {
+    appliedFilters = null;   // 2026-10-12（v2.109）：Reset all 与那颗 × 都是「清空并且已应用」
     document.querySelectorAll('#filterPopover').forEach(function(pop) {
       ['fp-status','fp-season','fp-user'].forEach(function(pid) {
         var panel = pop.querySelector('#' + pid);
@@ -5739,12 +5902,20 @@
     document.querySelectorAll('.btn-filter').forEach(function(b) { b.classList.remove('active'); });
     document.querySelectorAll('.filter-nav-item').forEach(function(b) { b.classList.remove('dirty'); });
     document.querySelectorAll('.btn-filter-clear').forEach(function(b) { b.classList.remove('show'); });
+    buildRows();
+    captureAppliedFilterState();   // 「Reset all」与弹层外那颗 × 都是**当场清空并已应用**，所以基准也要跟着回到默认
   }
   document.addEventListener('click', function(e) {
     if (e.target.closest('.btn-filter') || e.target.closest('.btn-filter-clear')) return;
+    var closed = false;
     document.querySelectorAll('#filterPopover').forEach(function(popover) {
-      if (!popover.contains(e.target)) popover.classList.remove('show');
+      if (!popover.contains(e.target) && popover.classList.contains('show')) {
+        popover.classList.remove('show');
+        closed = true;
+      }
     });
+    // 点弹层外面关闭 = 取消：丢弃没 Apply 的改动，回到上次应用的状态（2026-10-12 v2.108）
+    if (closed) restoreAppliedFilterState();
   });
 
   function selectSwatch(el) {
@@ -6593,14 +6764,26 @@
       lastPublishAIState.audio = audioToggle ? audioToggle.classList.contains('on') : true;
       lastPublishAIState.content = contentToggle ? contentToggle.classList.contains('on') : true;
       captureSocialSharing();   // 记下这一刻点亮的平台 → 供 Share 页的 Auto-share 状态
+      // 2026-10-10（v2.106）：Apple 订阅剧集的**发布去向按订阅类型分流** ——
+      //   · Ad-free → 照旧进 Share & Embed 页；
+      //   · 其余订阅类型（Subscriber-only / Early access / Archive access）→ **回到列表页**，只弹发布成功 toast。
+      // 必须在 closeEpisodeDetailsModal() 之前读这两个值（关弹窗不重置表单，但读早不读晚更稳）。
+      var appleSub = isAppleSubscriptionEpisode();
+      var subType = currentSubscriptionType();
       closeEpisodeDetailsModal();
       var isUpdate = editingIndex >= 0 && episodes[editingIndex] && episodes[editingIndex].status === 'Published';
       showToast(isUpdate ? 'Episode updated successfully!' : 'Episode published successfully!');
-      // 2026-10-09（v2.83）：**新建的剧集也要跳 Share & Embed**。以前只在编辑已有剧集时才跳
+      // 2026-10-09（v2.83）：**新建的剧集也要补一条列表数据**。以前只在编辑已有剧集时才处理
       // （`shareEpisode()` 按 `episodes[index]` 渲染，新建的还没有列表数据、没有 index 可用）。
-      // 现在先给它补一条真实条目再跳 —— 于是发布后它也会正常出现在列表里。
+      // 现在不论随后去 Share 页还是回列表，都先给它补一条真实条目 —— 于是发布后它也会出现在列表里。
       if (editingIndex < 0) editingIndex = createEpisodeFromForm();
-      shareEpisode(editingIndex);
+      // 2026-10-10（v2.106）：非 Ad-free 的 Apple 订阅剧集 → 回「进来的那个列表」
+      // （`publishReturnPage`，与 Save as Draft / Schedule 同一套返回页）；其余一律进 Share & Embed 页。
+      if (appleSub && subType !== 'Ad-free') {
+        navigate(publishReturnPage || 'episodelist');
+      } else {
+        shareEpisode(editingIndex);
+      }
     } else {
       openScheduleModal();
     }
@@ -6720,6 +6903,9 @@
     publishReturnPage = currentListPage();
     var overlay = document.getElementById('episodeDetailsModal');
     overlay.classList.add('show');
+    // 2026-10-10（v2.107）：每次打开都把「脏」标记复位，并保证脏跟踪只接一次线
+    publishFormDirty = false;
+    initPublishDirtyTracking();
     // 同页锚点布局：打开时回到顶部，初始化滚动联动菜单、播放器与章节列表
     overlay.scrollTop = 0;
     initV2ScrollSpy();
@@ -6734,16 +6920,37 @@
   function closeEpisodeDetailsModal() {
     document.getElementById('episodeDetailsModal').classList.remove('show');
   }
+  // 2026-10-10（v2.107）：Publish 表单的「脏」标记 —— Cancel 只在**真有改动**时才弹 Unsaved Changes 确认框
+  // （以前 Cancel 直接关闭、那个确认框根本没接上：backFromDetailsModal 是无人调用的死代码）。
+  // 打开弹窗时复位；表单内任何 input/change，以及只发 click、不发 change 的改动点
+  //（社交平台开关、AI 标题推荐项、"Upload / ✕" 文件动作）都会把它置真。
+  var publishFormDirty = false;
+  function markPublishDirty() { publishFormDirty = true; }
+  function initPublishDirtyTracking() {
+    var overlay = document.getElementById('episodeDetailsModal');
+    if (!overlay || overlay.dataset.dirtyWired) return;   // 只接一次线
+    overlay.dataset.dirtyWired = '1';
+    overlay.addEventListener('input', markPublishDirty, true);
+    overlay.addEventListener('change', markPublishDirty, true);
+    overlay.addEventListener('click', function (e) {
+      if (e.target.closest('.ed-v2-social-icon, .ed-v2-suggest-item, #v2MediaFileAction, #v2AdFreeFileAction')) {
+        markPublishDirty();
+      }
+    }, true);
+  }
+  // Cancel（以及点灰色遮罩）：有改动先弹确认框，没有就直接关闭。
   function backFromDetailsModal() {
-    document.getElementById('confirmModal').classList.add('show');
+    if (publishFormDirty) document.getElementById('confirmModal').classList.add('show');
+    else closeEpisodeDetailsModal();
   }
   function closeConfirmModal() {
     document.getElementById('confirmModal').classList.remove('show');
   }
+  // Leave：离开 Publish 弹窗、回到**进入前的那个列表页**（2026-10-10 v2.107；此前是重新打开 New Episode 上传页）。
   function leavePage() {
     closeConfirmModal();
     closeEpisodeDetailsModal();
-    openNewEpisodeModal();
+    navigate(publishReturnPage || 'episodelist');
   }
   function saveAsDraft() {
     closeEpisodeDetailsModal();
@@ -6761,7 +6968,7 @@
   });
 
   document.getElementById('episodeDetailsModal').addEventListener('click', function(e) {
-    if (e.target === this) closeEpisodeDetailsModal();
+    if (e.target === this) backFromDetailsModal();
   });
 
 
