@@ -101,8 +101,7 @@
 | **Published（发布日期）** | 日期范围 | From / To 两个日期输入框 | **两个都留空**（不按日期筛） |
 | **User（用户）** | 发布者 | All Users + 该账号下的 **author / admin**（演示页为 Creator E、Podcast Team） | **All Users**（两个子项全不勾） |
 
-- **筛完的收尾**：0 条时表格里显示一行 **No episodes match the current filters.**（跨整行）；有筛选时分页那句改成真实条数（形如 **Showing 1 to 6 of 6 entries**）并**收起那两颗假的分页标签**；Episodes (free plan) 页最前面那条演示行（**Episode 042 — …**）**不出现** —— 它不对应 `episodes` 里的数据，没法参与筛选。
-- **演示数据能筛出什么**：Status 六种状态都有（Published 11 / Draft 2 / Future 1 / AI Processing 2 / AI Finished 2 / AI Failed 2 条）；Media Type Video 6 条、Audio 14 条；Season 1 有 3 条、Season 2 有 2 条（**Season 3–10 没有数据，正好演示空态**）；User 两个各 10 条；发布日期跨 2025-02 → 2026-06。另外 **Video + Status=Future 是刻意留下的一个空组合**。
+- **筛完的收尾**：0 条时表格里显示一行 **No episodes match the current filters.**
 
 交互规则：
 
@@ -1251,4 +1250,4 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 > **代码层**：新增一组筛选引擎 —— `appliedFilters`（null ＝ 不筛；**全局一份**，三个列表页共用，做法与 `whenSort` 一致）＋ `checkedOptionLabels()` / `firstCheckbox()` / `readFilterConstraints()`（把弹层里的勾选读成条件）/ `filterTime()` / `episodeMatchesFilters()` / `emptyRowHTML()` / `renderListPagination()`。`buildRows()` 在 `order.forEach` 里加一句「不匹配就 return」；三页各自计数，0 条时补一行跨整行的空态；Episodes (free plan) 页那条演示行在有筛选时不出现。三颗 Apply 按钮改成 `applyFilter(this)`，好知道该读哪一份弹层。分页：第 1、2 页原来那句 `Showing 1 to 20 of 26 entries` 是**静态写死的**，现在加了 id，筛选时改成真实条数并收起那两颗假的分页标签（不筛时保持原样，连那个「26」的演示说法一起留着）。
 > **几条刻意的判断**：① **Media Type 两个都不勾 ＝ 空结果**（这个面板没有 All 项，两个都勾才等于不筛；都不勾就是「一个也不要」）；② **日期区间只认 When 列里看得见日期的行**（Published / Future）—— 与 When 列「按看得见的东西排序」是同一条原则，Draft 与四种 AI 状态的 `when` 是占位、不拿来当发布日期；③ **「To」含当天**（按当天 0 点 + 1 天比较）；④ **筛选与 Free plan 页自身的限制叠加**，不是覆盖。
 > **校验**：两个脚本 —— `outputs/check_v2109.js`（48 条：接线点 ＋ 把真实数据与真实引擎抠出来跑单面板 / 组合 / 日期区间，逐项对条数）与 `outputs/check_v2109_render.js`（20 条：抠 `buildRows` 配桩 DOM 跑真实渲染，数行数 / colspan / 分页文案，并确认行上的 id 仍是**数据里的原始下标**、Video 条件筛出来的 6 行标题与数据对得上）。v2.108 那套 21 条回归重跑通过（**其中两处切分边界得跟着 `applyFilter()` → `applyFilter(btn)` 一起改**）。**踩坑**：三次断言写错全出在我自己对数据的口算上 —— Season 传了剥离后的数字而不是面板上的文案（`Season 1`）、`Audio + Podcast Team + Published` 少算一行（实际 5 不是 4）、把空态行也当成数据行来数（空态本身也是一个 `<tr>`）。**结论还是那条：别口算，去数。**
-> **同日追加**：按用户要求，§3.2 里那一小节的**领句、那张「按什么筛 / 匹配规则」表、以及前三条 bullet（取交集 / 全局 / 与 Free plan 叠加）已删除**，只留下「筛完的收尾」与「演示数据能筛出什么」两条；Apply 那条里的「规则见上表」指向也跟着去掉了。**功能一行没动。**
+> **同日追加**：按用户要求，§3.2 里那一小节的**领句、那张「按什么筛 / 匹配规则」表、以及前三条 bullet（取交集 / 全局 / 与 Free plan 叠加）已删除**，只留下「筛完的收尾」与「演示数据能筛出什么」两条；Apply 那条里的「规则见上表」指向也跟着去掉了。**随后又把「筛完的收尾」里关于「分页文案改成真实条数、收起那两颗假分页标签、free plan 页演示行不出现」的那几句删掉**，该条现在只剩「0 条时表格里显示一行 `No episodes match the current filters.`」。**再之后连「（跨整行）」与整条「演示数据能筛出什么」也删掉了** —— §3.2 现在只剩五个子面板的选项表（含默认勾选那一列）、这一条说明、以及交互规则。**功能一行没动。**
