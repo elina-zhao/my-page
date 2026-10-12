@@ -1,7 +1,7 @@
 # Episodes 菜单功能说明文档
 
 > 适用范围：`index.html`（Podbean Admin — Episodes）
-> 文档版本：v2.104
+> 文档版本：v2.109
 > 说明：本文档为**功能 mockup**，逐页、逐控件描述 Episodes 菜单下的功能与交互逻辑。UI 文案保留英文原样。具体视觉样式由设计师另行确定，不在本文档范围内。
 
 ---
@@ -24,24 +24,22 @@
 
 ## 1. 页面整体结构
 
-**Episodes 0**、**Episodes**、**Episodes (apple)**、**Episodes (free plan)** 均为侧边栏一级菜单项（无子菜单）：
+**真实产品中侧边栏只有一个 `Episodes` 菜单项**（即本文档第 3 节的页面）。它随两件事改变形态：**有没有剧集**（没有 → 空状态，有 → 列表）与**账号条件**（是否为 Apple Podcast Subscription 用户、处于哪档定价计划）。
 
-- **Episodes 0** — 空状态演示页面：展示用户**尚未创建/发布任何剧集**时的状态
-- **Episodes** — 用户**已创建或发布剧集**后看到的完整 **Episodes 列表**页面
-- **Episodes (apple)** — 演示页面，模拟用户开通 **Apple Podcast Subscription** 之后剧集列表多出一列 **Type** 的展示效果
-- **Episodes (free plan)** — 演示页面，模拟 **Free plan** 用户的剧集列表：只显示 **Published / Draft** 状态的剧集，并在页面顶部提示 **Free 计划下剧集在创建 90 天后会被自动删除**、每集标题后内联显示删除倒计时（详见第 5 节）
+本原型为了能逐一对照这些条件，把这**一个**菜单拆成了**四个并列的演示入口**（在原型里都是普通一级菜单项、无子菜单）：
 
-同一 Episodes 页面在真实产品中根据用户是否有剧集数据，在"空状态"与"列表页"两种形态间切换；**Episodes 0** 与两个演示页（**Episodes (apple)** / **Episodes (free plan)**）均为演示这些形态/扩展形态的独立入口。
-
-> **2026-10-09（v2.82）：两个演示页的**侧栏菜单名**由编号改成说明性名称** —— **`Episodes 2` → `Episodes (apple)`**、**`Episodes 3` → `Episodes (free plan)`**（用户要求）。改的是**侧栏那一行可见文字**；**页面 id 仍是 `episodelist2` / `episodelist3`**，`data-page`、路由、以及 `index.html` 里若干注释中写的「Episodes 2 / Episodes 3」都指的是这两页、**未动**（导航靠 `data-page` 切换，不依赖标签文字，所以改名不影响跳转与高亮）。命名风格与 `Episodes 0`（空状态演示）一脉相承——**用括号点出这个演示页演示的是什么**。
-
-本文档覆盖这些页面；其余菜单（Dashboard、Distribution、Statistics、Settings 等）在当前版本为占位页，不在本文档范围内。
+| 原型里的入口 | 模拟的条件 | 相对 `Episodes` 基准形态的差别 | 本文档 |
+|---|---|---|---|
+| **Episodes** | 已有剧集 | —— 基准形态（完整列表） | §3 |
+| **Episodes 0** | 还没有任何剧集 | 整页换成空状态引导 + 两个推荐入口 | §2 |
+| **Episodes (apple)** | 已开通 Apple Podcast Subscription | 列表多一列 **Type**；Publish 弹框多出订阅设置块 | §4 |
+| **Episodes (free plan)** | Free plan 下的删除规则 | 只显示 **Published / Draft**，标题后带 90 天删除倒计时 + 顶部风险摘要 | §5 |
 
 ---
 
 ## 2. Episodes 0 页面（空状态）
 
-展示用户**尚未创建/发布任何剧集**时的状态。
+展示用户**尚未创建/发布任何剧集**时的状态 —— 也就是真实产品里 `Episodes` 菜单在还没有任何剧集时的样子（原型里的对应入口：侧边栏 **Episodes 0**）。
 
 ### 2.1 页面头部
 
@@ -65,18 +63,18 @@
 **① Podbean AI Podcast Creator**
 
 - 描述：`Turn your ideas into a full episode — AI writes the script, generates realistic voices, and creates show notes automatically.`
-- 操作链接：`Try AI Podcast Creator →`。
+- 操作链接：`Try AI Podcast Creator →` —— 点击**跳转到 AI Podcast Creator 后台**（Podbean 的 AI 播客创作页面，在当前标签页打开）。
 
 **② Podbean App 录制**
 
 - 描述：`Record high-quality episodes right from your phone with the Podbean App, then upload and publish directly.`
-- 操作链接：`Learn more →`。
+- 操作链接：`Learn more →` —— 点击**在新标签页打开** Podbean 帮助中心的教程 `https://help.podbean.com/support/solutions/articles/25000034072-record-and-edit-your-podcast`（用 Podbean App 录制与编辑播客）。
 
 ---
 
 ## 3. Episodes 列表页面
 
-用户**已创建或发布剧集**后看到的列表页（与 Episodes 0 空状态互为两种形态）。
+用户**已创建或发布剧集**后看到的列表页 —— 这是 `Episodes` 菜单的**基准形态**（与 **Episodes 0** 演示的空状态互为两种形态）；第 4、5 节描述的演示页，都是它再加上一个账号条件后的样子。
 
 ### 3.1 页面头部
 
@@ -95,21 +93,39 @@
 
 点击 Filter 按钮弹出筛选面板。筛选器按类别分为 5 个子面板，通过左侧导航切换：
 
-| 子面板 | 筛选内容 | 选项 |
+| 子面板 | 筛选内容 | 选项 | 默认勾选 |
+|---|---|---|---|
+| **Status（状态）** | 剧集发布状态 | All Statuses（全选）、Published、Draft、Future、AI Processing、AI Finished、AI Failed | **All Statuses**（六个子项全不勾） |
+| **Media Type（媒体类型）** | 音频/视频 | Audio、Video | **Audio 与 Video 都勾**（本面板没有 All 项，两个都勾＝不筛） |
+| **Season（季数）** | 所属季 | All Seasons + 用户已创建的 Seasons（真实产品按用户实际建过的 seasons 生成；演示页为**固定的十项** `Season 1`–`Season 10`） | **All Seasons**（十季全不勾） |
+| **Published（发布日期）** | 日期范围 | From / To 两个日期输入框 | **两个都留空**（不按日期筛） |
+| **User（用户）** | 发布者 | All Users + 该账号下的 **author / admin**（演示页为 Creator E、Podcast Team） | **All Users**（两个子项全不勾） |
+
+**筛选是真的会筛行（2026-10-12 v2.109 起）** —— 勾完点 Apply，列表当场只剩符合条件的剧集；此前它只做外观，一行都不动。
+
+| 面板 | 按什么筛 | 匹配规则 |
 |---|---|---|
-| **Status（状态）** | 剧集发布状态 | All Statuses（全选）、Published、Draft、Future、AI Processing、AI Finished、AI Failed |
-| **Media Type（媒体类型）** | 音频/视频 | Audio、Video |
-| **Season（季数）** | 所属季 | All Seasons + 用户已创建的 Seasons（数量根据用户创建的 seasons 动态生成，如 Season 1、Season 2……） |
-| **Published（发布日期）** | 日期范围 | From / To 两个日期输入框 |
-| **User（用户）** | 发布者 | All Users + 该播客下的用户（如 Creator E、Podcast Team）。**2026-10-09 v2.98 新增** —— 替代了原来表格里的 **User 列**（见 3.1 列说明） |
+| Status | 剧集状态 | 勾中的几个状态取**并集**；勾着 `All Statuses` 就不限制 |
+| Media Type | `mediaType`（Audio / Video） | 两个都勾＝不限制；只勾一个＝只要那一种；**两个都不勾＝一条都不要**（这个面板没有 All 项，空结果是会出现的） |
+| Season | 所属季 | 只留勾中的季；**没有归属季的剧集**（数据里 `season` 为空）不会被任何季选中 |
+| Published | When 列里那个日期 | 日期区间只认 **When 列里看得见日期**的行（**Published / Future**）；Draft 与四种 AI 状态的 `when` 是占位、不当作发布日期，设了区间就一律不出现。`To` **含当天** |
+| User | 发布者 | 只留勾中的发布者 |
+
+- **面板之间取交集**：例如 Status 勾 Published、Media Type 只勾 Video，剩下的就是「已发布且是视频」的那几条。
+- **筛选状态是全局的**：三个列表页共用一套条件（与 When 排序的 `whenSort` 同一套做法），Apply 之后三页一起变。
+- **与 Free plan 页自己的限制叠加**：那一页本来就只显示 Published / Draft，筛选在它之上再收一层 —— 所以在那一页筛 **Future** 会得到 0 条。
+- **筛完的收尾**：0 条时表格里显示一行 **No episodes match the current filters.**（跨整行）；有筛选时分页那句改成真实条数（形如 **Showing 1 to 6 of 6 entries**）并**收起那两颗假的分页标签**；Episodes (free plan) 页最前面那条演示行（**Episode 042 — …**）**不出现** —— 它不对应 `episodes` 里的数据，没法参与筛选。
+- **演示数据能筛出什么**：Status 六种状态都有（Published 11 / Draft 2 / Future 1 / AI Processing 2 / AI Finished 2 / AI Failed 2 条）；Media Type Video 6 条、Audio 14 条；Season 1 有 3 条、Season 2 有 2 条（**Season 3–10 没有数据，正好演示空态**）；User 两个各 10 条；发布日期跨 2025-02 → 2026-06。另外 **Video + Status=Future 是刻意留下的一个空组合**。
 
 交互规则：
 
 - 每个子面板的 "All" 选项与子选项互斥：勾选子选项时自动取消全选；取消全部子选项时自动勾回全选。
 - 面板底部仅保留 `Reset`（将当前面板重置为默认选项），不显示选中数量；侧边导航底部有 `Reset all`（将全部筛选重置为默认）。
+- **上表的「默认勾选」就是弹层刚打开时的状态**，也是 `Reset` 与 `Reset all` 之后回到的状态 —— 侧边导航里那颗 `dirty` 标记以它为「不亮」的基准（偏离默认才点亮）。
 - 老版 AI generator 的 **Pending / Pending Review** 状态在新后台不再适用，已删除，筛选器与剧集数据中均不再出现。
 - 已修改但未应用的筛选项，其导航项会显示 dirty 标记。
-- 点击底部 **Apply** 按钮应用筛选，Filter 按钮进入激活状态；应用筛选时会**清空当前选中态**（若有勾选的剧集则取消勾选、收起 Actions 菜单），避免筛选后可见行变化导致选中项被隐藏的困惑。
+- 点击底部 **Apply** 按钮应用筛选（**Apply 起会真的筛行**，规则见上表），Filter 按钮进入激活状态；应用筛选时会**清空当前选中态**（若有勾选的剧集则取消勾选、收起 Actions 菜单），避免筛选后可见行变化导致选中项被隐藏的困惑。
+- **关闭弹层 = 取消（2026-10-12 v2.108）**：点弹层外面、或**再点一次 Filter 按钮**，都会**丢弃还没 Apply 的改动**、回到上次应用的状态（`dirty` 点随之熄灭）。想留下改动只有点 **Apply** 一条路；弹层里那两处 `Reset` 是「回默认」，与这里「回上次应用」不是一回事。
 - **快速清除筛选**：Apply 后 Filter 按钮旁出现 `×` 清除按钮，点击一键将所有筛选重置为默认并关闭筛选弹窗（无需重新打开弹窗），同时 Filter 按钮退出激活状态。
 
 **③ Actions 按钮 + 批量操作弹窗（位于表格选中条）**
@@ -188,7 +204,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 - **Draft / AI Processing / AI Finished / AI Failed** → **色点 + 状态词**，不显示日期（它们还没有「发布时间」，数据里的 `when` 只是占位；Share 页对未发布也一律显示 `--/--/----`）。
 - **形状 =「小色点 + 文字」（2026-10-09 v2.100 定稿）**：整列统一成一行文字，颜色交给色点。此前是**药丸**，而"乱"的主因正是**一列里混着三种形状**（纯文字 / 药丸+文字 / 只有药丸）、且药丸宽度参差。v2.99 试过"等宽药丸 + 颜色收敛到两种"，**当天即被这一版取代**：色点把色块由"面"缩成"点"，音量低到**可以把五种颜色全留下** —— 比收敛版信息更全、观感更安静，而且**不再需要 `min-width`**（v2.99 那 30px 的宽度代价随之消失）。五种色点：Draft `#64748b` / Future `#3b82f6` / AI Processing `#b45309` / AI Finished `#1d4ed8` / AI Failed `#b91c1c`。
 - **实现**：色点**不写死颜色** —— 它套的还是 `.badge-*` 那套类，靠 `.ep-when-dot` 的 `background:currentColor` 取该状态自己的**文字色**（墨色），所以颜色仍只有一处定义；**`.ep-when-dot` 必须排在 `.badge-*` 之后**，否则会被它们的浅底盖掉。
-- **表头可排序（2026-10-09 v2.103）**：`When` 表头是一颗 `<button>`（不是给 `th` 挂 onclick，这样键盘可达、读屏能念），**标签右侧跟一对小三角** —— 未排序时两个都淡显（提示"这列能排"），排过之后只留对应那一个、标签与箭头一起加深（顺带标出"现在按这列排"）。点一下 = **升序（早→晚）**，再点 = **降序**（**两态**切换，没有"回到默认顺序"的第三态）。三个列表页共用**同一个**排序状态；**排序只改渲染顺序** —— 行上动作仍按剧集在数据里的**原始下标**走，所以排完序点某行打开的仍是那一集（这是最容易写错的地方）。重排会重建整行，于是**顺带清空勾选**（与 Apply 筛选同一套处理）；Episodes (free plan) 页那条固定在最前的 demo 行**不参与**排序。
+- **表头可排序（2026-10-09 v2.103）**：`When` 表头是一颗 `<button>`（不是给 `th` 挂 onclick，这样键盘可达、读屏能念；按钮的 `aria-label` 为 `Sort by episode date`，`aria-sort` 按规范挂在 `th` 上），**标签右侧跟一对小三角** —— 未排序时两个都淡显（提示"这列能排"），排过之后只留对应那一个、标签与箭头一起加深（顺带标出"现在按这列排"）。点一下 = **升序（早→晚）**，再点 = **降序**（**两态**切换，没有"回到默认顺序"的第三态）。三个列表页共用**同一个**排序状态；**排序只改渲染顺序** —— 行上动作仍按剧集在数据里的**原始下标**走，所以排完序点某行打开的仍是那一集（这是最容易写错的地方）。重排会重建整行，于是**顺带清空勾选**（与 Apply 筛选同一套处理）；Episodes (free plan) 页那条固定在最前的 demo 行**不参与**排序。
 - **表头仍叫 When**（已知代价，用户明确选择保持）：合并后这一列里会出现 `AI Failed` 之类的状态词，表头与内容不再严格对应。
 
 **行交互：**
@@ -232,7 +248,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 ## 4. Episodes (apple) 页面（Apple Podcast Subscription 演示）
 
-**背景**：此页面为演示页，模拟用户开通 **Apple Podcast Subscription** 之后 Episodes 列表的展示效果。开通后，剧集列表会多出一列 **Type**，用于标识每集的订阅类型。
+**背景**：真实产品里这仍然是**同一个 `Episodes` 菜单**，只是账号已开通 **Apple Podcast Subscription** —— 本页是那个条件对应的演示入口。开通订阅后，剧集列表会多出一列 **Type**，用于标识每集的订阅类型。
 
 与 Episodes 列表页面结构基本一致，区别在于：
 
@@ -248,7 +264,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 ## 5. Episodes (free plan) 页面（Free plan 自动删除演示）
 
-**背景**：此页面为演示页，模拟 **Free plan** 用户的 Episodes 列表。Free 计划下，**剧集在创建 90 天后会被自动删除**。列表**只显示 status 为 Published / Draft 的剧集**（其余列与 Episodes 列表页一致，无 Type 列，见 3.3）。
+**背景**：真实产品里这仍然是**同一个 `Episodes` 菜单**，只是账号处于 **Free plan** —— 本页是那个条件对应的演示入口。Free 计划下，**剧集在创建 90 天后会被自动删除**。列表**只显示 status 为 Published / Draft 的剧集**（其余列与 Episodes 列表页一致，无 Type 列，见 3.3）。
 
 ### 5.1 页面头部
 
@@ -278,7 +294,13 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 ### 5.3 升级提示弹窗（Upgrade to keep your episodes）
 
-点击 Free plan 提示条中的 **Upgrade to keep them →** 按钮弹出升级弹框。
+点击 Free plan 提示条中的 **Upgrade to keep them →** 按钮（`promptUpgradeForDeletion()`）弹出升级弹框。它和「上传了更高 plan 才支持的格式」「Free plan 点 AI 功能 Activate」共用**同一个**弹框外壳（`#upgradeModal`，居中卡片 + 遮罩，按钮为 **Cancel** / **Upgrade**），只是标题与说明文字按场景替换：
+
+- **本场景标题**：`Upgrade to keep your episodes`。
+- **说明**：以 `On the Free plan, episodes are automatically deleted 90 days after creation.` 起头，再接一句把目标套餐填进句中的说明——当前即“Upgrade to **Unlimited Audio** to keep your episodes forever, with more storage and no auto-deletion.”。
+- **按钮**：**Cancel**（关闭，不升级）/ **Upgrade**（主按钮）。
+- **点 Upgrade** 模拟升级成功：当前 plan 切为 `Unlimited Audio`，弹框关闭，页面按新 plan 刷新（上传格式提示、AI Enhance 面板的开关等）。
+- **同框的另两种场景**（标题不同）：上传**更高 plan 才支持**的格式 → 标题 `Upgrade Required`，说明点明需升级到的套餐；上传**任何 plan 都不支持**的格式 → 标题 `Unsupported Format`，说明里列出当前 plan 支持的格式。
 
 ---
 
@@ -376,7 +398,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 | 控件 | 说明 |
 |---|---|
-| **Cancel** | 有未保存修改时弹出 "Unsaved Changes" 确认框；否则直接关闭 |
+| **Cancel** | 有未保存修改时弹出 "Unsaved Changes" 确认框（**Leave** 离开并回到进入前的那个列表页 / **Stay** 留在弹窗）；没有修改则直接关闭。点弹窗灰色遮罩同此行为。（2026-10-10 v2.107 起「有改动才弹」才真正生效，见下） |
 | **Save as Draft** | 保存草稿、关闭弹窗并**回到进入前的那个列表页**（Toast 提示 "Episode saved successfully!"） |
 | **标题** | Publish Episode（固定不变） |
 | **排定时间行** | 仅 Future 剧集显示：`Scheduled for Jun 26, 2026 2:00 PM`（纯展示，无 Change 链接），位于主按钮左侧同一行（详见下方规则） |
@@ -390,16 +412,35 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
   - **滚动到第一个出错的位置并聚焦** —— 「第一个」按**页面上从上到下**的位置算（2026-10-09 v2.90）：两处都缺时报**更靠上**的那个，当前即 **Media File**（它在 Basic Info 里排在 Title **上方**）。顺序是**用 DOM 位置判断**的（`compareDocumentPosition`），不是写死「先文件后标题」，所以以后表单把这两个字段调个个儿，这里会自动跟着变。
   - **不弹 Toast**（同日要求去掉）—— 提示就落在出问题的控件上，不另开一处告诉用户。
   - 缺的那一项补上后，红框与那行小字**立刻撤掉**（不用等下次点发布）；打开弹窗（编辑 / 新建）时会先清一次，免得带上次的红框进来。
+  - **必填项的事前标记（2026-10-09 v2.105）**：只有 **Title** 与 **Media File** 的标签后带一个红色 `*`（`.ed-v2-req`）；**其余字段一律无标记 = 可选**。这样「必填」在事前就有信号，不必等点了发布才知道。**不采用「给 Transcripts / Chapter Markers 挂 (Optional)」** —— 那会反过来暗示其余三块必填（而事实只有两项必填），而且这两块的标题与左侧菜单名字会不一致（2026-09-30 试过、当天即撤，见 7.2）。
 - **新建剧集**（New Episode → Upload later）打开弹窗时**默认即为 Publish Now（即时发布模式）**，下拉项为 Schedule Publish；可切换为定时发布。
 - 点击 "Schedule Publish" 后按钮文案切换为 "Schedule Publish"，再次点击主按钮会打开 Schedule Publish 弹窗（见 9.1）。
 - **Future** 状态的剧集打开弹窗时**默认即为 Schedule Publish**（主按钮直接显示 Schedule Publish，下拉项变为 Publish Now，可切回即时发布）。
 - **排定时间展示与修改**：Future 剧集打开弹窗时，**主按钮左侧同一行显示当前排定时间**（如 `Scheduled for Jun 26, 2026 2:00 PM`，纯展示、无 Change 链接）；修改排定时间通过点击主按钮 **Schedule Publish** 打开 Schedule Publish 弹窗（Date/Time 预填当前排定值），确认修改后该时间行即时更新。
-- **三个动作完成后的去向（2026-10-09 v2.83 统一）**：
-  - **Publish Now** → Toast `Episode published successfully!`（更新已发布剧集时是 `Episode updated successfully!`），并**跳转到 Share & Embed 页面**（见 9.3）。**新建剧集也跳** —— 以前只在编辑已有剧集时才跳（`shareEpisode()` 按 `episodes[index]` 渲染，新建的还没有列表数据）；现在会先按表单填的内容**补一条剧集数据**再跳，所以发布后它也会正常出现在列表里。
+- **三个动作完成后的去向（2026-10-09 v2.83 统一；2026-10-10 v2.106 追加订阅类型分流）**：
+  - **Publish Now** → Toast `Episode published successfully!`（更新已发布剧集时是 `Episode updated successfully!`），随后**去哪个页面看在发布的是不是 Apple 订阅剧集**（新建与 `Update` 同一套判断）：
+    - **Ad-free 订阅剧集** → **跳转到 Share & Embed 页面**（见 9.3）。
+    - **其余订阅类型**（`Subscriber-only` / `Early access` / `Archive access`）→ **回到列表页**（`publishReturnPage`，与 Save as Draft / Schedule 同一套返回页），底部只留那条发布成功 Toast。
+    - **非订阅剧集**（未勾选 `Apple Podcast Subscription`，含普通剧集与 Free）→ 同 Ad-free，**跳转到 Share & Embed 页面**。
+  - **新建剧集同样适用**：以前只在编辑已有剧集时才处理跳转（`shareEpisode()` 按 `episodes[index]` 渲染，新建的还没有列表数据）；现在不论随后去 Share 页还是回列表，都会先按表单填的内容**补一条剧集数据**，所以发布后它也会正常出现在列表里。
   - **Save as Draft** → Toast `Episode saved successfully!`（原 `Episode saved as draft!`），并**回到进入前的那个列表页**。
   - **Schedule**（预约发布）→ Toast `Episode scheduled successfully!`（原 `Episode scheduled for <日期> <时间>`），并**回到进入前的那个列表页**。
   - **「进入前的那个列表页」**在打开弹窗时记下（`publishReturnPage`）：从 Episodes / Episodes (apple) / Episodes (free plan) 哪个列表进来就回哪个；若弹窗是在 **Share & Embed 页**上打开的，则再往回退一层到它记着的那个列表（与 Share 页的 `shareReturnPage` 同一套做法）。
+  - **四个动作去向速查**（普通剧集的行为未变，Apple 订阅剧集按类型分流）：
 
+| 动作 | 普通（非订阅）剧集 | Apple 订阅剧集 |
+|---|---|---|
+| **Publish Now** | **Share & Embed 页面** | **Ad-free → Share & Embed 页面**；**其他类型 → Episode list** |
+| **Update**（重新发布已发布剧集） | **Share & Embed 页面** | **Ad-free → Share & Embed 页面**；**其他类型 → Episode list** |
+| **Save as Draft** | **Episode list 页面** | **Episode list 页面** |
+| **Schedule** | **Episode list 页面** | **Episode list 页面** |
+
+> **2026-10-09（v2.105）：改成「反过来标必填」—— 只给 Title 与 Media File 的标签挂一个红色 `*`。** 用户问「publish episode 页面为什么没给 transcript 和 chapter 加 optional 解释」。**答案是它加过、当天就撤了**（2026-09-30）：当时在 `Transcripts` / `Chapter Markers` 标题后挂 **(Optional)** 括号，撤掉的理由是 ① 只标最后两块会**反过来暗示前面三块必填**，而真正拦发布的只有 **Title / Media File** 两项；② 左侧锚点菜单里这两块一直叫 `Transcripts` / `Chapter Markers`，挂括号会让**同一个区块出现两个名字**；③ 空态卡片（一句灰字 + 一颗 Add、无报错样式）本身已在说「不填也行」。
+> **但用户问到了真问题**：这张表单一共有两套「必填 / 可选」的表达、**而且都不在明面上** —— 必填**只在点了发布之后**才告诉他（v2.88 定稿的「点了才报错」）；而 Transcripts / Chapter Markers 恰好是**两个默认空着、还带祈使句 CTA 的区块**（`Add a transcript to improve your SEO and let listeners read along.`），一个空着 + 喊你动手的区块读起来确实像「还差这一步」；也就是说**事前没有任何地方说明哪些是必须的**。
+> 给了四条路（不动 / 加回 (Optional) / **反过来标必填** / 改这两块的措辞），用户选**反过来标必填** —— 它是唯一既不撒谎、又只动两处的做法，而且顺着既有约定（必填由「能不能发出去」定义，不由文案定义）。落地：`.ed-v2-req`（`color:#dc2626; margin-left:3px; font-weight:600`），挂在 **Title** 与 **Media File** 两个 `.ed-v2-label` 内（`title="Required" aria-label="required"`，读屏能念）。**全表单只有这两处**，其余字段无标记 = 可选；`publishBlockingField()` 也正好只检查这两项，**语义与实现一致**。
+> **没做**：没给 Transcripts / Chapter Markers 加任何可选标记（理由见上）；也没改那两句 **Add …** 的 CTA 文案 —— 「介绍句用 Add … 开头」是既有的文案偏好，改了会跟它冲突。
+> **校验**：`ed-v2-req` 全文 3 处（1 条 CSS + 2 处标记），分别落在 `Media File` 与 `Title` 两个标签内；裸的 `Title` / `Media File` 标签已为 0；`publishBlockingField()` 仍只查 title + file（与「只有两处标记」对得上）；内联脚本过 node --check。文首版本号 → **v2.105**。
+>
 > **2026-10-09（v2.104）：列头 **Downloads (All time)** 改名 `Total Downloads`。** 用户问「**Downloads (All time)** 改为 **All Time Downloads** 合理么」。判断：方向（去掉括号限定）可以理解，但**按他写的样子不合理** —— ① **缺连字符**：all-time 在这里是**定语形容词**（all-time high / all-time record 就是这个用法），放名词前必须连起来，否则 **All Time Downloads** 会变成三个并排的名词；② 它把限定词挪到最前，**列头的第一个词不再是名词**，破坏表头的扫读节奏；而且**房规本来就是「名词 + 括号限定」** —— 全站另一个带括号限定的可见文案是章节工作区里的 `Start Time (mm:ss)`。于是给了三条路（保留原样 / **All-Time Downloads** / **Total Downloads**），用户选 **`Total Downloads`**。
 > **口径说明（已向用户点明）**：`Total` 与 all time 严格说不是一个意思 —— 前者是**合计**、后者是**统计范围（建站以来）**；本页这列本来就是「这一集自建站以来的总下载」，所以 `Total Downloads` 是**简化说法**、不是精确改写。用户确认采用。
 > 落地：三个列表页的表头各改一处（`<th class="ep-dl-head">Total Downloads</th>`）；**类名 `ep-dl-head` / `ep-dl-cell` 不动**（从 downloads 派生，与文案无关）；v2.99 给它加的 `white-space:nowrap` 照旧 —— 新文案比原来短约 10%，正好少占一点 Title 的宽度。
@@ -435,7 +476,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 > **校验**：把真实的 `epWhenCell(ep)` 配桩跑过六种状态，逐条核对输出（Published 裸日期；Future = 徽标 + `.ep-when-date` 包裹的日期；其余四种只有徽标）；`ep-when-cell` 恰好 3 个 td + 1 条 CSS；`.badge-future` / `.badge-ai-finished` 已改灰，并确认这两个类**只被 When 列用**（`badgeClass` 只在 `epWhenCell(ep)` 里调用）；内联脚本过 node --check。文首版本号 → **v2.99**。
 >
 > **2026-10-09（v2.98）：去掉 User 列，改为筛选弹层里的 User 子面板。** 用户：「将 User 这一列也去掉，如果用户有多个发布者的话，可以在 filter 里面增加 filter 去检索 episode」。判断是**赞成**，理由：① 这套原型里**已经有现成先例** —— **Season 与 Media Type 就是「只活在筛选里、不占表格列」的维度**，User 与它们同类（取值很少、用来把列表收窄，而不是逐行要去比较的事实）；② 这条列今天**每一行都是同一个值**（`Creator E`，只有 demo 行是 `Podcast Team`），一列全是重复内容就是纯噪声。
-> **动手前必须说清的一件事**：这套原型的筛选**不会真的筛行** —— `applyFilter()` 只做「给按钮加 active、关弹层、点亮 ×、清空选中」四件事，`episodes` 一行都没动。所以这次加的 User 面板与现有四个一样是**装饰性**的；用户确认接受这点（要真筛是另一件大得多的事：得让 `buildRows()` 按筛选状态过滤，还得顺带把 Status / Season / Media Type / Published 一起做成真的，否则只有 User 能筛会很怪，并会牵到选中条批量与 N selected）。
+> **动手前必须说清的一件事**：这套原型的筛选**不会真的筛行** —— `applyFilter()` 只做「给按钮加 active、关弹层、点亮 ×、清空选中」四件事，`episodes` 一行都没动（**2026-10-12 v2.109 起已改成真筛**，见文末该版日志）。所以这次加的 User 面板与现有四个一样是**装饰性**的；用户确认接受这点（要真筛是另一件大得多的事：得让 `buildRows()` 按筛选状态过滤，还得顺带把 Status / Season / Media Type / Published 一起做成真的，否则只有 User 能筛会很怪，并会牵到选中条批量与 N selected）。
 > 落地：① 三个列表的 **User 列**去掉（3 个表头、3 条 `colspan`、行模板 `rowStart`、Episodes 3 的 demo 行），`colspan` 由 6/7/6 变 **5/6/5**；② 三个筛选弹层各加一颗 **User 导航项 + `#fp-user` 面板**（`All Users` / `Creator E` / `Podcast Team`，沿用 Season 那套「All 与子项互斥」写法）；③ **把 `fp-user` 接进三处 JS** —— `updateNavDots()` 的面板清单（**顺序必须与导航项的 DOM 顺序一致，它是按下标取 navItem 的**）、它的 dirty 判定分支、`clearCurrentPanel(el)` 的重置分支、`resetFilter()` 的清单 —— 少接任何一处，这个面板要么没有 dirty 点、要么 Reset / Reset all 清不掉它。
 > **已知**：筛选弹层在三个列表页里**各有一份副本**，所以这是「一个面板改三遍」；这三个副本的对应片段逐字相同，用 replace_all 一次改完。
 > **校验**：把真实的 `buildRows()` 配桩 DOM 跑三个列表，每行 `<td>` 数为 **5 / 6 / 5**、与表头 `<th>` 数一致，并逐格打印确认第 3 格已是 When、User 已无；`colspan` 5/6/5；`id="fp-user"` 与 `switchFilterPanel('user',this)` 各 3 处、五个导航项的顺序 status→media→season→published→user 三个弹层一致；`Creator E` / `Podcast Team` 现在**只出现在筛选面板里**（行模板中已无）；整段内联脚本过 node --check。文首版本号 → **v2.98**。
@@ -501,6 +542,27 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 >
 > **注意**：预约的**校验分支保持不跳转** —— 没填日期/时间时只 Toast 报错 `Please select date and time.` 并 return，不会把人踢回列表。
 
+> **2026-10-10（v2.106）：Apple 订阅剧集发布后**按订阅类型分流去向**。** 用户要求：「当发布 apple podcast subscription 类型的 Episode 的时候，如果选择的是 **ad-free** 类型，则发布后到 **share and embed** 页面；如果是**其他类型**则**返回到 Episode list 页面**，底部出现 toast 消息」。动手前确认两点（都按建议定）：**Publish Now 与 Update 都适用**、**返列表时复用现有的那条发布成功 toast**（`Episode published successfully!` / 更新已发布剧集时 `Episode updated successfully!`），不新造文案。
+>
+> **落地**：`publishPublish()` 的 publish 分支里，在 `closeEpisodeDetailsModal()` **之前**先读走两个值 —— `isAppleSubscriptionEpisode()`（勾选框）与 `currentSubscriptionType()`（不勾 = `Free`，否则读下拉）—— 然后按 `appleSub && subType !== 'Ad-free'` 分流：命中就 `navigate(publishReturnPage || 'episodelist')`（与 Save as Draft / Schedule 同一套返回页），否则照旧 `shareEpisode(editingIndex)`。**`if (editingIndex < 0) editingIndex = createEpisodeFromForm();` 的补数据那一步移到分流之前**，所以两条路都保证新建的剧集先落进 `episodes`、发布后能在列表里看到。
+>
+> **为什么在关弹窗之前读**：`closeEpisodeDetailsModal()` 目前只是移掉 `show` 类、不重置表单，读完再关也一样；但先把值取走更稳（万一以后关弹窗顺手加了复位就静默取不到了）。
+>
+> **边界（都验证过）**：非订阅剧集（未勾选，含普通剧集与 `Free`）**不受影响**，仍进 Share & Embed 页——规则只针对**勾了 Apple 订阅**的剧集；从 Episodes (apple) 以外的列表页点开一个 Apple 剧集编辑时，`syncAppleSubscriptionFromType(ep.type)` 仍会把勾选框同步为勾上、下拉同步为该类型（字段虽被 `updateEpisodeTypeField()` 隐藏），所以判断照常成立；**Save as Draft / Schedule 完全不受影响**（后者的去向本来就是回列表）。文首版本号 → **v2.106**。
+>
+> **校验**：把真实的 `publishPublish()` / `isAppleSubscriptionEpisode()` / `currentSubscriptionType()` 抠出来、配桩 DOM + 桩函数在 Node 里跑八种组合（Ad-free / Subscriber-only / Early access / Archive access / 非订阅 × 编辑 / 新建），断言「跳 Share 页还是回列表」「新建剧集是否仍补进 `episodes`」「toast 是否发出」三者都对；整段内联脚本过 node --check；markup `<div>` 开闭仍配平。
+
+> **2026-10-10（v2.107）：把 Cancel 的「未保存修改确认框」真正接上 + Leave 改为回列表页。** 起因是核对按钮行为时发现文档与代码不符：文档 §7.1 / §9.2 一直写着「Cancel 有未保存修改时弹 Unsaved Changes 确认框」，但 **`backFromDetailsModal()` 是无人调用的死代码** —— `.ed-back-btn` 的 onclick 直接是 `closeEpisodeDetailsModal()`，那个确认框（`#confirmModal`）在发布流程里**根本弹不出来**。用户确认要按文档修代码，并定下两点：**只在真有改动时才弹**（没改直接关闭）、**Leave 之后回到「进入前的那个列表页」**（原来 `leavePage()` 是去打开 New Episode 上传页，只有「从上传页进来」那一路才顺）。
+>
+> **落地三处**：
+> ① **加了「表单脏」跟踪** —— `var publishFormDirty` + `markPublishDirty()` + `initPublishDirtyTracking()`：在 `#episodeDetailsModal` 上挂一个**捕获阶段**的 `input` / `change` 委托（覆盖标题、描述、下拉、勾选框、标签、日期、文件选择），再加一个 `click` 委托专收**只发 click 不发 change** 的改动点（`.ed-v2-social-icon` 平台开关、`.ed-v2-suggest-item` 标题推荐项、`#v2MediaFileAction` / `#v2AdFreeFileAction` 的 Upload·✕）。`initPublishDirtyTracking()` 靠 `dataset.dirtyWired` 保证**只接一次线**；`openEpisodeDetailsModal()` 开头 `publishFormDirty = false` 复位。
+> ② **`backFromDetailsModal()` 改成条件式**：`publishFormDirty` 为真才弹出 `#confirmModal`，否则直接 `closeEpisodeDetailsModal()`；`.ed-back-btn` 的 onclick 由 `closeEpisodeDetailsModal()` 换成它，**点弹窗灰色遮罩**也从「直接关」改走同一个函数（它和 Cancel 是同一个「离开」动作，两条出口不该一个确认一个不确认）。
+> ③ **`leavePage()` 改成** 关确认框 → 关 Publish 弹窗 → `navigate(publishReturnPage || 'episodelist')`，**不再 `openNewEpisodeModal()`**。
+>
+> **判定范围（刻意保守）**：只把「会改变发布内容的操作」算作改动；**纯 UI 操作不算** —— 左侧锚点跳转、展开/收起 More options、展开 YouTube Video Settings 字段区、拉出封面按钮、只是打开标题推荐列表而不选。理由是「有改动才弹」若把看/展开也当改动，就退化成「总是弹」，与要修的初衷相反。**已知覆盖不到的一处**：封面「账号 Logo」那半（`chooseLogoFromAccount`）本身有老 bug 会抛错（见下方与「占位/遗留」清单），没有单独给它记脏。
+>
+> **校验**：抠出 `backFromDetailsModal()` / `leavePage()` 配桩 DOM 真跑 —— **干净态**点 Cancel 不弹框直接关；**脏态**点 Cancel 弹框且弹窗仍开着；Leave 只 `navigate('episodelist3')`（回 `publishReturnPage`）、**不再打开上传页**；另断言 `.ed-back-btn` 已接 `backFromDetailsModal`、遮罩点击同路、`openEpisodeDetailsModal` 复位脏标记并调用接线函数。整段内联脚本过 node --check；v2.106 那套 30 条回归仍全绿。文首版本号 → **v2.107**。
+
 ### 7.2 内容区 —— 左侧菜单 + 同页堆叠的五个区块
 
 内容区左侧为竖向菜单，五项依次为 **Basic Info → Settings → Social Sharing → Transcripts → Chapter Markers**。
@@ -537,6 +599,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 **② Media File**
 
+- **标签后带一个红色 `*`**（必填标记，2026-10-09 v2.105）—— 全表单**只有两处**必填标记，另一处是 Title；其余字段一律无标记 = 可选。
 - 显示当前文件名（如 `episode-audio.mp3`）；有文件时右侧为 **✕** 删除链接（与 File for Subscriber 的操作样式一致）。
 - **文件名只显示一行**：太长时截断为 `…`，且省略号出现在**扩展名之前**（如 `a-very-long-episode-nam… .mp3`），**扩展名始终完整可见**，不会被一起省略掉。
 - 点击 **✕** 清除文件后，文件名位置显示灰色提示 `Please upload a file.`，右侧链接变为 **Upload**，点击选择新文件。
@@ -553,6 +616,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 
 **④ Title**
 
+- **标签后带一个红色 `*`**（必填标记，2026-10-09 v2.105）—— 全表单**只有两处**必填标记，另一处是 Media File；其余字段一律无标记 = 可选。
 - 剧集标题输入框，placeholder 为 `Enter episode title`。标题变化会实时同步更新 Publish 按钮可用状态。
 - **AI Finished 剧集**（2026-10-09 v2.86）：**输入框内部右端**多出一颗绿色 **More** 链接（同日再一轮从「标签右侧」挪进框内，与 Media File 行里 Preview 的位置语言一致；输入框加了右内边距，文字不会压到它），点开是一个**下拉**，里面列 **3 条 AI 推荐标题**（每条下面一行小字说明推荐理由，如 `Adds the year — good for search`）。**点一条就填进输入框**（可以再手改）；点别处收起。推荐是**按当前标题派生**的（取冒号/破折号前的主干，套三种句式：`…: A Complete Guide for 2026` / `… — Everything You Need to Know` / `…: The Step-by-Step Walkthrough`），所以任何 AI Finished 剧集都有合适的三条。其它状态这个 More 不出现。
 
@@ -609,7 +673,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 |---|---|---|
 | **Author** | 文本输入 | 作者，placeholder `Enter author name` |
 | **Duration** | 文本输入 | 时长，placeholder `e.g. 00:32:15` |
-| **Alternative Episode Link** | 文本输入 | 自定义本集 RSS `<link>`；留空则用默认 Podbean 剧集链接 |
+| **Alternative Episode Link** | 文本输入 | 自定义本集 RSS `<link>`；placeholder `Leave this field blank to use the default Podbean episode URL.`（留空则用默认 Podbean 剧集链接） |
 
 #### Social Sharing 区块
 
@@ -620,7 +684,7 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
 - 点击 YouTube 图标激活时，展开 **YouTube Video Settings** 子面板（同一区块内，在图标行下方，与上面的图标行之间**只留间距、不画分隔线**；标题行**可折叠**、**默认收起**，点标题行才展开下面的字段；展开箭头**紧跟标题名右侧**（与 Settings 里 **More options** 同款，不是推到行末最右端）；子面板整体显隐只由上方 YouTube 图标开关控制）。字段排布为**上下结构**（label 在上、控件在下方占满整行，与弹框其它字段一致，但 label 用小号浅字 13px）。字段照线上（2026-10-08 由原来的 Visibility / Category / Language / Paid Promotion 四行改成下面这一组）：
   - **Title**：文本框，placeholder `YouTube video title. You can leave it blank to use the episode title.`（留空则用剧集标题）。
   - **Description**：多行文本框，placeholder `YouTube video description. You can leave it blank to use the episode description.`（留空则用剧集简介）。
-  - **Category**：下拉，默认选中 `Entertainment`，其余为 YouTube 标准分类（Film &amp; Animation、Autos &amp; Vehicles、Music、Gaming、Education、Science &amp; Technology 等）。
+  - **Category**：下拉，**默认选中** `Entertainment`，其余为 YouTube 标准分类（共 15 项，按字母序：Film &amp; Animation、Autos &amp; Vehicles、Music、Pets &amp; Animals、Sports、Travel &amp; Events、Gaming、People &amp; Blogs、Comedy、Entertainment、News &amp; Politics、Howto &amp; Style、Education、Science &amp; Technology、Nonprofits &amp; Activism）。
   - **Visibility**：单选 Public / Unlisted / Private，默认选中 Public。
   - 图标行**下面**、YouTube Video Settings 子面板**上面**一句提示（在子面板**之外**——子面板收起时它仍然显示；**只在 YouTube 图标点亮时才出现**，图标未点亮时不显示）：`Share to YouTube with episode length in excess of 15 minutes requires YouTube account verification first.`，其中 **requires YouTube account verification** 链到 `https://www.youtube.com/verify`。
 
@@ -716,8 +780,8 @@ Actions 按钮不在工具栏中，而是位于**表格选中条（alt-header-ba
   - 表格列：Time（点击可跳转播放到该时间点）、Title、删除按钮。
   - 空状态：`No chapters yet. Use the player or the form above to add one.`
   - **Add Chapter 按钮**：从播放器当前位置添加章节，打开 **Add Chapter** 弹窗：
-    - **Start Time (mm:ss)**：播放器当前时间自动填入，可手动修改。
-    - **Chapter Title**：章节标题。
+    - **Start Time (mm:ss)**：播放器当前时间自动填入，可手动修改；placeholder `05:30`。
+    - **Chapter Title**：章节标题，placeholder `Enter chapter title...`。
     - Cancel / Add Chapter（Enter 也可提交）。
     - 时间格式校验：`mm:ss` 或 `hh:mm:ss`。
   - 章节按时间自动排序。
@@ -785,10 +849,10 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 
 | 控件 | 说明 |
 |---|---|
-| **Denoising Method（下拉）** | 降噪方式：`Static`（仅移除恒定噪声）/ `Dynamic`（保留人声和音乐，移除其他，默认）/ `Speech Isolation`（保留人声，移除其他） |
-| Denoising Method 解释 | 说明 AI 应只移除静态噪声还是也包括快速变化噪声，以及是否保留/消除音乐 |
-| **Cut Silence（开关）** | 移除静音段落；解释：检测并移除录音中的静音片段（可能由停顿、呼吸、设备调整导致），视频文件除外 |
-| **Cut Fillers（开关）** | 移除口头填充词；解释：检测并移除 "um"、"uh"、"mh"、德语 "ähm"、法语 "euh"、西班牙语 "eh" 等填充词，视频文件除外 |
+| **Denoising Method（下拉）** | 降噪方式（选项文案原样）：`Static — Remove constant noises only.` / `Dynamic — Keep speech and music, remove everything else.`（默认）/ `Speech Isolation — Keep speech, remove everything else.` |
+| Denoising Method 解释 | `Define whether the AI should remove only static or also fast-changing noises, and whether it should keep or eliminate music.` |
+| **Cut Silence（开关）** | 移除静音段落，**默认开启**；解释 `It detects and removes silent segments from your record, that might be caused by speech breaks, pauses for breathing, or equipment-re-adjusting, except video files.` |
+| **Cut Fillers（开关）** | 移除口头填充词，**默认开启**；解释 `It detects and removes filler words, namely any kind of "um", "uh", "mh", German "ähm", "äh", "öh", French "euh", Spanish "eh" and similar, except video files.` |
 | 底部说明 | 提示：`The changes you made will be applied when you publish new episodes using AI Audio Optimization.` |
 | **Save 按钮** | 保存并关闭 |
 
@@ -798,9 +862,9 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 
 | 控件 | 说明 |
 |---|---|
-| **Description Style（下拉）** | 描述风格：`Standard`（简洁清晰的剧集描述，默认）/ `Informative`（概述主题、嘉宾和要点）/ `Conversational`（随意友好的语气）/ `Storytelling`（叙事风格吸引听众） |
-| **Description Length（下拉）** | 描述长度：`Brief`（简洁，突出要点，默认）/ `Comprehensive`（详细，覆盖各方面） |
-| **Transcript Speaker Diarization（开关）** | 说话人分离；解释：自动为说话人添加标识（如 Speaker 1），并允许在剧集转写编辑框中修改这些名称以实现个性化 |
+| **Description Style（下拉）** | 描述风格（选项文案原样）：`Standard — Generate a simple, clear episode description`（默认）/ `Informative — Overview of topics, guests, and key points` / `Conversational — Casual, friendly tone as if to a friend` / `Storytelling — Narrative style to engage listeners` |
+| **Description Length（下拉）** | 描述长度（选项文案原样）：`Brief — Concise description highlighting key points`（默认）/ `Comprehensive — Detailed description covering various aspects` |
+| **Transcript Speaker Diarization（开关）** | 说话人分离，**默认开启**；解释 `Automatically labels speakers with identifiers (e.g., Speaker 1) and allows you to edit these names in the episode transcript edit box for personalization.` |
 | 底部说明 | 提示：`The changes you made will be applied when you publish new episodes using AI Content Assistant.` |
 | **Save 按钮** | 保存并关闭 |
 
@@ -822,16 +886,23 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 
 ### 9.2 Unsaved Changes（未保存修改确认）
 
-当从 Publish Episode 弹窗点击 Cancel/返回且存在未保存修改时弹出：
+当从 Publish Episode 弹窗点击 **Cancel**（或点弹窗灰色遮罩）**且表单有未保存修改**时弹出（2026-10-10 v2.107 起「有改动才弹」真正生效）：
 
 - 标题：`Unsaved Changes`；说明：`You have unsaved changes. Are you sure you want to leave?`
-- 按钮：**Leave**（离开，回到 New Episode 弹窗）/ **Stay**（留在当前页）。
+- 按钮：**Leave**（离开：关闭确认框与 Publish 弹窗，回到**进入前的那个列表页**）/ **Stay**（留在当前页，只关确认框）。
+- 未作任何修改时点 Cancel **不弹此框**，直接关闭弹窗。
+- **「有修改」的判定**（`publishFormDirty`）：打开弹窗时复位；弹窗内任何 `input` / `change`（标题、描述、下拉、勾选框、标签、日期、文件选择），以及只发 click 不发 change 的改动点（社交平台图标开关、AI 标题推荐项、Media File / File for Subscriber 的 Upload·✕）都会把它置真。**纯 UI 操作**（左侧锚点跳转、展开/收起 More options、查看标题推荐列表本身）不算改动。
 
 ### 9.3 Share & Embed 页面（分享/嵌入）
 
 > 2026-09-30：**由弹窗改为整页**。左侧菜单里**没有**这一项——它是从剧集列表的行操作菜单（`…` → **Share & Embed**）或 Publish Episode 弹窗的 **Social Sharing 区块**（已发布剧集里的 **View Share & Embed** 按钮）进入的独立页面。页面左上角有 **`← Back to Episodes`**，返回到**进入前的那个列表页**（Episodes / Episodes (apple) / Episodes (free plan)）。发布成功后也会自动跳到这里（见 11.2）。
 
-页面顶部**没有**页标题，也**没有**剧集信息（封面 / 标题 / 状态徽章 / 日期）——整块已在 2026-10-09 v2.50 删除，页面从 **`← Back to Episodes`** 直接进入两个 Tab。内部含两个 Tab：
+页面顶部**没有**页标题（那个 32px 的 `Share & Embed` 大标题已于 2026-10-09 v2.50 移除，之后未再加回）；返回按钮下方是一条**剧集信息头**（2026-10-09 v2.68 加回，替代 v2.50 删掉的那一版、尺寸更小），再往下才是两个 Tab：
+
+- **剧集信息头**：左侧一张封面图（**96px** 圆角方框），右侧文字块与封面**居中对齐**——上行是剧集**标题**（长标题会折行、完整显示），下行是**状态徽章**（按剧集状态取色，如 `Future`）与**日期**（浅灰）。
+- **两个 Tab**：**Share** / **Embed Player**（页级 Tab，20px 字号 + 绿色下划线指示条），默认选中 **Share**。
+
+> 下面三条标着 **【已作废 · v2.50 已删整块】** 的注记，记录的是 v2.50 那一版被删掉的顶部信息头（后来 v2.68 又加回了新的一版），留档备查，别照它们把旧尺寸/旧对齐加回来。
 
 > **【已作废 · v2.50 已删整块】** **2026-10-09：顶部剧集 Logo 放大到 180×180。** 用户要求把 Share & Embed 页面顶部的剧集封面（`.share-episode-logo`）宽高由 **72px** 改成 **180px**。只改了这一条 CSS 的 `width` / `height`——圆角方框仍是 `border-radius:12px` + `overflow:hidden`、`flex-shrink:0` 不变，里面的 `<img>` 继续 `width/height:100%` + `object-fit:cover` 铺满并裁切，所以换尺寸不必动任何其它规则。右侧那列剧集信息（标题 / 状态 / 日期）仍是 `align-items:flex-start` 顶端对齐（同日的下一条把状态 / 日期那行改成了沉底对齐 + 16px，见下）。
 
@@ -1067,21 +1138,26 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 
 **① 链接区（URL）**
 
-- 三种 URL 类型切换按钮：`Episode URL` / `Download URL` / `Share URL`，基于剧集标题生成的 slug 拼接：
+- 三种 URL 类型切换按钮：`Episode URL` / `Download URL` / `Share URL`，**连成一个分段控件**（2026-10-09 v2.66：只有一圈外框、中间以竖分隔线分段；选中态为**浅灰底 + 深色字**，与 Publish 弹窗左侧导航同一种“选中”语言）。基于剧集标题生成的 slug 拼接：
   - Episode：`https://podcastingsmarter.podbean.com/e/<slug>`
   - Share：`https://podcastingsmarter.podbean.com/share/<slug>`
   - Download：`https://podcastingsmarter.podbean.com/media/<slug>/download`
-- 只读输入框 + 复制按钮（点击后短暂显示复制成功反馈）。
+- 只读输入框（2026-10-09 v2.69 改静默态：浅灰底、无描边，hover 才浮线）+ 右侧一颗 **`Copy`** 文字按钮（2026-10-09 v2.64 由图标改文字、v2.65 降噪成浅底描边；点击后短暂变成 `Copied` 并闪绿）。
 - **焦点行为**：点进输入框即**全选整条 URL**（键盘 Tab 聚焦同样全选）；切换 URL 类型时，若字段仍处于聚焦状态则**保持全选**，否则不动焦点。选区一旦进入，框内的正常选区操作（放置光标、拖选一段、双击选词）不受影响。
 
 **② Share to（社交分享）**
 
-- Facebook / X (Twitter) / LinkedIn / Email 四个社交按钮。
+- Facebook / X / LinkedIn / Email 四个社交按钮（`X` 的 `title` 为 `X (Twitter)`），均为**常亮品牌色**（2026-10-09 v2.58：`--sc` 图标色 + `--sc-bg` 浅色底，默认即着色、不再只在 hover 时出现；hover 只向上抬 2px 并压深一点）。
+- 图标行**上方**一句句内提示（2026-10-09 v2.55 补，v2.63 改黑字；**不是小节标题**）：`Share this episode — clicking a platform sends it to your account right now.` —— 用它和 Publish 弹窗里那排“发布时自动分享”的渠道开关区分开（这里是点一下、**现在就发**）。
 - 点击打开对应平台的模拟分享窗口，确认后通过真实分享 URL 新窗口打开（Facebook、Twitter、LinkedIn）或唤起邮件（Email）。
 
-**③ Auto-share Status（自动分享状态）**
+**③ Auto-sharing（自动分享状态）**
 
-- 说明：自动分享未启用，新剧集不会自动发布到已关联社交账号，附 `click to enable` 链接（跳转 Distribution → Social Share 页面）。
+> 2026-10-09 v2.59 起由一句静态文案改为**按“发布那一刻在 Social Sharing 里点亮了哪些平台”动态渲染**（`renderShareAutoShare()`）；v2.60 起照线上组件把它做成**表格**；v2.63 把表头第一列由 `Destination Name` 改成 `Auto-sharing`。
+
+- **点亮了平台**（该集 `socials` 非空）→ 一张表：表头 `Auto-sharing` / `Share Date` / `Status`，**一行一个点亮的平台**（目的地名取自 Publish 弹窗 Social Sharing 那套枚举：Facebook / Tumblr / LinkedIn / YouTube / WordPress）；`Share Date` 已发布填该集发布日期、未发布统一占位 `--/--/----`；`Status` 徽章已发布为 `shared`（绿）、未发布为 `pending`（灰）。
+- **一个都没点亮** → 藏起表格、只留一句灰字（不整块隐藏，因为本节就是来回答“这一集的分享状态是什么”）：已发布 `Auto-share was off for this episode — no platforms were switched on when it was published.`；未发布 `Auto-share is off for this episode — no platforms are switched on for it.`
+- **采集端**：发布 / 预约发布时由 `captureSocialSharing()` 把 Publish 弹窗里点亮的图标写入该集 `socials`（图标行隐藏时不采集，免得“更新已发布剧集”把发布时的选择覆盖掉）。
 
 #### Embed Player 选项卡
 
@@ -1142,8 +1218,8 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 ### 11.2 状态与数据流
 
 - **状态切换**：Publish Episode 弹窗**标题始终为 Publish Episode**；右上角主按钮文案根据剧集当前 status 切换（新建剧集 / Published / Draft / AI Finished / AI Failed → Publish Now 或 Update；Future → Schedule Publish；**AI Processing** 不可编辑，不进入弹窗）。新建剧集与 Draft / AI Finished / AI Failed 均默认 Publish Now（即时发布），Future 默认 Schedule Publish。
-- **三个动作的去向**（2026-10-09 v2.83 统一，详见 7.1）：
-  - **Publish Now**（含**新建剧集**）→ 结束在 **Share & Embed 页面**（见 9.3），方便立即分享或复制嵌入代码；页面左上角的 `← Back to Episodes` 可回到进入前的列表页。新建剧集发布时会先按表单内容补一条 `episodes` 数据，因此它随后也会出现在列表里。
+- **三个动作的去向**（2026-10-09 v2.83 统一、2026-10-10 v2.106 追加订阅类型分流，详见 7.1）：
+  - **Publish Now**（含**新建剧集**）→ 按发布的是不是 Apple 订阅剧集分两种结果：**Ad-free 订阅剧集、以及所有非订阅剧集** 结束在 **Share & Embed 页面**（见 9.3），方便立即分享或复制嵌入代码（页面左上角 `← Back to Episodes` 可回到进入前的列表页）；**其余订阅类型**（Subscriber-only / Early access / Archive access）则**回到进入前的列表页**、只弹一条发布成功 Toast。不论哪种，新建剧集都会先按表单内容补一条 `episodes` 数据，因此随后也会出现在列表里。
   - **Save as Draft** / **Schedule** → 结束在**进入前的那个列表页**（`publishReturnPage`），分别 Toast `Episode saved successfully!` / `Episode scheduled successfully!`。
   - 三者都在完成时 Toast：`Episode published successfully!` / `Episode updated successfully!`（更新已发布剧集）。
 - **Free plan 删除倒计时**：`daysUntilDeletion()` 按 `created + 90 天 − 当前日期` 计算剩余天数；剩余 ≤ 14 天视为"即将删除"（标题后倒计时用暖橙色，并计入顶部风险摘要，见 5.2）。
@@ -1163,3 +1239,28 @@ Media File 行里的 **Preview** 打开它：一块居中白卡（上限 560px�
 | 查看某集的数据 | 列表 **Downloads** 那格的数字 → **Statistics → Episodes**（2026-10-09 v2.102） |
 | 按发布时间排序 | 列表 **When** 表头 → 点击切换 升序 / 降序（2026-10-09 v2.103） |
 | 查看 Free plan 剧集删除倒计时 | 侧边栏 **Episodes (free plan)** → 顶部风险摘要 / 标题后倒计时 |
+
+---
+
+> **2026-10-10：文档补充 —— 把已上线、但先前只留在变更日志里的现状搬进正文（`index.html` 未改动，文首版本号不动）。** 一次对照 `index.html` 的全量核对，补齐/订正了正文里几处“当前状态描述”落后于实现的地方：
+> - **§1** 补上**侧边栏完整结构**（Dashboard 外链 / 四个 Episodes 一级项 / Distribution、Statistics、Settings 三个父级菜单及其子项）与顶栏构成，并点名 **Statistics → Episodes** 是 Downloads 数字的落点。
+> - **§5.3** 由一句话扩写为完整弹窗说明（标题 `Upgrade to keep your episodes`、说明文案、Cancel / Upgrade、Upgrade 后切 plan），并注明它与“上传格式升级”“AI 功能升级”**共用同一个弹框**（另两种标题为 `Upgrade Required` / `Unsupported Format`）。
+> - **§3.2 / §3.3** 补两处细节：Season 筛选在演示页是**固定十项** `Season 1`–`Season 10`；When 排序按钮的 `aria-label` 为 `Sort by episode date`。
+> - **§7.2** 补上 **Alternative Episode Link** 的 placeholder（`Leave this field blank to use the default Podbean episode URL.`）、**Chapter Markers** 工作区 Add Chapter 弹窗里 **Chapter Title** 的 placeholder（`Enter chapter title...`）与 **Start Time** 的 placeholder（`05:30`）。
+> - **§8** 两个 AI Settings 弹框的下拉选项改成**照 html 原样的英文文案**（原来只给了中文意译），并补上三个开关**默认开启**。
+> - **§9.3** 订正三处落后于实现的描述：① 页面顶部**已有剧集信息头**（v2.68 加回，96px 封面），领句原写“没有剧集信息”已作废；② Share 选项卡 ① 补上 URL 三种类型已是**分段控件**（v2.66）、Copy 已是**文字按钮**（v2.64/2.65）；③ Share 选项卡 ③ 由已删除的静态文案换成**按点亮平台动态渲染的 Auto-sharing 表格**（含表头三列与 off 态文案）。
+>
+> 这几处此前的“现状”都只存在于对应的 v2.5x–v2.8x 变更日志条目里，正文小结没有跟着收敛，导致正文与实现不一致；本次以 `index.html` 为准把正文补齐。
+
+> **2026-10-12：澄清 —— 真实产品只有一个 Episodes 菜单（`index.html` 未改动，文首版本号不动）。** 用户指出：「Episodes 0、Episodes、Episodes (apple)、Episodes (free plan) 是 Episodes 菜单**在不同条件下的演示**，实际只会有一个 Episodes 菜单」。此前 §1 与第 2/4/5 节的写法（「均为侧边栏一级菜单项」「此页面为演示页」）容易读成产品里有四个并列菜单，本次统一改成 **一个 `Episodes` 菜单 + 四个演示入口**：§1 开头换成一张「演示入口 ↔ 模拟的条件 ↔ 与基准形态的差别」对照表，§2/§3/§4/§5 的领句都补明「这是同一个菜单在不同条件下的样子」。**按用户要求又删掉了 §1 里原有的「原型侧边栏的完整结构」清单（Dashboard / Distribution / Statistics / Settings 等）与顶栏那句、以及那条 2026-10-09（v2.82）侧栏改名说明**。**原型侧边栏仍保留四个入口**（用户选择本次只改文档措辞、不动代码），所以文档里凡是写「侧边栏 **Episodes (free plan)**」这类**操作路径**，仍按原型现状写。
+
+> **2026-10-12：补上 §2.3 两个推荐入口的操作链接去向。** **① `Try AI Podcast Creator →`** —— 点击跳转到 **AI Podcast Creator 后台**（Podbean 的 AI 播客创作页面，当前标签页打开）。**② `Learn more →`**（Podbean App 录制那条）—— 点击**在新标签页打开** Podbean 帮助中心教程 `https://help.podbean.com/support/solutions/articles/25000034072-record-and-edit-your-podcast`。**留档**：原型 `index.html` 里这两颗链接目前都是 `href="#" onclick="event.preventDefault();"` 的**占位**（点了不跳转、就是为了演示不被点走），本节的去向是**期望行为**；要跟原型一致，得给这两颗接上跳转（各一行）。
+
+> **版本 v2.108**（2026-10-12）：**筛选弹层补上「关闭 = 取消」这半边语义。** 用户问「筛选弹窗底部是否应该加一个 Cancel 按钮」。先查了现状：这个弹层只有「暂存编辑 + Apply 提交」这半边 —— 改完不 Apply 直接关掉（点弹层外面，或再点一次 Filter 按钮），改动会**留着**（重开还在、`dirty` 点还亮着，Filter 按钮却仍是暗的），想「算了不改了」只能一条条手动勾回去。给的判断是**需要这个去处、但不新增按钮**：弹层里已经有三个「清掉我刚点的东西」的入口（面板内 `Reset`、导航 `Reset all`、弹层外那颗 `×`），再加一颗 Cancel 就有四个，且 `Cancel`（回上次应用）与 `Reset`（回默认）的差别从按钮字面上看不出来 —— 用户采纳，选了「让关闭动作承担取消」。落地：新增 `readFilterState()` / `writeFilterState()` / `captureAppliedFilterState()` / `restoreAppliedFilterState()` 与一个 `appliedFilterState` 快照。**捕获时机**＝ `applyFilter()` 之后、以及 `resetFilter()` 之后（「Reset all」与那颗 `×` 都是当场清空并已应用，基准要跟着回到默认）；**还原时机**＝点弹层外面**真的把弹层关掉**时（加了 `contains('show')` 守卫，所以点 Apply 自己不会触发还原），以及 `toggleFilter()` 的关闭分支；**首次打开时**懒捕获一次（页面上那份就是初始的已应用状态）。刻意**不**动 `clearCurrentPanel()`（面板内的 Reset）：它是「回默认」的**暂存编辑**，不提交、也不捕获，仍需 Apply。三个列表页各一份弹层副本，所以快照按 popover 逐个存、逐个还原。**顺带**把「再点一次 Filter 关闭」也归进同一套语义 —— 否则两个关闭手势会有两种结果、差别还看不见。
+> **校验**：`outputs/check_v2108.js`（21 条全过）—— 先过整段内联脚本语法，再断言接线点（Apply / Reset 后捕获、关闭后还原、只有真关掉才还原、Apply 自己不还原、`clearCurrentPanel` 不捕获、新的 `else` 分支在），最后把四个函数抠出来配桩 DOM 跑状态机：捕获默认态 → 改动 → 还原回到快照（三个副本都回到）、Apply 之后基准前进（还原回到 Apply 那份而不是更早的默认）、无快照时还原安静返回。**踩坑（断言写法）**：判「`clearCurrentPanel` 不捕获」时按 `indexOf('function clearCurrentPanel')` → `indexOf('function applyFilter')` 切片，而新加的函数正好插在这两者之间，切出来的片段把新代码也包进去了 → 假失败一次；边界要切到新代码的注释行。
+
+> **版本 v2.109**（2026-10-12）：**五个筛选面板做成真筛。** 用户：「更新 episodes list 中 Episode 的属性，使其在 apple 各个 filters 的时候，可以演示出不同的搜索结果」。动手前确认了两件事（都是用户选的）：**做法 ＝ 让现有 5 个面板真的筛行**（不新增 Type 面板）、**范围 ＝ 三个列表页都做**。此前这套筛选**只做外观** —— `applyFilter()` 只给按钮加 active、关弹层、点亮 ×、清空选中，`episodes` 一行都不动。
+> **数据层**：每集补两个属性 —— `mediaType`（Audio / Video）与 `user`（Creator E / Podcast Team），20 条分别是 **Video 6 / Audio 14**、**两个发布者各 10**。分布是照着「每种筛选都能看出不同结果」配的：Video 那 6 条**刻意覆盖除 Future 外的五种状态**（Published ×2 / AI Processing / AI Finished / AI Failed / Draft），于是 **Video + Future 成了现成的空组合**；`season` 没动（Season 1 三条、Season 2 两条，Season 3–10 天然为空，正好演示空态）。**注意 `mediaType` 与 `tags` 里的 audio / video 不是一回事**：`tags` 是用户标签（只有几条带 video），`mediaType` 是给筛选用的文件类型，两处只有 4 条示范性地重合。
+> **代码层**：新增一组筛选引擎 —— `appliedFilters`（null ＝ 不筛；**全局一份**，三个列表页共用，做法与 `whenSort` 一致）＋ `checkedOptionLabels()` / `firstCheckbox()` / `readFilterConstraints()`（把弹层里的勾选读成条件）/ `filterTime()` / `episodeMatchesFilters()` / `emptyRowHTML()` / `renderListPagination()`。`buildRows()` 在 `order.forEach` 里加一句「不匹配就 return」；三页各自计数，0 条时补一行跨整行的空态；Episodes (free plan) 页那条演示行在有筛选时不出现。三颗 Apply 按钮改成 `applyFilter(this)`，好知道该读哪一份弹层。分页：第 1、2 页原来那句 `Showing 1 to 20 of 26 entries` 是**静态写死的**，现在加了 id，筛选时改成真实条数并收起那两颗假的分页标签（不筛时保持原样，连那个「26」的演示说法一起留着）。
+> **几条刻意的判断**：① **Media Type 两个都不勾 ＝ 空结果**（这个面板没有 All 项，两个都勾才等于不筛；都不勾就是「一个也不要」）；② **日期区间只认 When 列里看得见日期的行**（Published / Future）—— 与 When 列「按看得见的东西排序」是同一条原则，Draft 与四种 AI 状态的 `when` 是占位、不拿来当发布日期；③ **「To」含当天**（按当天 0 点 + 1 天比较）；④ **筛选与 Free plan 页自身的限制叠加**，不是覆盖。
+> **校验**：两个脚本 —— `outputs/check_v2109.js`（48 条：接线点 ＋ 把真实数据与真实引擎抠出来跑单面板 / 组合 / 日期区间，逐项对条数）与 `outputs/check_v2109_render.js`（20 条：抠 `buildRows` 配桩 DOM 跑真实渲染，数行数 / colspan / 分页文案，并确认行上的 id 仍是**数据里的原始下标**、Video 条件筛出来的 6 行标题与数据对得上）。v2.108 那套 21 条回归重跑通过（**其中两处切分边界得跟着 `applyFilter()` → `applyFilter(btn)` 一起改**）。**踩坑**：三次断言写错全出在我自己对数据的口算上 —— Season 传了剥离后的数字而不是面板上的文案（`Season 1`）、`Audio + Podcast Team + Published` 少算一行（实际 5 不是 4）、把空态行也当成数据行来数（空态本身也是一个 `<tr>`）。**结论还是那条：别口算，去数。**
