@@ -13,9 +13,9 @@
 |---|---|---|
 | Onboarding（引导页） | `dashboard` | 新播客创建引导，帮助新用户完成开播前的基础步骤 |
 | Dashboard（数据分析页） | `dashboard-v2` | 播客数据总览：下载统计、趋势图表、单集表现、成就、评论 |
-| Dashboard v2（无评论变体） | `dashboard-v2-nc` | 与 v2 基本相同，但布局上移除了"最近评论"区块，成就区域改为通栏展示 |
+| Dashboard v2（无评论变体） | `dashboard-v2-nc` | 与 v2 基本相同，但布局上移除了"最近评论"区块，成就区域改为通栏展示。页面标题与 v2 页一致，只显示 "Dashboard"（标题里的 v2 标识与右侧的 "No Comments View" 标签均已移除） |
 
-页面当前使用**静态演示数据**（mock 数据），前端交互已完整实现，尚未接入后端 API。导航栏中的 "Dashboard v2"（无评论版）为同一数据面板的布局变体，用于对比评审。
+页面当前使用**静态演示数据**（mock 数据），前端交互已完整实现，尚未接入后端 API。导航栏中的 "Dashboard (v2)"（无评论版）为同一数据面板的布局变体，用于对比评审。
 
 ---
 
@@ -82,7 +82,7 @@
 |---|---|---|
 | Onboarding | `dashboard` | `#page-dashboard` |
 | Dashboard | `dashboard-v2` | `#page-dashboard-v2`（默认高亮） |
-| Dashboard v2 | `dashboard-v2-nc` | `#page-dashboard-v2-nc` |
+| Dashboard (v2) | `dashboard-v2-nc` | `#page-dashboard-v2-nc` |
 
 ---
 
@@ -333,6 +333,6 @@
 |---|---|---|
 | Onboarding（侧边栏） | `#page-dashboard` | `switchDashboard('dashboard')` |
 | Dashboard（侧边栏，默认） | `#page-dashboard-v2` | `switchDashboard('dashboard-v2')` |
-| Dashboard v2（侧边栏） | `#page-dashboard-v2-nc` | `switchDashboard('dashboard-v2-nc')` |
+| Dashboard (v2)（侧边栏） | `#page-dashboard-v2-nc` | `switchDashboard('dashboard-v2-nc')` |
 | Get Started / 导入播客 | → `dashboard-v2` | 引导页内链接 |
 | Skip the Guide | → `dashboard-v2` | `skipOnboarding()` |
