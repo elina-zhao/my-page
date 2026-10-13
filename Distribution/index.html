@@ -2893,6 +2893,12 @@
       flex: 1;
       min-width: 0;
     }
+    .ep-row-hint {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text-tertiary);
+      margin-top: 6px;
+    }
     .ep-row-control.select-wrap {
       max-width: 280px;
     }
@@ -3001,14 +3007,25 @@
       margin-top: 0;
     }
 
-    /* Embed Player: filter option sections */
+    /* Embed Player: filter option sections — nested under Episode Filter */
     .ep-filter-option {
-      margin-bottom: 4px;
+      margin: 2px 0 6px;
+      padding-left: 16px;
+      border-left: 2px solid var(--border);
+    }
+    .ep-filter-option .ep-row-item {
+      padding: 9px 0;
+    }
+    .ep-filter-option .ep-row-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      min-width: 92px;
     }
     .ep-filter-tags {
-      font-size: 14px;
+      font-size: 13px;
+      line-height: 1.5;
       color: var(--text-tertiary);
-      padding: 10px 8px;
+      padding: 10px 0;
     }
     .ep-swatch-section {
       padding: 12px 0;
@@ -4836,10 +4853,17 @@
             <div class="ep-custom-sub-title">Content Controls</div>
 
             <div class="ep-row-item">
+              <div class="ep-row-label">Display Order</div>
+              <div class="ep-row-control select-wrap">
+                <select id="epDisplayOrder" onchange="updatePlayer()"><option>Episodic (From New to Old)</option><option>Serial (From Old to New)</option></select>
+              </div>
+            </div>
+
+            <div class="ep-row-item">
               <div class="ep-row-label">Episode Filter</div>
               <div class="ep-row-control select-wrap">
                 <select id="epFilters" onchange="onEpisodeFilterChange()">
-                  <option value="all">All</option>
+                  <option value="all">No filter</option>
                   <option value="publish_time">Publish Time</option>
                   <option value="season">Season NO.</option>
                   <option value="tags">Tags</option>
@@ -4881,16 +4905,10 @@
             <div class="ep-row-item">
               <div class="ep-row-label">No. of Episodes</div>
               <div class="ep-row-control">
-                <input type="number" id="epNumEpisodes" value="10" min="1" max="200" onchange="updatePlayer()">
+                <input type="number" id="epNumEpisodes" value="10" min="1" max="300" onchange="updatePlayer()">
+                <div class="ep-row-hint">Limits the episodes returned by the filter above.</div>
               </div>
             </div>
-            <div class="ep-row-item">
-              <div class="ep-row-label">Display Order</div>
-              <div class="ep-row-control select-wrap">
-                <select id="epDisplayOrder" onchange="updatePlayer()"><option>Episodic (From New to Old)</option><option>Serial (From Old to New)</option></select>
-              </div>
-            </div>
-
             <!-- Controls -->
             <div class="ep-row-item">
               <div class="ep-row-label">Share</div>
