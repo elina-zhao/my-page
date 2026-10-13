@@ -14,19 +14,14 @@
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <style>
   /* ── Dashboard v1 (Onboarding) ─────────── */
-  .onboard-container { max-width:720px;margin:0 auto; }
-  .onboard-header { text-align:center;margin-bottom:36px; }
+  /* Base .content is 1440px (podbean-base.css); the onboarding column is narrower.
+     The width is derived from whichever page is actually visible, so it needs no
+     JS state kept in sync and can't go stale if the page is switched. */
+  .content:has(> #page-dashboard:not([style*="none"])) { max-width:1320px; }
+  .onboard-container { margin:0 auto; }
+  .onboard-header { text-align:center;margin-top:40px;margin-bottom:36px; }
   .onboard-title { font-size:26px;font-weight:700;color:var(--text);margin-bottom:10px; }
   .onboard-subtitle { font-size:14px;color:var(--text-secondary);line-height:1.6; }
-
-  .onboard-progress { margin-bottom:36px; }
-  .onboard-progress-bar {
-    height:6px;background:#f1f5f9;border-radius:3px;margin-bottom:8px;overflow:hidden;
-  }
-  .onboard-progress-fill {
-    height:100%;background:var(--primary);border-radius:3px;transition:width .4s ease;
-  }
-  .onboard-progress-text { font-size:13px;color:var(--text-secondary); }
 
   .onboard-checklist { display:flex;flex-direction:column;gap:0;margin-bottom:24px;
     border:1px solid var(--border);border-radius:12px;overflow:hidden;
@@ -47,12 +42,11 @@
     width:28px;height:28px;border-radius:50%;
     border:2px solid #cbd5e1;background:#fff;
     display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;cursor:pointer;
+    flex-shrink:0;cursor:default;
     transition:all .2s ease;
     margin-top:2px;
   }
   .onboard-checkbox svg { opacity:0;transition:opacity .15s;color:#fff; }
-  .onboard-checkbox:hover { border-color:var(--primary);background:#f0fdf6; }
   .onboard-checkbox.checked { background:var(--primary);border-color:var(--primary); }
   .onboard-checkbox.checked svg { opacity:1; }
   .onboard-item-content { flex:1;min-width:0; }
@@ -77,6 +71,12 @@
     transition:color .15s;
   }
   .onboard-skip:hover { color:var(--text-secondary); }
+
+  /* ── Dashboard v1: extra content modules ── */
+  .onboard-section { margin-top:40px; }
+  .onboard-section-head { margin-bottom:18px; }
+  .onboard-section-title { font-size:17px;font-weight:600;color:var(--text);margin-bottom:5px; }
+  .onboard-section-desc { font-size:13px;color:var(--text-secondary); }
 
   /* ── Dashboard v2 (Analytics) ──────────── */
   .dash-layout { display:flex;gap:28px;align-items:flex-start;overflow:hidden;margin-bottom:28px; }
@@ -164,29 +164,28 @@
 
   .resource-grid { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
   .resource-card {
-    display:flex;align-items:flex-start;gap:16px;
-    padding:20px;border:1px solid #f1f5f9;border-radius:10px;
+    display:flex;flex-direction:column;
+    padding:0;overflow:hidden;
+    border:1px solid #f1f5f9;border-radius:10px;
     text-decoration:none;transition:all .15s;
   }
-  .resource-card:hover { border-color:#cbd5e1;background:#fafdfc;box-shadow:0 2px 8px rgba(0,0,0,.04); }
-  .resource-icon {
-    width:40px;height:40px;border-radius:8px;
+  .resource-thumb {
+    width:100%;aspect-ratio:16/9;
     display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;
+    color:#fff;
   }
-  .resource-body { flex:1;min-width:0; }
-  .resource-tag {
-    display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;
-    letter-spacing:.04em;color:var(--text-tertiary);margin-bottom:4px;
-  }
+  .resource-thumb svg { width:100%;height:100%;display:block; }
+  .thumb-green  { background:linear-gradient(135deg,#059669,#34d399); }
+  .thumb-blue   { background:linear-gradient(135deg,#2563eb,#60a5fa); }
+  .thumb-amber  { background:linear-gradient(135deg,#d97706,#fbbf24); }
+  .thumb-pink   { background:linear-gradient(135deg,#db2777,#f472b6); }
+  .thumb-teal   { background:linear-gradient(135deg,#0d9488,#2dd4bf); }
+  .thumb-violet { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
+  .resource-card:hover { border-color:#cbd5e1;background:#fafdfc;box-shadow:0 2px 8px rgba(0,0,0,.04); }
+  .resource-body { flex:1;min-width:0;padding:18px 20px; }
   .resource-title {
     font-size:14px;font-weight:600;color:var(--text);
     margin-bottom:4px;line-height:1.4;
-    display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  }
-  .resource-desc {
-    font-size:13px;color:var(--text-secondary);
-    line-height:1.5;
     display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
   }
 
@@ -488,63 +487,33 @@
           </div>
           <div class="resource-grid">
             <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#ecfdf5;color:#10b981;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <div class="resource-thumb thumb-green">
+                <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="248" cy="40" r="54" fill="rgba(255,255,255,.08)"/><circle cx="52" cy="148" r="42" fill="rgba(255,255,255,.07)"/>
+<path d="M150 30c24 14 38 38 38 66 0 12-4 22-10 30h-56c-6-8-10-18-10-30 0-28 14-52 38-66z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+<circle cx="150" cy="76" r="14" fill="none" stroke="#fff" stroke-width="5"/>
+<path d="M112 126l-18 24 30-8z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+<path d="M188 126l18 24-30-8z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+<path d="M136 150c5 10 9 15 14 19 5-4 9-9 14-19" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="5" stroke-linecap="round"/>
+<path d="M40 56h40M40 80h28M40 104h40" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="6" stroke-linecap="round"/>
+<path d="M236 92h44M236 116h30" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="6" stroke-linecap="round"/></svg>
               </div>
               <div class="resource-body">
-                <div class="resource-tag">Guide</div>
                 <div class="resource-title">How to Start a Podcast in 2026: The Complete Guide</div>
-                <div class="resource-desc">Step-by-step walkthrough from idea to launch — covers equipment, hosting, and distribution.</div>
               </div>
             </a>
             <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#eff6ff;color:#3b82f6;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <div class="resource-thumb thumb-blue">
+                <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="146" r="46" fill="rgba(255,255,255,.08)"/><circle cx="264" cy="42" r="50" fill="rgba(255,255,255,.07)"/>
+<rect x="48" y="98" width="20" height="48" rx="5" fill="rgba(255,255,255,.5)"/>
+<rect x="78" y="76" width="20" height="70" rx="5" fill="rgba(255,255,255,.68)"/>
+<rect x="108" y="52" width="20" height="94" rx="5" fill="rgba(255,255,255,.85)"/>
+<rect x="138" y="88" width="20" height="58" rx="5" fill="rgba(255,255,255,.6)"/>
+<circle cx="228" cy="74" r="42" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="6"/>
+<path d="M258 104l28 28" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+<path d="M208 88l14-18 11 12 17-24" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
               <div class="resource-body">
-                <div class="resource-tag">Strategy</div>
                 <div class="resource-title">Podcast SEO: How to Get Your Show Discovered</div>
-                <div class="resource-desc">Optimize titles, descriptions, and tags to rank higher on Apple, Spotify, and Google.</div>
-              </div>
-            </a>
-            <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#fefce8;color:#eab308;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              </div>
-              <div class="resource-body">
-                <div class="resource-tag">Growth</div>
-                <div class="resource-title">10 Proven Ways to Grow Your Podcast Audience in 2026</div>
-                <div class="resource-desc">Cross-promotion, social media, email lists — tactics that actually move the needle.</div>
-              </div>
-            </a>
-            <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#fdf2f8;color:#ec4899;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-              </div>
-              <div class="resource-body">
-                <div class="resource-tag">Equipment</div>
-                <div class="resource-title">Best Podcasting Equipment for Every Budget</div>
-                <div class="resource-desc">Microphone, interface, and software picks — from $50 starter kits to pro studios.</div>
-              </div>
-            </a>
-            <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#f0fdf4;color:#22c55e;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
-              </div>
-              <div class="resource-body">
-                <div class="resource-tag">Monetization</div>
-                <div class="resource-title">Podcast Monetization 101: Ads, Sponsors & Memberships</div>
-                <div class="resource-desc">When and how to start earning from your show — from dynamic ads to Patreon.</div>
-              </div>
-            </a>
-            <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#f5f3ff;color:#8b5cf6;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              </div>
-              <div class="resource-body">
-                <div class="resource-tag">Community</div>
-                <div class="resource-title">Building a Loyal Podcast Community from Day One</div>
-                <div class="resource-desc">Engage listeners beyond the episode — Discord, live Q&A, and newsletter tips.</div>
               </div>
             </a>
           </div>
@@ -693,63 +662,33 @@
           </div>
           <div class="resource-grid">
             <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#ecfdf5;color:#10b981;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <div class="resource-thumb thumb-green">
+                <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="248" cy="40" r="54" fill="rgba(255,255,255,.08)"/><circle cx="52" cy="148" r="42" fill="rgba(255,255,255,.07)"/>
+<path d="M150 30c24 14 38 38 38 66 0 12-4 22-10 30h-56c-6-8-10-18-10-30 0-28 14-52 38-66z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+<circle cx="150" cy="76" r="14" fill="none" stroke="#fff" stroke-width="5"/>
+<path d="M112 126l-18 24 30-8z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+<path d="M188 126l18 24-30-8z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+<path d="M136 150c5 10 9 15 14 19 5-4 9-9 14-19" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="5" stroke-linecap="round"/>
+<path d="M40 56h40M40 80h28M40 104h40" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="6" stroke-linecap="round"/>
+<path d="M236 92h44M236 116h30" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="6" stroke-linecap="round"/></svg>
               </div>
               <div class="resource-body">
-                <div class="resource-tag">Guide</div>
                 <div class="resource-title">How to Start a Podcast in 2026: The Complete Guide</div>
-                <div class="resource-desc">Step-by-step walkthrough from idea to launch — covers equipment, hosting, and distribution.</div>
               </div>
             </a>
             <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#eff6ff;color:#3b82f6;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <div class="resource-thumb thumb-blue">
+                <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="146" r="46" fill="rgba(255,255,255,.08)"/><circle cx="264" cy="42" r="50" fill="rgba(255,255,255,.07)"/>
+<rect x="48" y="98" width="20" height="48" rx="5" fill="rgba(255,255,255,.5)"/>
+<rect x="78" y="76" width="20" height="70" rx="5" fill="rgba(255,255,255,.68)"/>
+<rect x="108" y="52" width="20" height="94" rx="5" fill="rgba(255,255,255,.85)"/>
+<rect x="138" y="88" width="20" height="58" rx="5" fill="rgba(255,255,255,.6)"/>
+<circle cx="228" cy="74" r="42" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="6"/>
+<path d="M258 104l28 28" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+<path d="M208 88l14-18 11 12 17-24" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
               <div class="resource-body">
-                <div class="resource-tag">Strategy</div>
                 <div class="resource-title">Podcast SEO: How to Get Your Show Discovered</div>
-                <div class="resource-desc">Optimize titles, descriptions, and tags to rank higher on Apple, Spotify, and Google.</div>
-              </div>
-            </a>
-            <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#fefce8;color:#eab308;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              </div>
-              <div class="resource-body">
-                <div class="resource-tag">Growth</div>
-                <div class="resource-title">10 Proven Ways to Grow Your Podcast Audience in 2026</div>
-                <div class="resource-desc">Cross-promotion, social media, email lists — tactics that actually move the needle.</div>
-              </div>
-            </a>
-            <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#fdf2f8;color:#ec4899;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-              </div>
-              <div class="resource-body">
-                <div class="resource-tag">Equipment</div>
-                <div class="resource-title">Best Podcasting Equipment for Every Budget</div>
-                <div class="resource-desc">Microphone, interface, and software picks — from $50 starter kits to pro studios.</div>
-              </div>
-            </a>
-            <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#f0fdf4;color:#22c55e;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
-              </div>
-              <div class="resource-body">
-                <div class="resource-tag">Monetization</div>
-                <div class="resource-title">Podcast Monetization 101: Ads, Sponsors & Memberships</div>
-                <div class="resource-desc">When and how to start earning from your show — from dynamic ads to Patreon.</div>
-              </div>
-            </a>
-            <a href="#" class="resource-card">
-              <div class="resource-icon" style="background:#f5f3ff;color:#8b5cf6;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              </div>
-              <div class="resource-body">
-                <div class="resource-tag">Community</div>
-                <div class="resource-title">Building a Loyal Podcast Community from Day One</div>
-                <div class="resource-desc">Engage listeners beyond the episode — Discord, live Q&A, and newsletter tips.</div>
               </div>
             </a>
           </div>
@@ -765,83 +704,177 @@
             <p class="onboard-subtitle">Complete the key steps to publish, distribute, and grow your show.</p>
           </div>
 
-          <div class="onboard-progress">
-            <div class="onboard-progress-bar">
-              <div class="onboard-progress-fill" id="onboardProgressFill" style="width:0%;"></div>
+          <!-- Steps view when no data yet -->
+          <div id="onboardStepsView">
+
+            <div class="onboard-checklist">
+              <div class="onboard-item" data-step="1">
+                <div class="onboard-item-left">
+                  <div class="onboard-checkbox" id="check1">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="onboard-item-content">
+                    <div class="onboard-item-title">Set up your podcast</div>
+                    <div class="onboard-item-desc">Set up your podcast profile and basic information.</div>
+                    <div style="margin-top:10px;font-size:13px;color:var(--text-secondary);">
+                      Already have a show? <a href="#" style="color:var(--primary);font-weight:500;text-decoration:none;" onclick="switchDashboard('dashboard-v2');return false;">Import existing podcast to Podbean</a>
+                    </div>
+                  </div>
+                </div>
+                <a href="#" class="onboard-item-btn" onclick="completeOnboardStep(1);switchDashboard('dashboard-v2');return false;">Get Started</a>
+              </div>
+
+              <div class="onboard-item" data-step="2">
+                <div class="onboard-item-left">
+                  <div class="onboard-checkbox" id="check2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="onboard-item-content">
+                    <div class="onboard-item-title">Publish your first episode</div>
+                    <div class="onboard-item-desc">Upload your first episode and make your show live.</div>
+                  </div>
+                </div>
+                <a href="#" class="onboard-item-btn" onclick="completeOnboardStep(2);return false;">Create Episode</a>
+              </div>
+
+              <div class="onboard-item" data-step="3">
+                <div class="onboard-item-left">
+                  <div class="onboard-checkbox" id="check3">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="onboard-item-content">
+                    <div class="onboard-item-title">Submit to podcast platforms</div>
+                    <div class="onboard-item-desc">Reach listeners on Spotify, Apple Podcasts, and more.</div>
+                  </div>
+                </div>
+                <a href="#" class="onboard-item-btn" onclick="completeOnboardStep(3);return false;">Start Distribution</a>
+              </div>
             </div>
-            <span class="onboard-progress-text" id="onboardProgressText">0 of 5 completed</span>
+
+            <div class="onboard-footer">
+              <a href="#" class="onboard-skip" onclick="skipOnboarding();return false;">Skip the Guide →</a>
+            </div>
+
+            <!-- Hint text when in steps view -->
+            <div id="onboardHint" style="text-align:center;padding:24px 0 0;color:var(--text-secondary);font-size:14px;">
+              You will see your podcast statistics here after you get a few downloads.
+            </div>
+
+            <!-- Starter resources -->
+            <div class="onboard-section">
+              <div class="onboard-section-head">
+                <div class="onboard-section-title">Getting started resources</div>
+                <div class="onboard-section-desc">New to podcasting? Start with these.</div>
+              </div>
+              <div class="resource-grid">
+                <a href="#" class="resource-card">
+                  <div class="resource-thumb thumb-green">
+                    <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="258" cy="44" r="56" fill="rgba(255,255,255,.08)"/><circle cx="60" cy="152" r="44" fill="rgba(255,255,255,.07)"/>
+<path d="M94 76a56 56 0 0 1 112 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+<rect x="82" y="72" width="20" height="32" rx="10" fill="rgba(255,255,255,.9)"/>
+<rect x="198" y="72" width="20" height="32" rx="10" fill="rgba(255,255,255,.9)"/>
+<rect x="128" y="40" width="44" height="70" rx="22" fill="none" stroke="#fff" stroke-width="5"/>
+<path d="M139 60h22M139 70h22M139 80h22" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="3" stroke-linecap="round"/>
+<path d="M116 90v4a34 34 0 0 0 68 0v-4" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+<path d="M150 128v14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+<path d="M133 142h34" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+                  </div>
+                  <div class="resource-body">
+                    <div class="resource-title">Recording Your First Episode: Gear and Room Checklist</div>
+                  </div>
+                </a>
+                <a href="#" class="resource-card">
+                  <div class="resource-thumb thumb-pink">
+                    <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="66" cy="38" r="50" fill="rgba(255,255,255,.08)"/><circle cx="252" cy="150" r="46" fill="rgba(255,255,255,.07)"/>
+<rect x="58" y="30" width="108" height="118" rx="12" fill="none" stroke="#fff" stroke-width="5"/>
+<circle cx="88" cy="60" r="9" fill="rgba(255,255,255,.9)"/>
+<path d="M66 128l30-34 24 26 16-16 20 26" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M190 60h74" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+<path d="M190 82h56" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="6" stroke-linecap="round"/>
+<path d="M190 104h66" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="6" stroke-linecap="round"/>
+<path d="M190 126h42" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="6" stroke-linecap="round"/></svg>
+                  </div>
+                  <div class="resource-body">
+                    <div class="resource-title">Cover Art and Show Naming Guidelines</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
           </div>
 
-          <div class="onboard-checklist">
-            <div class="onboard-item" data-step="1">
-              <div class="onboard-item-left">
-                <div class="onboard-checkbox" id="check1" onclick="toggleOnboardStep(1)">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          <!-- Data view when there are downloads -->
+          <div id="onboardDataView" style="display:none;">
+
+            <div class="stat-cards" style="margin-bottom:28px;">
+              <div class="stat-card">
+                <div class="sc-info">
+                  <div class="sc-label">Yesterday</div>
+                  <div class="sc-value">342</div>
                 </div>
-                <div class="onboard-item-content">
-                  <div class="onboard-item-title">Create your podcast</div>
-                  <div class="onboard-item-desc">Set up your podcast profile and basic information.</div>
-                </div>
+                <div class="sc-sparkline"><canvas id="sparkOnboardYesterday"></canvas></div>
               </div>
-              <a href="#" class="onboard-item-btn" onclick="switchDashboard('dashboard-v2');return false;">Get Started</a>
+              <div class="stat-card">
+                <div class="sc-info">
+                  <div class="sc-label">7 Days</div>
+                  <div class="sc-value">2,847</div>
+                </div>
+                <div class="sc-sparkline"><canvas id="sparkOnboard7Days"></canvas></div>
+              </div>
+              <div class="stat-card">
+                <div class="sc-info">
+                  <div class="sc-label">30 Days</div>
+                  <div class="sc-value">12,560</div>
+                </div>
+                <div class="sc-sparkline"><canvas id="sparkOnboard30Days"></canvas></div>
+              </div>
+              <div class="stat-card">
+                <div class="sc-info">
+                  <div class="sc-label">All Time</div>
+                  <div class="sc-value">48,293</div>
+                </div>
+                <div class="sc-sparkline"><canvas id="sparkOnboardAllTime"></canvas></div>
+              </div>
             </div>
 
-            <div class="onboard-item" data-step="2">
-              <div class="onboard-item-left">
-                <div class="onboard-checkbox" id="check2" onclick="toggleOnboardStep(2)">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <div class="onboard-item-content">
-                  <div class="onboard-item-title">Publish your first episode</div>
-                  <div class="onboard-item-desc">Upload your first episode and make your show live.</div>
-                </div>
+            <!-- Downloads Trending Chart -->
+            <div class="dash-chart-section" style="margin-bottom:28px;">
+              <div class="chart-header">
+                <div class="chart-title">Downloads Trending</div>
+                <a href="#" class="view-more-btn">View more →</a>
               </div>
-              <span class="onboard-item-btn" style="display:inline-block;">Create Episode</span>
+              <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:16px;">
+                <div>
+                  <div style="font-size:28px;font-weight:700;color:var(--text);letter-spacing:-0.03em;">5,846</div>
+                  <div style="font-size:13px;color:var(--text-secondary);font-weight:500;margin-top:1px;">Last 14 days</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:4px 12px;background:#ecfdf5;border-radius:8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>
+                  <span style="font-size:14px;font-weight:700;color:#059669;">+6.2%</span>
+                </div>
+                <span style="font-size:13px;color:var(--text-tertiary);">vs previous 14 days</span>
+              </div>
+              <div class="dash-chart-wrap">
+                <canvas id="downloadChartOnboard"></canvas>
+              </div>
             </div>
 
-            <div class="onboard-item" data-step="3">
-              <div class="onboard-item-left">
-                <div class="onboard-checkbox" id="check3" onclick="toggleOnboardStep(3)">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <div class="onboard-item-content">
-                  <div class="onboard-item-title">Submit to podcast platforms</div>
-                  <div class="onboard-item-desc">Reach listeners on Spotify, Apple Podcasts, and more.</div>
-                </div>
+            <!-- Episode Performance -->
+            <div class="dash-chart-section" style="margin-bottom:28px;">
+              <div class="chart-header">
+                <div class="chart-title">Episode Performance</div>
+                <a href="#" class="view-more-btn">View more →</a>
               </div>
-              <span class="onboard-item-btn" style="display:inline-block;">Start Distribution</span>
+              <table class="ep-perf-table">
+                <thead>
+                  <tr><th>Episode Title</th><th style="text-align:center;">First Week</th><th style="text-align:center;">First Month</th></tr>
+                </thead>
+                <tbody id="epPerfBodyOnboard"></tbody>
+              </table>
             </div>
 
-            <div class="onboard-item" data-step="4">
-              <div class="onboard-item-left">
-                <div class="onboard-checkbox" id="check4" onclick="toggleOnboardStep(4)">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <div class="onboard-item-content">
-                  <div class="onboard-item-title">Customize your podcast page</div>
-                  <div class="onboard-item-desc">Design your page and show your brand.</div>
-                </div>
-              </div>
-              <span class="onboard-item-btn" style="display:inline-block;">Customize</span>
-            </div>
-
-            <div class="onboard-item" data-step="5">
-              <div class="onboard-item-left">
-                <div class="onboard-checkbox" id="check5" onclick="toggleOnboardStep(5)">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <div class="onboard-item-content">
-                  <div class="onboard-item-title">Share your podcast</div>
-                  <div class="onboard-item-desc">Promote your show and grow your audience.</div>
-                </div>
-              </div>
-              <span class="onboard-item-btn" style="display:inline-block;">Share Now</span>
-            </div>
           </div>
 
-          <div class="onboard-footer">
-            <a href="#" class="onboard-skip" onclick="skipOnboarding();return false;">Skip the Guide →</a>
-          </div>
         </div>
       </div>
 
@@ -971,7 +1004,7 @@
 
   /* ── Episode Performance Table ────────── */
   var epPerfData = [
-    { title: '英文里的"奇妙日常"：旅馆为何被拼布大会订满？', firstWeek: 0, firstMonth: 0 },
+    { title: 'Everyday Wonders in English: Why Hotels Sell Out for Quilt Conventions', firstWeek: 0, firstMonth: 0 },
     { title: 'How to Start a Podcast in 9 Steps (2026): From Idea to Growth', firstWeek: 245, firstMonth: 892 },
     { title: 'Hometown Heroes Expanded: Up to $35K for Florida First-Time Buyers', firstWeek: 186, firstMonth: 673 },
     { title: 'How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes', firstWeek: 412, firstMonth: 1540 },
@@ -990,20 +1023,15 @@
     if (tbody) tbody.innerHTML = html;
     var tbody2 = document.getElementById('epPerfBody2');
     if (tbody2) tbody2.innerHTML = html;
+    var tbodyOnboard = document.getElementById('epPerfBodyOnboard');
+    if (tbodyOnboard) tbodyOnboard.innerHTML = html;
   }
 
   /* ── Dashboard v1 (Onboarding) ─────────── */
-  var onboardSteps = JSON.parse(localStorage.getItem('podbean_onboard_steps') || '[false,false,false,false,false]');
+  var onboardSteps = JSON.parse(localStorage.getItem('podbean_onboard_steps') || '[false,false,false]');
 
   function updateOnboardProgress() {
-    var completed = onboardSteps.filter(function(s){return s;}).length;
-    var pct = Math.round((completed / 5) * 100);
-    var fill = document.getElementById('onboardProgressFill');
-    var text = document.getElementById('onboardProgressText');
-    if (fill) fill.style.width = pct + '%';
-    if (text) text.textContent = completed + ' of 5 completed';
-
-    for (var i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 3; i++) {
       var item = document.querySelector('.onboard-item[data-step="' + i + '"]');
       var check = document.getElementById('check' + i);
       if (!item || !check) continue;
@@ -1017,16 +1045,23 @@
     }
   }
 
-  function toggleOnboardStep(step) {
-    onboardSteps[step - 1] = !onboardSteps[step - 1];
+  /* The circle is a status indicator, not a control — clicking it does nothing.
+     A step is only marked complete when the user actually performs it, i.e. after
+     using that step's own action button to go to the corresponding place. Steps 2
+     and 3 still point at placeholder destinations, so they complete on the button
+     itself; once the real create-episode / distribution flows exist, drive this from
+     that actual state instead. */
+  function completeOnboardStep(step) {
+    if (onboardSteps[step - 1]) return;
+    onboardSteps[step - 1] = true;
     localStorage.setItem('podbean_onboard_steps', JSON.stringify(onboardSteps));
     updateOnboardProgress();
   }
 
   function skipOnboarding() {
-    onboardSteps = [true, true, true, true, true];
+    onboardSteps = [true, true, true];
     localStorage.setItem('podbean_onboard_steps', JSON.stringify(onboardSteps));
-    updateOnboardProgress();
+    switchDashboard('dashboard-v2');
   }
 
   /* ── Initialize Everything ────────────── */
@@ -1043,6 +1078,76 @@
     initSparkline('sparkAllTime2', '#ec4899', [1200,1350,1420,1280,1560,1480,1650,1720,1580,1430,1670,1820,1750,1900,1850,1780,1920,2100,1980,2050,2150,2080,2250,2400,2300,2450,2600,2500,2750,2900]);
     (function() {
       var ctx = document.getElementById('downloadChart2');
+      if (!ctx) return;
+      var labels = [];
+      for (var d = 29; d >= 0; d--) {
+        var date = new Date();
+        date.setDate(date.getDate() - d);
+        labels.push((date.getMonth() + 1) + '/' + date.getDate());
+      }
+      new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '2026',
+            data: [120,135,142,118,156,148,165,172,158,143,167,182,175,190,185,178,192,210,198,205,215,208,225,240,230,245,260,250,275,290],
+            borderColor: '#1a9a6c',
+            backgroundColor: 'rgba(26,154,108,0.08)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 3,
+            pointBackgroundColor: '#1a9a6c',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 1.5,
+          }, {
+            label: '2025',
+            data: [80,85,78,92,88,95,102,98,84,90,88,95,100,92,105,98,102,110,108,115,112,118,125,120,128,132,126,135,140,145],
+            borderColor: '#cbd5e1',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            fill: false,
+            tension: 0.35,
+            pointRadius: 2,
+            pointBackgroundColor: '#cbd5e1',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              titleColor: '#e2e8f0',
+              bodyColor: '#f1f5f9',
+              cornerRadius: 8,
+              padding: 10,
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8', font: { size: 11 }, maxTicksLimit: 8 },
+            },
+            y: {
+              grid: { color: '#f1f5f9' },
+              ticks: { color: '#94a3b8', font: { size: 11 } },
+              beginAtZero: true,
+            }
+          }
+        }
+      });
+    })();
+    initSparkline('sparkOnboardYesterday', '#10b981', [18,22,25,20,28,32,30,35,38,34,40,42,38,45,48,42,50,55,52,48]);
+    initSparkline('sparkOnboard7Days', '#3b82f6', [280,310,295,340,370,355,390]);
+    initSparkline('sparkOnboard30Days', '#eab308', [380,350,420,445,410,390,430,470,450,480,510,490,520,540,510,530,560,545,570,590,560,580,610,595,620,605,630,615,640,625]);
+    initSparkline('sparkOnboardAllTime', '#ec4899', [1200,1350,1420,1280,1560,1480,1650,1720,1580,1430,1670,1820,1750,1900,1850,1780,1920,2100,1980,2050,2150,2080,2250,2400,2300,2450,2600,2500,2750,2900]);
+    (function() {
+      var ctx = document.getElementById('downloadChartOnboard');
       if (!ctx) return;
       var labels = [];
       for (var d = 29; d >= 0; d--) {
