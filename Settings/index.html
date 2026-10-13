@@ -1145,12 +1145,13 @@
     .modal-overlay.open {
       display: flex;
     }
+    /* One dialog shell for every plugin editor: same width, height fits content */
     .modal-dialog {
       background: #fff;
       border-radius: 12px;
       width: 930px;
       max-width: 90vw;
-      height: 780px;
+      max-height: 90vh;
       display: flex;
       flex-direction: column;
       box-shadow: 0 16px 48px rgba(0,0,0,0.15);
@@ -1161,6 +1162,103 @@
       justify-content: space-between;
       padding: 20px 24px 0;
     }
+    /* ---- Dropbox import dialog ---- */
+    .db-import-panel {
+      border: 1px solid #dcdcdc;
+      border-radius: 2px;
+      padding: 26px 32px 22px;
+    }
+    .db-import-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.55;
+      margin: 0 0 18px;
+    }
+    .db-select-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 18px;
+      background: #fff;
+      border: 1px solid #cfcfcf;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: #2b2b2b;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .db-select-btn:hover { background: #f5f5f5; border-color: #b8b8b8; }
+    .db-select-btn svg { flex-shrink: 0; }
+    .db-import-hint {
+      font-size: 13px;
+      color: #999;
+      margin: 12px 0 0;
+    }
+
+    .db-table {
+      margin-top: 26px;
+      border: 1px solid #dcdcdc;
+      border-radius: 2px;
+    }
+    .db-table-head,
+    .db-table-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 0 22px;
+      min-height: 54px;
+    }
+    .db-table-head {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 1px solid #dcdcdc;
+    }
+    .db-table-row {
+      font-size: 14px;
+      color: var(--text);
+      border-bottom: 1px solid #dcdcdc;
+    }
+    /* Refresh belongs inside the table, not in a dialog action bar */
+    .db-table-foot {
+      display: flex;
+      justify-content: flex-end;
+      padding: 16px 22px;
+    }
+
+    /* ---- Custom Meta Tags dialog ---- */
+    /* Label stacked above the field, not beside it */
+    .meta-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .meta-label {
+      font-size: 14px;
+      color: var(--text);
+    }
+    .meta-field {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .meta-textarea {
+      width: 100%;
+      min-height: 300px;
+      padding: 12px 14px;
+      border: 1px solid #cfcfcf;
+      border-radius: 2px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text);
+      resize: vertical;
+    }
+    .meta-textarea:focus { outline: none; border-color: #9a9a9a; }
     .modal-title {
       font-size: 18px;
       font-weight: 600;
@@ -1190,8 +1288,25 @@
     }
     .modal-body .pb-editor-body {
       flex: 1;
-      min-height: 0;
+      /* the dialog height now fits its content, so give the editor a floor */
+      min-height: 320px;
     }
+    /* Scope note — informational, not a control (no choice to make) */
+    .endnote-scope-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+      flex-shrink: 0;
+    }
+    .endnote-scope-note svg {
+      flex-shrink: 0;
+      color: var(--text-tertiary);
+    }
+
     .modal-footer {
       display: flex;
       justify-content: flex-end;
@@ -1210,17 +1325,20 @@
       cursor: pointer;
     }
     .modal-footer .cancel-btn:hover { background: #f1f5f9; }
-    .modal-footer .save-btn {
+    .modal-footer .save-btn,
+    .db-refresh-btn {
       padding: 8px 20px;
       background: #1e293b;
       color: #fff;
       border: none;
       border-radius: 50px;
+      font-family: inherit;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
     }
-    .modal-footer .save-btn:hover { background: #334155; }
+    .modal-footer .save-btn:hover,
+    .db-refresh-btn:hover { background: #334155; }
 
     /* Custom Select Dropdown */
     .pb-custom-select {
@@ -1884,7 +2002,7 @@
       <div class="modal-overlay" id="endnoteModal">
         <div class="modal-dialog">
           <div class="modal-header">
-            <div class="modal-title">Edit Episode Endnote</div>
+            <div class="modal-title">Episode Endnote</div>
             <button class="modal-close" onclick="closeEndnoteModal()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
@@ -1911,10 +2029,78 @@
                 <p>Follow us on social media for updates!</p>
               </div>
             </div>
+
+            <p class="endnote-scope-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Saving will apply this endnote to all episodes.
+            </p>
           </div>
           <div class="modal-footer">
             <button class="cancel-btn" onclick="closeEndnoteModal()">Cancel</button>
             <button class="save-btn" onclick="saveEndnote()">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Import Files from Dropbox -->
+      <div class="modal-overlay" id="dropboxModal">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <div class="modal-title">Import Files from Dropbox</div>
+            <button class="modal-close" onclick="closeDropboxModal()" aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="db-import-panel">
+              <p class="db-import-text">Click on the button below to import files from your Dropbox to your Podbean Media Manager.</p>
+              <button type="button" class="db-select-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#0061FF" aria-hidden="true">
+                  <path d="M6.2 1.8 0 5.9l6.2 4.1 6.2-4.1-6.2-4.1Z"/>
+                  <path d="M17.8 1.8 11.6 5.9l6.2 4.1L24 5.9l-6.2-4.1Z"/>
+                  <path d="M0 14.1l6.2 4.1 6.2-4.1-6.2-4.1L0 14.1Z"/>
+                  <path d="M17.8 10l-6.2 4.1 6.2 4.1 6.2-4.1-6.2-4.1Z"/>
+                  <path d="M6.2 19.9l6.2 4.1 6.2-4.1-6.2-4.1-6.2 4.1Z"/>
+                </svg>
+                Select Files from Dropbox
+              </button>
+              <p class="db-import-hint">Max allowed file size is 3GB.</p>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-head">
+                <span>Filename</span>
+                <span>Size</span>
+                <span>Status</span>
+              </div>
+              <div class="db-table-row" id="dbEmptyRow">No importing dropbox files.</div>
+              <div class="db-table-foot">
+                <button type="button" class="db-refresh-btn">Refresh</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Custom Meta Tags (SEO Meta Tags plugin) -->
+      <div class="modal-overlay" id="metaTagsModal">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <div class="modal-title">Custom Meta Tags</div>
+            <button class="modal-close" onclick="closeMetaTagsModal()" aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="meta-row">
+              <label class="meta-label" for="metaTagsInput">Meta Tags :</label>
+              <div class="meta-field">
+                <textarea class="meta-textarea" id="metaTagsInput" spellcheck="false"><meta name="keywords" content="video demo, product demo podcast, screen recording, explainer videos, tutorial videos, video marketing, SaaS demo, customer onboarding, YouTube demo tips"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="save-btn" onclick="saveMetaTags()">Save changes</button>
           </div>
         </div>
       </div>
@@ -2316,15 +2502,66 @@
 
     // Modal functions
     function openEndnoteModal() {
+      // Entered from the Plugin page, so the unsaved-changes bar of whatever
+      // Settings page is behind it must not be involved here.
       document.getElementById('endnoteModal').classList.add('open');
     }
     function closeEndnoteModal() {
       document.getElementById('endnoteModal').classList.remove('open');
     }
     function saveEndnote() {
+      // Saving always applies to every episode — there is no narrower scope.
       closeEndnoteModal();
-      showActiveSaveBar();
+      showToast('Endnote saved to all episodes');
     }
+    // Modal: Import Files from Dropbox
+    function openDropboxModal() {
+      document.getElementById('dropboxModal').classList.add('open');
+    }
+    function closeDropboxModal() {
+      document.getElementById('dropboxModal').classList.remove('open');
+    }
+    document.getElementById('dropboxModal').addEventListener('click', function(e) {
+      if (e.target === this) closeDropboxModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      var modal = document.getElementById('dropboxModal');
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeDropboxModal();
+    });
+
+    // Modal: Custom Meta Tags
+    function openMetaTagsModal() {
+      document.getElementById('metaTagsModal').classList.add('open');
+    }
+    function closeMetaTagsModal() {
+      document.getElementById('metaTagsModal').classList.remove('open');
+    }
+    function saveMetaTags() {
+      closeMetaTagsModal();
+      showToast('Meta tags saved');
+    }
+    document.getElementById('metaTagsModal').addEventListener('click', function(e) {
+      if (e.target === this) closeMetaTagsModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      var modal = document.getElementById('metaTagsModal');
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeMetaTagsModal();
+    });
+
+    // Plugin page: each editable plugin row's pencil button opens its own dialog
+    (function initPluginEditButtons() {
+      var editors = {
+        'Episode Endnote': openEndnoteModal,
+        'Import Files from Dropbox': openDropboxModal,
+        'SEO Meta Tags': openMetaTagsModal
+      };
+      Object.keys(editors).forEach(function(name) {
+        var row = document.querySelector('#pluginList [data-plugin-name="' + name + '"]');
+        if (!row) return;
+        var editBtn = row.querySelector('.plugin-action-btn:not(.delete)');
+        if (editBtn) editBtn.addEventListener('click', editors[name]);
+      });
+    })();
     // Close modal when clicking overlay background
     document.getElementById('endnoteModal').addEventListener('click', function(e) {
       if (e.target === this) closeEndnoteModal();
