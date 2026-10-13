@@ -599,26 +599,31 @@
       background: var(--text);
     }
 
-    /* Sticky bottom save bar */
+    /* Fixed bottom save bar — spans the full width of the main panel */
     .pb-save-bar {
       display: none;
-      position: sticky;
+      position: fixed;
+      left: 230px;   /* clears the fixed sidebar */
+      right: 0;
       bottom: 0;
-      width: 100%;
       height: 111px;
       border-top: 1px solid #eee;
       background: #fff;
-      z-index: 50;
+      z-index: 150;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
     }
     .pb-save-bar.is-visible { display: flex; align-items: center; }
     .pb-save-bar-inner {
-      width: 100%;
-      padding: 0 24px 0 48px;
+      /* align the buttons with the 60%-wide form column above */
+      width: 60%;
+      margin: 0 auto;
+      padding: 0 48px;
       display: flex;
       gap: 12px;
       justify-content: flex-end;
     }
+    /* reserve space at the bottom of the page so the bar never covers content */
+    .page-section.active:has(.pb-save-bar.is-visible) { padding-bottom: 111px; }
     .pb-save-bar .cancel-btn {
       width: 102px;
       height: 50px;
@@ -647,7 +652,97 @@
     .pb-save-bar .save-btn:hover { background: #334155; }
 
     /* Multi-select country */
-    .pb-vs-wrap.multi .pb-vs span { color: #999; }
+    .pb-vs-wrap.multi { position: relative; }
+    .pb-vs-wrap.multi .pb-vs { align-items: flex-start; }
+    .pb-vs-wrap.multi .pb-vs.placeholder .pb-chips-empty { color: #999; }
+    .pb-vs-wrap.multi .pb-vs svg { margin-top: 3px; }
+
+    .pb-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      flex: 1;
+      min-width: 0;
+    }
+    .pb-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 4px 3px 10px;
+      background: #f1f5f9;
+      border-radius: 50px;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+    .pb-chip .pb-chip-remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border: none;
+      background: none;
+      padding: 0;
+      border-radius: 50%;
+      font-size: 14px;
+      line-height: 1;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .pb-chip .pb-chip-remove:hover { background: #e2e8f0; color: var(--text); }
+
+    /* Multi-select dropdown */
+    .pb-select-dropdown.pb-multi-dropdown.open { display: flex; flex-direction: column; }
+    .pb-multi-search {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      flex-shrink: 0;
+    }
+    .pb-multi-search:focus { border-bottom-color: var(--text); }
+    .pb-multi-list { overflow-y: auto; max-height: 232px; }
+    .pb-multi-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .pb-multi-option:hover { background: #f1f5f9; }
+    .pb-multi-option .pb-check {
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.12s;
+    }
+    .pb-multi-option.checked .pb-check {
+      background: var(--text);
+      border-color: var(--text);
+    }
+    .pb-multi-option.checked .pb-check::after {
+      content: '';
+      width: 3px;
+      height: 7px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
+    .pb-multi-empty { padding: 12px; font-size: 13px; color: #999; }
+
+    .pb-vs.is-error { border-bottom-color: #dc2626; }
 
     /* Radio hover */
     .pb-radio:hover .pb-radio-dot { border-color: var(--text); }
@@ -890,12 +985,15 @@
       .plugin-item { flex-wrap: wrap; }
       .plugin-item-info { width: calc(100% - 64px); }
       .plugin-item-actions { margin-left: 64px; }
+      .pb-save-bar { left: 0; }
+      .pb-save-bar-inner { width: 100%; padding: 0 24px; }
     }
 
     @media (max-width: 480px) {
       .content { padding: 16px; }
       .plugin-item-actions { flex-direction: column; width: 100%; }
       .plugin-item-actions .plugin-action-btn { justify-content: center; }
+      .pb-save-bar-inner { padding: 0 16px; }
     }
 
     /* Plugin Page */
@@ -1468,8 +1566,16 @@
                   </div>
                   <div id="countryList" style="display:none;margin-top:12px;">
                     <div class="pb-vs-wrap multi">
-                      <div class="pb-vs placeholder"><span>Select countries</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                      <div class="pb-vs placeholder" id="countrySelectTrigger">
+                        <span class="pb-chips"><span class="pb-chips-empty">Select countries</span></span>
+                        <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                      </div>
+                      <div class="pb-select-dropdown pb-multi-dropdown" id="dropdown-country-list">
+                        <input type="text" class="pb-multi-search" id="countrySearch" placeholder="Search countries" autocomplete="off" />
+                        <div class="pb-multi-list" id="countryOptions"></div>
+                      </div>
                     </div>
+                    <div class="pb-field-error"></div>
                   </div>
                 </div>
               </div>
@@ -1570,15 +1676,25 @@
 
 
               <div class="info-content-item">
-                <span class="cc-item-label">Generate MP3 for Video Episodes</span>
+                <span class="cc-item-label">Generate audio-only feed</span>
                 <div class="toggle-row-compact">
                   <div>
-                    <p class="toggle-desc">Automatically generates an MP3 audio version in your feed for video episodes to ensure compatibility with platforms like Spotify, while delivering HLS video streams for video-supported platforms like Apple Podcasts.</p>
+                    <p class="toggle-desc">Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don't accept video. Your video feed stays as it is.</p>
                   </div>
                   <span class="pb-switch checked">
-                    <input type="checkbox" checked />
+                    <input type="checkbox" checked data-toggle="audio-only-feed-url" />
                     <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
                   </span>
+                </div>
+                <div id="audio-only-feed-url" style="margin-top:16px;">
+                  <p class="toggle-desc" style="margin-bottom:8px;">Your audio-only feed is:</p>
+                  <div class="feed-url-box">
+                    <span class="feed-url-text">https://feed.podbean.com/channel519b/audio/feed.xml</span>
+                    <button class="feed-copy-btn" type="button" onclick="navigator.clipboard.writeText('https://feed.podbean.com/channel519b/audio/feed.xml')">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      Copy
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -1709,7 +1825,13 @@
       });
       document.querySelectorAll('.pb-vs[data-select]').forEach(function(el) {
         var label = el.querySelector('span');
-        savedState.selects.push({ el: el, label: label ? label.textContent : '' });
+        var dd = document.getElementById('dropdown-' + el.getAttribute('data-select'));
+        var sel = dd ? dd.querySelector('.pb-select-option.selected') : null;
+        savedState.selects.push({
+          el: el,
+          label: label ? label.textContent : '',
+          value: sel ? sel.getAttribute('data-value') : null
+        });
       });
       document.querySelectorAll('.pb-switch input[type="checkbox"]').forEach(function(el) {
         savedState.switches.push({ el: el, checked: el.checked });
@@ -1717,6 +1839,7 @@
       document.querySelectorAll('.pb-radio input').forEach(function(el) {
         savedState.radios.push({ el: el, checked: el.checked });
       });
+      savedState.countries = window.__countryMulti ? window.__countryMulti.get() : [];
     }
 
     function restoreState() {
@@ -1727,6 +1850,15 @@
       savedState.selects.forEach(function(item) {
         var label = item.el.querySelector('span');
         if (label) label.textContent = item.label;
+        // Also restore which option is marked selected — the label alone is not enough
+        if (item.value != null) {
+          var dd = document.getElementById('dropdown-' + item.el.getAttribute('data-select'));
+          if (dd) {
+            dd.querySelectorAll('.pb-select-option').forEach(function(o) {
+              o.classList.toggle('selected', o.getAttribute('data-value') === item.value);
+            });
+          }
+        }
       });
       savedState.switches.forEach(function(item) {
         item.el.checked = item.checked;
@@ -1743,7 +1875,146 @@
         var rd = item.el.closest('.pb-radio');
         if (rd) rd.classList.toggle('checked', item.checked);
       });
+      if (savedState.countries && window.__countryMulti) {
+        window.__countryMulti.set(savedState.countries);
+      }
+      // Re-sync the Country of Origin picker visibility with the restored mode,
+      // otherwise the label reverts to "Global" while the picker stays open.
+      var modeOpt = document.querySelector('#dropdown-country-mode .pb-select-option.selected');
+      var countryBox = document.getElementById('countryList');
+      if (modeOpt && countryBox) {
+        countryBox.style.display = modeOpt.getAttribute('data-value') === 'specific' ? 'block' : 'none';
+      }
     }
+
+    // ==============================================
+    // Country of Origin → multi-select (Specific countries)
+    // ==============================================
+    var COUNTRY_LIST = [
+      'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Bulgaria', 'Canada',
+      'Chile', 'China', 'Colombia', 'Croatia', 'Czechia', 'Denmark', 'Egypt', 'Estonia',
+      'Finland', 'France', 'Germany', 'Greece', 'Hong Kong SAR', 'Hungary', 'Iceland',
+      'India', 'Indonesia', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kenya', 'Latvia',
+      'Lithuania', 'Luxembourg', 'Malaysia', 'Mexico', 'Netherlands', 'New Zealand',
+      'Nigeria', 'Norway', 'Pakistan', 'Peru', 'Philippines', 'Poland', 'Portugal',
+      'Romania', 'Saudi Arabia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa',
+      'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Taiwan', 'Thailand', 'Turkey',
+      'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Vietnam'
+    ];
+
+    (function initCountryMultiSelect() {
+      var trigger = document.getElementById('countrySelectTrigger');
+      var dropdown = document.getElementById('dropdown-country-list');
+      var search = document.getElementById('countrySearch');
+      var listEl = document.getElementById('countryOptions');
+      var box = document.getElementById('countryList');
+      if (!trigger || !dropdown || !listEl) return;
+
+      var selected = [];
+
+      function esc(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function renderOptions() {
+        var q = (search.value || '').trim().toLowerCase();
+        var matches = COUNTRY_LIST.filter(function(c) { return c.toLowerCase().indexOf(q) >= 0; });
+        if (!matches.length) {
+          listEl.innerHTML = '<div class="pb-multi-empty">No countries found</div>';
+          return;
+        }
+        listEl.innerHTML = matches.map(function(c) {
+          var checked = selected.indexOf(c) >= 0;
+          return '<div class="pb-multi-option' + (checked ? ' checked' : '') + '" data-country="' + esc(c) + '">' +
+                   '<span class="pb-check"></span><span>' + esc(c) + '</span>' +
+                 '</div>';
+        }).join('');
+      }
+
+      function renderChips() {
+        var chips = trigger.querySelector('.pb-chips');
+        if (!chips) return;
+        if (selected.length === 0) {
+          chips.innerHTML = '<span class="pb-chips-empty">Select countries</span>';
+          trigger.classList.add('placeholder');
+        } else {
+          chips.innerHTML = selected.map(function(c) {
+            return '<span class="pb-chip"><span>' + esc(c) + '</span>' +
+                     '<button type="button" class="pb-chip-remove" data-country="' + esc(c) + '" aria-label="Remove ' + esc(c) + '">&times;</button>' +
+                   '</span>';
+          }).join('');
+          trigger.classList.remove('placeholder');
+        }
+        // Selecting a country clears the "required" error immediately
+        if (selected.length > 0 && box) {
+          box.querySelectorAll('.pb-field-error').forEach(function(e) {
+            e.classList.remove('is-visible'); e.textContent = '';
+          });
+          box.querySelectorAll('.pb-vs.is-error').forEach(function(e) {
+            e.classList.remove('is-error');
+          });
+        }
+      }
+
+      trigger.addEventListener('click', function(e) {
+        var removeBtn = e.target.closest('.pb-chip-remove');
+        if (removeBtn) {
+          e.stopPropagation();
+          var rc = removeBtn.getAttribute('data-country');
+          var ri = selected.indexOf(rc);
+          if (ri >= 0) selected.splice(ri, 1);
+          renderOptions();
+          renderChips();
+          showActiveSaveBar();
+          return;
+        }
+
+        e.stopPropagation();
+        document.querySelectorAll('.pb-select-dropdown.open').forEach(function(d) {
+          if (d !== dropdown) d.classList.remove('open');
+        });
+        var willOpen = !dropdown.classList.contains('open');
+        dropdown.classList.toggle('open', willOpen);
+        if (willOpen) {
+          search.value = '';
+          renderOptions();
+          search.focus();
+        }
+      });
+
+      // Clicks inside the dropdown must not count as an outside click
+      dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+
+      listEl.addEventListener('click', function(e) {
+        var opt = e.target.closest('.pb-multi-option');
+        if (!opt) return;
+        var c = opt.getAttribute('data-country');
+        var i = selected.indexOf(c);
+        if (i >= 0) selected.splice(i, 1); else selected.push(c);
+        renderOptions();
+        renderChips();
+        showActiveSaveBar();
+      });
+
+      search.addEventListener('input', renderOptions);
+
+      document.addEventListener('click', function() {
+        dropdown.classList.remove('open');
+      });
+
+      // Shared handle so save-state capture/restore can reach the selection
+      window.__countryMulti = {
+        get: function() { return selected.slice(); },
+        set: function(arr) {
+          selected = (arr || []).slice();
+          renderOptions();
+          renderChips();
+        }
+      };
+
+      renderOptions();
+      renderChips();
+    })();
 
     // Capture initial state after page load
     if (document.readyState === 'loading') {
@@ -1943,6 +2214,14 @@
     });
 
     // Helper: get save bar in active page
+    function showActiveSaveBar() {
+      var saveBar = getActiveSaveBar();
+      if (saveBar) {
+        saveBar.classList.add('is-visible');
+        markUnsaved();
+      }
+    }
+
     function getActiveSaveBar() {
       var activePage = document.querySelector('.page-section.active');
       return activePage ? activePage.querySelector('.pb-save-bar') : null;
@@ -1994,6 +2273,17 @@
 
         // Custom Website URL is optional — only validate format if filled in
         // (format validation to be added)
+
+        // Redirect to a New Feed: if the toggle is on, a new feed URL is required
+        var redirectToggle = activePage.querySelector('[data-toggle="redirect-feed-input"]');
+        var redirectBox = document.getElementById('redirect-feed-input');
+        if (redirectToggle && redirectToggle.checked && redirectBox) {
+          var redirectInput = redirectBox.querySelector('.pb-input');
+          if (redirectInput && redirectInput.value.trim() === '') {
+            showFieldError(redirectBox, 'Please enter your new feed URL');
+            errors.push({ el: redirectInput });
+          }
+        }
 
         if (errors.length > 0) {
           if (errors[0].el) errors[0].el.focus();
@@ -2061,8 +2351,21 @@
             var target = document.getElementById(targetId);
             if (target) {
               target.style.display = input.checked ? 'block' : 'none';
+              // Hiding a conditional block clears any error it was showing
+              if (!input.checked) {
+                target.querySelectorAll('.pb-field-error').forEach(function(e) {
+                  e.classList.remove('is-visible'); e.textContent = '';
+                });
+                target.querySelectorAll('.pb-input.is-error').forEach(function(e) {
+                  e.classList.remove('is-error');
+                });
+              }
             }
           }
+
+          // The input is display:none, so setting .checked above fires no
+          // native change event — dispatch one so listeners (save bar, etc.) run.
+          input.dispatchEvent(new Event('change', { bubbles: true }));
         }
       });
     });
@@ -2105,20 +2408,18 @@
         });
       });
 
-    function showActiveSaveBar() {
-      var saveBar = getActiveSaveBar();
-      if (saveBar) {
-        saveBar.classList.add('is-visible');
-        markUnsaved();
-      }
-    }
     })();
 
     // Custom Select Dropdowns
     document.addEventListener('click', function(e) {
-      // Close all dropdowns when clicking outside
-      var isSelectTrigger = e.target.closest && e.target.closest('.pb-vs[data-select]');
-      if (!isSelectTrigger) {
+      // Close all dropdowns when clicking outside (a click inside a dropdown
+      // or on its trigger still counts as "inside")
+      var inside = e.target.closest && (
+        e.target.closest('.pb-vs[data-select]') ||
+        e.target.closest('.pb-select-dropdown') ||
+        e.target.closest('#countrySelectTrigger')
+      );
+      if (!inside) {
         document.querySelectorAll('.pb-select-dropdown.open').forEach(function(d) {
           d.classList.remove('open');
         });
@@ -2177,6 +2478,7 @@
     function clearAllErrors() {
       document.querySelectorAll('.pb-field-error').forEach(function(el) { el.classList.remove('is-visible'); el.textContent = ''; });
       document.querySelectorAll('.pb-input.is-error').forEach(function(el) { el.classList.remove('is-error'); });
+      document.querySelectorAll('.pb-vs.is-error').forEach(function(el) { el.classList.remove('is-error'); });
       document.querySelectorAll('.pb-editor.is-error').forEach(function(el) { el.classList.remove('is-error'); });
       document.querySelectorAll('.pb-tab.has-error').forEach(function(el) { el.classList.remove('has-error'); });
     }
@@ -2192,7 +2494,7 @@
       errorEl.textContent = message;
       errorEl.classList.add('is-visible');
       // Highlight the input
-      var input = container.querySelector('.pb-input, .pb-editor-body');
+      var input = container.querySelector('.pb-input, .pb-editor-body, .pb-vs');
       if (input) {
         input.classList.add('is-error');
         var editor = container.querySelector('.pb-editor');
@@ -2245,7 +2547,15 @@
       }
 
       // --- Metadata Tab ---
-      // (No required fields in Author & Region)
+      // Country of Origin → "Specific countries" requires at least one country
+      var countryModeOpt = document.querySelector('#dropdown-country-mode .pb-select-option.selected');
+      var countryMode = countryModeOpt ? countryModeOpt.getAttribute('data-value') : 'global';
+      var countryBox = document.getElementById('countryList');
+      var pickedCountries = window.__countryMulti ? window.__countryMulti.get() : [];
+      if (countryMode === 'specific' && pickedCountries.length === 0 && countryBox) {
+        showFieldError(countryBox, 'Please select at least one country');
+        errors.push({ tabId: 'metadata', el: countryBox.querySelector('.pb-vs') });
+      }
 
       // --- Publication Tab ---
       // (No required fields in Content Classification)
