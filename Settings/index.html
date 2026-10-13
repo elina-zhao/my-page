@@ -259,7 +259,9 @@
     .content {
       padding: 24px 48px;
       flex: 1;
-      width: 60%;
+      /* Content column: 1440px wide, centred in the main panel */
+      width: 100%;
+      max-width: 1440px;
       margin: 0 auto;
     }
 
@@ -614,8 +616,9 @@
     }
     .pb-save-bar.is-visible { display: flex; align-items: center; }
     .pb-save-bar-inner {
-      /* align the buttons with the 60%-wide form column above */
-      width: 60%;
+      /* align the buttons with the 1440px form column above */
+      width: 100%;
+      max-width: 1440px;
       margin: 0 auto;
       padding: 0 48px;
       display: flex;
@@ -1004,9 +1007,7 @@
     }
     .plugin-card {
       background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0 20px;
+      padding: 0;
     }
     .plugin-get-btn {
       display: inline-flex;
@@ -1030,33 +1031,51 @@
     /* Plugin Item Row */
     .plugin-item {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 16px;
-      padding: 20px 0;
+      padding: 22px 0;
     }
     .plugin-item + .plugin-item {
       border-top: 1px solid var(--border);
     }
     .plugin-item-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
+      position: relative;
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
       overflow: hidden;
       flex-shrink: 0;
+      background: #f1f5f9;
     }
     .plugin-item-icon img {
+      position: relative;
+      z-index: 1;
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
+    /* Shown only when the remote logo can't load (e.g. offline preview) */
+    .plugin-icon-fallback {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--c, #64748b);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
     .plugin-item-info {
       flex: 1;
       min-width: 0;
+      padding-top: 2px;
     }
     .plugin-item-name {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
       color: var(--text);
       margin-bottom: 2px;
@@ -1067,6 +1086,19 @@
       line-height: 1.5;
       margin: 0;
     }
+    /* "Expired" state — hidden by default, matching the reference markup */
+    .plugin-badge {
+      display: none;
+      margin-left: 8px;
+      padding: 1px 8px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #fef3c7;
+      color: #b45309;
+      vertical-align: middle;
+    }
+    .plugin-badge.is-visible { display: inline-block; }
     .plugin-item-actions {
       display: flex;
       gap: 8px;
@@ -1284,6 +1316,20 @@
       transition: background 0.15s;
     }
     .modal-confirm .btn-leave:hover { background: #334155; }
+    /* Destructive confirmation (e.g. delete a plugin) */
+    .modal-confirm .btn-danger {
+      width: 102px;
+      height: 50px;
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .modal-confirm .btn-danger:hover { background: #b91c1c; }
 
 
     /* ==============================
@@ -1440,6 +1486,7 @@
         <a href="#" class="active" data-page="podcast-basic">Podcast Info</a>
         <a href="#" data-page="feed">Feed</a>
         <a href="#" data-page="plugin">Plugin</a>
+        <a href="#" data-page="import-to-podbean">Import to Podbean</a>
       </div>
     </nav>
   </aside>
@@ -1737,8 +1784,98 @@
           <a href="https://apps.podbean.com" class="plugin-get-btn">Get more plugins</a>
         </div>
 
-        <div class="plugin-empty" style="text-align:center;padding:60px 20px;color:var(--text-tertiary);font-size:14px;line-height:1.6;">
-          Take your podcast to the next level by adding popular plugins and services.
+        <div class="plugin-empty" id="pluginEmptyState" style="display:none;text-align:center;padding:60px 20px;color:var(--text-tertiary);font-size:14px;line-height:1.6;">Take your podcast to the next level by adding popular plugins and services.</div>
+
+        <div class="plugin-card" id="pluginList">
+          <div class="plugin-item" data-plugin-name="Episode Endnote">
+            <div class="plugin-item-icon">
+              <span class="plugin-icon-fallback" style="--c:#7c3aed">EE</span>
+              <img src="https://pbcdn1.podbean.com/fs1/podbean_app_logo/EpisodeEndnote_heqcd.png" alt="Episode Endnote" onerror="this.remove()">
+            </div>
+            <div class="plugin-item-info">
+              <div class="plugin-item-name">Episode Endnote <span class="plugin-badge">Expired</span></div>
+              <p class="plugin-item-desc">Add a customizable endnote that appears at the end of your episode descriptions, ideal for including social media links, promotional details.</p>
+            </div>
+            <div class="plugin-item-actions">
+              <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit Episode Endnote">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              </button>
+              <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove Episode Endnote">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="plugin-item" data-plugin-name="Episode Tags">
+            <div class="plugin-item-icon">
+              <span class="plugin-icon-fallback" style="--c:#0891b2">ET</span>
+              <img src="https://s3.amazonaws.com/fs1.podbean.com/podbean_app_logo/EpisodeTags_r5ez8.png" alt="Episode Tags" onerror="this.remove()">
+            </div>
+            <div class="plugin-item-info">
+              <div class="plugin-item-name">Episode Tags <span class="plugin-badge">Expired</span></div>
+              <p class="plugin-item-desc">Episode Tags can be used to organize the episodes on your podcast site. You can add tags in Podbean when creating or editing an episode.</p>
+            </div>
+            <div class="plugin-item-actions">
+              <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove Episode Tags">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="plugin-item" data-plugin-name="Import Files from Dropbox">
+            <div class="plugin-item-icon">
+              <span class="plugin-icon-fallback" style="--c:#2563eb">DB</span>
+              <img src="https://s3.amazonaws.com/fs1.podbean.com/podbean_app_logo/Import-Files-from-Dropbox.jpg" alt="Import Files from Dropbox" onerror="this.remove()">
+            </div>
+            <div class="plugin-item-info">
+              <div class="plugin-item-name">Import Files from Dropbox <span class="plugin-badge">Expired</span></div>
+              <p class="plugin-item-desc">Import files directly from your Dropbox account to your Podbean Media Manager.</p>
+            </div>
+            <div class="plugin-item-actions">
+              <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit Import Files from Dropbox">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              </button>
+              <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove Import Files from Dropbox">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="plugin-item" data-plugin-name="SEO Meta Tags">
+            <div class="plugin-item-icon">
+              <span class="plugin-icon-fallback" style="--c:#059669">SEO</span>
+              <img src="https://s3.amazonaws.com/fs1.podbean.com/podbean_app_logo/Custom-Meta-Tag_hzt9y.jpg" alt="SEO Meta Tags" onerror="this.remove()">
+            </div>
+            <div class="plugin-item-info">
+              <div class="plugin-item-name">SEO Meta Tags <span class="plugin-badge">Expired</span></div>
+              <p class="plugin-item-desc">This plugin makes it very easy for you to manage SEO titles, keywords and descriptions for your podcast site.</p>
+            </div>
+            <div class="plugin-item-actions">
+              <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit SEO Meta Tags">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              </button>
+              <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove SEO Meta Tags">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Page: Import to Podbean ===== -->
+      <div class="page-section" id="page-import-to-podbean">
+        <div class="page-heading-title">Import to Podbean</div>
+        <p class="page-subtitle">Import an existing podcast into Podbean. <a href="#" style="color:inherit;font-weight:500;">Learn more</a></p>
+
+        <div class="pb-card" style="margin-top:24px;">
+          <div class="info-row">
+            <div class="info-content-item">
+              <span class="cc-item-label">Podcast Feed URL</span>
+              <span class="tips">Enter the RSS feed URL of the podcast you want to import.</span>
+              <input type="text" class="pb-input" placeholder="https://" style="margin-top:8px;" />
+              <div class="pb-field-error"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1778,6 +1915,18 @@
           <div class="modal-footer">
             <button class="cancel-btn" onclick="closeEndnoteModal()">Cancel</button>
             <button class="save-btn" onclick="saveEndnote()">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Plugin confirmation -->
+      <div class="modal-overlay" id="pluginDeleteModal">
+        <div class="modal-confirm">
+          <div class="modal-confirm-title">Delete Plugin</div>
+          <p class="modal-confirm-desc" id="pluginDeleteDesc">Are you sure you want to delete this plugin?</p>
+          <div class="modal-confirm-actions">
+            <button class="btn-stay" id="pluginDeleteCancel">Cancel</button>
+            <button class="btn-danger" id="pluginDeleteConfirm">Delete</button>
           </div>
         </div>
       </div>
@@ -2563,14 +2712,78 @@
       return errors;
     }
 
-    function showToast() {
+    function showToast(message) {
       var toast = document.getElementById('saveToast');
       if (!toast) return;
+      toast.textContent = message || 'Saved successfully';
       toast.classList.add('is-visible');
-      setTimeout(function() {
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(function() {
         toast.classList.remove('is-visible');
       }, 2500);
     }
+
+    // ==============================================
+    // Plugin page — delete a plugin (with confirmation)
+    // ==============================================
+    (function initPluginDelete() {
+      var list = document.getElementById('pluginList');
+      var modal = document.getElementById('pluginDeleteModal');
+      var desc = document.getElementById('pluginDeleteDesc');
+      var confirmBtn = document.getElementById('pluginDeleteConfirm');
+      var cancelBtn = document.getElementById('pluginDeleteCancel');
+      var emptyState = document.getElementById('pluginEmptyState');
+      if (!list || !modal) return;
+
+      var pendingRow = null;
+
+      function closeModal() {
+        modal.classList.remove('open');
+        pendingRow = null;
+      }
+
+      function syncEmptyState() {
+        if (!emptyState) return;
+        emptyState.style.display = list.children.length === 0 ? 'block' : 'none';
+      }
+
+      function openDeleteModal(row) {
+        var name = row.getAttribute('data-plugin-name') || 'this plugin';
+        pendingRow = row;
+        desc.textContent = 'Are you sure you want to delete “' + name +
+          '”? Its settings will be removed from your podcast. This action cannot be undone.';
+        modal.classList.add('open');
+        confirmBtn.focus();
+      }
+
+      // Any remove button in the list (the list is static, so bind directly)
+      list.querySelectorAll('.plugin-action-btn.delete').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          openDeleteModal(this.closest('.plugin-item'));
+        });
+      });
+
+      confirmBtn.addEventListener('click', function() {
+        var row = pendingRow;
+        if (row) {
+          var name = row.getAttribute('data-plugin-name') || 'Plugin';
+          row.remove();
+          syncEmptyState();
+          showToast(name + ' deleted');
+        }
+        closeModal();
+      });
+
+      cancelBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+
+      syncEmptyState();
+    })();
   </script>
 
 </body>
