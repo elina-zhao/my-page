@@ -1161,11 +1161,22 @@ body {
   window._pSelectTitle = function(idx){state.selectedTitle=idx;document.querySelectorAll('.title-card').forEach(function(e,i){e.classList.toggle('selected',i===idx);});};
   window._pSelectLogo = function(idx){state.selectedLogo=idx;document.querySelectorAll('.logo-card').forEach(function(e,i){e.classList.toggle('selected',i===idx);});};
 
+/* \u4efb\u4f55\u300c\u8fdb\u5165 dashboard\u300d\u7684\u89e6\u53d1 \u2014\u2014 \u70b9 Looks Good\u3001\u5728\u7ed3\u679c\u9875\u6253\u5b57\u786e\u8ba4\uff08looks good / \u786e\u8ba4\u2026\uff09\u3001
+     \u5bfc\u5165\u6d41\u7a0b\u91cc\u70b9 Go to dashboard \u6216\u6253 dashboard \u2014\u2014 \u90fd\u76f4\u63a5\u8df3\u5230\u7ebf\u4e0a dashboard\u3002
+     state.step='complete' \u53ea\u662f\u9632\u8fde\u70b9\uff1a\u89e6\u53d1\u8fc7\u4e00\u6b21\u5c31\u4e0d\u518d\u89e6\u53d1\u7b2c\u4e8c\u6b21\u3002
+     mockup \u5185\u90a3\u5957 dashboard\uff08showMockDashboard \u53ca\u4e0b\u9762\u7684 build*Dashboard\uff09\u4fdd\u7559\uff0c\u65b9\u4fbf\u4ee5\u540e\u8981\u56de\u9000\u3002 */
   function enterDashboard() {
+    if(state.step==='complete') return;
     state.step='complete'; setProgress('complete');
-    clearInput();   /* 收掉对话输入区，避免隐藏的 autofocus 输入框还留在 DOM 里 */
+    clearInput();
+    goLiveDashboard();
+  }
+
+  /* \u539f mockup \u5185\u7684 dashboard \u843d\u5730\u903b\u8f91\uff0c\u6682\u65f6\u4e0d\u7528 */
+  function showMockDashboard() {
+    state.step='complete'; setProgress('complete');
+    clearInput();
     document.getElementById('setupMode').style.display='none';
-    /* dashboard 里「Skip the chat」不该还是个能点的活控件（点了也是 no-op），置灰掉 */
     document.getElementById('skipLink').classList.add('skip-disabled');
     document.getElementById('dashMode').classList.add('active');
     renderDashboard();
