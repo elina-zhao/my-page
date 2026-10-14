@@ -13,9 +13,10 @@
 |---|---|---|
 | Onboarding（引导页） | `dashboard` | 新播客创建引导，帮助新用户完成开播前的基础步骤 |
 | Dashboard（数据分析页） | `dashboard-v2` | 播客数据总览：下载统计、趋势图表、单集表现、成就、评论 |
-| Dashboard v2（无评论变体） | `dashboard-v2-nc` | 与 v2 基本相同，但布局上移除了"最近评论"区块，成就区域改为通栏展示。页面标题与 v2 页一致，只显示 "Dashboard"（标题里的 v2 标识与右侧的 "No Comments View" 标签均已移除） |
+| Dashboard v2（评论关闭变体） | `dashboard-v2-nc` | 与 v2 布局一致，成就与"最近评论"仍并排（各占 1/2 宽），但评论卡片为**空状态**：账号已关闭评论功能，因此不展示任何评论数据。页面标题与 v2 页一致，只显示 "Dashboard" |
+| Dashboard v3（无评论默认空态） | `dashboard-v3` | 与 v2 布局一致，评论卡片同样为空状态，但语义是**默认空态**："No comments yet / Your latest comments will show up here."（功能正常，只是还没有评论）。页面标题与 v2 页一致，只显示 "Dashboard" |
 
-页面当前使用**静态演示数据**（mock 数据），前端交互已完整实现，尚未接入后端 API。导航栏中的 "Dashboard (v2)"（无评论版）为同一数据面板的布局变体，用于对比评审。
+页面当前使用**静态演示数据**（mock 数据），前端交互已完整实现，尚未接入后端 API。导航栏中的 "Dashboard (v2)"、"Dashboard (v3)" 都是同一数据面板的**变体页**，用于对比评审"最近评论"卡片的三种状态：v2 有评论列表、v2-nc 是"评论功能已关闭"的空态、v3 是"还没有评论"的默认空态。
 
 ---
 
@@ -150,11 +151,29 @@
 | 10K Downloads | 灰（半透明） | 🔒 锁定 | 未达成，显示 "Locked" |
 
 - 顶部大图为最新获得的徽章图片（`podcastbadge.png`），右侧带 **Share（分享）** 按钮，hover 时按钮背景加深（使用内联 `onmouseover/onmouseout` 实现）。
-- 成就区域在 v2 中与"最近评论"并排（各占 1/2 宽）；在 v2-nc 中改为通栏显示。
+- 成就区域在 v2 与 v2-nc 中都与"最近评论"并排（各占 1/2 宽），两个视图布局一致。
 
 ### 4.5 最近评论（Recent Comments）
 
-展示听众最新评论列表（仅存在于 `dashboard-v2` 视图）：
+三个 Dashboard 视图都有该卡片，区别在于卡片内容：
+
+| 视图 | 卡片内容 |
+|---|---|
+| `dashboard-v2` | 评论列表（3 条 mock 评论） |
+| `dashboard-v2-nc` | **空状态**：账号已关闭评论功能，不展示评论数据 |
+| `dashboard-v3` | **空状态**：还没有任何评论，提示新评论会出现在这里 |
+
+卡片标题栏统一为 "Recent Comments"：`dashboard-v2` 保留 "View more →" 链接，两个空状态（v2-nc、v3）**都没有该链接**（无评论可跳转）。
+
+空状态（`dashboard-v2-nc`）自上而下为：灰色圆形对话框图标 → 标题 "No comments" → 说明文字 "Commenting is turned off for your account."。**没有按钮、没有跳转链接**——只做状态陈述。说明文字为**中性陈述**：只说明该账号的评论功能处于关闭状态，不写明是谁关的（既不说"You turned it off"，也不暗示是平台限制）。
+
+空状态（`dashboard-v3`）结构完全相同，仅文案不同：标题 "No comments yet"，说明文字 "Your latest comments will show up here."。与 v2-nc 的区别是**语义方向相反**：v2-nc 说的是"功能被关掉了"，v3 说的是"功能正常、只是目前还没有评论"，属于更中性的默认空态。
+
+空状态在卡片内**垂直居中**（卡片为 `display:flex;flex-direction:column`，`.comments-empty` 占满剩余高度），因此在与成就卡片等高时视觉居中。样式类为 `.comments-empty` / `.comments-empty-icon` / `.comments-empty-title` / `.comments-empty-text`；早期版本的 `.comments-empty-btn`（"Manage comment settings" 按钮）已随按钮一起删除。
+
+> 维护提示：v2-nc 与 v3 两页是**从 `dashboard-v2` 页整体复制**出来的变体，结构完全一致，只改了页面 id、元素 id 后缀（`2` / `V3`）和评论卡片内容。要再加减变体，请复制 v2 页（它是结构最干净的一份）再套用同样的三处改动，不要手工改副本——曾经因此出现过标签不配对、新页被嵌进隐藏页里的问题。每页的 `sparkYesterday*` / `downloadChart*` / `epPerfBody*` id 必须唯一，否则该页图表与单集表格会静默留空（初始化脚本在文末的 `DOMContentLoaded` 里，新页要在那里补调用）。
+
+评论列表（`dashboard-v2`）：
 
 | 用户 | 评论摘要 | 关联单集 | 时间 |
 |---|---|---|---|
