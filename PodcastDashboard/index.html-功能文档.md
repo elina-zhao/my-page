@@ -15,7 +15,7 @@
 | Dashboard（数据分析页） | `dashboard-v2` | 播客数据总览：下载统计、趋势图表、单集表现、成就、评论 |
 | Dashboard v2（评论关闭变体） | `dashboard-v2-nc` | 与 v2 布局一致，成就与"最近评论"仍并排（各占 1/2 宽），但评论卡片为**空状态**：账号已关闭评论功能，因此不展示任何评论数据。页面标题与 v2 页一致，只显示 "Dashboard" |
 | Dashboard v3（无评论默认空态） | `dashboard-v3` | 与 v2 布局一致，评论卡片同样为空状态，但语义是**默认空态**："No comments yet / Your latest comments will show up here."（功能正常，只是还没有评论）。页面标题与 v2 页一致，只显示 "Dashboard" |
-| Dashboard v4（无徽章空态） | `dashboard-v4` | 与 v2 完全一致（含真实评论列表、图表、单集表现），**唯一区别是徽章进度为 0**：成就卡片走零徽章空状态（空态大图、无 Share、只剩两个目标格）。用来单独评审成就空态，变量只有"有没有徽章" |
+| Dashboard v4（空状态页） | `dashboard-v4` | 与 v2 布局一致，用来集中演示"全新播客"的空状态：**徽章进度为 0**（空态大图、无 Share、两格都灰）+ **一条单集都没有**（单集表现表换成空状态）。评论列表、统计卡片与图表仍是正常数据 |
 
 页面当前使用**静态演示数据**（mock 数据），前端交互已完整实现，尚未接入后端 API。导航栏中的 "Dashboard (v2)"、"Dashboard (v3)"、"Dashboard (v4)" 都是同一数据面板的**变体页**：v2 是基准页；v2-nc 评审"评论功能已关闭"的空态；v3 评审"还没有评论"的默认空态；v4 评审"还没有徽章"的空态。
 
@@ -126,18 +126,25 @@
 
 表格列出各单集的下载表现，两列指标：**First Week**（首周）与 **First Month**（首月）。
 
-| 单集标题 | First Week | First Month |
-|---|---|---|
-| 英文里的"奇妙日常"：旅馆为何被拼布大会订满？ | — | — |
-| How to Start a Podcast in 9 Steps (2026) | 245 | 892 |
-| Hometown Heroes Expanded: Florida First-Time Buyers | 186 | 673 |
-| How_to_Record_and_Convert_Zoom_Calls... | 412 | 1,540 |
-| Born on the Seven-Mile Miracle: John John Florence | 367 | 1,250 |
-| this is video episode 2 | 523 | 2,100 |
+`epPerfData` 里目前有 **10 条** mock 单集（Dashboard / v2 / v3 三页共用同一份）：
 
-- 数据来源：JS 常量数组 `epPerfData`（硬编码）。
-- 渲染逻辑：`buildEpPerfTable()` 将同一份数据同时填充到三个视图的表格 `#epPerfBody`、`#epPerfBody2`、`#epPerfBodyOnboard`。
-- 数值为 0 时显示占位符 `—`（如首条记录）。
+| # | 单集标题 | First Week | First Month |
+|---|---|---|---|
+| 1 | Everyday Wonders in English: Why Hotels Sell Out for Quilt Conventions | — | — |
+| 2 | How to Start a Podcast in 9 Steps (2026): From Idea to Growth | 245 | 892 |
+| 3 | Hometown Heroes Expanded: Up to $35K for Florida First-Time Buyers | 186 | 673 |
+| 4 | How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes | 412 | 1,540 |
+| 5 | Born on the Seven-Mile Miracle: John John Florence | 367 | 1,250 |
+| 6 | this is video episode 2 | 523 | 2,100 |
+| 7 | Behind the Mic: Building a Home Studio on a Budget | 298 | 1,140 |
+| 8 | Listener Q&A: Monetization, Sponsorships and Burnout | 431 | 1,685 |
+| 9 | The Art of the Interview: Asking Better Questions | 274 | 998 |
+| 10 | Season Finale: What 100 Episodes Taught Us | 612 | 2,340 |
+
+- 数据来源：JS 常量数组 `epPerfData`（硬编码；真实实现应改为按单集查询后端）。
+- 渲染逻辑：`buildEpPerfTable()` 把同一份数据填进各视图的 `#epPerfBody`（Dashboard）、`#epPerfBody2`（v2-nc）、`#epPerfBodyV3`（v3），以及引导页的 `#epPerfBodyOnboard`。
+- 数值为 0 时显示占位符 `—`（如第 1 条）。
+- **v4 演示"一条单集都没有"**：那一页没有表格，只有一个 `#epPerfV4` 容器，`buildEpPerfTable()` 往里渲染空状态（`.panel-empty`：柱状图图标 + 一行 `No data found.`），标题栏的 "View more →" 也一并去掉（没东西可看）。
 - 表格行有 hover 高亮；标题列 hover 变绿、可点击（跳转动作尚未实现）。
 
 ### 4.4 成就系统（Achievements）
@@ -326,7 +333,7 @@
 
 | 函数 | 作用 |
 |---|---|
-| `buildEpPerfTable()` | 依据 `epPerfData` 生成三个视图的单集表现表 |
+| `buildEpPerfTable()` | 依据 `epPerfData` 生成各视图的单集表现表；v4 的 `#epPerfV4` 则渲染空状态 |
 | `updateOnboardProgress()` | 依据 `onboardSteps` 更新三个步骤的圆圈勾选与完成态样式 |
 | `completeOnboardStep(step)` | 将指定步骤标记为已完成（幂等）并写入 localStorage；由该步骤的操作按钮调用，圆圈本身不可点击 |
 | `skipOnboarding()` | 完成全部步骤并跳转 Dashboard v2 |

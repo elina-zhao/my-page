@@ -205,6 +205,18 @@
   .ach-empty-title { font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px; }
   .ach-empty-desc { font-size:13px;color:var(--text-secondary);line-height:1.5;max-width:280px; }
 
+  /* generic section-level empty state (first used by Episode Performance on v4) */
+  .panel-empty {
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:30px 20px;
+  }
+  .panel-empty-icon {
+    width:44px;height:44px;border-radius:50%;background:#f1f5f9;color:var(--text-tertiary);
+    display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+  }
+  .panel-empty-title { font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px; }
+  .panel-empty-text { font-size:13px;color:var(--text-secondary);line-height:1.55;max-width:340px; }
+
   /* 4 achievement slots: one row per badge family (earned on top, target below) */
   .badge-tiles { display:flex;gap:10px;margin-bottom:6px; }
   .badge-tile {
@@ -937,18 +949,12 @@
           </div><!-- .dash-main -->
         </div><!-- .dash-layout -->
 
-        <!-- Episode Performance -->
+        <!-- Episode Performance — this page demos the no-episodes state -->
         <div class="dash-chart-section" style="margin-bottom:28px;">
           <div class="chart-header">
             <div class="chart-title">Episode Performance</div>
-            <a href="#" class="view-more-btn">View more →</a>
           </div>
-          <table class="ep-perf-table">
-            <thead>
-              <tr><th>Episode Title</th><th style="text-align:center;">First Week</th><th style="text-align:center;">First Month</th></tr>
-            </thead>
-            <tbody id="epPerfBodyV4"></tbody>
-          </table>
+          <div id="epPerfV4"></div>
         </div>
 
         <!-- Achievements & Recent Comments -->
@@ -1665,6 +1671,10 @@
     { title: 'How_to_Record_and_Convert_Zoom_Calls_into_Podcast_Episodes', firstWeek: 412, firstMonth: 1540 },
     { title: 'Born on the Seven-Mile Miracle: John John Florence', firstWeek: 367, firstMonth: 1250 },
     { title: 'this is video episode 2', firstWeek: 523, firstMonth: 2100 },
+    { title: 'Behind the Mic: Building a Home Studio on a Budget', firstWeek: 298, firstMonth: 1140 },
+    { title: 'Listener Q&A: Monetization, Sponsorships and Burnout', firstWeek: 431, firstMonth: 1685 },
+    { title: 'The Art of the Interview: Asking Better Questions', firstWeek: 274, firstMonth: 998 },
+    { title: 'Season Finale: What 100 Episodes Taught Us', firstWeek: 612, firstMonth: 2340 },
   ];
 
   function buildEpPerfTable() {
@@ -1680,10 +1690,20 @@
     if (tbody2) tbody2.innerHTML = html;
     var tbody3 = document.getElementById('epPerfBodyV3');
     if (tbody3) tbody3.innerHTML = html;
-    var tbody4 = document.getElementById('epPerfBodyV4');
-    if (tbody4) tbody4.innerHTML = html;
     var tbodyOnboard = document.getElementById('epPerfBodyOnboard');
     if (tbodyOnboard) tbodyOnboard.innerHTML = html;
+
+    /* v4 shows what the panel looks like for a podcast with no episodes at all */
+    var empty = document.getElementById('epPerfV4');
+    if (empty) {
+      empty.innerHTML =
+        '<div class="panel-empty">' +
+          '<div class="panel-empty-icon">' +
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="18" y1="20" x2="18" y2="9"/><line x1="3" y1="20" x2="21" y2="20"/></svg>' +
+          '</div>' +
+          '<div class="panel-empty-title">No data found.</div>' +
+        '</div>';
+    }
   }
 
   /* ── Dashboard v1 (Onboarding) ─────────── */
