@@ -14,10 +14,9 @@
 | Onboarding（引导页） | `dashboard` | 新播客创建引导，帮助新用户完成开播前的基础步骤 |
 | Dashboard（数据分析页） | `dashboard-v2` | 播客数据总览：下载统计、趋势图表、单集表现、成就、评论 |
 | Dashboard v2（评论关闭变体） | `dashboard-v2-nc` | 与 v2 布局一致，成就与"最近评论"仍并排（各占 1/2 宽），但评论卡片为**空状态**：账号已关闭评论功能，因此不展示任何评论数据。页面标题与 v2 页一致，只显示 "Dashboard" |
-| Dashboard v3（无评论默认空态） | `dashboard-v3` | 与 v2 布局一致，评论卡片同样为空状态，但语义是**默认空态**："No comments yet / Your latest comments will show up here."（功能正常，只是还没有评论）。页面标题与 v2 页一致，只显示 "Dashboard" |
-| Dashboard v4（空状态页） | `dashboard-v4` | 与 v2 布局一致，用来集中演示"全新播客"的空状态：**徽章进度为 0**（空态大图、无 Share、两格都灰）+ **一条单集都没有**（单集表现表换成空状态）。评论列表、统计卡片与图表仍是正常数据 |
+| Dashboard v3（空状态页） | `dashboard-v3` | 与 v2 布局一致，整页演示**全新播客**（数据全为 0）：统计卡片 4 个数字都是 `0`、迷你趋势线拉平；下载趋势图 0 / +0% 且只画一条贴 0 的平线；单集表现表换成空状态；徽章进度为 0（空态大图、无 Share、两格都灰）；评论卡片为空状态。是全站空状态的集中演示页 |
 
-页面当前使用**静态演示数据**（mock 数据），前端交互已完整实现，尚未接入后端 API。导航栏中的 "Dashboard (v2)"、"Dashboard (v3)"、"Dashboard (v4)" 都是同一数据面板的**变体页**：v2 是基准页；v2-nc 评审"评论功能已关闭"的空态；v3 评审"还没有评论"的默认空态；v4 评审"还没有徽章"的空态。
+页面当前使用**静态演示数据**（mock 数据），前端交互已完整实现，尚未接入后端 API。导航栏中的 "Dashboard (v2)"、"Dashboard (v3)" 都是同一数据面板的**变体页**：v2 是基准页；v2-nc 评审"评论功能已关闭"的空态；v3 评审整页空状态（全新播客）。编号说明：2026-10-14 先删掉了当时的 `dashboard-v3`（"还没有评论"的默认空态），随后把 `dashboard-v4` 改名为 `dashboard-v3`，所以现在的 v3 是整页空状态页。
 
 ---
 
@@ -118,6 +117,9 @@
 - 绿色趋势徽章 `+6.2%`：环比上一 14 天
 - "vs previous 14 days" 说明文字
 
+**v3 的空数据形态（2026-10-14 加）**
+`dashboard-v3` 演示"一条单集都没有、自然也没有下载"的状态：头部数字改为 `0`、徽章 `+0%`，图表由独立的 `initEmptyTrendChart()` 渲染 —— 只画一条 2026 的平线贴在 0 上（无填充、无去年同期虚线），Y 轴用 `suggestedMax: 50` 撑开，避免整块塌成一条细缝。之所以另写一个函数而不给 `initTrendChart()` 加参数，是因为文末那段的代码在文件里有两份（引导页还有一份同款 IIFE），整段替换很容易改错地方。
+
 **交互**
 - Tooltip 跟随鼠标（`interaction.mode: 'index'`，暗色样式）
 - 点击 "View more →" 跳转详情页（当前为空链接占位）
@@ -126,7 +128,7 @@
 
 表格列出各单集的下载表现，两列指标：**First Week**（首周）与 **First Month**（首月）。
 
-`epPerfData` 里目前有 **10 条** mock 单集（Dashboard / v2 / v3 三页共用同一份）：
+`epPerfData` 里目前有 **10 条** mock 单集（Dashboard / v2-nc 共用同一份）：
 
 | # | 单集标题 | First Week | First Month |
 |---|---|---|---|
@@ -142,9 +144,9 @@
 | 10 | Season Finale: What 100 Episodes Taught Us | 612 | 2,340 |
 
 - 数据来源：JS 常量数组 `epPerfData`（硬编码；真实实现应改为按单集查询后端）。
-- 渲染逻辑：`buildEpPerfTable()` 把同一份数据填进各视图的 `#epPerfBody`（Dashboard）、`#epPerfBody2`（v2-nc）、`#epPerfBodyV3`（v3），以及引导页的 `#epPerfBodyOnboard`。
+- 渲染逻辑：`buildEpPerfTable()` 把同一份数据填进各视图的 `#epPerfBody`（Dashboard）、`#epPerfBody2`（v2-nc），以及引导页的 `#epPerfBodyOnboard`。
 - 数值为 0 时显示占位符 `—`（如第 1 条）。
-- **v4 演示"一条单集都没有"**：那一页没有表格，只有一个 `#epPerfV4` 容器，`buildEpPerfTable()` 往里渲染空状态（`.panel-empty`：柱状图图标 + 一行 `No data found.`），标题栏的 "View more →" 也一并去掉（没东西可看）。
+- **v3 演示"一条单集都没有"**：那一页没有表格，只有一个 `#epPerfV3` 容器，`buildEpPerfTable()` 往里渲染空状态（`.panel-empty`：柱状图图标 + 一行 `No data found.`），标题栏的 "View more →" 也一并去掉（没东西可看）。
 - 表格行有 hover 高亮；标题列 hover 变绿、可点击（跳转动作尚未实现）。
 
 ### 4.4 成就系统（Achievements）
@@ -185,8 +187,8 @@
 #### 数据与实现
 
 - `BADGE_DATA`（`index.html` 末尾脚本内）是两个家族的数据源：`thresholds` 阈值列表、`current` 当前进度（累计已发布单集数 / 累计下载量）、`unlocked` 各已解锁徽章的解锁月份。**原型里它是硬编码的，真实实现应来自后端**（下载量每日 T+1 更新，单集数在发布成功时更新）。
-- `BADGE_DATA_EMPTY` 是同结构的零进度数据（`current: 0`、无 `unlocked`），供 v4 页演示零徽章状态用。
-- `ACH_PAGES` 是"哪个页面用哪份数据"的映射：v2 / v2-nc / v3 → `BADGE_DATA`，v4 → `BADGE_DATA_EMPTY`。`renderAchievements()` 遍历它，分别写入各页的 `#achHero*`（大图/空态）与 `#achTiles*`（格子）容器。**改徽章只需改 `BADGE_DATA` 一处**，用到的页面同时生效；要再加一个演示变体，加一行 `ACH_PAGES` 即可。
+- `BADGE_DATA_EMPTY` 是同结构的零进度数据（`current: 0`、无 `unlocked`），供 v3 页演示零徽章状态用。
+- `ACH_PAGES` 是"哪个页面用哪份数据"的映射：v2 / v2-nc → `BADGE_DATA`，v3 → `BADGE_DATA_EMPTY`。`renderAchievements()` 遍历它，分别写入各页的 `#achHero*`（大图/空态）与 `#achTiles*`（格子）容器。**改徽章只需改 `BADGE_DATA` 一处**，用到的页面同时生效；要再加一个演示变体，加一行 `ACH_PAGES` 即可。
 - 格子配色按家族区分（不再按单枚徽章）：发布类黄 `#fef3c7`/`#d97706`，下载类蓝 `#dbeafe`/`#2563eb`，灰色 `#f1f5f9`/`#cbd5e1` + 整格 `opacity:.5`。图标：发布类用麦克风，下载类用走势线。
 
 #### 徽章大图的来源
@@ -210,7 +212,7 @@
 
 #### 零徽章（空状态）
 
-用户一枚徽章都没有时（`earnedCount() === 0`，即两个家族的 `current` 都低于第一个阈值）。这个状态在 **Dashboard (v4)** 页可以直接看到（该页数据来自 `BADGE_DATA_EMPTY`）：
+用户一枚徽章都没有时（`earnedCount() === 0`，即两个家族的 `current` 都低于第一个阈值）。这个状态在 **Dashboard (v3)** 页可以直接看到（该页数据来自 `BADGE_DATA_EMPTY`）：
 
 - **顶部大图换成空状态**：灰色圆形徽章轮廓图标 + `No badges yet` + `Publish your first episode to unlock your first badge.`，整块保持 `min-height:130px`，与有大图时高度一致，卡片不会突然变矮。
 - **Share 按钮隐藏**（不是置灰）：没有可分享的徽章，而它分享的对象就是"最新那枚"，此时指向的内容并不存在。
@@ -222,7 +224,7 @@
 - 某家族全部解锁：该格显示最高阈值那枚（亮的），没有"下一枚"可显示，也不会出现 `All unlocked` 之类的特殊状态。
 - 同一家族一次解锁多枚（批量导入）：只占一格，取阈值最高的那枚。
 - 顶部大图与格子可能显示同一枚徽章（例如都亮着 `10 Episodes`），这是预期内的：大图是"炫耀 + 分享位"且可被点击切换，格子是"两类进度对照位"。
-- 成就区域在 v2 / v2-nc / v3 / v4 四个页面里都与"最近评论"并排（各占 1/2 宽），布局一致。
+- 成就区域在 v2 / v2-nc / v3 三个页面里都与"最近评论"并排（各占 1/2 宽），布局一致。
 
 ### 4.5 最近评论（Recent Comments）
 
@@ -232,9 +234,9 @@
 |---|---|
 | `dashboard-v2` | 评论列表（3 条 mock 评论） |
 | `dashboard-v2-nc` | **空状态**：账号已关闭评论功能，不展示评论数据 |
-| `dashboard-v3` | **空状态**：还没有任何评论，提示新评论会出现在这里 |
+| `dashboard-v3` | **空状态**：还没有任何评论，提示新评论会出现在这里（v3 演示全新播客） |
 
-卡片标题栏统一为 "Recent Comments"：`dashboard-v2` 保留 "View more →" 链接，两个空状态（v2-nc、v3）**都没有该链接**（无评论可跳转）。
+卡片标题栏统一为 "Recent Comments"：只有 `dashboard-v2` 保留 "View more →" 链接，两个空状态（v2-nc、v3）**都没有该链接**（无评论可跳转）。
 
 空状态（`dashboard-v2-nc`）自上而下为：灰色圆形对话框图标 → 标题 "No comments" → 说明文字 "Commenting is turned off for your account."。**没有按钮、没有跳转链接**——只做状态陈述。说明文字为**中性陈述**：只说明该账号的评论功能处于关闭状态，不写明是谁关的（既不说"You turned it off"，也不暗示是平台限制）。
 
@@ -242,7 +244,7 @@
 
 空状态在卡片内**垂直居中**（卡片为 `display:flex;flex-direction:column`，`.comments-empty` 占满剩余高度），因此在与成就卡片等高时视觉居中。样式类为 `.comments-empty` / `.comments-empty-icon` / `.comments-empty-title` / `.comments-empty-text`；早期版本的 `.comments-empty-btn`（"Manage comment settings" 按钮）已随按钮一起删除。
 
-> 维护提示：v2-nc 与 v3 两页是**从 `dashboard-v2` 页整体复制**出来的变体，结构完全一致，只改了页面 id、元素 id 后缀（`2` / `V3`）和评论卡片内容。要再加减变体，请复制 v2 页（它是结构最干净的一份）再套用同样的三处改动，不要手工改副本——曾经因此出现过标签不配对、新页被嵌进隐藏页里的问题。每页的 `sparkYesterday*` / `downloadChart*` / `epPerfBody*` id 必须唯一，否则该页图表与单集表格会静默留空（初始化脚本在文末的 `DOMContentLoaded` 里，新页要在那里补调用）。
+> 维护提示：v2-nc 与 v3 两页是**从 `dashboard-v2` 页整体复制**出来的变体，结构完全一致，只改了页面 id、元素 id 后缀（`2` / `V3`）和卡片内容。要再加减变体，请复制 v2 页（它是结构最干净的一份）再套用同样的三处改动，不要手工改副本——曾经因此出现过标签不配对、新页被嵌进隐藏页里的问题。每页的 `sparkYesterday*` / `downloadChart*` / `epPerfBody*` id 必须唯一，否则该页图表与单集表格会静默留空（初始化脚本在文末的 `DOMContentLoaded` 里，新页要在那里补调用）。
 
 评论列表（`dashboard-v2`）：
 
@@ -333,7 +335,7 @@
 
 | 函数 | 作用 |
 |---|---|
-| `buildEpPerfTable()` | 依据 `epPerfData` 生成各视图的单集表现表；v4 的 `#epPerfV4` 则渲染空状态 |
+| `buildEpPerfTable()` | 依据 `epPerfData` 生成各视图的单集表现表；v3 的 `#epPerfV3` 则渲染空状态 |
 | `updateOnboardProgress()` | 依据 `onboardSteps` 更新三个步骤的圆圈勾选与完成态样式 |
 | `completeOnboardStep(step)` | 将指定步骤标记为已完成（幂等）并写入 localStorage；由该步骤的操作按钮调用，圆圈本身不可点击 |
 | `skipOnboarding()` | 完成全部步骤并跳转 Dashboard v2 |
