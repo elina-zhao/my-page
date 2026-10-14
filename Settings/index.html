@@ -259,9 +259,10 @@
     .content {
       padding: 24px 48px;
       flex: 1;
-      /* Content column: 1440px wide, centred in the main panel */
+      /* Content column: 1360px wide, centred in the main panel.
+         Kept in step with .pb-save-bar-inner below — they are one column. */
       width: 100%;
-      max-width: 1440px;
+      max-width: 1360px;
       margin: 0 auto;
     }
 
@@ -616,9 +617,9 @@
     }
     .pb-save-bar.is-visible { display: flex; align-items: center; }
     .pb-save-bar-inner {
-      /* align the buttons with the 1440px form column above */
+      /* align the buttons with the 1360px form column above */
       width: 100%;
-      max-width: 1440px;
+      max-width: 1360px;
       margin: 0 auto;
       padding: 0 48px;
       display: flex;
@@ -988,6 +989,9 @@
       .plugin-item { flex-wrap: wrap; }
       .plugin-item-info { width: calc(100% - 64px); }
       .plugin-item-actions { margin-left: 64px; }
+      .wiz-body { margin-left: 30px; }
+      .wiz-choice-items { grid-template-columns: 1fr; }
+      .wiz-info-tip { width: min(300px, calc(100vw - 72px)); }
       .pb-save-bar { left: 0; }
       .pb-save-bar-inner { width: 100%; padding: 0 24px; }
     }
@@ -1131,6 +1135,484 @@
       border-color: #fca5a5;
       background: #fef2f2;
     }
+
+    /* ==============================================
+       Import to Podbean page
+       ============================================== */
+    /* Source picker — one answer, not three. A radio group laid out as rows:
+       the radio carries the "exactly one" meaning, so the copy doesn't have to,
+       and stacking vertically avoids a 3-up row with nothing under it.
+       Frameless on purpose (rows separated by hairlines only). */
+    .import-sources { margin-top: 24px; }
+    .import-source {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 16px;
+      margin: 0 -16px;   /* lets the selected tint breathe without indenting the row */
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+    .import-source + .import-source { border-top: 1px solid var(--border); }
+    .import-source:hover { background: #fafbfc; }
+    /* The chosen row stays tinted on return from "Import options" — driven by
+       the real :checked state, so there is no second copy of it to keep in sync */
+    .import-source:has(.import-radio:checked) { background: #f1f5f9; }
+
+    /* Same metrics as .pb-radio-dot elsewhere: 16px ring, 1.5px border, 8px dot */
+    .import-radio {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+      margin: 0;
+      border: 1.5px solid #d1d5db;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: border-color 0.15s;
+    }
+    .import-radio::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text);
+      transform: scale(0);
+      transition: transform 0.15s;
+    }
+    .import-radio:checked { border-color: var(--text); }
+    .import-radio:checked::after { transform: scale(1); }
+    .import-source:hover .import-radio { border-color: var(--text); }
+    .import-radio:focus-visible { outline: 2px solid #94a3b8; outline-offset: 2px; }
+
+    .import-source-icon {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      /* --c / --c-bg are set per row (or derived from the name in JS) */
+      background: var(--c-bg, #f1f5f9);
+      color: var(--c, var(--text-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .import-source-icon svg { width: 20px; height: 20px; }
+    .import-source-text { flex: 1; min-width: 0; }
+    .import-source-name {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .import-source-desc {
+      display: block;
+      font-size: 13px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+      margin-top: 3px;
+    }
+    /* Nothing is preselected (picking IS the task), but a greyed-out dead button
+       explains nothing — so Continue stays live and says what's missing. */
+    .import-pick-error {
+      display: none;
+      color: #dc2626;
+      font-size: 13px;
+      line-height: 1.4;
+      margin-top: 12px;
+    }
+    .import-pick-error.is-visible { display: block; }
+    /* Small numbered sub-steps inside a step card */
+    .import-substep {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .import-substep + .import-substep { margin-top: 12px; }
+    .import-substep-num {
+      flex: 0 0 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid #cfd6e0;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.5px;
+    }
+    .import-substeps { margin-bottom: 24px; }
+
+    .import-field-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    /* Same underline field language as .pb-input on Podcast Info / Feed */
+    .import-input {
+      width: 100%;
+      padding: 8px 0;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    .import-input::placeholder { color: var(--text-tertiary); }
+    .import-input:hover { border-bottom-color: #cbd5e1; }
+    .import-input:focus { border-bottom-color: var(--text); }
+    .import-input.is-error { border-bottom-color: #dc2626; }
+    .import-example {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+
+    /* Saved / completed state */
+    .import-saved {
+      margin-top: 28px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+    }
+    .import-saved-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .import-saved-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: #f0fdf4;
+      color: #16a34a;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .import-saved-value {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+      color: var(--text);
+      word-break: break-all;
+    }
+    .import-saved-value span { flex: 1; }
+    .import-saved-value a {
+      white-space: nowrap;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: underline;
+    }
+
+    .import-hint a, .pb-check-line a { color: inherit; font-weight: 500; }
+
+    /* Primary CTA — matches the reference's dark pill */
+    .import-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 20px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .import-btn:hover { background: #334155; }
+
+    /* Checkbox rows (Import Options) */
+    .pb-check-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.55;
+      cursor: pointer;
+    }
+    .pb-check-line + .pb-check-line { margin-top: 14px; }
+    /* Custom control — the native input stays in the DOM (and stays the click
+       target) so `change` still fires; only its rendering is replaced. */
+    .pb-check-line input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 17px;
+      height: 17px;
+      margin: 2.5px 0 0;
+      box-sizing: border-box;
+      border: 1.5px solid #cfd6e0;
+      border-radius: 4px;
+      background-color: #fff;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 12px 12px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.15s, border-color 0.15s;
+    }
+    .pb-check-line input[type="checkbox"]:hover { border-color: var(--text-secondary); }
+    .pb-check-line input[type="checkbox"]:checked {
+      background-color: var(--text);
+      border-color: var(--text);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.6 8.6 6.6 11.6 12.4 4.8' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    .pb-check-line input[type="checkbox"]:focus-visible {
+      outline: 2px solid #94a3b8;
+      outline-offset: 2px;
+    }
+    .pb-check-line.is-error { color: #dc2626; }
+    .pb-check-line.is-error input[type="checkbox"] {
+      border-color: #dc2626;
+      outline: 2px solid #fecaca;
+      outline-offset: 2px;
+    }
+
+    /* ---- Import wizard: steps and their content share one column ---- */
+    .wiz-steps { margin-top: 8px; }
+    .wiz-step {
+      position: relative;
+      padding-bottom: 28px;
+    }
+    .wiz-step:last-child { padding-bottom: 0; }
+    .wiz-head { display: flex; align-items: flex-start; gap: 12px; }
+    /* hangs the content off its own step: 24px dot + 12px gap */
+    .wiz-body { margin-left: 36px; margin-top: 20px; }
+    .wiz-result { margin-top: 32px; }
+    /* Read-only capture of a finished step, shown once the import is running
+       and its inputs are frozen */
+    .wiz-step-summary {
+      margin: 10px 0 0 36px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      word-break: break-all;
+    }
+
+    /* the connector runs down the gutter from this dot to the next one,
+       past the content of the step it belongs to */
+    .wiz-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 11.5px;
+      top: 30px;
+      bottom: 2px;
+      width: 1px;
+      background: var(--border);
+      transition: background-color 0.15s;
+    }
+    .wiz-step.is-done:not(:last-child)::after { background: var(--text); }
+
+    .wiz-dot {
+      box-sizing: border-box;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12.5px;
+      font-weight: 700;
+      line-height: 1;
+      background: #fff;
+      border: 1.5px solid #cfd6e0;
+      color: var(--text-tertiary);
+      transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .wiz-tick { display: none; }
+    .wiz-label {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 24px;   /* one line box, matched to the dot */
+      color: var(--text-tertiary);
+    }
+    .wiz-step.is-current .wiz-dot { background: var(--text); border-color: var(--text); color: #fff; }
+    .wiz-step.is-current .wiz-label { color: var(--text); font-weight: 600; }
+    .wiz-step.is-done .wiz-dot { background: var(--text); border-color: var(--text); color: #fff; }
+    .wiz-step.is-done .wiz-num { display: none; }
+    .wiz-step.is-done .wiz-tick { display: block; }
+    .wiz-step.is-done .wiz-label { color: var(--text-secondary); }
+    /* a finished step's header is a way back, not just decoration */
+    .wiz-step.is-done .wiz-head { cursor: pointer; }
+    .wiz-step.is-done:hover .wiz-label { color: var(--text); }
+
+    /* a body's own leading margin would knock it out of line with its dot */
+    .wiz-body > :first-child { margin-top: 0; }
+
+    /* Scope choice — two named outcomes, so neither needs "uncheck this if…" */
+    .wiz-choice { margin-bottom: 28px; }
+    .wiz-choice-legend {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    /* Info affordance — the option's explanation on demand, so the option row
+       itself stays one line. Living inside the option's label element is safe:
+       activating interactive content does not trigger the label's radio. */
+    .wiz-info-wrap { display: inline-flex; align-items: center; margin-left: 6px; vertical-align: middle; }
+    .wiz-info {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      transition: color 0.15s;
+    }
+    .wiz-info:hover { color: var(--text); }
+    .wiz-info:focus-visible { outline: 2px solid #94a3b8; outline-offset: 2px; border-radius: 50%; }
+    .wiz-info-tip {
+      position: absolute;
+      /* Hangs off the bottom edge of its own option row. Anchoring to the row
+         (rather than percentage-positioning inside the 16px icon box) keeps the
+         placement predictable, and the top edge touching the row is what makes
+         it read as belonging to that option. */
+      top: calc(100% + 8px);
+      left: 0;
+      z-index: 20;
+      width: 320px;
+      padding: 10px 12px;
+      background: var(--text);
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 400;
+      line-height: 1.5;
+      border-radius: 8px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s;
+      pointer-events: none;
+    }
+    .wiz-info:hover + .wiz-info-tip,
+    .wiz-info:focus-visible + .wiz-info-tip { opacity: 1; visibility: visible; }
+
+    .wiz-choice-item {
+      position: relative;   /* the tooltip hangs off this row */
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+    }
+    /* Two options side by side. The grid gap covers both directions, so the
+       old ".wiz-choice-item + .wiz-choice-item" top margin must not come back:
+       the second item is still an adjacent sibling inside the grid, and a top
+       margin on it would push the right-hand column down and unpair the two. */
+    .wiz-choice-items {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 32px;
+      align-items: start;
+    }
+    .wiz-choice-item .import-radio { margin-top: 2px; }
+    .wiz-choice-title {
+      display: block;
+      font-size: 14px;
+      /* regular weight on purpose: the legend above is the bold 15px heading,
+         so the options read as its answers instead of competing with it */
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    /* No rule above the buttons: the step's own content already ends with a
+       separator, and a second line right above Continue read as a stray edge. */
+    .wiz-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .wiz-back-btn {
+      height: 36px;
+      padding: 0 20px;
+      background: #fff;
+      color: var(--text);
+      border: 1px solid #cfd6e0;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .wiz-back-btn:hover { background: #f8fafc; border-color: var(--text-secondary); }
+
+    .wiz-next {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .wiz-next-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
+    .wiz-next .import-btn { margin-top: 24px; }
+    /* The gate on the redirect: darker than the fine print below it, because
+       getting this order wrong breaks the subscriber hand-off. */
+    .wiz-next-lead {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0 0 20px;
+    }
+
+    /* Only shown when the user asked for .mp3 — the conversion is triggered by
+       the redirect, so it belongs beside the redirect, not in step 3 alone */
+    .wiz-next-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .wiz-restart { margin-top: 24px; }
+    .wiz-result-title { font-size: 16px; font-weight: 600; color: var(--text); }
+    .pb-check-line.is-terms {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    /* the elements JS toggles with [hidden] that also have a display of their own */
+    .wiz-body[hidden],
+    .wiz-nav[hidden],
+    .wiz-back-btn[hidden],
+    #wizResultFeed[hidden],
+    .wiz-next-note[hidden],
+    #wizResultNext[hidden] { display: none; }
 
     /* Modal */
     .modal-overlay {
@@ -1982,18 +2464,184 @@
 
       <!-- ===== Page: Import to Podbean ===== -->
       <div class="page-section" id="page-import-to-podbean">
-        <div class="page-heading-title">Import to Podbean</div>
-        <p class="page-subtitle">Import an existing podcast into Podbean. <a href="#" style="color:inherit;font-weight:500;">Learn more</a></p>
+        <div id="importPageHead">
+          <div class="page-heading-title">Import to Podbean</div>
+          <p class="page-subtitle">Import an existing podcast or video series into Podbean. <a href="#" style="color:inherit;font-weight:500;">Learn more</a></p>
+        </div>
 
-        <div class="pb-card" style="margin-top:24px;">
-          <div class="info-row">
-            <div class="info-content-item">
-              <span class="cc-item-label">Podcast Feed URL</span>
-              <span class="tips">Enter the RSS feed URL of the podcast you want to import.</span>
-              <input type="text" class="pb-input" placeholder="https://" style="margin-top:8px;" />
-              <div class="pb-field-error"></div>
+        <!-- The whole import is one 3-step flow. Steps and their content share a
+             single column: each field sits directly under the step it belongs to. -->
+        <div class="wiz-steps" id="wizSteps">
+
+          <div class="wiz-step is-current" data-step="1">
+            <div class="wiz-head">
+              <span class="wiz-dot"><span class="wiz-num">1</span><svg class="wiz-tick" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="wiz-label">Choose a source</span>
+            </div>
+            <div class="wiz-step-summary" hidden></div>
+            <div class="wiz-body" id="wizPanel1" data-wiz-panel="1">
+              <div class="import-sources" id="importSources" role="radiogroup" aria-label="Choose an import source">
+              <label class="import-source">
+                <input type="radio" class="import-radio" name="importSource" value="rss" />
+                <span class="import-source-icon" style="--c:#e8710a;--c-bg:#fdf1e3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 11a9 9 0 0 1 9 9"/>
+                    <path d="M4 4a16 16 0 0 1 16 16"/>
+                    <circle cx="5" cy="19" r="1.4" fill="currentColor" stroke="none"/>
+                  </svg>
+                </span>
+                <span class="import-source-text">
+                  <span class="import-source-name">RSS Feed URL</span>
+                  <span class="import-source-desc">You have a podcast hosted on another platform, or a collection of episodes in an RSS feed.</span>
+                </span>
+              </label>
+
+              <label class="import-source">
+                <input type="radio" class="import-radio" name="importSource" value="video" />
+                <span class="import-source-icon" style="--c:#7c3aed;--c-bg:#f4efff">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                    <rect x="2.5" y="5" width="12.5" height="14" rx="2.5"/>
+                    <path d="M15 10.5 21.5 7v10L15 13.5z"/>
+                  </svg>
+                </span>
+                <span class="import-source-text">
+                  <span class="import-source-name">Video to Podcast</span>
+                  <span class="import-source-desc">You have video content that you want to publish as a podcast.</span>
+                </span>
+              </label>
+              </div>
+              <div class="import-pick-error" id="importPickError"></div>
             </div>
           </div>
+
+          <div class="wiz-step" data-step="2">
+            <div class="wiz-head">
+              <span class="wiz-dot"><span class="wiz-num">2</span><svg class="wiz-tick" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="wiz-label" id="wizStep2Label">Enter details</span>
+            </div>
+            <div class="wiz-step-summary" hidden></div>
+            <div class="wiz-body" id="wizPanel2" data-wiz-panel="2" hidden>
+              <div class="import-field">
+                <div class="import-field-label" id="wizFieldLabel">RSS Feed URL</div>
+                <input type="text" class="import-input" id="wizUrl" />
+                <div class="pb-field-error" id="wizUrlError"></div>
+                <div class="import-example" id="wizUrlHint"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wiz-step" data-step="3">
+            <div class="wiz-head">
+              <span class="wiz-dot"><span class="wiz-num">3</span><svg class="wiz-tick" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="wiz-label">Review and start</span>
+            </div>
+            <div class="wiz-body" id="wizPanel3" data-wiz-panel="3" hidden>
+              <div class="wiz-choice" role="radiogroup" aria-labelledby="wizScopeLegend">
+                <div class="wiz-choice-legend" id="wizScopeLegend">What should we bring over?</div>
+
+                <div class="wiz-choice-items">
+                  <label class="wiz-choice-item">
+                    <input type="radio" class="import-radio" name="wizScope" value="all" checked />
+                    <span class="wiz-choice-text">
+                      <span class="wiz-choice-title">Podcast details and episodes<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizScopeAllInfo" aria-label="What this includes"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizScopeAllInfo" role="tooltip"></span></span></span>
+                    </span>
+                  </label>
+
+                  <label class="wiz-choice-item">
+                    <input type="radio" class="import-radio" name="wizScope" value="episodes" />
+                    <span class="wiz-choice-text">
+                      <span class="wiz-choice-title">Episodes only</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="wiz-choice" role="radiogroup" aria-labelledby="wizFormatLegend">
+                <div class="wiz-choice-legend" id="wizFormatLegend">What audio format should we use?</div>
+
+                <div class="wiz-choice-items">
+                  <label class="wiz-choice-item">
+                    <input type="radio" class="import-radio" name="wizFormat" value="mp3" checked />
+                    <span class="wiz-choice-text">
+                      <span class="wiz-choice-title">Convert to .mp3<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizFormatConvertInfo" aria-label="When the conversion runs"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizFormatConvertInfo" role="tooltip"></span></span></span>
+                    </span>
+                  </label>
+
+                  <label class="wiz-choice-item">
+                    <input type="radio" class="import-radio" name="wizFormat" value="keep" />
+                    <span class="wiz-choice-text">
+                      <span class="wiz-choice-title">Use original format</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <label class="pb-check-line is-terms" id="wizAgreeLine">
+                <input type="checkbox" id="wizAgree" />
+                <span>By clicking &ldquo;Start import,&rdquo; you confirm that you own the rights to this podcast and that you agree to Podbean&rsquo;s <a href="https://www.podbean.com/podbean-terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Result — outside the steps: the whole flow has finished -->
+        <div class="wiz-body wiz-result" id="wizPanelResult" data-wiz-panel="result" hidden>
+          <div class="import-saved">
+            <div class="import-saved-head">
+              <span class="wiz-result-title" id="wizResultTitle">RSS import</span>
+              <span class="import-saved-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                In progress
+              </span>
+            </div>
+            <div id="wizResultFeed">
+              <div class="import-field-label">Your new Podbean RSS feed</div>
+              <div class="import-saved-value">
+                <span id="wizResultUrl">https://feed.podbean.org/elinazplus/feed.xml</span>
+                <button type="button" class="feed-copy-btn" id="wizCopyBtn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  Copy
+                </button>
+              </div>
+            </div>
+            <div class="import-example" id="wizResultNote"></div>
+          </div>
+
+          <div class="wiz-next" id="wizResultNext">
+            <div class="wiz-next-title">What to do next</div>
+            <p class="wiz-next-lead">Redirecting before the import finishes would send your subscribers to a show that is still filling up.</p>
+
+            <div class="import-substeps">
+              <div class="import-substep">
+                <span class="import-substep-num">1</span>
+                <span>Wait for the import to finish &mdash; the card above shows its status.</span>
+              </div>
+              <div class="import-substep">
+                <span class="import-substep-num">2</span>
+                <span>Copy your new Podbean feed URL above.</span>
+              </div>
+              <div class="import-substep">
+                <span class="import-substep-num">3</span>
+                <span>Set it as the redirect target in your old hosting platform, so your existing subscribers keep getting new episodes.</span>
+              </div>
+              <div class="import-substep">
+                <span class="import-substep-num">4</span>
+                <span>Come back and run the redirect check once your host has applied it.</span>
+              </div>
+            </div>
+            <p class="wiz-next-note" id="wizMp3Note" hidden>Your episodes are converted to .mp3 as soon as the redirect is live, so the podcast is ready to submit to Spotify.</p>
+            <button type="button" class="import-btn" id="wizRedirectBtn">Check redirect</button>
+          </div>
+
+          <div class="wiz-restart">
+            <button type="button" class="wiz-back-btn" id="wizStartAnother">Start another import</button>
+          </div>
+        </div>
+
+        <!-- Wizard nav — JS moves it into the active step's body -->
+        <div class="wiz-nav" id="wizNav">
+          <button type="button" class="wiz-back-btn" id="wizBack">Back</button>
+          <button type="button" class="import-btn" id="wizNext">Continue</button>
         </div>
       </div>
     </div>
@@ -2548,26 +3196,14 @@
       if (e.key === 'Escape' && modal.classList.contains('open')) closeMetaTagsModal();
     });
 
-    // Plugin page: each editable plugin row's pencil button opens its own dialog
-    (function initPluginEditButtons() {
-      var editors = {
-        'Episode Endnote': openEndnoteModal,
-        'Import Files from Dropbox': openDropboxModal,
-        'SEO Meta Tags': openMetaTagsModal
-      };
-      Object.keys(editors).forEach(function(name) {
-        var row = document.querySelector('#pluginList [data-plugin-name="' + name + '"]');
-        if (!row) return;
-        var editBtn = row.querySelector('.plugin-action-btn:not(.delete)');
-        if (editBtn) editBtn.addEventListener('click', editors[name]);
-      });
-    })();
     // Close modal when clicking overlay background
     document.getElementById('endnoteModal').addEventListener('click', function(e) {
       if (e.target === this) closeEndnoteModal();
     });
 
-    // Unsaved Changes modal handlers
+    // ==============================================
+    // Unsaved-changes guard
+    // ==============================================
     document.getElementById('unsavedModal').addEventListener('click', function(e) {
       if (e.target === this) {
         document.getElementById('unsavedModal').classList.remove('open');
@@ -2599,18 +3235,54 @@
       }
     });
 
-    // Helper: get save bar in active page
+    // ==============================================
+    // Page switching + save bars
+    // ==============================================
+    function switchPage(page) {
+      document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
+      var target = document.getElementById('page-' + page);
+      if (!target) return;
+      target.classList.add('active');
+
+      // Capture initial state of the new page
+      captureState();
+
+      // Reset to first tab when entering a page
+      var firstTab = target.querySelector('.pb-tab');
+      var firstPanel = target.querySelector('.pb-panel');
+      if (firstTab && firstPanel) {
+        target.querySelectorAll('.pb-tab').forEach(function(t) { t.classList.remove('active'); });
+        target.querySelectorAll('.pb-panel').forEach(function(p) { p.classList.remove('active'); });
+        firstTab.classList.add('active');
+        firstPanel.classList.add('active');
+      }
+    }
+
+    // Podcast Info tabs
+    document.querySelectorAll('.pb-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var tabId = this.getAttribute('data-pb-tab');
+        var panel = document.getElementById('pb-' + tabId);
+        if (!panel) return;
+        var scope = this.closest('.page-section') || document;
+        scope.querySelectorAll('.pb-tab').forEach(function(t) { t.classList.remove('active'); });
+        scope.querySelectorAll('.pb-panel').forEach(function(p) { p.classList.remove('active'); });
+        this.classList.add('active');
+        panel.classList.add('active');
+      });
+    });
+
+    function getActiveSaveBar() {
+      var activePage = document.querySelector('.page-section.active');
+      return activePage ? activePage.querySelector('.pb-save-bar') : null;
+    }
+
     function showActiveSaveBar() {
       var saveBar = getActiveSaveBar();
       if (saveBar) {
         saveBar.classList.add('is-visible');
         markUnsaved();
       }
-    }
-
-    function getActiveSaveBar() {
-      var activePage = document.querySelector('.page-section.active');
-      return activePage ? activePage.querySelector('.pb-save-bar') : null;
     }
 
     // Save button: Podcast Info
@@ -2622,17 +3294,15 @@
         // Validate all Podcast Info tabs
         var errors = validatePodcastInfo();
         if (errors.length > 0) {
-          // Switch to first tab with errors
+          // Switch to the first tab that has an error
           var errorTabIds = [];
           errors.forEach(function(err) { if (errorTabIds.indexOf(err.tabId) < 0) errorTabIds.push(err.tabId); });
           if (errorTabIds.length > 0) {
             var tabBtn = document.querySelector('.pb-tab[data-pb-tab="' + errorTabIds[0] + '"]');
             if (tabBtn) tabBtn.click();
-            // Mark error tabs
             document.querySelectorAll('.pb-tab').forEach(function(t) {
               t.classList.toggle('has-error', errorTabIds.indexOf(t.getAttribute('data-pb-tab')) >= 0);
             });
-            // Focus first error field
             if (errors[0].el) errors[0].el.focus();
           }
           return;
@@ -2654,11 +3324,7 @@
         var activePage = document.querySelector('.page-section.active');
         if (!activePage || activePage.id !== 'page-feed') return;
 
-        // Validate Feed fields
         var errors = [];
-
-        // Custom Website URL is optional — only validate format if filled in
-        // (format validation to be added)
 
         // Redirect to a New Feed: if the toggle is on, a new feed URL is required
         var redirectToggle = activePage.querySelector('[data-toggle="redirect-feed-input"]');
@@ -2684,43 +3350,6 @@
         captureState();
         showToast();
       });
-    }
-
-    function switchPage(page) {
-      document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
-      var target = document.getElementById('page-' + page);
-      if (!target) return;
-      target.classList.add('active');
-
-      // Capture initial state of the new page
-      captureState();
-
-      // Reset to first tab when entering a page
-      var firstTab = target.querySelector('.pb-tab');
-      var firstPanel = target.querySelector('.pb-panel');
-      if (firstTab && firstPanel) {
-        target.querySelectorAll('.pb-tab').forEach(function(t) { t.classList.remove('active'); });
-        target.querySelectorAll('.pb-panel').forEach(function(p) { p.classList.remove('active'); });
-        firstTab.classList.add('active');
-        firstPanel.classList.add('active');
-      }
-    }
-
-    // Podcast Info Tabs
-    document.querySelectorAll('.pb-tab').forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        var tabId = this.getAttribute('data-pb-tab');
-        document.querySelectorAll('.pb-tab').forEach(function(t) { t.classList.remove('active'); });
-        document.querySelectorAll('.pb-panel').forEach(function(p) { p.classList.remove('active'); });
-        this.classList.add('active');
-        document.getElementById('pb-' + tabId).classList.add('active');
-      });
-    });
-
-    // Toggle collapsible
-    function toggleCollapse(id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.toggle('open');
     }
 
     // Switch toggle click
@@ -2756,34 +3385,24 @@
       });
     });
 
-    // Show save bar on form changes — attach listeners to all inputs across all pages
+    // Show the save bar whenever a form field changes
     (function() {
-      function showSaveBar() {
-        showActiveSaveBar();
-      }
+      function showSaveBar() { showActiveSaveBar(); }
 
-      var inputs = document.querySelectorAll('.pb-input, .pb-url-input, .pb-vs, .pb-textarea');
-      inputs.forEach(function(input) {
+      document.querySelectorAll('.pb-input, .pb-url-input, .pb-vs, .pb-textarea').forEach(function(input) {
         input.addEventListener('input', showSaveBar);
         input.addEventListener('change', showSaveBar);
       });
-
-      var editors = document.querySelectorAll('.pb-editor-body');
-      editors.forEach(function(editor) {
+      document.querySelectorAll('.pb-editor-body').forEach(function(editor) {
         editor.addEventListener('input', showSaveBar);
       });
-
-      var radios = document.querySelectorAll('.pb-radio input');
-      radios.forEach(function(radio) {
+      document.querySelectorAll('.pb-radio input').forEach(function(radio) {
         radio.addEventListener('change', showSaveBar);
       });
-
-      var switches = document.querySelectorAll('.pb-switch input');
-      switches.forEach(function(s) {
+      document.querySelectorAll('.pb-switch input').forEach(function(s) {
         s.addEventListener('change', showSaveBar);
       });
 
-      // Attach cancel buttons for all save bars
       document.querySelectorAll('.pb-save-bar .cancel-btn').forEach(function(cancelBtn) {
         cancelBtn.addEventListener('click', function() {
           var bar = this.closest('.pb-save-bar');
@@ -2793,13 +3412,13 @@
           clearAllErrors();
         });
       });
-
     })();
 
-    // Custom Select Dropdowns
+    // ==============================================
+    // Custom select dropdowns
+    // ==============================================
     document.addEventListener('click', function(e) {
-      // Close all dropdowns when clicking outside (a click inside a dropdown
-      // or on its trigger still counts as "inside")
+      // A click inside a dropdown or on its trigger still counts as "inside"
       var inside = e.target.closest && (
         e.target.closest('.pb-vs[data-select]') ||
         e.target.closest('.pb-select-dropdown') ||
@@ -2815,16 +3434,13 @@
     document.querySelectorAll('.pb-vs[data-select]').forEach(function(trigger) {
       trigger.addEventListener('click', function(e) {
         e.stopPropagation();
-        var selectId = this.getAttribute('data-select');
-        var dropdownId = 'dropdown-' + selectId;
+        var dropdownId = 'dropdown-' + this.getAttribute('data-select');
         var dropdown = document.getElementById(dropdownId);
         if (!dropdown) return;
 
-        // Close other dropdowns
         document.querySelectorAll('.pb-select-dropdown.open').forEach(function(d) {
           if (d.id !== dropdownId) d.classList.remove('open');
         });
-
         dropdown.classList.toggle('open');
       });
     });
@@ -2841,7 +3457,7 @@
         this.classList.add('selected');
         dropdown.classList.remove('open');
 
-        // Country mode toggle
+        // Country of Origin: "Specific countries" reveals the country picker
         if (dropdown.id === 'dropdown-country-mode') {
           var countryList = document.getElementById('countryList');
           if (countryList) {
@@ -2849,21 +3465,17 @@
           }
         }
 
-        // Show save bar
-
-        // Show save bar
         showActiveSaveBar();
       });
     });
-  
 
     // ==============================================
     // Validation helpers
     // ==============================================
-
     function clearAllErrors() {
       document.querySelectorAll('.pb-field-error').forEach(function(el) { el.classList.remove('is-visible'); el.textContent = ''; });
       document.querySelectorAll('.pb-input.is-error').forEach(function(el) { el.classList.remove('is-error'); });
+      document.querySelectorAll('.import-input.is-error').forEach(function(el) { el.classList.remove('is-error'); });
       document.querySelectorAll('.pb-vs.is-error').forEach(function(el) { el.classList.remove('is-error'); });
       document.querySelectorAll('.pb-editor.is-error').forEach(function(el) { el.classList.remove('is-error'); });
       document.querySelectorAll('.pb-tab.has-error').forEach(function(el) { el.classList.remove('has-error'); });
@@ -2880,7 +3492,7 @@
       errorEl.textContent = message;
       errorEl.classList.add('is-visible');
       // Highlight the input
-      var input = container.querySelector('.pb-input, .pb-editor-body, .pb-vs');
+      var input = container.querySelector('.pb-input, .import-input, .pb-editor-body, .pb-vs');
       if (input) {
         input.classList.add('is-error');
         var editor = container.querySelector('.pb-editor');
@@ -2892,8 +3504,6 @@
       clearAllErrors();
       var errors = [];
       var basic = document.getElementById('pb-basic');
-      var metadata = document.getElementById('pb-metadata');
-      var publication = document.getElementById('pb-publication');
 
       // --- Basic Tab ---
       var basicItems = basic ? basic.querySelectorAll('.info-content-item') : [];
@@ -2993,7 +3603,6 @@
         confirmBtn.focus();
       }
 
-      // Any remove button in the list (the list is static, so bind directly)
       list.querySelectorAll('.plugin-action-btn.delete').forEach(function(btn) {
         btn.addEventListener('click', function() {
           openDeleteModal(this.closest('.plugin-item'));
@@ -3020,6 +3629,267 @@
       });
 
       syncEmptyState();
+    })();
+
+    // ==============================================
+    // Plugin page — each editor row opens its own dialog
+    // ==============================================
+    (function initPluginEditButtons() {
+      var editors = {
+        'Episode Endnote': openEndnoteModal,
+        'Import Files from Dropbox': openDropboxModal,
+        'SEO Meta Tags': openMetaTagsModal
+      };
+      Object.keys(editors).forEach(function(name) {
+        var row = document.querySelector('#pluginList [data-plugin-name="' + name + '"]');
+        if (!row) return;
+        var editBtn = row.querySelector('.plugin-action-btn:not(.delete)');
+        if (editBtn) editBtn.addEventListener('click', editors[name]);
+      });
+    })();
+
+    // ==============================================
+    // ==============================================
+    // Import to Podbean — one 3-step wizard
+    //   1 Choose a source · 2 Details · 3 Review and start
+    // Step 1 IS the source choice, so the total cost is visible up front, and
+    // the 301-redirect guidance moves to the result: it is follow-up work, not
+    // something a user can complete before the import has started.
+    // ==============================================
+    (function initImportWizard() {
+      var page = document.getElementById('page-import-to-podbean');
+      if (!page) return;
+
+      var SOURCES = {
+        rss: {
+          name: 'RSS Feed URL',
+          resultTitle: 'RSS import',
+          step2: 'Enter your feed URL',
+          fieldLabel: 'RSS Feed URL',
+          requiredMsg: 'Please enter your RSS feed URL',
+          scopeInfo: 'Brings over the episodes, the show details and Apple Podcasts settings.',
+          formatConvertDesc: 'Converts your audio after you complete the 301 redirect.',
+          placeholder: 'https://feeds.example.com/myshow.xml',
+          hint: 'Example: https://feeds.podbean.org/elinazplus/feed.xml',
+          redirect: true
+        },
+        video: {
+          name: 'Video to Podcast',
+          resultTitle: 'Video import',
+          step2: 'Enter your video URL',
+          fieldLabel: 'Video or channel URL',
+          requiredMsg: 'Please enter your video or channel URL',
+          scopeInfo: 'Brings over the episodes, the show details and the video titles and artwork.',
+          formatConvertDesc: 'Converts your audio after the import finishes.',
+          placeholder: 'https://www.youtube.com/@yourchannel',
+          hint: 'A single video, a playlist, or a whole channel.',
+          redirect: false
+        }
+      };
+
+      var key = null;    // the chosen source
+      var step = 1;      // 1 | 2 | 3 | 'result'
+      var urls = {};     // one URL remembered per source, so going back is cheap
+
+      var step2Label = document.getElementById('wizStep2Label');
+      var nav = document.getElementById('wizNav');
+      var backBtn = document.getElementById('wizBack');
+      var nextBtn = document.getElementById('wizNext');
+      var pickError = document.getElementById('importPickError');
+      var field = page.querySelector('[data-wiz-panel="2"] .import-field');
+      var urlInput = document.getElementById('wizUrl');
+      var urlHint = document.getElementById('wizUrlHint');
+      var agree = document.getElementById('wizAgree');
+      var agreeLine = document.getElementById('wizAgreeLine');
+
+      // A new source never shows up as a flat grey tile.
+      page.querySelectorAll('.import-source').forEach(function (row) {
+        var icon = row.querySelector('.import-source-icon');
+        if (!icon || icon.style.getPropertyValue('--c')) return;
+        var name = row.querySelector('.import-source-name').textContent.trim();
+        var h = 0;
+        for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
+        icon.style.setProperty('--c', 'hsl(' + h + ', 60%, 40%)');
+        icon.style.setProperty('--c-bg', 'hsl(' + h + ', 72%, 95%)');
+      });
+
+      function chosenKey() {
+        var input = page.querySelector('input[name="importSource"]:checked');
+        return input ? input.value : null;
+      }
+
+      function render() {
+        var cur = step === 'result' ? 4 : step;
+
+        page.querySelectorAll('[data-wiz-panel]').forEach(function (p) {
+          p.hidden = p.getAttribute('data-wiz-panel') !== String(step);
+        });
+        page.querySelectorAll('.wiz-step').forEach(function (el) {
+          var n = parseInt(el.getAttribute('data-step'), 10);
+          el.classList.toggle('is-done', n < cur);
+          el.classList.toggle('is-current', n === cur);
+          if (n === cur) el.setAttribute('aria-current', 'step');
+          else el.removeAttribute('aria-current');
+        });
+
+        // step 2's label advertises what step 1 chose
+        step2Label.textContent = key ? SOURCES[key].step2 : 'Enter details';
+
+        // one nav, parked inside whichever step is open, so the buttons sit
+        // with the content instead of floating at the bottom of the page
+        var activeBody = page.querySelector('[data-wiz-panel="' + step + '"]');
+        if (activeBody) activeBody.appendChild(nav);
+
+        // a finished wizard has no next step — the result panel owns the exit
+        nav.hidden = step === 'result';
+        backBtn.hidden = step === 1;
+        nextBtn.textContent = step === 3 ? 'Start import' : 'Continue';
+
+        if (step === 2) {
+          var s2 = SOURCES[key];
+          document.getElementById('wizFieldLabel').textContent = s2.fieldLabel;
+          urlInput.placeholder = s2.placeholder;
+          urlHint.textContent = s2.hint;
+          urlInput.value = urls[key] || '';
+        } else if (step === 3) {
+          var s3 = SOURCES[key];
+          document.getElementById('wizScopeAllInfo').textContent = s3.scopeInfo;
+          document.getElementById('wizFormatConvertInfo').textContent = s3.formatConvertDesc;
+        } else if (step === 'result') {
+          var s4 = SOURCES[key];
+          // what each finished step captured — always re-collapsed on render
+          page.querySelectorAll('.wiz-step-summary').forEach(function (el) {
+            var n = parseInt(el.closest('.wiz-step').getAttribute('data-step'), 10);
+            el.textContent = n === 1 ? (key ? SOURCES[key].name : '') : (urls[key] || '');
+            el.hidden = true;
+          });
+          // the .mp3 conversion is triggered by the redirect, and only matters
+          // if the user asked for it — so only promise it when both are true
+          var mp3Note = document.getElementById('wizMp3Note');
+          var wantsMp3 = !!page.querySelector('input[name="wizFormat"][value="mp3"]:checked');
+          mp3Note.hidden = !(s4.redirect && wantsMp3);
+          document.getElementById('wizResultTitle').textContent = s4.resultTitle;
+          // only an RSS import leaves you with a feed to redirect
+          document.getElementById('wizResultFeed').hidden = !s4.redirect;
+          document.getElementById('wizResultNext').hidden = !s4.redirect;
+          document.getElementById('wizResultNote').textContent = s4.redirect
+            ? 'We are copying your episodes in the background. You can leave this page.'
+            : 'We are working through your content in the background. You can leave this page.';
+        }
+        window.scrollTo(0, 0);
+      }
+
+      function goTo(n) {
+        step = n;
+        clearAllErrors();
+        pickError.classList.remove('is-visible');
+        agreeLine.classList.remove('is-error');
+        render();
+      }
+
+      nextBtn.addEventListener('click', function () {
+        if (step === 1) {
+          key = chosenKey();
+          if (!key) {
+            pickError.textContent = 'Please choose an import source';
+            pickError.classList.add('is-visible');
+            var first = page.querySelector('.import-radio');
+            if (first) first.focus();
+            return;
+          }
+          goTo(2);
+          return;
+        }
+        if (step === 2) {
+          if (urlInput.value.trim() === '') {
+            showFieldError(field, SOURCES[key].requiredMsg);
+            urlInput.focus();
+            return;
+          }
+          urls[key] = urlInput.value.trim();
+          goTo(3);
+          return;
+        }
+        if (step === 3) {
+          if (!agree.checked) {
+            agreeLine.classList.add('is-error');
+            agreeLine.scrollIntoView({ block: 'nearest' });
+            return;
+          }
+          showToast('Import started');
+          goTo('result');
+        }
+      });
+
+      backBtn.addEventListener('click', function () {
+        if (step === 3) goTo(2);
+        else if (step === 2) goTo(1);
+      });
+
+      // Only a step's own header is a way back. The nav buttons and the fields
+      // live inside the step, so without the .wiz-head guard a click on
+      // "Continue" bubbles here, finds the step freshly marked is-done, and
+      // sends the user straight back to step 1.
+      // Steps 1 and 2 hold the values the import is already running on, so once
+      // the wizard is finished their headers disclose what was captured instead
+      // of reopening the inputs. Only step 3 stays a way back.
+      var FROZEN_AFTER_START = { 1: true, 2: true };
+      function activateStep(el) {
+        if (!el.classList.contains('is-done')) return;
+        var n = parseInt(el.getAttribute('data-step'), 10);
+        if (step === 'result' && FROZEN_AFTER_START[n]) {
+          var summary = el.querySelector('.wiz-step-summary');
+          if (summary) summary.hidden = !summary.hidden;
+          return;
+        }
+        goTo(n);
+      }
+      page.querySelectorAll('.wiz-step').forEach(function (el) {
+        el.setAttribute('tabindex', '0');
+        el.addEventListener('click', function (e) {
+          if (e.target.closest('.wiz-head')) activateStep(el);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.target !== el) return;   // only when the step itself has focus
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activateStep(el);
+          }
+        });
+      });
+
+      page.querySelectorAll('.import-radio').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          key = chosenKey();
+          pickError.classList.remove('is-visible');
+          step2Label.textContent = SOURCES[key].step2;
+        });
+      });
+
+      urlInput.addEventListener('input', function () {
+        if (this.value.trim() !== '') clearAllErrors();
+      });
+      agree.addEventListener('change', function () {
+        if (this.checked) agreeLine.classList.remove('is-error');
+      });
+
+      document.getElementById('wizCopyBtn').addEventListener('click', function () {
+        var text = document.getElementById('wizResultUrl').textContent.trim();
+        try {
+          if (navigator.clipboard) navigator.clipboard.writeText(text);
+        } catch (err) { /* clipboard unavailable in sandboxed previews */ }
+        showToast('Feed URL copied');
+      });
+      document.getElementById('wizRedirectBtn').addEventListener('click', function () {
+        showToast('Redirect is working');
+      });
+      // keeps the radio row and any URL the user already typed
+      document.getElementById('wizStartAnother').addEventListener('click', function () {
+        agree.checked = false;
+        goTo(1);
+      });
+
+      render();
     })();
   </script>
 
