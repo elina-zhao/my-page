@@ -46,15 +46,23 @@
    - [5.2 插件操作](#52-插件操作)
    - [5.3 Episode Endnote 编辑弹窗](#53-episode-endnote-编辑弹窗)
    - [5.4 Get More Plugins](#54-get-more-plugins)
-6. [全局交互规则](#6-全局交互规则)
-   - [6.1 Save Bar（底部保存栏）](#61-save-bar底部保存栏)
-   - [6.2 修改检测](#62-修改检测)
-   - [6.3 自定义下拉选择器](#63-自定义下拉选择器)
-   - [6.5 页面切换](#65-页面切换)
-7. [数据校验规则](#7-数据校验规则)
-   - [7.1 必填字段](#71-必填字段)
-   - [7.2 格式校验](#72-格式校验)
-   - [7.3 保存前校验流程](#73-保存前校验流程)
+6. [页面四：Import to Podbean（导入）](#6-页面四import-to-podbean导入)
+   - [6.0 页面结构](#60-页面结构)
+   - [6.1 步骤一：选择来源](#61-步骤一选择来源)
+   - [6.2 步骤二：填写地址](#62-步骤二填写地址)
+   - [6.3 步骤三：确认并开始](#63-步骤三确认并开始)
+   - [6.4 导入状态](#64-导入状态)
+   - [6.5 301 Redirect 校验](#65-301-redirect-校验)
+   - [6.6 校验成功后的完成态](#66-校验成功后的完成态)
+7. [全局交互规则](#7-全局交互规则)
+   - [7.1 Save Bar（底部保存栏）](#71-save-bar底部保存栏)
+   - [7.2 修改检测](#72-修改检测)
+   - [7.3 自定义下拉选择器](#73-自定义下拉选择器)
+   - [7.5 页面切换](#75-页面切换)
+8. [数据校验规则](#8-数据校验规则)
+   - [8.1 必填字段](#81-必填字段)
+   - [8.2 格式校验](#82-格式校验)
+   - [8.3 保存前校验流程](#83-保存前校验流程)
 8. [附录：新老页面对比](#附录新老页面对比)
    - [Podcast Info 页面变化说明](#新-mockup-变化说明)
    - [Feed 页面变化说明](#feed-页面变化说明)
@@ -485,9 +493,134 @@ Tab 标签状态：
 
 ---
 
-## 6. 全局交互规则
+## 6. 页面四：Import to Podbean（导入）
 
-### 6.1 Save Bar（底部保存栏）
+把一个已有的播客（或视频系列）连同剧集导入 Podbean。整条流程是**单页三步向导**：导入开始后不跳转到二级页面，而是在同一页内进入状态流转。
+
+### 6.0 页面结构
+
+```
+① Choose a source  →  ② Enter your feed URL  →  ③ Review and start
+```
+
+| 属性 | 说明 |
+|---|---|
+| **承载方式** | 三个步骤自上而下排列在同一列内；当前步骤的内容展开在其标题下方，缩进对齐步骤名 |
+| **已完成步骤** | 折叠为一行标题（带勾选标记） |
+| **未到步骤** | 仅显示标题，不可点击 |
+| **返回** | 流程进行中，点击已完成步骤的标题可返回修改 |
+| **步骤冻结** | 点击 **Start import** 之后，**步骤 1 与步骤 2 不可再返回编辑**；点击其标题只展开一行只读信息（步骤 1 → 所选来源名，步骤 2 → 已填写的地址） |
+
+### 6.1 步骤一：选择来源
+
+来源互斥，单选。当前提供两项（原「Blog to Podcast」方案已移除）：
+
+| 选项 | 说明 |
+|---|---|
+| **Podcast details and episodes**（默认） | 从 RSS feed 带入剧集与节目资料 |
+| **Episodes only** | 只带入剧集 |
+
+第一个选项标题右侧有 ⓘ 图标：悬停或键盘聚焦时显示说明文字（RSS 路径为 “Brings over the episodes, the show details and Apple Podcasts settings.”）。
+
+### 6.2 步骤二：填写地址
+
+| 来源 | 字段 | 必填 |
+|---|---|---|
+| RSS | RSS Feed URL | 是 |
+| Video | Video or channel URL | 是 |
+
+字段未填写时点击 Continue，在字段下方显示行内错误提示，不进入下一步。
+
+### 6.3 步骤三：确认并开始
+
+**导入范围**（单选，二选一）
+
+| 选项 | 说明 |
+|---|---|
+| **Podcast details and episodes**（默认） | 剧集与节目资料（标题、简介、封面、分类及 Apple Podcasts 设置）均从 feed 带入，**覆盖当前节目资料** |
+| **Episodes only** | 只带入剧集，现有节目资料保持不变 |
+
+**音频格式**（单选，二选一）
+
+| 选项 | 说明 |
+|---|---|
+| **Convert to .mp3**（默认） | 重编码为 .mp3。Spotify 只接受 .mp3，此选项供需要提交到 Spotify 的用户使用；转换在重定向完成后进行（ⓘ 提示） |
+| **Use original format** | 保持原有音频格式 |
+
+**其它**：条款勾选（必勾）；点击 **Start import** 进入导入状态。
+
+### 6.4 导入状态
+
+开始导入后，页面顶部显示导入状态卡片，并在重定向步骤旁重复同一状态：
+
+| 状态 | 文案 | 表现 |
+|---|---|---|
+| 复制中 | `Copying episodes…` | 状态胶囊；Check redirect 保持禁用 |
+| 复制完成 | `Episodes copied` | 状态胶囊；**Check redirect 变为可点击** |
+
+| 控件 | 位置 | 说明 |
+|---|---|---|
+| **Refresh status** | 第 1 步「Wait for the import to finish.」旁 | 点击后状态变为 `Episodes copied`（Mockup 中以一次点击代表轮询到完成） |
+| **状态命名原则** | — | 状态文案必须**指明范围**（是「复制完成」而非笼统的「完成」）——因为音频文件要等重定向之后才真正导入，笼统的“完成”会被误解为整件事已经结束 |
+
+> 导入复制完成之前，页面上**不出现任何重新导入的入口**。
+
+### 6.5 301 Redirect 校验
+
+**为什么必须做**：在 Podbean 上，**重定向就是触发真实音频文件导入的标志**——不设置重定向，音频文件不会被导入。
+
+区块标题为 **Next, set up the redirect**，下方三步：
+
+| # | 内容 |
+|---|---|
+| 1 | Wait for the import to finish.（旁有状态胶囊与 Refresh status） |
+| 2 | Copy your new Podbean feed URL and set it as the redirect target in your old hosting platform.（下方为新 feed 地址与 Copy 按钮） |
+| 3 | Come back and run the redirect check once your host has applied it. |
+
+**Check redirect 的两种结果：**
+
+| 结果 | 界面表现 |
+|---|---|
+| **未检测到重定向** | 弹出居中报错弹框：标题 `Redirect not detected`；正文说明未检测到旧 feed 指向该 Podbean feed 的重定向，提示确认重定向已在旧托管平台生效，并说明**新设置的重定向可能需要几分钟才能传播**；单个 `OK` 按钮关闭（点击遮罩或按 Esc 亦可关闭）；弹框打开时焦点落在 `OK` |
+| **检测成功** | Toast 提示 `Redirect is working`；「Next, set up the redirect」区块整体替换为完成态内容（见 6.6） |
+
+**弹框复用站内既有组件**（`modal-overlay` / `modal-confirm`），与其他四个弹框的遮罩、圆角、按钮样式一致。
+
+> **Mockup 说明**：当前只演示**成功路径**，报错弹框保留在页面中但不触发。需要查看该状态时，在控制台执行
+> `document.getElementById('redirectErrorModal').classList.add('open')`。
+
+### 6.6 校验成功后的完成态
+
+重定向校验通过后，整个「Next, set up the redirect」区块被以下内容替换：
+
+| 元素 | 内容 |
+|---|---|
+| **建议说明** | We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across. |
+| **通知条**（浅黄底、无边框） | We will inform you by email once the files are completely imported. |
+| **Next:** | 三条带深色图标与链接的后续建议：<br>1. 审阅 **podcast information** 与 **episode list**，按需调整<br>2. 提交到 **podcast apps** 并连接 **social media**<br>3. 加入 **Podbean's Ads Marketplace** 获取赞助收入 |
+| **重新导入** | Click **here** if you want to re-import content. —— 点击返回步骤一重新开始 |
+
+进入完成态时同时发生两处调整：
+
+| 调整 | 原因 |
+|---|---|
+| **隐藏状态胶囊**（`Episodes copied`） | 流程已交接出去，该胶囊不再承载信息；卡片仅保留标题 |
+| **内容与页面标题左对齐**（去掉步骤内容的 36px 缩进） | 完成态不再显示步骤标记，缩进失去对齐对象；导入中的状态保留缩进，因为它对齐的是步骤名 |
+
+**文件导入完成后的状态**（比上一状态更晚一步）：
+
+| 元素 | 内容 |
+|---|---|
+| **通知条** | 由「完成后邮件通知」变为结果统计 —— `File Import Completed: 16 Successful. 0 Failed.`，右侧带 **×** 可关闭该通知条 |
+| **Next 列表第 4 项** | **Add Downloads to Imported Episodes**（可折叠，默认展开）：可把旧主机上每集的下载量导入 Podbean；含 CSV 导入说明、`Import CSV File` 按钮，以及两段合规声明（导入数据须真实、虚报历史数据违反 Terms of Use 可能被停用账号） |
+
+> **Mockup 入口说明**：侧边栏 Settings 下另有一项 **Import to Podbean (complete)**，直接展示上述「文件导入完成后」的页面状态——仅为便于评审，**不属于最终产品的菜单项**。
+
+---
+
+## 7. 全局交互规则
+
+### 7.1 Save Bar（底部保存栏）
 
 Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plugin 页面不包含 Save bar。
 
@@ -521,7 +654,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 - **Feed 页面 Save**：校验 Feed 页面的必填字段（Feed Website URL），格式校验（Verification Email、Episode Number Limit、Redirect URL）
 - **Plugin 页面**：无表单字段，无需 Save bar
 
-### 6.2 修改检测
+### 7.2 修改检测
 
 以下操作均会触发 Save bar 显示：
 
@@ -533,7 +666,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | 单选按钮（.pb-radio input） | change |
 | Toggle 开关（.pb-switch input） | change |
 
-### 6.3 自定义下拉选择器
+### 7.3 自定义下拉选择器
 
 ```
 ┌─────────────────────┐
@@ -552,7 +685,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | **选中反馈** | 激活项高亮或有选中标识，触发器文字更新为选中项 |
 | **保存联动** | 选中后触发 Save bar 显示 |
 
-### 6.5 页面切换
+### 7.5 页面切换
 
 | 操作 | 行为 |
 |---|---|
@@ -562,9 +695,9 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 
 ---
 
-## 7. 数据校验规则
+## 8. 数据校验规则
 
-### 7.1 必填字段
+### 8.1 必填字段
 
 | 页面 | 字段 | 校验规则 | 错误提示 |
 |---|---|---|---|
@@ -574,7 +707,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | Podcast Info | Podcast Logo | 必须有图片 | 见 3.1.4 |
 | Feed | Feed Website URL | 不能为空 | 见 4.4 |
 
-### 7.2 格式校验
+### 8.2 格式校验
 
 | 字段 | 规则 | 错误提示示例 |
 |---|---|---|
@@ -584,7 +717,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | Podcast Logo 上传 | 通过文件选择器过滤，不支持的格式无法选中 | — |
 | Episode Number Limit | 必须为整数且不超过当前套餐上限 | "Please enter a whole number"（含小数时）；"Please enter a number between 1 and {limit}"（超过上限时） |
 
-### 7.3 保存前校验流程
+### 8.3 保存前校验流程
 
 各页面独立执行校验。以下为 Podcast Info 页面（含多 Tab）的校验流程：
 
