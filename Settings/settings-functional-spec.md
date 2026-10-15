@@ -588,7 +588,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 | 选项 | 默认 | ⓘ 提示文案 |
 |---|---|---|
-| **Sync future content** | 勾选 | 「Videos added after this import become new episodes automatically.」（**自定义文案**）——对应步骤二提示里的 "sync future content as you prefer" |
+| **Sync future content** | **不勾选** | 「Videos added after this import become new episodes automatically.」（**自定义文案**）——对应步骤二提示里的 "sync future content as you prefer" |
 | **Import YouTube Thumbnail as podcast and episode logos** | 不勾选 | 「Note: The YouTube Thumbnail may not fit the square podcast and episode logo.」——选项名本身已经写明缩略图会成为播客与剧集的 logo，所以 ⓘ 收窄为只保留这条方形适配提醒（2026-10-15） |
 
 **② Content Source = RSS Feed URL**
@@ -669,7 +669,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 |---|---|
 | **建议说明** | We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across. |
 | **通知条**（浅黄底、无边框） | We will inform you by email once the files are completely imported. |
-| **Next:** | 三条带深色图标与链接的后续建议：<br>1. 审阅 **podcast information** 与 **episode list**，按需调整<br>2. 提交到 **podcast apps** 并连接 **social media**<br>3. 加入 **Podbean's Ads Marketplace** 获取赞助收入 |
+| **Next:** | **两条**带深色图标与链接的后续建议（2026-10-15 由原来一条拆成两条）：<br>1. You can review the **podcast information**.<br>2. You can review the **episode list**.<br>拆条时两句各带一遍 "making any necessary adjustments"，读起来重复，已从两句都去掉——"review" 本身已含"看过再改"的意思。<br>~~提交到 podcast apps / 加入 Ads Marketplace~~ 两条已于同日删除（流内完成态与 `#page-import-complete` 页面两处一并删除，保持两个视图内容一致） |
 | **重新导入** | Click **here** if you want to re-import content. —— 点击返回步骤一重新开始 |
 
 进入完成态时同时发生两处调整：
@@ -684,7 +684,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 | 元素 | 内容 |
 |---|---|
 | **通知条** | 由「完成后邮件通知」变为结果统计 —— `File Import Completed: 16 Successful. 0 Failed.`，右侧带 **×** 可关闭该通知条 |
-| **Next 列表第 4 项** | **Add Downloads to Imported Episodes**（可折叠，默认展开）：可把旧主机上每集的下载量导入 Podbean；含 CSV 导入说明、`Import CSV File` 按钮，以及两段合规声明（导入数据须真实、虚报历史数据违反 Terms of Use 可能被停用账号） |
+| **Next 列表第 3 项** | **Optionally, import downloads.**（可折叠，**默认收起**——2026-10-15 从「Add Downloads to Imported Episodes」改名，并把默认从展开改为收起；收起时箭头朝下 ▼、展开时朝上 ▲）：可把旧主机上每集的下载量导入 Podbean；含 CSV 导入说明、`Import CSV File` 按钮，以及两段合规声明（导入数据须真实、虚报历史数据违反 Terms of Use 可能被停用账号） |
 
 > **Mockup 入口说明**：侧边栏 Settings 下另有一项 **Import to Podbean (complete)**，直接展示上述「文件导入完成后」的页面状态——仅为便于评审，**不属于最终产品的菜单项**。
 
