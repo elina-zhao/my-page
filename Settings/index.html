@@ -1260,6 +1260,25 @@
       color: var(--text);
       margin-bottom: 6px;
     }
+    /* Stacked fields inside step 2's video form. .import-field carries no box of
+       its own, so the gap between two of them has to be declared here. */
+    .import-field + .import-field { margin-top: 26px; }
+
+    /* Video step 2: the content source is a labelled dropdown row — label on the
+       left, control taking the rest — matching the reference layout. The fixed
+       150px label column is what keeps "Content Source" and "YouTube Playlist"
+       starting the dropdowns at the same x. */
+    .wiz-dd-row { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; }
+    .wiz-dd-row .import-field-label { flex: 0 0 150px; margin-bottom: 0; }
+    .wiz-dd-row .pb-custom-select,
+    .wiz-dd-row .import-input { flex: 1; }
+    /* Inside a field the hint below supplies the gap, so the row drops its own */
+    .import-field .wiz-dd-row { margin-bottom: 0; }
+    /* The channel handle has no label of its own: the input takes the width and
+       Search sits on its baseline. */
+    .wiz-search-row { display: flex; align-items: flex-end; gap: 18px; }
+    .wiz-search-row .import-input { flex: 1; }
+    .wiz-search-row .import-btn { flex-shrink: 0; }
     /* Same underline field language as .pb-input on Podcast Info / Feed */
     .import-input {
       width: 100%;
@@ -1553,6 +1572,9 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px 32px;
       align-items: start;
+      /* Capped so a pair of short labels does not stretch a 656px column each
+         across the whole 1344px column and leave half of it empty. */
+      max-width: 760px;
     }
     .wiz-choice-item .import-radio { margin-top: 2px; }
     .wiz-choice-title {
@@ -1563,6 +1585,18 @@
       font-weight: 400;
       color: var(--text);
     }
+    /* The video-RSS step 3 opens with a statement of what the import will do,
+       so it leads its block, reads at body weight, and needs no top gap. */
+    .wiz-opt-lead {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0 0 22px;
+    }
+    .wiz-opt-lead b { font-weight: 600; }
+    /* An info tooltip hangs off the bottom edge of its own row, so any checkbox
+       row carrying one needs to be the positioning context. */
+    .pb-check-line:has(.wiz-info-wrap) { position: relative; }
 
     /* No rule above the buttons: the step's own content already ends with a
        separator, and a second line right above Continue read as a stray edge. */
@@ -1572,20 +1606,8 @@
       gap: 12px;
       margin-top: 24px;
     }
-    .wiz-back-btn {
-      height: 36px;
-      padding: 0 20px;
-      background: #fff;
-      color: var(--text);
-      border: 1px solid #cfd6e0;
-      border-radius: 50px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .wiz-back-btn:hover { background: #f8fafc; border-color: var(--text-secondary); }
+    /* No Back button: a step's own header is the only way back, so the nav is
+       just the forward action. */
 
     /* Live import status — the same chip in the result card and beside the
        wait step, with the refresh action that resolves it */
@@ -1765,11 +1787,13 @@
       padding-top: 20px;
       border-top: 1px solid var(--border);
     }
-    /* the elements JS toggles with [hidden] that also have a display of their own */
+    /* the elements JS toggles with [hidden] that also have a display of their own.
+       .pb-check-line is display:flex, so without it `hidden` did nothing at all
+       and a toggled-off checkbox row stayed on screen. */
     .wiz-body[hidden],
     .wiz-nav[hidden],
-    .wiz-back-btn[hidden],
     .wiz-next-note[hidden],
+    .pb-check-line[hidden],
     #wizResultNext[hidden] { display: none; }
 
     /* Modal */
@@ -2684,12 +2708,70 @@
             </div>
             <div class="wiz-step-summary" hidden></div>
             <div class="wiz-body" id="wizPanel2" data-wiz-panel="2" hidden>
-              <div class="import-field">
-                <div class="import-field-label" id="wizFieldLabel">RSS Feed URL</div>
-                <input type="text" class="import-input" id="wizUrl" />
-                <div class="pb-field-error" id="wizUrlError"></div>
-                <div class="import-example" id="wizUrlHint"></div>
+
+              <!-- RSS source: one field, unchanged -->
+              <div id="wizModeRss">
+                <div class="import-field">
+                  <div class="import-field-label" id="wizFieldLabel">RSS Feed URL</div>
+                  <input type="text" class="import-input" id="wizUrl" />
+                  <div class="pb-field-error" id="wizUrlError"></div>
+                  <div class="import-example" id="wizUrlHint"></div>
+                </div>
               </div>
+
+              <!-- Video source: the videos can come from a YouTube playlist or
+                   from a video RSS feed, so pick one first, then fill the field
+                   that belongs to it. -->
+              <div id="wizModeVideo" hidden>
+                <div class="wiz-dd-row">
+                  <div class="import-field-label">Content Source</div>
+                  <div class="pb-custom-select">
+                    <div class="pb-vs" data-select="video-src"><span>YouTube Playlist</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                    <div class="pb-select-dropdown" id="dropdown-video-src">
+                      <div class="pb-select-option selected" data-value="youtube">YouTube Playlist</div>
+                      <div class="pb-select-option" data-value="rss">RSS Feed URL</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="wizVideoYt">
+                  <div class="import-field" id="wizYtHandleField">
+                    <div class="wiz-search-row">
+                      <input type="text" class="import-input" id="wizYtHandle" placeholder="Your YouTube channel handle (e.g. @podbean)" />
+                      <button type="button" class="import-btn" id="wizYtSearchBtn">Search</button>
+                    </div>
+                    <div class="pb-field-error" id="wizYtHandleError"></div>
+                    <div class="import-example">Search for your YouTube channel and choose the playlist you want to convert.</div>
+                  </div>
+
+                  <div class="import-field" id="wizYtPlaylistField" hidden>
+                    <div class="wiz-dd-row">
+                      <div class="import-field-label">YouTube Playlist</div>
+                      <div class="pb-custom-select">
+                        <div class="pb-vs" data-select="yt-playlist"><span>Podbean Amplified Season 2</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                        <div class="pb-select-dropdown" id="dropdown-yt-playlist">
+                          <div class="pb-select-option selected" data-value="p1">Podbean Amplified Season 2</div>
+                          <div class="pb-select-option" data-value="p2">Podbean Amplified Season 1</div>
+                          <div class="pb-select-option" data-value="p3">How to Podcast &mdash; Tutorials</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="import-example">We will retrieve <b>the latest 10 videos</b> and sync future content as you prefer.</div>
+                  </div>
+                </div>
+
+                <div id="wizVideoRss" hidden>
+                  <div class="import-field" id="wizVideoRssField">
+                    <div class="wiz-dd-row">
+                      <div class="import-field-label">RSS Feed</div>
+                      <input type="text" class="import-input" id="wizVideoRssInput" placeholder="Enter your RSS feed URL" />
+                    </div>
+                    <div class="pb-field-error" id="wizVideoRssError"></div>
+                    <div class="import-example">We will retrieve <b>the latest 10 videos</b>, convert them into MP3 and sync future content as you prefer.</div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -2699,7 +2781,40 @@
               <span class="wiz-label">Review and start</span>
             </div>
             <div class="wiz-body" id="wizPanel3" data-wiz-panel="3" hidden>
-              <div class="wiz-choice" role="radiogroup" aria-labelledby="wizScopeLegend">
+
+              <!-- Video + YouTube Playlist opens with the output type -->
+              <div id="wizOptVideoYt" hidden>
+                <div class="wiz-choice" role="radiogroup" aria-labelledby="wizOutputLegend">
+                  <div class="wiz-choice-legend" id="wizOutputLegend">What kind of podcast should this become?</div>
+
+                  <div class="wiz-choice-items">
+                    <label class="wiz-choice-item">
+                      <input type="radio" class="import-radio" name="wizOutput" value="audio" checked />
+                      <span class="wiz-choice-text">
+                        <span class="wiz-choice-title">Convert to Audio Podcasts</span>
+                      </span>
+                    </label>
+
+                    <label class="wiz-choice-item">
+                      <input type="radio" class="import-radio" name="wizOutput" value="video" />
+                      <span class="wiz-choice-text">
+                        <span class="wiz-choice-title">Convert to Video Podcasts</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Video + RSS Feed URL opens with a statement, not a choice -->
+              <div id="wizOptVideoRss" hidden>
+                <p class="wiz-opt-lead">We will retrieve <b>the latest 10 videos and convert them into MP3</b> audio format for your podcasts, automatically publishing them.</p>
+              </div>
+
+              <!-- "What should we bring over?" serves BOTH the RSS source path and
+                   video + RSS Feed URL — they ask the identical question, so there is
+                   one group rather than two. A second copy would also share
+                   name="wizScope" and the two would cancel each other out. -->
+              <div class="wiz-choice" id="wizScopeChoice" role="radiogroup" aria-labelledby="wizScopeLegend">
                 <div class="wiz-choice-legend" id="wizScopeLegend">What should we bring over?</div>
 
                 <div class="wiz-choice-items">
@@ -2719,7 +2834,8 @@
                 </div>
               </div>
 
-              <div class="wiz-choice" role="radiogroup" aria-labelledby="wizFormatLegend">
+              <!-- Audio format — the RSS source path only -->
+              <div class="wiz-choice" id="wizFormatChoice" role="radiogroup" aria-labelledby="wizFormatLegend">
                 <div class="wiz-choice-legend" id="wizFormatLegend">What audio format should we use?</div>
 
                 <div class="wiz-choice-items">
@@ -2738,10 +2854,27 @@
                   </label>
                 </div>
               </div>
+
+              <!-- The video-only options -->
+              <div id="wizVideoOptions" hidden>
+                <div class="wiz-choice-legend" id="wizOptionsLegend">Options</div>
+
+                <label class="pb-check-line">
+                  <input type="checkbox" id="wizSync" checked />
+                  <span>Sync future content<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizSyncInfo" aria-label="What this does"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizSyncInfo" role="tooltip"></span></span></span>
+                </label>
+
+                <label class="pb-check-line" id="wizThumbLine">
+                  <input type="checkbox" id="wizThumb" />
+                  <span>Import YouTube Thumbnail as podcast and episode logos<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizThumbInfo" aria-label="What this does"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizThumbInfo" role="tooltip"></span></span></span>
+                </label>
+              </div>
+
+              <!-- One checkbox for both paths; only the wording changes -->
               <label class="pb-check-line is-terms" id="wizAgreeLine">
-                <input type="checkbox" id="wizAgree" />
-                <span>By clicking &ldquo;Start import,&rdquo; you confirm that you own the rights to this podcast and that you agree to Podbean&rsquo;s <a href="https://www.podbean.com/podbean-terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.</span>
-              </label>
+              <input type="checkbox" id="wizAgree" />
+              <span id="wizAgreeText"></span>
+            </label>
             </div>
           </div>
 
@@ -2823,7 +2956,6 @@
 
         <!-- Wizard nav — JS moves it into the active step's body -->
         <div class="wiz-nav" id="wizNav">
-          <button type="button" class="wiz-back-btn" id="wizBack">Back</button>
           <button type="button" class="import-btn" id="wizNext">Continue</button>
         </div>
       </div>
@@ -3936,6 +4068,8 @@
       var page = document.getElementById('page-import-to-podbean');
       if (!page) return;
 
+      var TERMS_LINK = ' <a href="https://www.podbean.com/podbean-terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.';
+
       var SOURCES = {
         rss: {
           name: 'RSS Feed URL',
@@ -3947,18 +4081,34 @@
           formatConvertDesc: 'Converts your audio after you complete the 301 redirect.',
           placeholder: 'https://feeds.example.com/myshow.xml',
           hint: 'Example: https://feeds.podbean.org/elinazplus/feed.xml',
+          // the button is "Start import", so the quoted word in the terms follows
+          // it rather than the reference's "Import"
+          terms: 'By clicking “Start import,” you confirm that you own the rights to this podcast and that you agree to Podbean’s' + TERMS_LINK,
           redirect: true
         },
         video: {
           name: 'Video to Podcast',
           resultTitle: 'Video import',
-          step2: 'Enter your video URL',
-          fieldLabel: 'Video or channel URL',
-          requiredMsg: 'Please enter your video or channel URL',
+          // the videos can come from a YouTube playlist or from a video RSS feed,
+          // so step 2 picks between them and the copy lives per mode
+          step2: 'Choose your video source',
+          ytRequiredMsg: 'Please enter your YouTube channel handle',
+          ytSearchMsg: 'Click Search to load the playlists for this channel',
+          rssRequiredMsg: 'Please enter your video RSS feed URL',
           scopeInfo: 'Brings over the episodes, the show details and the video titles and artwork.',
           formatConvertDesc: 'Converts your audio after the import finishes.',
-          placeholder: 'https://www.youtube.com/@yourchannel',
-          hint: 'A single video, a playlist, or a whole channel.',
+          // the video import has no redirect, and the wording follows whichever
+          // of the two video sources was used
+          terms: {
+            youtube: 'By clicking “Start import,” you confirm that you own the rights to this YouTube Content and that you agree to Podbean’s' + TERMS_LINK,
+            rss: 'By clicking “Start import,” you confirm that you own the rights to this content and that you agree to Podbean’s' + TERMS_LINK
+          },
+          // my own copy. Deliberately says neither "playlist" nor "feed": this
+          // row is shared by the YouTube and video-RSS paths.
+          syncInfo: 'Videos added after this import become new episodes automatically.',
+          // product copy, supplied by the user — verbatim. Trimmed to the Note
+          // once the option label started saying what the thumbnail becomes.
+          thumbInfo: 'Note: The YouTube Thumbnail may not fit the square podcast and episode logo.',
           redirect: false
         }
       };
@@ -3967,9 +4117,15 @@
       var step = 1;      // 1 | 2 | 3 | 'result'
       var urls = {};     // one URL remembered per source, so going back is cheap
 
+      // Video only: which of the two video sources is chosen, and what was typed
+      // into each. Kept apart from `urls` because a YouTube import is identified
+      // by channel + playlist, not by a single URL.
+      var videoSrc = 'youtube';   // 'youtube' | 'rss'
+      var ytSearched = false;     // the playlist picker only exists after a search
+      var video = { ytHandle: '', ytPlaylist: '', rss: '' };
+
       var step2Label = document.getElementById('wizStep2Label');
       var nav = document.getElementById('wizNav');
-      var backBtn = document.getElementById('wizBack');
       var nextBtn = document.getElementById('wizNext');
       var pickError = document.getElementById('importPickError');
       var field = page.querySelector('[data-wiz-panel="2"] .import-field');
@@ -3977,6 +4133,17 @@
       var urlHint = document.getElementById('wizUrlHint');
       var agree = document.getElementById('wizAgree');
       var agreeLine = document.getElementById('wizAgreeLine');
+
+      // step 2's video form
+      var videoSrcTrigger = page.querySelector('.pb-vs[data-select="video-src"]');
+      var videoSrcOptions = page.querySelectorAll('#dropdown-video-src .pb-select-option');
+      var playlistTrigger = page.querySelector('.pb-vs[data-select="yt-playlist"]');
+      var playlistOptions = page.querySelectorAll('#dropdown-yt-playlist .pb-select-option');
+      var ytHandle = document.getElementById('wizYtHandle');
+      var ytHandleField = document.getElementById('wizYtHandleField');
+      var ytPlaylistField = document.getElementById('wizYtPlaylistField');
+      var videoRssInput = document.getElementById('wizVideoRssInput');
+      var videoRssField = document.getElementById('wizVideoRssField');
 
       // A new source never shows up as a flat grey tile.
       page.querySelectorAll('.import-source').forEach(function (row) {
@@ -4024,6 +4191,97 @@
         document.getElementById('wizResultNote').hidden = done;
       }
 
+      // Step 2 holds two different forms. The RSS source keeps its single URL
+      // field; the video source picks between two video sources and swaps the
+      // field below. Split out of render() because the Content Source dropdown
+      // has to redraw the form without re-rendering the wizard — a full render()
+      // scrolls the page back to the top, which is jarring mid-form.
+      function renderStep2() {
+        var isVideo = key === 'video';
+        document.getElementById('wizModeRss').hidden = isVideo;
+        document.getElementById('wizModeVideo').hidden = !isVideo;
+
+        if (!isVideo) {
+          var s2 = SOURCES[key];
+          if (!s2) return;
+          document.getElementById('wizFieldLabel').textContent = s2.fieldLabel;
+          urlInput.placeholder = s2.placeholder;
+          urlHint.textContent = s2.hint;
+          urlInput.value = urls[key] || '';
+          return;
+        }
+
+        // the dropdown states which of the two video sources is active
+        videoSrcTrigger.querySelector('span').textContent =
+          videoSrc === 'youtube' ? 'YouTube Playlist' : 'RSS Feed URL';
+        videoSrcOptions.forEach(function (o) {
+          o.classList.toggle('selected', o.getAttribute('data-value') === videoSrc);
+        });
+
+        var isYt = videoSrc === 'youtube';
+        document.getElementById('wizVideoYt').hidden = !isYt;
+        document.getElementById('wizVideoRss').hidden = isYt;
+
+        if (isYt) {
+          ytHandle.value = video.ytHandle;
+          ytPlaylistField.hidden = !ytSearched;
+          playlistTrigger.querySelector('span').textContent = video.ytPlaylist;
+        } else {
+          videoRssInput.value = video.rss;
+        }
+        // switching Content Source can put the nav back or take it away
+        applyNavState();
+      }
+
+      // what step 2 captured, for the frozen read-only summary line
+      function videoSummary() {
+        return videoSrc === 'youtube'
+          ? 'YouTube Playlist · ' + (video.ytPlaylist || '')
+          : video.rss;
+      }
+
+      // The video import asks a different question than the RSS one — an output
+      // type plus two independent options, instead of a scope pair and a format
+      // pair — so step 3 holds a block per source and shows one of them.
+      function renderStep3() {
+        var s3 = SOURCES[key];
+        if (!s3) return;
+        var isVideo = key === 'video';
+        var isYt = isVideo && videoSrc === 'youtube';
+        var isVideoRss = isVideo && !isYt;
+
+        // the opening: the output pair for YouTube, a statement for video RSS
+        document.getElementById('wizOptVideoYt').hidden = !isYt;
+        document.getElementById('wizOptVideoRss').hidden = !isVideoRss;
+        // "What should we bring over?" answers identically for the RSS source
+        // path and video + RSS Feed URL, so one group serves both; the audio
+        // format question belongs to the RSS source path alone.
+        document.getElementById('wizScopeChoice').hidden = isYt;
+        document.getElementById('wizFormatChoice').hidden = isVideo;
+        document.getElementById('wizVideoOptions').hidden = !isVideo;
+        document.getElementById('wizThumbLine').hidden = !isYt;
+
+        document.getElementById('wizAgreeText').innerHTML = isVideo ? s3.terms[videoSrc] : s3.terms;
+        document.getElementById('wizScopeAllInfo').textContent = s3.scopeInfo;
+        if (s3.formatConvertDesc) {
+          document.getElementById('wizFormatConvertInfo').textContent = s3.formatConvertDesc;
+        }
+        if (isVideo) {
+          document.getElementById('wizSyncInfo').textContent = s3.syncInfo;
+          document.getElementById('wizThumbInfo').textContent = s3.thumbInfo;
+        }
+      }
+
+      // Whether the nav is on screen. It used to be one variable (the wizard is
+      // finished), and now the YouTube path also holds it back until Search has
+      // produced the playlist — there is nothing to continue to before that.
+      // One owner, because it depends on more than one variable.
+      function applyNavState() {
+        var waitingForPlaylist = step === 2 && key === 'video' &&
+          videoSrc === 'youtube' && !ytSearched;
+        nav.hidden = step === 'result' || waitingForPlaylist;
+      }
+
       function render() {
         var cur = step === 'result' ? 4 : step;
 
@@ -4045,22 +4303,19 @@
         // with the content instead of floating at the bottom of the page
         var activeBody = page.querySelector('[data-wiz-panel="' + step + '"]');
         if (activeBody) activeBody.appendChild(nav);
+        // The terms line reads as the legal footnote UNDER the action it
+        // authorises (as the real product has it). It has to be re-appended
+        // after the nav: appendChild moves the nav to the end of the body, so
+        // anything left later in the markup would land above the button.
+        if (step === 3) activeBody.appendChild(agreeLine);
 
-        // a finished wizard has no next step — the result panel owns the exit
-        nav.hidden = step === 'result';
-        backBtn.hidden = step === 1;
+        applyNavState();
         nextBtn.textContent = step === 3 ? 'Start import' : 'Continue';
 
         if (step === 2) {
-          var s2 = SOURCES[key];
-          document.getElementById('wizFieldLabel').textContent = s2.fieldLabel;
-          urlInput.placeholder = s2.placeholder;
-          urlHint.textContent = s2.hint;
-          urlInput.value = urls[key] || '';
+          renderStep2();
         } else if (step === 3) {
-          var s3 = SOURCES[key];
-          document.getElementById('wizScopeAllInfo').textContent = s3.scopeInfo;
-          document.getElementById('wizFormatConvertInfo').textContent = s3.formatConvertDesc;
+          renderStep3();
         } else if (step === 'result') {
           var s4 = SOURCES[key];
           // what each finished step captured — always re-collapsed on render
@@ -4106,6 +4361,33 @@
           return;
         }
         if (step === 2) {
+          if (key === 'video') {
+            if (videoSrc === 'youtube') {
+              if (ytHandle.value.trim() === '') {
+                showFieldError(ytHandleField, SOURCES.video.ytRequiredMsg);
+                ytHandle.focus();
+                return;
+              }
+              // Belt and braces: the nav is hidden until a search runs
+              // (applyNavState), so this branch is unreachable through the UI —
+              // kept so a revealed nav can never skip the playlist.
+              if (!ytSearched) {
+                showFieldError(ytHandleField, SOURCES.video.ytSearchMsg);
+                ytHandle.focus();
+                return;
+              }
+            } else {
+              if (videoRssInput.value.trim() === '') {
+                showFieldError(videoRssField, SOURCES.video.rssRequiredMsg);
+                videoRssInput.focus();
+                return;
+              }
+              video.rss = videoRssInput.value.trim();
+            }
+            urls[key] = videoSummary();
+            goTo(3);
+            return;
+          }
           if (urlInput.value.trim() === '') {
             showFieldError(field, SOURCES[key].requiredMsg);
             urlInput.focus();
@@ -4126,10 +4408,8 @@
         }
       });
 
-      backBtn.addEventListener('click', function () {
-        if (step === 3) goTo(2);
-        else if (step === 2) goTo(1);
-      });
+      // Going back is the step headers' job (see activateStep) — the nav holds
+      // only the forward action.
 
       // Only a step's own header is a way back. The nav buttons and the fields
       // live inside the step, so without the .wiz-head guard a click on
@@ -4174,6 +4454,51 @@
       urlInput.addEventListener('input', function () {
         if (this.value.trim() !== '') clearAllErrors();
       });
+
+      // Search stands in for looking the channel up — one click reveals the
+      // playlist picker, which is what step 2 actually needs chosen.
+      document.getElementById('wizYtSearchBtn').addEventListener('click', function () {
+        if (ytHandle.value.trim() === '') {
+          showFieldError(ytHandleField, SOURCES.video.ytRequiredMsg);
+          ytHandle.focus();
+          return;
+        }
+        clearAllErrors();
+        video.ytHandle = ytHandle.value.trim();
+        ytSearched = true;
+        // a second search can be a different channel, so the playlist starts over
+        var first = playlistOptions[0];
+        video.ytPlaylist = first ? first.textContent : '';
+        playlistOptions.forEach(function (o, i) { o.classList.toggle('selected', i === 0); });
+        ytPlaylistField.hidden = false;
+        playlistTrigger.querySelector('span').textContent = video.ytPlaylist;
+        // the playlist is what step 2 needs, so the way forward appears with it
+        applyNavState();
+        showToast('Playlists loaded');
+      });
+
+      // Switching the video content source redraws step 2 only — see renderStep2.
+      videoSrcOptions.forEach(function (o) {
+        o.addEventListener('click', function () {
+          videoSrc = o.getAttribute('data-value');
+          clearAllErrors();
+          renderStep2();
+        });
+      });
+
+      playlistOptions.forEach(function (o) {
+        o.addEventListener('click', function () { video.ytPlaylist = o.textContent; });
+      });
+
+      ytHandle.addEventListener('input', function () {
+        video.ytHandle = this.value;
+        if (this.value.trim() !== '') clearAllErrors();
+      });
+      videoRssInput.addEventListener('input', function () {
+        video.rss = this.value;
+        if (this.value.trim() !== '') clearAllErrors();
+      });
+
       agree.addEventListener('change', function () {
         if (this.checked) agreeLine.classList.remove('is-error');
       });

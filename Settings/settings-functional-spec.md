@@ -500,16 +500,18 @@ Tab 标签状态：
 ### 6.0 页面结构
 
 ```
-① Choose a source  →  ② Enter your feed URL  →  ③ Review and start
+① Choose a source  →  ② 填写地址  →  ③ Review and start
 ```
+
+步骤二的标题随来源而变：RSS 为「Enter your feed URL」，Video 为「Choose your video source」。
 
 | 属性 | 说明 |
 |---|---|
 | **承载方式** | 三个步骤自上而下排列在同一列内；当前步骤的内容展开在其标题下方，缩进对齐步骤名 |
 | **已完成步骤** | 折叠为一行标题（带勾选标记） |
 | **未到步骤** | 仅显示标题，不可点击 |
-| **返回** | 流程进行中，点击已完成步骤的标题可返回修改 |
-| **步骤冻结** | 点击 **Start import** 之后，**步骤 1 与步骤 2 不可再返回编辑**；点击其标题只展开一行只读信息（步骤 1 → 所选来源名，步骤 2 → 已填写的地址） |
+| **返回** | **没有 Back 按钮**——返回只通过点击上一步的标题完成（见下条）。底部永远只有前进按钮 |
+| **步骤冻结** | 点击 **Start import** 之后，**步骤 1 与步骤 2 不可再返回编辑**；点击其标题只展开一行只读信息（步骤 1 → 所选来源名，步骤 2 → 已填写的地址；Video 路径下为 `YouTube Playlist · 播放列表名` 或视频 RSS 地址） |
 
 ### 6.1 步骤一：选择来源
 
@@ -517,37 +519,107 @@ Tab 标签状态：
 
 | 选项 | 说明 |
 |---|---|
-| **Podcast details and episodes**（默认） | 从 RSS feed 带入剧集与节目资料 |
-| **Episodes only** | 只带入剧集 |
+| **RSS Feed URL** | 播客托管在其它平台，或已有一份 RSS feed |
+| **Video to Podcast** | 有视频内容，希望以播客形式发布 |
 
-第一个选项标题右侧有 ⓘ 图标：悬停或键盘聚焦时显示说明文字（RSS 路径为 “Brings over the episodes, the show details and Apple Podcasts settings.”）。
+Continue 是唯一的入口按钮：未选择时点击 Continue，在列表下方显示行内错误「Please choose an import source」并聚焦第一个单选项，不进入下一步。
 
 ### 6.2 步骤二：填写地址
 
-| 来源 | 字段 | 必填 |
-|---|---|---|
-| RSS | RSS Feed URL | 是 |
-| Video | Video or channel URL | 是 |
+步骤二的表单内容与标题都随步骤一的来源而变：RSS → 「Enter your feed URL」，Video → 「Choose your video source」。
 
-字段未填写时点击 Continue，在字段下方显示行内错误提示，不进入下一步。
+**来源为 RSS Feed URL**：单个下划线输入框。
+
+| 字段 | 必填 | 说明 |
+|---|---|---|
+| RSS Feed URL | 是 | 提示：Example: https://feeds.podbean.org/elinazplus/feed.xml |
+
+**来源为 Video to Podcast**：视频本身也有两个来源，用一行「Content Source」下拉框切换，切换后下方字段整体替换。
+
+| Content Source | 字段 | 说明 |
+|---|---|---|
+| **YouTube Playlist**（默认） | YouTube channel handle：无字段标签，占位符 “Your YouTube channel handle (e.g. @podbean)”，右侧贴一枚 **Search** 按钮 | 提示：「Search for your YouTube channel and choose the playlist you want to convert.」 |
+| | YouTube Playlist 下拉框 —— **只有点过 Search 之后才出现** | 提示：「We will retrieve **the latest 10 videos** and sync future content as you prefer.」 |
+| **RSS Feed URL** | RSS Feed 输入框 | 提示：「We will retrieve **the latest 10 videos**, convert them into MP3 and sync future content as you prefer.」 |
+
+- **Search 是必经步骤，而且 Continue 按钮在检索之前根本不出现**（2026-10-15）：点 Search 出结果后，播放列表下拉与 **Continue** 同时出现——在此之前没有可继续的东西。切换 Content Source 到 RSS Feed URL 时按钮立刻恢复显示；已经检索过的状态下在步骤间往返，按钮保持显示（检索结果不会因为来回切步骤而丢失）。
+  - handle 为空时点 Search → 「Please enter your YouTube channel handle」。
+  - 「Click Search to load the playlists for this channel」这条校验仍留在代码里作为兜底；按钮隐藏后正常路径下已经触发不到，保留是为了将来按钮若被别的方式显示出来也不会跳过播放列表。
+- Search 会把播放列表重置为第一个结果（换一个 channel 就是另一组播放列表）；handle 与已选播放列表在步骤间往返、以及来回切换 Content Source 时都会保留。
+- 三个带标签的行（Content Source / YouTube Playlist / RSS Feed）共用 150px 的标签列，因此控件起始位置对齐；handle 一行没有标签，输入框占满宽度、Search 贴在右侧。
+- 字段未填写时点击 Continue，在字段下方显示行内错误提示，不进入下一步。
 
 ### 6.3 步骤三：确认并开始
 
-**导入范围**（单选，二选一）
+步骤三的内容同样随步骤一的来源而变：两个路径各自一组选项，共用一个条款勾选框（文字随来源变化）与底部按钮。
+
+**来源为 RSS Feed URL**
+
+导入范围（单选，二选一）
 
 | 选项 | 说明 |
 |---|---|
 | **Podcast details and episodes**（默认） | 剧集与节目资料（标题、简介、封面、分类及 Apple Podcasts 设置）均从 feed 带入，**覆盖当前节目资料** |
 | **Episodes only** | 只带入剧集，现有节目资料保持不变 |
 
-**音频格式**（单选，二选一）
+音频格式（单选，二选一）
 
 | 选项 | 说明 |
 |---|---|
 | **Convert to .mp3**（默认） | 重编码为 .mp3。Spotify 只接受 .mp3，此选项供需要提交到 Spotify 的用户使用；转换在重定向完成后进行（ⓘ 提示） |
 | **Use original format** | 保持原有音频格式 |
 
-**其它**：条款勾选（必勾）；点击 **Start import** 进入导入状态。
+**来源为 Video to Podcast**
+
+video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种形态。两者**共用「Sync future content」**一项，其余各不相同，且都**没有输出类型以外的「导入范围」组**（video 导入没有"现有节目资料"可覆盖，与真实产品一致）。
+
+**① Content Source = YouTube Playlist**
+
+输出类型（单选，二选一，**有可见组标题**：「What kind of podcast should this become?」）
+
+| 选项 | 说明 |
+|---|---|
+| **Convert to Audio Podcasts**（默认） | 转成音频播客 |
+| **Convert to Video Podcasts** | 转成视频播客 |
+
+**选项下面不带 tagline**（2026-10-15 删除）。原先跟组挂在下面、随选择切换的一句说明（音频 → 「Reach a wider audience and attract new listeners by leveraging popular directories such as Apple Podcasts, Spotify, and more.」；视频 → 「Reach viewers as well as listeners…」）被去掉了。理由：两个选项名本身已经说清结果，而在步骤三这个位置——来源、范围、格式都已经定完——再补一句"选音频有什么好处"也影响不了任何决定。这一步的选项一律不带 tagline。
+
+两个互相独立的勾选项（各带 ⓘ 提示），共用一个**轻标题「Options」**：
+
+| 选项 | 默认 | ⓘ 提示文案 |
+|---|---|---|
+| **Sync future content** | 勾选 | 「Videos added after this import become new episodes automatically.」（**自定义文案**）——对应步骤二提示里的 "sync future content as you prefer" |
+| **Import YouTube Thumbnail as podcast and episode logos** | 不勾选 | 「Note: The YouTube Thumbnail may not fit the square podcast and episode logo.」——选项名本身已经写明缩略图会成为播客与剧集的 logo，所以 ⓘ 收窄为只保留这条方形适配提醒（2026-10-15） |
+
+**② Content Source = RSS Feed URL**
+
+视频 RSS 源一律转成 MP3 音频播客，所以**没有输出类型可选**，改为导入前的一句陈述：
+
+> We will retrieve **the latest 10 videos and convert them into MP3** audio format for your podcasts, automatically publishing them。
+
+然后接**与 RSS 路径完全相同的那一组**「What should we bring over?」（Podcast details and episodes / Episodes only），最后是「Options」下的 **Sync future content**。
+
+- **这一组是和 RSS 路径共用的同一个组，不是复制一份。** 两条路径问的是同一个问题——勾选/不勾选正好对应「Podcast details and episodes」/「Episodes only」。复制还会带来一个真实故障：两组会共用 `name="wizScope"`，浏览器把它们当成同一组，选中一边会清掉另一边。
+- 副作用是选择在两条路径间共享（在 RSS 路径选了 Episodes only，切到 video + RSS 仍是 Episodes only）。这是想要的行为。
+- **「Import podcast info and Apple Podcast settings from the RSS feed.」这个勾选项已删除**（2026-10-15）——它就是上面那一组，同一个问题不该在同一步里以两种形态出现。原来那条 ⓘ 自拟文案随之移除。
+
+**排版规则（三条路径统一，2026-10-15 定稿）**
+
+- 每个组都有**加粗组标题**（15px/600）：互斥选择用问句（What should we bring over? / What audio format should we use? / What kind of podcast should this become?），各自独立的开关用标题「Options」——轻重的差别是刻意想做的，但目前两者其实用的是同一个 `.wiz-choice-legend` 样式，**并未真正做出差别**，待定。
+  - 组标题统一**只点出维度（axis）**，由选项去说结果。所以音频/视频这一组问的是 kind（What kind of podcast should this become?），而不是重复选项里的 audio / video——原先的「What should we publish?」正是因为 publish 既不指向 audio 也不指向 video 而被换掉（2026-10-15）。
+- 并排单选组的宽度上限 **760px**（`.wiz-choice-items`），组说明句用同一量度。此前每列被拉到 656px，而标签只有 100–200px，右半页全空。
+- 选项标题维持 14px/400，勾选项标签 14px `--text`；条款行用细线与上方隔开，作为页脚。
+- **JS 用 `[hidden]` 切换显隐的元素，若自身带 `display`，必须补一条 `[hidden] { display: none }` 守卫**：作者样式会盖过 `[hidden]` 的 UA `display:none`。`.pb-check-line`（`display:flex`）此前就漏了这条，导致 video + RSS 路径上本该隐藏的 **Import YouTube Thumbnail 一直显示**（2026-10-15 修）。
+
+两条提示都只在悬停 / 键盘聚焦时出现。缩略图这一项影响的是**播客与剧集两处 logo**——选项名本身已写明（2026-10-15 从「Import YouTube Thumbnail」改过来），所以 ⓘ 里只留「缩略图可能不适配方形的 logo」这一条提醒。
+
+**条款与按钮（三条路径共用）**
+
+| 项目 | 说明 |
+|---|---|
+| 条款文案 | 三选一：来源 RSS → "…rights to **this podcast**…"；video + YouTube Playlist → "…rights to **this YouTube Content**…"；video + RSS Feed URL → "…rights to **this content**…"。勾选框必勾，未勾选时点击按钮给该行加红 |
+| 按钮 | 底部**只有前进按钮**：步骤 1 / 2 为 Continue，步骤 3 为 **Start import**。没有 Back 按钮，返回靠点击上一步标题 |
+| 条款位置 | 在按钮**下方**（2026-10-15 改），与真实产品一致：按钮是选项列表的收尾，条款作为其下的法务行，上面用一条细线隔开。它仍是必勾项——未勾选就点按钮，会在按钮下方的这一行标红提示 |
 
 ### 6.4 导入状态
 
