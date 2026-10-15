@@ -59,6 +59,8 @@
    - [7.2 修改检测](#72-修改检测)
    - [7.3 自定义下拉选择器](#73-自定义下拉选择器)
    - [7.5 页面切换](#75-页面切换)
+    - [7.6 mockup 专用：不被搜索引擎检索](#76-mockup-专用不被搜索引擎检索)
+    - [7.7 版本提示（mockup 专用）](#77-版本提示mockup-专用)
 8. [数据校验规则](#8-数据校验规则)
    - [8.1 必填字段](#81-必填字段)
    - [8.2 格式校验](#82-格式校验)
@@ -85,6 +87,21 @@ Settings                              ← 一级导航（带箭头展开/收起�
 ├── Feed（RSS 源管理）
 └── Plugin（插件管理）
 ```
+
+**一级导航里有三个条目是外部链接**（2026-10-15）：它们指向另外几份独立的 mockup，**不是本页内的页面切换**。
+
+| 条目 | 指向 |
+|---|---|
+| **Dashboard** | `https://elina-zhao.github.io/my-page/PodcastDashboard/` |
+| **Episodes** | `https://elina-zhao.github.io/my-page/Episodes/` |
+| **Distribution** | `https://melodyw-max.github.io/Podbean-distribution//Distribution-new/`（地址里的双斜杠按用户给的原样保留，未擅自规范化——GitHub Pages 通常会把 `//` 归一化，但这一点无法从这里验证） |
+
+- 这三条都**去掉了 `data-page`、折叠箭头与子菜单**：既然整条点击就是跳走，子菜单展开就再也到不了，留着只是死标记。
+- 代价与好处：`data-page` 一并去掉后，本页的 `switchPage()` 自然绑不到它们（选择器要求 `[data-page]`），所以浏览器按 `href` 正常跳转。那段 `> a[data-page]` 的处理器因此**目前匹配不到任何元素**，已加注释保留给以后新增的一级页面。
+- **Statistics 与 Settings 仍保留子菜单**（点一下展开/收起，不跳转），这两个才是本页内的导航。
+- 附带修掉的两个死路：Dashboard 原先带 `data-page="dashboard"` 而本页没有 `#page-dashboard`；Episodes / Distribution 的子链接（`episode-list` / `podcast-apps` 等）同样没有对应 section。`switchPage()` 遇到缺失的 section 会提前返回并清掉所有 `.active`——**点它们会把内容区清空**。现在这些入口要么是外部链接，要么随子菜单一起移除了。
+
+> 附带修掉的一个问题：Dashboard 原先带 `data-page="dashboard"` 而本页并没有 `#page-dashboard`，`switchPage()` 遇到缺失的 section 会提前返回并清掉所有 `.active`——**点它会把内容区清空**。改成真链接后这个死路没有了。
 
 ### 2.2 交互逻辑
 
@@ -641,6 +658,12 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 - video + RSS Feed URL 路径**不显示缩略图那一行**（该路径的步骤三没有这个选项）。`.wiz-option-row` 带 `display:flex`，所以必须靠 `.wiz-option-row[hidden]` 守卫才能真正隐藏。
 - **放什么、不放什么**（2026-10-15 逐项定稿）：**保留**「已连接的内容源」这一行（用户明确要求在这一屏看到自己连的是哪个播放列表）；**不放**来源 logo、绿色对勾角标与 `Video to Podcast` 来源名。曾按真实产品的参考图放过完整版（logo + 角标 + 来源名 + 已连接内容源），同日删掉了前三项、只把内容源那行加了回来。
 - **区块内容与页面大标题左对齐**：这一屏是完成态面板而不是向导里的某一步，所以去掉 `.wiz-body` 的 36px 缩进——**那 36px 本来就是用来对齐步骤标记的**，而标记在这一屏已经隐藏，对照物没了，缩进就成了凭空的偏移。`applyDoneState()` 用一个 `finishedPanel` 标志同时推导这两件事（隐藏标记、去掉缩进）：**有标记才需要缩进，两者必须同进退**。RSS 结果页仍保留缩进，因为它还显示着步骤标记。
+- **2026-10-15：拿真实产品的参考截图逐项核对过这一屏，四处差异经确认后一律不采纳**，以免以后有人照参考图"修"回去：
+  1. 参考图把「已连接的内容源」放在琥珀条**上面**——用户此前明确要求放在**下面**，维持。
+  2. 参考图的琥珀条文案是旧的 `We will inform you by email once the files are completely imported.`——维持状态在前的那句（理由见 §6.6 的合并说明）。
+  3. 参考图的琥珀条**带 ×**——两条状态条都不带 × 是此前的决定，维持。
+  4. 参考图的开关是**绿色、开着**，名字是 `Future Content Sync`——维持深色轨道、默认关、`Sync future content`（理由见「两个设置开关」一行）。
+  结构部分本来就是一致的：只显示一个开关（缩略图那行在该路径隐藏）、来源显示用户填的 feed 地址。
 - **步骤标记在这一屏整块隐藏**（2026-10-15，用户指出）：视频结果页和 RSS 完成态在屏幕上其实是同一种东西——一块「已完成/进行中」的面板，不是向导里的某一步，所以两者都隐藏步骤标记。判定条件写在 `applyDoneState()` 里：`#wizSteps.hidden = inCompletion || (isVideo && step === 'result')`。
   - **`&& step === 'result'` 这半句不能少**：只写 `isVideo` 会让视频路径在步骤 1–3 上也隐藏标记，用户就点不到步骤标题、无法返回上一步。这是实际写错过一次、被探针当场抓到的。
 
@@ -719,10 +742,10 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 > **Mockup 入口说明**：侧边栏 Settings 下另有一项 **Import to Podbean (complete)**，直接展示上述「文件导入完成后」的页面状态——仅为便于评审，**不属于最终产品的菜单项**。
 
-> **第二个 Mockup 入口：导入状态说明**（2026-10-15）。侧边栏 Settings 下新增一项同名条目，把导入相关的**三种状态**并排放在一页上供对照，方便评审。同样是 **mockup 专用、不属于最终产品的菜单项**。三种状态：① RSS 正在导入（流内完成态）② YouTube Playlist 正在导入（视频结果页）③ 已完成（文件全部导完）。实现要点：
-> - 三张卡片（`.state-card` / `.state-tag`）各自复刻一屏的**整个内容区**，含三屏共用的页面大标题与 tagline（用户要求完整复刻）。
+> **第二个 Mockup 入口：导入状态说明**（2026-10-15）。侧边栏 Settings 下新增一项同名条目，把导入相关的**四种状态**并排放在一页上供对照，方便评审。同样是 **mockup 专用、不属于最终产品的菜单项**。四种状态：① RSS 正在导入（流内完成态）② YouTube Playlist 正在导入 ③ video + RSS Feed URL 正在导入 ④ 已完成（文件全部导完）。实现要点：
+> - 四张卡片（`.state-card` / `.state-tag`）各自复刻一屏的**整个内容区**，含四屏共用的页面大标题与 tagline（用户要求完整复刻）。
 > - **卡片内容由脚本从真实区块克隆而来**（`#importPageHead`、`#wizResultDone`、`#wizResultVideo`、`#page-import-complete .wiz-done`），不是手抄的 markup——这一页被改了十几次的文案很容易手抄过期，克隆让它在结构上不可能过期。
-> - 视频那张卡片的「已连接内容源」值是运行时才写入的，克隆出来会是空的，所以要手工填一个示例值（`Podbean Amplified Season 2`）。
+> - 两张 video 卡片共用 `fillVideoCard(card, sourceText, hasThumbnail)`：写入「已连接内容源」的示例值（YouTube 用播放列表名、video RSS 用 feed 地址），并在 `hasThumbnail === false` 时隐藏缩略图那一行——**按 `[data-mirrors="wizThumb"]` 选，不能用 id**，因为 `cloneInto` 会把所有 id 剥掉。
 > - 克隆时会**剥掉所有 `id` 与 `aria-controls`**：重复 id 会让 `getElementById` 指到克隆体上，把真实页面的连线弄坏。折叠行与开关分别复用 `wireCollapsible(toggle, panel)` 和 `wireSwitch(el)`——**这两个都必须做成可复用的函数**，因为克隆体是在页面初始化之后才生成的，`querySelectorAll(...)` 那一轮永远够不到它们。
 > - **这个 `.page-section` 必须是 `.content` 的子元素**，不能是它的兄弟——放进 `</div>` 之后会拿到错误的列宽（`x230..1737` 而正确值为 `x352..1616`）。验证方式是对同一个元素做**差分测量**：把已知正确页面激活后量一次，再量新页面，两者必须一致。
 
@@ -803,7 +826,23 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | 切换页面 | 自动重置到该页面的第一个 Tab |
 | 未保存修改时切换 | 弹出确认弹框，标题 **"Unsaved Changes"**，文字 "You have unsaved changes. Do you want to leave without saving?"；**Stay** 停留在当前页，**Leave** 丢弃修改并切换；点击弹框之外区域或按 Esc 键同 Stay 行为 |
 
-### 7.6 版本提示（mockup 专用，不属于产品功能）
+### 7.6 mockup 专用：不被搜索引擎检索
+
+这两项都只服务于"把 mockup 分享给团队评审"，不属于产品功能。
+
+**不被搜索引擎收录**（2026-10-15）：
+
+| 位置 | 内容 |
+|---|---|
+| `index.html` `<head>` | `<meta name="robots" content="noindex">` |
+| 仓库根目录 `robots.txt` | `User-agent: *` + `Allow: /`（**刻意不写 `Disallow`**）。放在**仓库根目录**，不是 `Settings/`——站点根是 `…/my-page/`，放子目录里不起作用。注意这份内容**等同不写该文件**（`Allow` 就是默认），写出来只为记录意图 |
+
+- **这两者不是互相补强的，而是会互相抵消**，值得知道再决定：被 `robots.txt` 挡住的爬虫**读不到 `noindex` 标签**，所以 `Disallow` 抑制的是"抓取"，`noindex` 抑制的是"收录"。若要**从搜索结果里彻底消失**，正确做法是**允许抓取 + 只加 `noindex`**；若只想"别来爬"、不在意链接仍可能以无摘要形式出现，则只用 `Disallow`。
+- **最终选择（2026-10-15）：允许抓取 + `noindex`**。目标是「从搜索结果里彻底消失」，所以 `robots.txt` **不写 `Disallow`**——真正起作用的是 `index.html` 里那一行 `noindex`，它必须能被爬虫读到才生效。
+- 注意这只影响搜索引擎，**不改变站点公开的事实**——知道 URL 的人依然能打开。
+
+### 7.7 版本提示（mockup 专用）
+
 
 这个 mockup 会被分享给团队其他人看。两个原因会让他们看到旧版本：
 

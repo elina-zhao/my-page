@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- This mockup is shared by link, not meant to be found in search results.
+       Paired with robots.txt at the repo root. Note the two are not complementary
+       the way they look: a crawler blocked by robots.txt never reads this tag, so
+       Disallow suppresses crawling and this suppresses indexing — see the spec. -->
+  <meta name="robots" content="noindex" />
   <title>Podcast Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -2273,7 +2278,7 @@
 
     <div class="topbar-actions">
       <a class="build-stamp" id="buildStamp" target="_blank" rel="noopener noreferrer" title="Open the commit history"></a>
-      <button class="btn-new-episode">+ New Item</button>
+      <button class="btn-new-episode">+ New Episode</button>
       <button class="icon-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -2298,7 +2303,7 @@
   <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar" id="sidebar">
     <nav class="sidebar-nav">
-      <a href="#" data-page="dashboard">
+      <a href="https://elina-zhao.github.io/my-page/PodcastDashboard/">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7" rx="1"></rect>
@@ -2310,20 +2315,16 @@
         Dashboard
       </a>
 
-      <a href="#">
+      <a href="https://elina-zhao.github.io/my-page/Episodes/">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
           </svg>
         </span>
         <span>Episodes</span>
-        <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
       </a>
-      <div class="sub-menu">
-        <a href="#" data-page="episode-list">Episode List</a>
-      </div>
 
-      <a href="#">
+      <a href="https://melodyw-max.github.io/Podbean-distribution//Distribution-new/">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
@@ -2331,14 +2332,7 @@
           </svg>
         </span>
         <span>Distribution</span>
-        <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
       </a>
-      <div class="sub-menu">
-        <a href="#" data-page="podcast-apps">Podcast Apps</a>
-        <a href="#" data-page="social-share">Social Share</a>
-        <a href="#" data-page="podcast-website">Podcast Website</a>
-        <a href="#" data-page="embed-player">Embed Player</a>
-      </div>
 
       <a href="#">
         <span class="nav-icon">
@@ -3104,7 +3098,7 @@
       <!-- ===== Page: "RSS feed 导入状态说明" — mockup-only review view ===== -->
       <div class="page-section" id="page-rss-import-states">
         <div class="page-heading-title">导入状态说明</div>
-        <p class="page-subtitle">导入相关的三种状态并排放在一页上，便于评审对照。每张卡片各自复刻该状态下整个内容区的样子——页面大标题与 tagline 三种状态共用，始终都在。卡片里的内容由脚本从真实区块克隆而来，所以真实文案改动时这里不会过期。</p>
+        <p class="page-subtitle">导入相关的四种状态并排放在一页上，便于评审对照。每张卡片各自复刻该状态下整个内容区的样子——页面大标题与 tagline 四种状态共用，始终都在。卡片里的内容由脚本从真实区块克隆而来，所以真实文案改动时这里不会过期。</p>
 
         <div class="state-card" id="stateCardNow">
           <span class="state-tag">RSS · 正在导入（剧集名单已拷完，媒体文件仍在导入）</span>
@@ -3112,6 +3106,10 @@
 
         <div class="state-card" id="stateCardVideo">
           <span class="state-tag">YouTube Playlist · 正在导入</span>
+        </div>
+
+        <div class="state-card" id="stateCardVideoRss">
+          <span class="state-tag">video + RSS Feed URL · 正在导入</span>
         </div>
 
         <div class="state-card" id="stateCardDone">
@@ -3504,7 +3502,11 @@
       document.getElementById('sidebarOverlay').classList.toggle('show');
     }
 
-    // Sidebar: Dashboard (direct page switch)
+    // Sidebar: top-level `a[data-page]` links.
+    // NOTE (2026-10-15): this now matches NOTHING — Dashboard was the only such
+    // link and it is a real href to the separate PodcastDashboard mockup, so it
+    // carries no `data-page`. Kept for the next top-level page added; the
+    // unsaved-changes flow below is still live for the sub-menu handler.
     document.querySelectorAll('.sidebar-nav > a[data-page]').forEach(function(link) {
       link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -4179,8 +4181,10 @@
     // ==============================================
     (function initImportStatesPage() {
       var nowCard = document.getElementById('stateCardNow');
+      var videoCard = document.getElementById('stateCardVideo');
+      var videoRssCard = document.getElementById('stateCardVideoRss');
       var doneCard = document.getElementById('stateCardDone');
-      if (!nowCard || !doneCard) return;
+      if (!nowCard || !videoCard || !videoRssCard || !doneCard) return;
 
       // The cards are CLONES of the live blocks rather than hand-copied markup,
       // so this page cannot fall out of step with the real screens when their
@@ -4201,21 +4205,29 @@
       }
 
       var head = document.getElementById('importPageHead');
-      var videoCard = document.getElementById('stateCardVideo');
       // every screen carries the same page head — it is never hidden in the wizard
-      cloneInto(nowCard, head);
-      cloneInto(videoCard, head);
-      cloneInto(doneCard, head);
+      [nowCard, videoCard, videoRssCard, doneCard].forEach(function (card) {
+        cloneInto(card, head);
+      });
       cloneInto(nowCard, document.getElementById('wizResultDone'));
 
-      // The video card's connected-source value is written by the wizard at run
-      // time, so the clone needs a sample put into it or the line renders empty.
-      var videoCopy = cloneInto(videoCard, document.getElementById('wizResultVideo'));
-      if (videoCopy) {
-        var connected = videoCopy.querySelector('.wiz-source-connected a');
-        if (connected) connected.textContent = 'Podbean Amplified Season 2';
-        videoCopy.querySelectorAll('.pb-switch').forEach(wireSwitch);
+      // The connected-source value is written by the wizard at run time, so each
+      // clone needs a sample put into it or the line renders empty. The video-RSS
+      // screen also has no thumbnail setting, so that row is hidden there.
+      function fillVideoCard(card, sourceText, hasThumbnail) {
+        var copy = cloneInto(card, document.getElementById('wizResultVideo'));
+        if (!copy) return;
+        var connected = copy.querySelector('.wiz-source-connected a');
+        if (connected) connected.textContent = sourceText;
+        if (!hasThumbnail) {
+          // selected by data-mirrors: cloneInto strips ids, so the row's id is gone
+          var row = copy.querySelector('[data-mirrors="wizThumb"]');
+          if (row) row.hidden = true;
+        }
+        copy.querySelectorAll('.pb-switch').forEach(wireSwitch);
       }
+      fillVideoCard(videoCard, 'Podbean Amplified Season 2', true);
+      fillVideoCard(videoRssCard, 'https://feed.podbean.com/PBvideo/feed.xml', false);
 
       var doneCopy = cloneInto(doneCard, document.querySelector('#page-import-complete .wiz-done'));
       if (doneCopy) {
