@@ -54,6 +54,7 @@
    - [6.4 导入状态](#64-导入状态)
    - [6.5 301 Redirect 校验](#65-301-redirect-校验)
    - [6.6 校验成功后的完成态](#66-校验成功后的完成态)
+   - [6.7 免费账号（Free plan）：不能开始导入](#67-免费账号free-plan不能开始导入)
 7. [全局交互规则](#7-全局交互规则)
    - [7.1 Save Bar（底部保存栏）](#71-save-bar底部保存栏)
    - [7.2 修改检测](#72-修改检测)
@@ -747,6 +748,46 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 > - 两张 video 卡片共用 `fillVideoCard(card, sourceText, hasThumbnail)`：写入「已连接内容源」的示例值（YouTube 用播放列表名、video RSS 用 feed 地址），并在 `hasThumbnail === false` 时隐藏缩略图那一行——**按 `[data-mirrors="wizThumb"]` 选，不能用 id**，因为 `cloneInto` 会把所有 id 剥掉。
 > - 克隆时会**剥掉所有 `id` 与 `aria-controls`**：重复 id 会让 `getElementById` 指到克隆体上，把真实页面的连线弄坏。折叠行与开关分别复用 `wireCollapsible(toggle, panel)` 和 `wireSwitch(el)`——**这两个都必须做成可复用的函数**，因为克隆体是在页面初始化之后才生成的，`querySelectorAll(...)` 那一轮永远够不到它们。
 > - **这个 `.page-section` 必须是 `.content` 的子元素**，不能是它的兄弟——放进 `</div>` 之后会拿到错误的列宽（`x230..1737` 而正确值为 `x352..1616`）。验证方式是对同一个元素做**差分测量**：把已知正确页面激活后量一次，再量新页面，两者必须一致。
+
+---
+
+### 6.7 免费账号（Free plan）：不能开始导入
+
+> **Mockup 入口**：侧边栏 Settings 下新增一项 **Import to Podbean (free)**，展示**免费账号**走到步骤三时的状态。与 Import to Podbean (complete)、导入状态说明 一样，**仅用于评审，不属于最终产品的菜单项**。
+
+**实现方式：同一个向导 + 一个模式开关。** 本页的三步向导只有**一份** markup 和**一份** JS（`initImportWizard`），免费版不是第二份拷贝：
+
+- 侧边栏那条 `data-page="import-free"` 经 `PAGE_SECTION_ALIAS = { 'import-free': 'import-to-podbean' }` 解析到**同一个 `.page-section`**；`switchPage()` 仅当目标 section 是它时调用 `window.setImportMode(page === 'import-free')`。
+- **为什么不做第二份**：三步向导的 markup 加 IIFE 有几百行且 id 密集，本文件既无 git 也无备份，两份拷贝第一次只改一侧就开始漂移——而且免费版的步骤一/步骤二本来就必须和付费版逐像素一致。
+- `setImportMode` 只做两件事：改 `freeMode`、`render()`。**它不重置向导**——已做的选择全部保留，于是在两条菜单之间来回点就是对比同一步在两种模式下差异的最快方式（有意为之，不是副作用）。
+
+**差异只出现在步骤三（Review and start）**；步骤一、步骤二与付费版完全一致（参考图里免费账号同样能选来源、填地址，限制落在"开始"这一步）。
+
+| 免费版步骤三 | 付费版 |
+|---|---|
+| `Start import` 按钮**隐藏** | 显示 |
+| 原按钮的位置改为升级 CTA，右侧跟一句 `Enjoy a 14-day free trial!` | 无 |
+| Terms of Service 勾选行**隐藏** | 显示 |
+| 选项（bring over / audio format / 音视频输出 / Options）**照常可交互** | 一致 |
+
+- **升级按钮的文案取决于选项**，派生自当前选择而不是存一份副本（`upgradePlanLabel()` 读的是当前来源 + `input[name="wizOutput"][value="video"]:checked`）：
+
+| 路径 | 输出 | CTA 文案 |
+|---|---|---|
+| RSS Feed URL | 音频 | `Upgrade to Unlimited Audio Plan for Imports` |
+| Video + YouTube Playlist，选 `Convert to Audio Podcasts` | 音频 | `Upgrade to Unlimited Audio Plan for Imports` |
+| Video + YouTube Playlist，选 `Convert to Video Podcasts` | 视频 | `Upgrade to Unlimited Plus Plan for Imports` |
+| Video + RSS Feed URL | 音频（强制转 MP3，用户没有选择） | `Upgrade to Unlimited Audio Plan for Imports` |
+
+  - 因此 `Convert to Audio Podcasts / Convert to Video Podcasts` 这一组**必须在切换时刷新 CTA 文案**——页面上没有别的东西监听这组 radio，不刷新的话文案会停在上一次选择对应的方案。
+  - 四条路径里只有"视频播客"需要 Plus：视频 RSS 一定转 MP3，所以它不是例外。
+
+- **CTA 放在 `#wizNav` 内部**，而不是另外追加在面板末尾。`render()` 把 `nav` 移动到当前步骤 body 的末尾，把 CTA 放进同一个 nav，它自然落在 `Start import` 原来的位置，不必再维护一套 append 顺序（这正是条款行排在按钮后面需要的那套顺序）。
+- **条款行随按钮一起隐藏**：它授权的是"点击 Start import"，没有按钮就没有授权对象，参考图的免费流程里也没有这一行。`.pb-check-line[hidden]` 的 `display:none` 守卫早就在，所以隐藏是真隐藏。
+- 升级按钮点击后**只弹 toast** `Opening upgrade plans…`：本 mockup 没有计费流程，与其假装跳转，不如说明它要去哪。**它不会开始导入**——`#wizNext` 的 step 3 分支开头有 `if (freeMode) return;`（按钮已隐藏，这条是兜底，与 YouTube 搜索那条同类）。因此免费版**永远到不了导入中 / 完成态**，步骤三之后没有出路。
+- **两条菜单在步骤三之前长得一模一样**（页头也没有 Free 标识）——这是评审时的选择：限制只落在"开始"这一步，不做提前劝退。若要一眼分辨当前模式，最小的改法是在页头标题旁加一个 `Free plan` chip（`#importPageHead` 一直被渲染，见 6.0）。
+
+**验证方式**：探针跑通全部四条路径 ×（付费 / 免费），断言 CTA 文案、试用文案、`Start import` 与条款行的可见性、两者不会同时出现、升级点击弹 toast 且不进入导入、切回付费菜单后按钮与条款行复原、免费模式下步骤一/二仍只有一个 Continue 按钮，外加 `window errors = none`、无重复 id、无横向溢出。可见性一律用 `offsetParent` 断言，**不读 `hidden` 属性**——作者样式会盖掉 `[hidden]`，本文件已经因为这个漏掉过一次真实缺陷。
 
 ---
 

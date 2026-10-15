@@ -1636,6 +1636,15 @@
     /* No Back button: a step's own header is the only way back, so the nav is
        just the forward action. */
 
+    /* Free plan: step 3's forward button becomes the upgrade CTA, with the
+       trial note beside it — the reference has the two on one row. */
+    .wiz-free-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .wiz-free-trial { font-size: 14px; color: var(--text); white-space: nowrap; }
+
     /* Live import status — the same chip in the result card and beside the
        wait step, with the refresh action that resolves it */
     .wiz-status-chip {
@@ -1839,6 +1848,8 @@
     .wiz-next-note[hidden],
     .pb-check-line[hidden],
     .wiz-option-row[hidden],
+    .import-btn[hidden],
+    .wiz-free-actions[hidden],
     #wizResultNext[hidden] { display: none; }
 
     /* Modal */
@@ -2309,6 +2320,10 @@
         <a href="#" data-page="feed">Feed</a>
         <a href="#" data-page="plugin">Plugin</a>
         <a href="#" data-page="import-to-podbean">Import to Podbean</a>
+        <!-- Mockup-only entry: the same wizard in free-plan mode. It resolves to
+             the import page-section (see PAGE_SECTION_ALIAS in switchPage) and
+             only flips the mode, so there is no second copy of the wizard. -->
+        <a href="#" data-page="import-free">Import to Podbean (free)</a>
         <a href="#" data-page="import-complete">Import to Podbean (complete)</a>
         <a href="#" data-page="rss-import-states">导入状态说明</a>
       </div>
@@ -2997,6 +3012,15 @@
         <!-- Wizard nav — JS moves it into the active step's body -->
         <div class="wiz-nav" id="wizNav">
           <button type="button" class="import-btn" id="wizNext">Continue</button>
+          <!-- Free plan: at step 3 a free account cannot start the import, so the
+               forward action becomes the upgrade CTA. It lives inside the nav on
+               purpose — the nav is the one element render() parks under the open
+               step, so the CTA lands exactly where "Start import" was instead of
+               needing its own append order. -->
+          <span class="wiz-free-actions" id="wizFreeActions" hidden>
+            <button type="button" class="import-btn" id="wizUpgradeBtn">Upgrade to Unlimited Audio Plan for Imports</button>
+            <span class="wiz-free-trial">Enjoy a 14-day free trial!</span>
+          </span>
         </div>
       </div>
 
@@ -3669,11 +3693,23 @@
     // ==============================================
     // Page switching + save bars
     // ==============================================
+    // The free-plan demo is the SAME wizard in a different mode, so its menu
+    // entry resolves to the import page-section and only flips a flag. A second
+    // copy of the 3-step wizard (markup + IIFE) would drift from this one the
+    // first time either was edited, and this file has no version control.
+    var PAGE_SECTION_ALIAS = { 'import-free': 'import-to-podbean' };
+
     function switchPage(page) {
       document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
-      var target = document.getElementById('page-' + page);
+      var target = document.getElementById('page-' + (PAGE_SECTION_ALIAS[page] || page));
       if (!target) return;
       target.classList.add('active');
+
+      // Only the two import entries touch the plan mode — every other page
+      // leaves the wizard exactly as it was left.
+      if (target.id === 'page-import-to-podbean' && typeof window.setImportMode === 'function') {
+        window.setImportMode(page === 'import-free');
+      }
 
       // Capture initial state of the new page
       captureState();
@@ -4245,6 +4281,13 @@
       var step = 1;      // 1 | 2 | 3 | 'result'
       var urls = {};     // one URL remembered per source, so going back is cheap
 
+      // Free-plan demo. It is this same wizard with one mode flag: at step 3 a
+      // free account cannot start the import, so the forward action becomes the
+      // upgrade CTA. Set through window.setImportMode, which switchPage calls for
+      // the "Import to Podbean (free)" menu entry. Steps 1 and 2 are deliberately
+      // identical in both modes — the reference only gates the start.
+      var freeMode = false;
+
       // Video only: which of the two video sources is chosen, and what was typed
       // into each. Kept apart from `urls` because a YouTube import is identified
       // by channel + playlist, not by a single URL.
@@ -4255,6 +4298,8 @@
       var step2Label = document.getElementById('wizStep2Label');
       var nav = document.getElementById('wizNav');
       var nextBtn = document.getElementById('wizNext');
+      var freeActions = document.getElementById('wizFreeActions');
+      var upgradeBtn = document.getElementById('wizUpgradeBtn');
       var pickError = document.getElementById('importPickError');
       var field = page.querySelector('[data-wiz-panel="2"] .import-field');
       var urlInput = document.getElementById('wizUrl');
@@ -4417,6 +4462,20 @@
         }
       }
 
+      // Free plan only: which plan the step-3 choices need, so the CTA names the
+      // one that would actually unblock this import. Everything the wizard can
+      // import comes out as audio — video + RSS Feed URL is converted to MP3 with
+      // no say in the matter — so "Unlimited Plus" is needed in exactly one case:
+      // a YouTube playlist published as a video podcast. Derived from the checked
+      // radio rather than a stored copy, so the label cannot outlive the choice.
+      function upgradePlanLabel() {
+        var wantsVideo = key === 'video' && videoSrc === 'youtube' &&
+          !!page.querySelector('input[name="wizOutput"][value="video"]:checked');
+        return wantsVideo
+          ? 'Upgrade to Unlimited Plus Plan for Imports'
+          : 'Upgrade to Unlimited Audio Plan for Imports';
+      }
+
       // Whether the nav is on screen. It used to be one variable (the wizard is
       // finished), and now the YouTube path also holds it back until Search has
       // produced the playlist — there is nothing to continue to before that.
@@ -4472,6 +4531,19 @@
 
         applyNavState();
         nextBtn.textContent = step === 3 ? 'Start import' : 'Continue';
+
+        // Free plan: step 3's forward action is the upgrade CTA instead of
+        // "Start import" — a free account cannot run the import. The two swap
+        // places inside the same nav, so the step still has exactly one action
+        // and applyNavState() keeps owning whether the row is on screen at all.
+        var freeCta = freeMode && step === 3;
+        nextBtn.hidden = freeCta;
+        freeActions.hidden = !freeCta;
+        if (freeCta) upgradeBtn.textContent = upgradePlanLabel();
+        // The terms line authorises pressing the button; with no button there is
+        // nothing to agree to, so it goes with it (the reference has no terms row
+        // on the free flow either).
+        agreeLine.hidden = freeMode;
 
         if (step === 2) {
           renderStep2();
@@ -4569,6 +4641,11 @@
           return;
         }
         if (step === 3) {
+          // Belt and braces: on a free account step 3 has no Start import button
+          // (render swaps in the upgrade CTA), so this is unreachable through the
+          // UI — kept so a revealed button can never start an import the account
+          // cannot run.
+          if (freeMode) return;
           if (!agree.checked) {
             agreeLine.classList.add('is-error');
             agreeLine.scrollIntoView({ block: 'nearest' });
@@ -4722,6 +4799,33 @@
       // user removed it on 2026-10-15), so this handler is gone with it. The
       // dedicated Import to Podbean (complete) page keeps its own
       // #wizReimportComplete. Note the in-flow state now has NO exit at all.
+
+      // The output pair is the only step-3 choice the free CTA's plan name
+      // depends on, and nothing else on the page reacts to it — so switching
+      // between audio and video has to refresh the label itself, or the CTA
+      // would keep naming the plan the previous choice needed.
+      page.querySelectorAll('input[name="wizOutput"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          if (freeMode && step === 3) upgradeBtn.textContent = upgradePlanLabel();
+        });
+      });
+
+      // The upgrade CTA is the free flow's terminal action. There is no billing
+      // flow in this mockup, so it says where it would go rather than pretending
+      // to navigate anywhere.
+      upgradeBtn.addEventListener('click', function () {
+        showToast('Opening upgrade plans…');
+      });
+
+      // One owner for the plan mode, called by switchPage for the two import menu
+      // entries. It re-renders instead of resetting, so the wizard keeps the
+      // choices already made — flipping between the two entries is the fastest
+      // way to compare what step 3 does in each mode.
+      window.setImportMode = function (isFree) {
+        if (freeMode === isFree) return;
+        freeMode = isFree;
+        render();
+      };
 
       render();
     })();
