@@ -669,7 +669,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 |---|---|
 | **建议说明** | We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across. |
 | **通知条**（浅黄底、无边框） | We will inform you by email once the files are completely imported. |
-| **Next:** | **两条**带深色图标与链接的后续建议（2026-10-15 由原来一条拆成两条）：<br>1. You can review the **podcast information**.<br>2. You can review the **episode list**.<br>拆条时两句各带一遍 "making any necessary adjustments"，读起来重复，已从两句都去掉——"review" 本身已含"看过再改"的意思。<br>~~提交到 podcast apps / 加入 Ads Marketplace~~ 两条已于同日删除（流内完成态与 `#page-import-complete` 页面两处一并删除，保持两个视图内容一致） |
+| **Next:** | **两条**带深色图标与链接的后续建议（2026-10-15 由原来一条拆成两条）：<br>1. You can review the **podcast information** and adjust the show settings.<br>2. You can review the **episode list** and edit any episodes.<br>两句的尾巴**动词不同**（adjust / fix）——拆条时两句各带一遍 "making any necessary adjustments" 读起来重复，所以没有沿用同一句收尾。<br>~~提交到 podcast apps / 加入 Ads Marketplace~~ 两条已于同日删除（流内完成态与 `#page-import-complete` 页面两处一并删除，保持两个视图内容一致） |
 | **重新导入** | Click **here** if you want to re-import content. —— 点击返回步骤一重新开始 |
 
 进入完成态时同时发生两处调整：
