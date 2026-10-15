@@ -562,6 +562,8 @@ Continue 是唯一的入口按钮：未选择时点击 Continue，在列表下�
 | **Podcast details and episodes**（默认） | 剧集与节目资料（标题、简介、封面、分类及 Apple Podcasts 设置）均从 feed 带入，**覆盖当前节目资料** |
 | **Episodes only** | 只带入剧集，现有节目资料保持不变 |
 
+「Podcast details and episodes」右侧的 ⓘ 文案：**「Brings over the episodes, the show details and Apple Podcasts settings.」**（2026-10-15 统一：这一组在 RSS 路径与 video + RSS Feed URL 路径共用，此前两条路径各写一版——video 那版写的是「…and the video titles and artwork.」，用户要求两条路径统一。代码里改成**只定义一次**（`SCOPE_INFO` 常量，两处 `scopeInfo` 引用它），避免以后改一边漏一边。）
+
 音频格式（单选，二选一）
 
 | 选项 | 说明 |

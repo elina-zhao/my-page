@@ -4237,6 +4237,11 @@
 
       var TERMS_LINK = ' <a href="https://www.podbean.com/podbean-terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.';
 
+      // The ⓘ on "Podcast details and episodes". Both sources show the same
+      // group and the same list of what arrives, so the text is defined once and
+      // pointed at twice — as two copies they would drift apart.
+      var SCOPE_INFO = 'Brings over the episodes, the show details and Apple Podcasts settings.';
+
       var SOURCES = {
         rss: {
           name: 'RSS Feed URL',
@@ -4244,7 +4249,7 @@
           step2: 'Enter your feed URL',
           fieldLabel: 'RSS Feed URL',
           requiredMsg: 'Please enter your RSS feed URL',
-          scopeInfo: 'Brings over the episodes, the show details and Apple Podcasts settings.',
+          scopeInfo: SCOPE_INFO,
           formatConvertDesc: 'Converts your audio after you complete the 301 redirect.',
           placeholder: 'https://feeds.example.com/myshow.xml',
           hint: 'Example: https://feeds.podbean.org/elinazplus/feed.xml',
@@ -4262,7 +4267,7 @@
           ytRequiredMsg: 'Please enter your YouTube channel handle',
           ytSearchMsg: 'Click Search to load the playlists for this channel',
           rssRequiredMsg: 'Please enter your video RSS feed URL',
-          scopeInfo: 'Brings over the episodes, the show details and the video titles and artwork.',
+          scopeInfo: SCOPE_INFO,
           formatConvertDesc: 'Converts your audio after the import finishes.',
           // the video import has no redirect, and the wording follows whichever
           // of the two video sources was used
