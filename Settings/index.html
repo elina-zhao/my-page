@@ -2178,55 +2178,6 @@
     .pb-editor.is-error .pb-editor-body { border-bottom: 2px solid #dc2626; }
     .pb-tab.has-error { color: #dc2626; }
     .pb-tab.has-error::after { content: ' ⚠'; }
-    /* Build stamp + "newer version" notice. NOT part of the mockup's product UI:
-       GitHub Pages caches HTML for 10 minutes and an open tab never re-checks on
-       its own, so the team needs a way to tell whether what they are looking at
-       is the latest push. */
-    .build-stamp {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      text-decoration: none;
-      white-space: nowrap;
-      margin-right: 4px;
-    }
-    .build-stamp:hover { color: var(--text-secondary); text-decoration: underline; }
-    .update-banner {
-      position: fixed;
-      right: 24px;
-      bottom: 24px;
-      z-index: 320;               /* above the transient toast */
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: var(--text);
-      color: #fff;
-      padding: 14px 14px 14px 20px;
-      border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-      font-size: 14px;
-    }
-    .update-banner[hidden] { display: none; }
-    .update-banner .update-reload {
-      font: inherit;
-      font-weight: 600;
-      color: var(--text);
-      background: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 7px 16px;
-      cursor: pointer;
-    }
-    .update-banner .update-dismiss {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      font-size: 18px;
-      line-height: 1;
-      padding: 2px 4px;
-      cursor: pointer;
-    }
-    .update-banner .update-dismiss:hover { color: #fff; }
-
     .pb-toast {
       position: fixed;
       bottom: 80px;
@@ -2277,7 +2228,6 @@
     </div>
 
     <div class="topbar-actions">
-      <a class="build-stamp" id="buildStamp" target="_blank" rel="noopener noreferrer" title="Open the commit history"></a>
       <button class="btn-new-episode">+ New Episode</button>
       <button class="icon-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2289,13 +2239,7 @@
     </div>
   </header>
 
-  <!-- "A newer version is available" — a meta affordance for the team reviewing
-       this mockup, not part of the product -->
-  <div class="update-banner" id="updateBanner" hidden>
-    <span>A newer version of this page is available.</span>
-    <button type="button" class="update-reload" id="updateReload">Reload</button>
-    <button type="button" class="update-dismiss" id="updateDismiss" aria-label="Dismiss">&times;</button>
-  </div>
+
 
   <!-- ===== SIDEBAR OVERLAY ===== -->
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -4782,54 +4726,6 @@
       render();
     })();
 
-    // ==============================================
-    // "Is the page I'm looking at the latest push?" — a meta affordance for the
-    // team, not part of the product. GitHub Pages caches HTML for 10 minutes and
-    // an open tab never re-checks by itself, so the page polls version.json
-    // (written by the sync step) and announces a change.
-    // Fails silently when the file is absent or fetch is unavailable — the
-    // design preview and a local file:// open both land there.
-    // ==============================================
-    (function initVersionWatch() {
-      var stamp = document.getElementById('buildStamp');
-      var banner = document.getElementById('updateBanner');
-      var reloadBtn = document.getElementById('updateReload');
-      var dismissBtn = document.getElementById('updateDismiss');
-      if (!stamp || !banner || typeof fetch !== 'function') return;
-
-      var loaded = null;    // the version this tab started with
-      var latest = null;    // the newest version seen
-      var dismissed = null; // a version the reader already waved away
-
-      function readVersion() {
-        return fetch('version.json?_=' + Date.now(), { cache: 'no-store' })
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .catch(function () { return null; });
-      }
-
-      function check() {
-        readVersion().then(function (data) {
-          if (!data || !data.built) return;
-          latest = data.built;
-          if (loaded === null) {
-            loaded = data.built;
-            stamp.textContent = 'Updated ' + (data.label || data.built);
-            stamp.href = 'https://github.com/elina-zhao/my-page/commits/main/Settings';
-            return;
-          }
-          if (data.built !== loaded && data.built !== dismissed) banner.hidden = false;
-        });
-      }
-
-      reloadBtn.addEventListener('click', function () { location.reload(); });
-      dismissBtn.addEventListener('click', function () {
-        dismissed = latest;
-        banner.hidden = true;
-      });
-
-      check();
-      setInterval(check, 90000);   // 90s — GitHub Pages' own HTML cache is 10 min
-    })();
   </script>
 
 </body>
