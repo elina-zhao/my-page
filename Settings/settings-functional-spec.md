@@ -588,7 +588,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 | 选项 | 默认 | ⓘ 提示文案 |
 |---|---|---|
-| **Sync future content** | **不勾选** | 「Videos added after this import become new episodes automatically.」（**自定义文案**）——对应步骤二提示里的 "sync future content as you prefer" |
+| **Sync future content** | **不勾选** | 「Automatically import and publish newly added content from your connected content source.」（**真实产品文案**，2026-10-15 由自拟文案替换）——对应步骤二提示里的 "sync future content as you prefer" |
 | **Import YouTube Thumbnail as podcast and episode logos** | 不勾选 | 「Note: The YouTube Thumbnail may not fit the square podcast and episode logo.」——选项名本身已经写明缩略图会成为播客与剧集的 logo，所以 ⓘ 收窄为只保留这条方形适配提醒（2026-10-15） |
 
 **② Content Source = RSS Feed URL**
@@ -625,20 +625,22 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 开始导入后，页面顶部显示导入状态卡片，并在重定向步骤旁重复同一状态：
 
-**Video 路径有自己的一套结果页（2026-10-15 新增）**，不含状态卡片、也不含重定向区块（视频导入没有 301 重定向）。`#wizResultVideo` 的结构自上而下：
+**Video 路径：点 Start import 后直接进入「正在导入」页，没有状态卡片**（2026-10-15 定稿）。视频导入没有 301 重定向，也就不需要「Refresh status / Check redirect」那一套，所以视频路径**不显示** `RSS import / Video import` 那张状态卡片，也不显示重定向区块。它的结果区只有：
 
 | 元素 | 内容 |
 |---|---|
-| **来源标识** | 72×50 圆角来源图标 + 右上角绿色对勾角标（`#16a34a`，与状态胶囊同一绿）。YouTube Playlist 路径为 YouTube 红（`#ff0000`）；video + RSS Feed URL 路径换成步骤一那个紫色视频图标（`#7c3aed`，`is-video-rss`） |
-| **来源名** | `Video to Podcast` |
-| **已连接的内容源** | `Connected Content Source: <链接>` —— YouTube 路径显示用户选的播放列表名，video RSS 路径显示他填的 feed 地址。值取自 `video.ytPlaylist` / `video.rss`，不是固定文案 |
-| **状态条** | 琥珀条，文案 `Importing your media files — we'll email you once they're done.`（与 RSS 流内完成态同一句），**不带 ×** |
-| **两个设置开关** | `Sync future content` 与 `Import YouTube Thumbnail as podcast and episode logos`，各带 ⓘ，用 `.pb-switch` |
+| **状态条**（琥珀，最上方） | `Importing your media files — we'll email you once they're done.`——与 RSS 流内完成态同一句、同一组件，**不带 ×** |
+| **已连接的内容源** | `Connected Content Source: <链接>`（14px / 正文色），位置在状态条**下面**（2026-10-15 从上面调下来）。YouTube Playlist 路径显示用户选的**播放列表名**；video + RSS Feed URL 路径显示他填的 **feed 地址**。值取自 `video.ytPlaylist` / `video.rss`，不是固定文案 |
+| **两个设置开关** | `Sync future content` 与 `Import YouTube Thumbnail as podcast and episode logos`，各带 ⓘ，行间距 `margin-top: 18px`；**开关紧跟在标签之后（12px）**，不推到行尾——12px 读起来是「一个控件」，撑满整行读起来是「两栏」；标签字号 **14px**，与上面的已连接内容源一致（2026-10-15 两处调整，均为用户指出） |
 
-- **开关与步骤三的勾选框是同一个设置**，所以 `syncResultSwitches()` 在每次渲染时把开关对齐到对应勾选框，开关被点击时写回勾选框（`data-mirrors` 指明镜像哪个 id）。一个设置、一个状态、两处可见——这是避免两处说法不一致的唯一办法。
-- **video + RSS Feed URL 路径不显示缩略图那一行**：那条路径的步骤三根本没有这个选项（`#wizThumbRowResult` 按路径隐藏）。注意它带 `display:flex`，所以必须靠 `.wiz-option-row[hidden]` 守卫才能真正隐藏。
-- 开关在 mockup 里沿用既有的 `.pb-switch`（开启为深色轨道），**没有照参考图改成绿色**——页面上的开关在 Feed 页已经是这个样式，为这一屏另加一个绿色变体会让同一控件出现两种样子。
+**这一屏四段文字统一为 14px**（琥珀条、已连接内容源、两个开关标签），颜色为正文色 `--text`。`.wiz-option-row` 必须显式写 `font-size: 14px`——**不写会继承到 16px**，与上面一行看起来不齐。
 
+- **开关与步骤三的勾选框是同一个设置**：每次渲染时 `syncResultSwitches()` 把开关对齐到对应勾选框，点击开关写回勾选框（`data-mirrors` 指明镜像哪个 id）。一个设置、一个状态、两处可见。
+- video + RSS Feed URL 路径**不显示缩略图那一行**（该路径的步骤三没有这个选项）。`.wiz-option-row` 带 `display:flex`，所以必须靠 `.wiz-option-row[hidden]` 守卫才能真正隐藏。
+- **放什么、不放什么**（2026-10-15 逐项定稿）：**保留**「已连接的内容源」这一行（用户明确要求在这一屏看到自己连的是哪个播放列表）；**不放**来源 logo、绿色对勾角标与 `Video to Podcast` 来源名。曾按真实产品的参考图放过完整版（logo + 角标 + 来源名 + 已连接内容源），同日删掉了前三项、只把内容源那行加了回来。
+- **区块内容与页面大标题左对齐**：这一屏是完成态面板而不是向导里的某一步，所以去掉 `.wiz-body` 的 36px 缩进——**那 36px 本来就是用来对齐步骤标记的**，而标记在这一屏已经隐藏，对照物没了，缩进就成了凭空的偏移。`applyDoneState()` 用一个 `finishedPanel` 标志同时推导这两件事（隐藏标记、去掉缩进）：**有标记才需要缩进，两者必须同进退**。RSS 结果页仍保留缩进，因为它还显示着步骤标记。
+- **步骤标记在这一屏整块隐藏**（2026-10-15，用户指出）：视频结果页和 RSS 完成态在屏幕上其实是同一种东西——一块「已完成/进行中」的面板，不是向导里的某一步，所以两者都隐藏步骤标记。判定条件写在 `applyDoneState()` 里：`#wizSteps.hidden = inCompletion || (isVideo && step === 'result')`。
+  - **`&& step === 'result'` 这半句不能少**：只写 `isVideo` 会让视频路径在步骤 1–3 上也隐藏标记，用户就点不到步骤标题、无法返回上一步。这是实际写错过一次、被探针当场抓到的。
 
 
 | 状态 | 文案 | 表现 |
@@ -715,10 +717,11 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 > **Mockup 入口说明**：侧边栏 Settings 下另有一项 **Import to Podbean (complete)**，直接展示上述「文件导入完成后」的页面状态——仅为便于评审，**不属于最终产品的菜单项**。
 
-> **第二个 Mockup 入口：RSS feed 导入状态说明**（2026-10-15）。侧边栏 Settings 下新增一项同名条目，把两种完成状态并排放在一页上供对照，方便评审。同样是 **mockup 专用、不属于最终产品的菜单项**。实现要点：
-> - 两张卡片（`.state-card` / `.state-tag`）各自复刻一屏的**整个内容区**，含两屏共用的页面大标题与 tagline（用户要求完整复刻）。
-> - **卡片内容由脚本从真实区块克隆而来**（`#importPageHead`、`#wizResultDone`、`#page-import-complete .wiz-done`），不是手抄的 markup——这一页被改了十几次的文案很容易手抄过期，克隆让它在结构上不可能过期。
-> - 克隆时会**剥掉所有 `id` 与 `aria-controls`**：重复 id 会让 `getElementById` 指到克隆体上，把真实页面的连线弄坏。折叠行复用同一个 `wireCollapsible(toggle, panel)`。
+> **第二个 Mockup 入口：导入状态说明**（2026-10-15）。侧边栏 Settings 下新增一项同名条目，把导入相关的**三种状态**并排放在一页上供对照，方便评审。同样是 **mockup 专用、不属于最终产品的菜单项**。三种状态：① RSS 正在导入（流内完成态）② YouTube Playlist 正在导入（视频结果页）③ 已完成（文件全部导完）。实现要点：
+> - 三张卡片（`.state-card` / `.state-tag`）各自复刻一屏的**整个内容区**，含三屏共用的页面大标题与 tagline（用户要求完整复刻）。
+> - **卡片内容由脚本从真实区块克隆而来**（`#importPageHead`、`#wizResultDone`、`#wizResultVideo`、`#page-import-complete .wiz-done`），不是手抄的 markup——这一页被改了十几次的文案很容易手抄过期，克隆让它在结构上不可能过期。
+> - 视频那张卡片的「已连接内容源」值是运行时才写入的，克隆出来会是空的，所以要手工填一个示例值（`Podbean Amplified Season 2`）。
+> - 克隆时会**剥掉所有 `id` 与 `aria-controls`**：重复 id 会让 `getElementById` 指到克隆体上，把真实页面的连线弄坏。折叠行与开关分别复用 `wireCollapsible(toggle, panel)` 和 `wireSwitch(el)`——**这两个都必须做成可复用的函数**，因为克隆体是在页面初始化之后才生成的，`querySelectorAll(...)` 那一轮永远够不到它们。
 > - **这个 `.page-section` 必须是 `.content` 的子元素**，不能是它的兄弟——放进 `</div>` 之后会拿到错误的列宽（`x230..1737` 而正确值为 `x352..1616`）。验证方式是对同一个元素做**差分测量**：把已知正确页面激活后量一次，再量新页面，两者必须一致。
 
 ---

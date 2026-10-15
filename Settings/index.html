@@ -1712,42 +1712,9 @@
       line-height: 1.6;
       margin: 0 0 20px;
     }
-    /* ---- Video import: the connected source, shown while the files import ---- */
-    .wiz-source-wrap {
-      position: relative;         /* the verified badge hangs off the corner */
-      display: inline-block;
-      margin-bottom: 14px;
-    }
-    .wiz-source-logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 72px;
-      height: 50px;
-      border-radius: 12px;
-      background: #ff0000;        /* YouTube; the video-RSS path swaps it below */
-      color: #fff;
-    }
-    .wiz-source-logo.is-video-rss { background: #7c3aed; }
-    .wiz-source-badge {
-      position: absolute;
-      top: -7px;
-      right: -7px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #16a34a;        /* the same green as the status chips */
-      color: #fff;
-      border: 2px solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .wiz-source-name {
-      font-size: 14px;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
+    /* ---- Video import: lands straight on the importing screen, so there is no
+       status card — the connected source, an amber bar, and the two settings it
+       collected ---- */
     .wiz-source-connected {
       font-size: 14px;
       color: var(--text);
@@ -1757,11 +1724,16 @@
       position: relative;         /* the ⓘ tooltip hangs off this row */
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 24px;
+      /* the switch follows the label rather than being pushed to the far edge —
+         a 12px gap reads as one control, a full-width gap reads as two columns */
+      justify-content: flex-start;
+      gap: 12px;
       margin-top: 18px;
+      /* 14px, the same as the connected-source line above. Without this the label
+         inherits 16px from further up and the two lines look mismatched. */
+      font-size: 14px;
+      color: var(--text);
     }
-    .wiz-option-row:first-of-type { margin-top: 0; }
     .wiz-notice {
       display: flex;
       align-items: center;
@@ -2342,7 +2314,7 @@
         <a href="#" data-page="plugin">Plugin</a>
         <a href="#" data-page="import-to-podbean">Import to Podbean</a>
         <a href="#" data-page="import-complete">Import to Podbean (complete)</a>
-        <a href="#" data-page="rss-import-states">RSS feed 导入状态说明</a>
+        <a href="#" data-page="rss-import-states">导入状态说明</a>
       </div>
     </nav>
   </aside>
@@ -2952,23 +2924,14 @@
         <!-- Result — outside the steps: the whole flow has finished -->
         <div class="wiz-body wiz-result" id="wizPanelResult" data-wiz-panel="result" hidden>
 
-          <!-- Video: the connected source and its settings, in place of the RSS
-               status card. The two settings are the same ones step 3 collects, so
-               each row mirrors that checkbox and writes back to it — one setting,
-               one state, two places to see it. -->
+          <!-- Video: no status card at all — Start import lands straight on the
+               importing screen, which is the amber bar plus the two settings
+               step 3 collected. Those are the same settings, so each row mirrors
+               its checkbox and writes back to it. -->
           <div id="wizResultVideo" hidden>
-            <span class="wiz-source-wrap">
-              <span class="wiz-source-logo" id="wizSourceLogo">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7.2v9.6L16.8 12z"/></svg>
-              </span>
-              <span class="wiz-source-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
-            </span>
-            <div class="wiz-source-name">Video to Podcast</div>
-            <p class="wiz-source-connected">Connected Content Source: <a href="#" id="wizConnectedSource"></a></p>
-
             <div class="wiz-notice"><span class="wiz-notice-text">Importing your media files &mdash; we&rsquo;ll email you once they&rsquo;re done.</span></div>
+
+            <p class="wiz-source-connected">Connected Content Source: <a href="#" id="wizConnectedSource"></a></p>
 
             <div class="wiz-option-row" data-mirrors="wizSync">
               <span>Sync future content<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizSyncInfoResult" aria-label="What this does"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizSyncInfoResult" role="tooltip"></span></span></span>
@@ -3082,15 +3045,19 @@
 
       <!-- ===== Page: "RSS feed 导入状态说明" — mockup-only review view ===== -->
       <div class="page-section" id="page-rss-import-states">
-        <div class="page-heading-title">RSS feed 导入状态说明</div>
-        <p class="page-subtitle">同一页的两种完成状态。两张卡片各自复刻该状态下整个内容区的样子——页面大标题与 tagline 两屏共用，始终都在。卡片里的内容由脚本从真实区块克隆而来，所以真实文案改动时这里不会过期。</p>
+        <div class="page-heading-title">导入状态说明</div>
+        <p class="page-subtitle">导入相关的三种状态并排放在一页上，便于评审对照。每张卡片各自复刻该状态下整个内容区的样子——页面大标题与 tagline 三种状态共用，始终都在。卡片里的内容由脚本从真实区块克隆而来，所以真实文案改动时这里不会过期。</p>
 
         <div class="state-card" id="stateCardNow">
-          <span class="state-tag">正在导入 · 剧集名单已拷完，媒体文件仍在导入</span>
+          <span class="state-tag">RSS · 正在导入（剧集名单已拷完，媒体文件仍在导入）</span>
+        </div>
+
+        <div class="state-card" id="stateCardVideo">
+          <span class="state-tag">YouTube Playlist · 正在导入</span>
         </div>
 
         <div class="state-card" id="stateCardDone">
-          <span class="state-tag">已完成 · 媒体文件全部导完</span>
+          <span class="state-tag">已完成（媒体文件全部导完）</span>
         </div>
       </div>
     </div>
@@ -3813,37 +3780,40 @@
     }
 
     // Switch toggle click
-    document.querySelectorAll('.pb-switch').forEach(function(s) {
+    // One switch behaviour, shared by the page's own switches and by the clones
+    // on the "导入状态说明" review page — those are built after this point, so a
+    // querySelectorAll run here can never reach them.
+    function wireSwitch(s) {
       s.addEventListener('click', function() {
         var input = this.querySelector('input');
-        if (input) {
-          input.checked = !input.checked;
-          this.classList.toggle('checked');
+        if (!input) return;
+        input.checked = !input.checked;
+        this.classList.toggle('checked');
 
-          // Show/hide linked input by data-toggle
-          var targetId = input.getAttribute('data-toggle');
-          if (targetId) {
-            var target = document.getElementById(targetId);
-            if (target) {
-              target.style.display = input.checked ? 'block' : 'none';
-              // Hiding a conditional block clears any error it was showing
-              if (!input.checked) {
-                target.querySelectorAll('.pb-field-error').forEach(function(e) {
-                  e.classList.remove('is-visible'); e.textContent = '';
-                });
-                target.querySelectorAll('.pb-input.is-error').forEach(function(e) {
-                  e.classList.remove('is-error');
-                });
-              }
+        // Show/hide linked input by data-toggle
+        var targetId = input.getAttribute('data-toggle');
+        if (targetId) {
+          var target = document.getElementById(targetId);
+          if (target) {
+            target.style.display = input.checked ? 'block' : 'none';
+            // Hiding a conditional block clears any error it was showing
+            if (!input.checked) {
+              target.querySelectorAll('.pb-field-error').forEach(function(e) {
+                e.classList.remove('is-visible'); e.textContent = '';
+              });
+              target.querySelectorAll('.pb-input.is-error').forEach(function(e) {
+                e.classList.remove('is-error');
+              });
             }
           }
-
-          // The input is display:none, so setting .checked above fires no
-          // native change event — dispatch one so listeners (save bar, etc.) run.
-          input.dispatchEvent(new Event('change', { bubbles: true }));
         }
+
+        // The input is display:none, so setting .checked above fires no
+        // native change event — dispatch one so listeners (save bar, etc.) run.
+        input.dispatchEvent(new Event('change', { bubbles: true }));
       });
-    });
+    }
+    document.querySelectorAll('.pb-switch').forEach(wireSwitch);
 
     // Show the save bar whenever a form field changes
     (function() {
@@ -4173,10 +4143,22 @@
       }
 
       var head = document.getElementById('importPageHead');
-      // both screens carry the same page head — it is never hidden in the wizard
+      var videoCard = document.getElementById('stateCardVideo');
+      // every screen carries the same page head — it is never hidden in the wizard
       cloneInto(nowCard, head);
+      cloneInto(videoCard, head);
       cloneInto(doneCard, head);
       cloneInto(nowCard, document.getElementById('wizResultDone'));
+
+      // The video card's connected-source value is written by the wizard at run
+      // time, so the clone needs a sample put into it or the line renders empty.
+      var videoCopy = cloneInto(videoCard, document.getElementById('wizResultVideo'));
+      if (videoCopy) {
+        var connected = videoCopy.querySelector('.wiz-source-connected a');
+        if (connected) connected.textContent = 'Podbean Amplified Season 2';
+        videoCopy.querySelectorAll('.pb-switch').forEach(wireSwitch);
+      }
+
       var doneCopy = cloneInto(doneCard, document.querySelector('#page-import-complete .wiz-done'));
       if (doneCopy) {
         wireCollapsible(doneCopy.querySelector('.wiz-done-item.is-toggle'),
@@ -4230,9 +4212,9 @@
             youtube: 'By clicking “Start import,” you confirm that you own the rights to this YouTube Content and that you agree to Podbean’s' + TERMS_LINK,
             rss: 'By clicking “Start import,” you confirm that you own the rights to this content and that you agree to Podbean’s' + TERMS_LINK
           },
-          // my own copy. Deliberately says neither "playlist" nor "feed": this
-          // row is shared by the YouTube and video-RSS paths.
-          syncInfo: 'Videos added after this import become new episodes automatically.',
+          // product copy, supplied by the user — verbatim. Shared by step 3's row
+          // and by the importing screen's row, so the two cannot disagree.
+          syncInfo: 'Automatically import and publish newly added content from your connected content source.',
           // product copy, supplied by the user — verbatim. Trimmed to the Note
           // once the option label started saying what the thumbnail becomes.
           thumbInfo: 'Note: The YouTube Thumbnail may not fit the square podcast and episode logo.',
@@ -4299,16 +4281,24 @@
       var redirectDone = false;
       function applyDoneState() {
         var inCompletion = step === 'result' && redirectDone;
-        // The video path has its own result body: the connected source plus its
-        // settings, in place of the RSS status card.
+        // The video path skips the status card entirely: Start import lands
+        // straight on the importing screen (amber bar + the two settings).
         var isVideo = key === 'video';
         if (step === 'result') {
           document.getElementById('wizResultDone').hidden = !inCompletion;
           document.getElementById('wizResultNext').hidden = inCompletion || !SOURCES[key].redirect;
           document.getElementById('wizResultVideo').hidden = !isVideo;
         }
-        document.getElementById('wizSteps').hidden = inCompletion;
-        page.querySelector('#wizPanelResult').classList.toggle('is-done', inCompletion);
+        // A finished-state PANEL rather than a wizard step: the RSS completion
+        // state, and the whole video result screen (it opens straight on the
+        // importing panel). Both consequences are derived from this one flag —
+        // hide the step markers, and drop the 36px indent that exists only to
+        // line up with those markers. The `step === 'result'` half is essential:
+        // without it the video path hides its own step markers on steps 1–3 and
+        // there is no way back.
+        var finishedPanel = inCompletion || (isVideo && step === 'result');
+        document.getElementById('wizSteps').hidden = finishedPanel;
+        page.querySelector('#wizPanelResult').classList.toggle('is-done', finishedPanel);
         // In the completion state the amber bar carries the state, so the status
         // card has nothing left to say — its title went with the small headings.
         // Outside completion the card is the running status ("RSS import" +
@@ -4418,8 +4408,8 @@
         nav.hidden = step === 'result' || waitingForPlaylist;
       }
 
-      // The video result screen shows the two step-3 settings as switches. They
-      // are the same settings, so one function keeps each switch in step with its
+      // The importing screen shows the two step-3 settings as switches. They are
+      // the same settings, so one function keeps each switch in step with its
       // checkbox, and the switch writes back — otherwise the two places could
       // disagree about what the user chose.
       var resultOptionRows = page.querySelectorAll('#wizResultVideo .wiz-option-row');
@@ -4482,14 +4472,12 @@
           var wantsMp3 = !!page.querySelector('input[name="wizFormat"][value="mp3"]:checked');
           mp3Note.hidden = !(s4.redirect && wantsMp3);
           document.getElementById('wizResultTitle').textContent = s4.resultTitle;
-          // the video result names the source it connected to, and shows the same
+          // the video importing screen names the connected source and shows the
           // two settings step 3 collected
           if (key === 'video') {
-            var isYtSource = videoSrc === 'youtube';
             document.getElementById('wizConnectedSource').textContent =
-              isYtSource ? (video.ytPlaylist || '') : (video.rss || '');
-            document.getElementById('wizSourceLogo').classList.toggle('is-video-rss', !isYtSource);
-            document.getElementById('wizThumbRowResult').hidden = !isYtSource;
+              videoSrc === 'youtube' ? (video.ytPlaylist || '') : (video.rss || '');
+            document.getElementById('wizThumbRowResult').hidden = videoSrc !== 'youtube';
             document.getElementById('wizSyncInfoResult').textContent = s4.syncInfo;
             document.getElementById('wizThumbInfoResult').textContent = s4.thumbInfo;
             syncResultSwitches();
@@ -4667,7 +4655,7 @@
         if (this.checked) agreeLine.classList.remove('is-error');
       });
 
-      // The result screen's switches mirror step 3's checkboxes. The global
+      // The importing screen's switches mirror step 3's checkboxes. The global
       // .pb-switch handler was bound earlier in the file, so it has already
       // flipped the input by the time this runs — read the new value, write back.
       resultOptionRows.forEach(function (row) {
