@@ -663,30 +663,47 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 ### 6.6 校验成功后的完成态
 
-重定向校验通过后，整个「Next, set up the redirect」区块被以下内容替换：
+重定向校验通过后，整个「Next, set up the redirect」区块被以下内容替换。**顺序是「状态条 → 建议」**（2026-10-15 调整）：
 
 | 元素 | 内容 |
 |---|---|
-| **建议说明** | We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across. |
-| **通知条**（浅黄底、无边框） | We will inform you by email once the files are completely imported. |
-| **Next:** | **两条**带深色图标与链接的后续建议（2026-10-15 由原来一条拆成两条）：<br>1. You can review the **podcast information** and adjust the show settings.<br>2. You can review the **episode list** and edit any episodes.<br>两句的尾巴**动词不同**（adjust / fix）——拆条时两句各带一遍 "making any necessary adjustments" 读起来重复，所以没有沿用同一句收尾。<br>~~提交到 podcast apps / 加入 Ads Marketplace~~ 两条已于同日删除（流内完成态与 `#page-import-complete` 页面两处一并删除，保持两个视图内容一致） |
-| **重新导入** | Click **here** if you want to re-import content. —— 点击返回步骤一重新开始 |
+| **状态条**（琥珀底、无边框，**最上方**） | `Importing your media files — we'll email you once they're done.` —— **状态在前、后续说明在后**，因为这条现在是**唯一的状态面**（见下）。深色文字、14px，`margin-bottom: 36px` |
+| **建议说明** | We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across.<br>**用正文色**（14px / `--text`，2026-10-15 由 `--text-secondary` 改为正文色）：这是要求用户继续照做的建议，不是小字补充 |
 
-进入完成态时同时发生两处调整：
+**这一状态没有出口**（2026-10-15）：Next 列表与「重新导入」入口都已从这里删除，用户走到这里就到头了；那两项只保留在 `Import to Podbean (complete)` 页面。删除时 `#wizReimport` 与它的 click 处理器一并移除——只删 markup 留下处理器会让 `getElementById(...).addEventListener` 抛错，把后面的初始化全部带崩。
+
+**2026-10-15：状态从小标题并入琥珀条。** 此前状态被说了两遍——小标题说一次（`Importing your media files…` / `Import complete.`），琥珀条再说一次（邮件承诺 / `16 Successful`）。合并后只剩一个状态面：**琥珀条**。连带三点：
+
+- 琥珀条文案改成**状态在前**，否则它当不了状态面（流内那条原来是纯未来时的承诺）。
+- **两条琥珀条都不再有 ×**：它现在是常驻状态，只在下一个状态到来时被替换文字。此前只有页面那条带 ×，而关掉之后页面上就没有任何一句说明结果了。
+- 状态卡片在完成态整张隐藏（见下表），小标题的 CSS 类、× 的按钮样式与它的 click 处理器都随之删除。
+- **同一天还短暂加过一行「来源行」（`From <类型> · <地址>`），随后按用户要求删除。** 当时的理由是「只写类型没信息量、地址才让用户确认导的是哪条」，但最终判断是这一屏不需要它：状态条已经说明发生了什么，建议说明负责下一步，来源属于步骤二的输入，不必回述。`#wizDoneSource`、它的 CSS 与 `render()` 里的填充语句都已一并删除。
+
+进入完成态时同时发生三处调整：
 
 | 调整 | 原因 |
 |---|---|
-| **隐藏状态胶囊**（`Episodes copied`） | 流程已交接出去，该胶囊不再承载信息；卡片仅保留标题 |
+| **隐藏整张状态卡片** | 卡片标题（`RSS import`）与胶囊都随「小标题并入状态条」一起去掉了，卡片会变成空壳。**注意这是双向设置的**：非完成态（导入进行中）卡片仍是运行状态面，显示 `RSS import` + `Copying episodes…`，所以不能只隐藏一次 |
+| **隐藏状态胶囊**（`Episodes copied`） | 同上，状态已由琥珀条承载 |
 | **内容与页面标题左对齐**（去掉步骤内容的 36px 缩进） | 完成态不再显示步骤标记，缩进失去对齐对象；导入中的状态保留缩进，因为它对齐的是步骤名 |
 
 **文件导入完成后的状态**（比上一状态更晚一步）：
 
 | 元素 | 内容 |
 |---|---|
-| **通知条** | 由「完成后邮件通知」变为结果统计 —— `File Import Completed: 16 Successful. 0 Failed.`，右侧带 **×** 可关闭该通知条 |
-| **Next 列表第 3 项** | **Optionally, import downloads.**（可折叠，**默认收起**——2026-10-15 从「Add Downloads to Imported Episodes」改名，并把默认从展开改为收起；收起时箭头朝下 ▼、展开时朝上 ▲）：可把旧主机上每集的下载量导入 Podbean；含 CSV 导入说明、`Import CSV File` 按钮，以及两段合规声明（导入数据须真实、虚报历史数据违反 Terms of Use 可能被停用账号） |
+| **状态条**（琥珀底，**最上方**） | `Import complete — 16 successful, 0 failed.`（2026-10-15 由 `File Import Completed: 16 Successful. 0 Failed.` 改写为状态在前） |
+| **建议说明** | 与流内完成态同一句、同一位置、同一颜色（已在上一节说明） |
+| **What you can do next** | 与上方建议说明的间距 **36px**（`.wiz-done-title` 的 `margin: 36px 0 20px`，2026-10-15 从 20px 调大）——它是一处**段落分隔**而不是建议的下一行；36px 也和琥珀条自身的下边距同值，页面只有一套纵向节奏。相邻边距会合并，所以实际间距就是 36px。<br>标题 + **两条**带深色图标与链接的后续建议：<br>1. You can review the **podcast information** and adjust the show settings.<br>2. You can review the **episode list** and edit any episodes.<br>两句尾巴**动词不同**（adjust / edit）——拆条时两句各带一遍 "making any necessary adjustments" 读起来重复，故不再沿用同一句收尾。<br>标题 2026-10-15 由参考图的 `Next:` 改成本句：`Next:` 只有一个冒号加一个最泛的词，没说下面是什么性质，而且它是命令式的光杆标签，与下面几行「You can review the…」的语气不搭。也没有选 `Next steps`——"steps" 会暗示这是一串按顺序要做的事，而这三项实际是平行且可选的。<br>~~提交到 podcast apps / 加入 Ads Marketplace~~ 两条同批删除 |
+| **Next 列表第 3 项** | **Optionally, import downloads.**（可折叠，**默认收起**——2026-10-15 从「Add Downloads to Imported Episodes」改名，并把默认从展开改为收起；收起时箭头朝下 ▼、展开时朝上 ▲，箭头紧跟标题右侧）：可把旧主机上每集的下载量导入 Podbean；含 CSV 导入说明、`Import CSV File` 按钮，以及两段合规声明（导入数据须真实、虚报历史数据违反 Terms of Use 可能被停用账号） |
+| **重新导入** | Click **here** if you want to re-import content.（`#wizReimportComplete`）—— 点击返回步骤一重新开始 |
 
 > **Mockup 入口说明**：侧边栏 Settings 下另有一项 **Import to Podbean (complete)**，直接展示上述「文件导入完成后」的页面状态——仅为便于评审，**不属于最终产品的菜单项**。
+
+> **第二个 Mockup 入口：RSS feed 导入状态说明**（2026-10-15）。侧边栏 Settings 下新增一项同名条目，把两种完成状态并排放在一页上供对照，方便评审。同样是 **mockup 专用、不属于最终产品的菜单项**。实现要点：
+> - 两张卡片（`.state-card` / `.state-tag`）各自复刻一屏的**整个内容区**，含两屏共用的页面大标题与 tagline（用户要求完整复刻）。
+> - **卡片内容由脚本从真实区块克隆而来**（`#importPageHead`、`#wizResultDone`、`#page-import-complete .wiz-done`），不是手抄的 markup——这一页被改了十几次的文案很容易手抄过期，克隆让它在结构上不可能过期。
+> - 克隆时会**剥掉所有 `id` 与 `aria-controls`**：重复 id 会让 `getElementById` 指到克隆体上，把真实页面的连线弄坏。折叠行复用同一个 `wireCollapsible(toggle, panel)`。
+> - **这个 `.page-section` 必须是 `.content` 的子元素**，不能是它的兄弟——放进 `</div>` 之后会拿到错误的列宽（`x230..1737` 而正确值为 `x352..1616`）。验证方式是对同一个元素做**差分测量**：把已知正确页面激活后量一次，再量新页面，两者必须一致。
 
 ---
 
