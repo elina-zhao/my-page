@@ -625,6 +625,22 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 开始导入后，页面顶部显示导入状态卡片，并在重定向步骤旁重复同一状态：
 
+**Video 路径有自己的一套结果页（2026-10-15 新增）**，不含状态卡片、也不含重定向区块（视频导入没有 301 重定向）。`#wizResultVideo` 的结构自上而下：
+
+| 元素 | 内容 |
+|---|---|
+| **来源标识** | 72×50 圆角来源图标 + 右上角绿色对勾角标（`#16a34a`，与状态胶囊同一绿）。YouTube Playlist 路径为 YouTube 红（`#ff0000`）；video + RSS Feed URL 路径换成步骤一那个紫色视频图标（`#7c3aed`，`is-video-rss`） |
+| **来源名** | `Video to Podcast` |
+| **已连接的内容源** | `Connected Content Source: <链接>` —— YouTube 路径显示用户选的播放列表名，video RSS 路径显示他填的 feed 地址。值取自 `video.ytPlaylist` / `video.rss`，不是固定文案 |
+| **状态条** | 琥珀条，文案 `Importing your media files — we'll email you once they're done.`（与 RSS 流内完成态同一句），**不带 ×** |
+| **两个设置开关** | `Sync future content` 与 `Import YouTube Thumbnail as podcast and episode logos`，各带 ⓘ，用 `.pb-switch` |
+
+- **开关与步骤三的勾选框是同一个设置**，所以 `syncResultSwitches()` 在每次渲染时把开关对齐到对应勾选框，开关被点击时写回勾选框（`data-mirrors` 指明镜像哪个 id）。一个设置、一个状态、两处可见——这是避免两处说法不一致的唯一办法。
+- **video + RSS Feed URL 路径不显示缩略图那一行**：那条路径的步骤三根本没有这个选项（`#wizThumbRowResult` 按路径隐藏）。注意它带 `display:flex`，所以必须靠 `.wiz-option-row[hidden]` 守卫才能真正隐藏。
+- 开关在 mockup 里沿用既有的 `.pb-switch`（开启为深色轨道），**没有照参考图改成绿色**——页面上的开关在 Feed 页已经是这个样式，为这一屏另加一个绿色变体会让同一控件出现两种样子。
+
+
+
 | 状态 | 文案 | 表现 |
 |---|---|---|
 | 复制中 | `Copying episodes…` | 状态胶囊；Check redirect 保持禁用 |

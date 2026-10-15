@@ -1712,6 +1712,56 @@
       line-height: 1.6;
       margin: 0 0 20px;
     }
+    /* ---- Video import: the connected source, shown while the files import ---- */
+    .wiz-source-wrap {
+      position: relative;         /* the verified badge hangs off the corner */
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+    .wiz-source-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 50px;
+      border-radius: 12px;
+      background: #ff0000;        /* YouTube; the video-RSS path swaps it below */
+      color: #fff;
+    }
+    .wiz-source-logo.is-video-rss { background: #7c3aed; }
+    .wiz-source-badge {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #16a34a;        /* the same green as the status chips */
+      color: #fff;
+      border: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wiz-source-name {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .wiz-source-connected {
+      font-size: 14px;
+      color: var(--text);
+      margin: 0 0 24px;
+    }
+    .wiz-option-row {
+      position: relative;         /* the ⓘ tooltip hangs off this row */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 18px;
+    }
+    .wiz-option-row:first-of-type { margin-top: 0; }
     .wiz-notice {
       display: flex;
       align-items: center;
@@ -1811,6 +1861,7 @@
     .wiz-nav[hidden],
     .wiz-next-note[hidden],
     .pb-check-line[hidden],
+    .wiz-option-row[hidden],
     #wizResultNext[hidden] { display: none; }
 
     /* Modal */
@@ -2900,6 +2951,36 @@
 
         <!-- Result — outside the steps: the whole flow has finished -->
         <div class="wiz-body wiz-result" id="wizPanelResult" data-wiz-panel="result" hidden>
+
+          <!-- Video: the connected source and its settings, in place of the RSS
+               status card. The two settings are the same ones step 3 collects, so
+               each row mirrors that checkbox and writes back to it — one setting,
+               one state, two places to see it. -->
+          <div id="wizResultVideo" hidden>
+            <span class="wiz-source-wrap">
+              <span class="wiz-source-logo" id="wizSourceLogo">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7.2v9.6L16.8 12z"/></svg>
+              </span>
+              <span class="wiz-source-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </span>
+            <div class="wiz-source-name">Video to Podcast</div>
+            <p class="wiz-source-connected">Connected Content Source: <a href="#" id="wizConnectedSource"></a></p>
+
+            <div class="wiz-notice"><span class="wiz-notice-text">Importing your media files &mdash; we&rsquo;ll email you once they&rsquo;re done.</span></div>
+
+            <div class="wiz-option-row" data-mirrors="wizSync">
+              <span>Sync future content<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizSyncInfoResult" aria-label="What this does"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizSyncInfoResult" role="tooltip"></span></span></span>
+              <span class="pb-switch"><input type="checkbox" /><span class="pb-switch-track"><span class="pb-switch-thumb"></span></span></span>
+            </div>
+
+            <div class="wiz-option-row" id="wizThumbRowResult" data-mirrors="wizThumb">
+              <span>Import YouTube Thumbnail as podcast and episode logos<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizThumbInfoResult" aria-label="What this does"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizThumbInfoResult" role="tooltip"></span></span></span>
+              <span class="pb-switch"><input type="checkbox" /><span class="pb-switch-track"><span class="pb-switch-thumb"></span></span></span>
+            </div>
+          </div>
+
           <div class="import-saved">
             <div class="import-saved-head">
               <span class="wiz-result-title" id="wizResultTitle">RSS import</span>
@@ -4218,9 +4299,13 @@
       var redirectDone = false;
       function applyDoneState() {
         var inCompletion = step === 'result' && redirectDone;
+        // The video path has its own result body: the connected source plus its
+        // settings, in place of the RSS status card.
+        var isVideo = key === 'video';
         if (step === 'result') {
           document.getElementById('wizResultDone').hidden = !inCompletion;
           document.getElementById('wizResultNext').hidden = inCompletion || !SOURCES[key].redirect;
+          document.getElementById('wizResultVideo').hidden = !isVideo;
         }
         document.getElementById('wizSteps').hidden = inCompletion;
         page.querySelector('#wizPanelResult').classList.toggle('is-done', inCompletion);
@@ -4228,7 +4313,7 @@
         // card has nothing left to say — its title went with the small headings.
         // Outside completion the card is the running status ("RSS import" +
         // "Copying episodes…"), so this is set both ways, not just hidden once.
-        document.querySelector('.import-saved').hidden = inCompletion;
+        document.querySelector('.import-saved').hidden = isVideo || inCompletion;
         document.querySelector('.import-saved-badge').hidden = inCompletion;
       }
       function setImportState(done) {
@@ -4333,6 +4418,22 @@
         nav.hidden = step === 'result' || waitingForPlaylist;
       }
 
+      // The video result screen shows the two step-3 settings as switches. They
+      // are the same settings, so one function keeps each switch in step with its
+      // checkbox, and the switch writes back — otherwise the two places could
+      // disagree about what the user chose.
+      var resultOptionRows = page.querySelectorAll('#wizResultVideo .wiz-option-row');
+      function syncResultSwitches() {
+        resultOptionRows.forEach(function (row) {
+          var input = row.querySelector('.pb-switch input');
+          var source = document.getElementById(row.getAttribute('data-mirrors'));
+          if (!input || !source) return;
+          input.checked = source.checked;
+          var sw = input.closest('.pb-switch');
+          if (sw) sw.classList.toggle('checked', source.checked);
+        });
+      }
+
       function render() {
         var cur = step === 'result' ? 4 : step;
 
@@ -4381,6 +4482,18 @@
           var wantsMp3 = !!page.querySelector('input[name="wizFormat"][value="mp3"]:checked');
           mp3Note.hidden = !(s4.redirect && wantsMp3);
           document.getElementById('wizResultTitle').textContent = s4.resultTitle;
+          // the video result names the source it connected to, and shows the same
+          // two settings step 3 collected
+          if (key === 'video') {
+            var isYtSource = videoSrc === 'youtube';
+            document.getElementById('wizConnectedSource').textContent =
+              isYtSource ? (video.ytPlaylist || '') : (video.rss || '');
+            document.getElementById('wizSourceLogo').classList.toggle('is-video-rss', !isYtSource);
+            document.getElementById('wizThumbRowResult').hidden = !isYtSource;
+            document.getElementById('wizSyncInfoResult').textContent = s4.syncInfo;
+            document.getElementById('wizThumbInfoResult').textContent = s4.thumbInfo;
+            syncResultSwitches();
+          }
           setImportState(false);
           document.getElementById('wizResultNote').textContent = s4.redirect
             ? 'Importing runs in the background \u2014 you can leave this page while it works. Depending on how many episodes your feed has, it can take a few minutes.'
@@ -4552,6 +4665,19 @@
 
       agree.addEventListener('change', function () {
         if (this.checked) agreeLine.classList.remove('is-error');
+      });
+
+      // The result screen's switches mirror step 3's checkboxes. The global
+      // .pb-switch handler was bound earlier in the file, so it has already
+      // flipped the input by the time this runs — read the new value, write back.
+      resultOptionRows.forEach(function (row) {
+        var sw = row.querySelector('.pb-switch');
+        if (!sw) return;
+        sw.addEventListener('click', function () {
+          var input = sw.querySelector('input');
+          var source = document.getElementById(row.getAttribute('data-mirrors'));
+          if (input && source) source.checked = input.checked;
+        });
       });
 
       document.getElementById('wizCopyBtn').addEventListener('click', function () {
