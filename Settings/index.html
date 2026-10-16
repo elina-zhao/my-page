@@ -51,16 +51,32 @@
       z-index: 200;
     }
 
+    /* Left cluster of the topbar: the 9-dot channel list button (always visible),
+       the hamburger (≤768px only) and the brand. The two icon buttons share one
+       treatment so neighbours cannot drift; only their display differs. */
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar .channel-menu-btn,
     .topbar .menu-toggle {
-      display: none;
       background: none;
       border: none;
       cursor: pointer;
       color: var(--text-secondary);
       padding: 4px;
       border-radius: 4px;
+      align-items: center;
     }
+    .topbar .channel-menu-btn { display: flex; }
+    .topbar .menu-toggle { display: none; }
+    .topbar .channel-menu-btn:hover,
     .topbar .menu-toggle:hover { background: #f1f5f9; }
+    /* Pressed look comes from the real aria state, so it cannot drift from the
+       menu's own open/closed flag */
+    .topbar .channel-menu-btn[aria-expanded="true"] { background: #f1f5f9; }
 
     .topbar .logo-icon { display: flex; align-items: center; }
     .topbar .logo-icon svg {
@@ -91,22 +107,6 @@
       align-items: center;
       gap: 8px;
     }
-
-    .topbar-actions .btn-new-episode {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--text);
-      color: #fff;
-      border: none;
-      padding: 7px 16px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      transition: background 0.2s;
-    }
-    .topbar-actions .btn-new-episode:hover { background: #334155; }
 
     .topbar-actions .icon-btn {
       background: none;
@@ -306,7 +306,12 @@
       line-height: 1.5;
     }
 
-    /* ---- Tabs (Podcast Info) ---- */
+    /* ---- Tabs (Podcast Settings) ---- */
+    /* The subtitle used to supply the space above the tabs on this page (4px
+       heading margin + a 21px line + 24px of its own). With it gone the tabs
+       would sit 4px under the heading, so this page's tab bar carries the gap —
+       scoped by id so the pages that keep a subtitle are untouched. */
+    #page-podcast-basic .pb-tabs { margin-top: 24px; }
     .pb-tabs {
       display: flex;
       gap: 0;
@@ -1006,6 +1011,12 @@
       .sidebar.open { transform: translateX(0); }
       .sidebar-overlay.show { display: block; }
       .topbar .menu-toggle { display: flex; }
+      /* The two-pane card does not fit a phone: stack the panes and turn the
+         vertical divider into a horizontal one */
+      .channel-menu { top: 54px; left: 32px; right: 32px; align-items: stretch; }
+      .channel-menu-card { flex-direction: column; }
+      .channel-menu-nav { flex: none; width: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .channel-menu-panels { width: auto; }
       .main-panel { margin-left: 0; }
       .content { padding: 24px; }
       .pb-logo-row { flex-direction: column; }
@@ -1031,6 +1042,10 @@
     }
 
     /* Plugin Page */
+    /* Same story as #page-podcast-basic: the subtitle that used to sit above this
+       toolbar carried the gap, and the toolbar has no top margin of its own. Scoped
+       by id so nothing else moves. */
+    #page-plugin .plugin-toolbar-wrap { margin-top: 24px; }
     .plugin-toolbar-wrap {
       display: flex;
       justify-content: flex-end;
@@ -1306,7 +1321,7 @@
     .wiz-search-row { display: flex; align-items: flex-end; gap: 18px; }
     .wiz-search-row .import-input { flex: 1; }
     .wiz-search-row .import-btn { flex-shrink: 0; }
-    /* Same underline field language as .pb-input on Podcast Info / Feed */
+    /* Same underline field language as .pb-input on Podcast Settings / Feed */
     .import-input {
       width: 100%;
       padding: 8px 0;
@@ -1850,7 +1865,14 @@
     .wiz-option-row[hidden],
     .import-btn[hidden],
     .wiz-free-actions[hidden],
-    #wizResultNext[hidden] { display: none; }
+    #wizResultNext[hidden],
+    .channel-menu[hidden],
+    .channel-panel[hidden],
+    .channel-panel-top[hidden],
+    .channel-search[hidden],
+    .channel-item[hidden],
+    .channel-empty[hidden],
+    .ai-setup-result[hidden] { display: none; }
 
     /* Modal */
     .modal-overlay {
@@ -1876,6 +1898,74 @@
       flex-direction: column;
       box-shadow: 0 16px 48px rgba(0,0,0,0.15);
     }
+    /* The editors' 930px shell is too wide for a form dialog; this one is 800px.
+       Id-scoped rather than a shared modifier because it has a single user, and a
+       generic name would drift from whatever the number happens to be. */
+    /* The two steps are different heights; a floor keeps the dialog from resizing
+       as you move between them (the popover taught that lesson). */
+    #createPodcastModal .modal-dialog { width: 800px; min-height: 400px; }
+    /* Back sits on the left, Cancel/Continue stay right — `margin-right: auto`
+       takes the free space the footer's flex-end would otherwise leave in front
+       of the group. Scoped by id so no other dialog's footer moves. */
+    #cpBackBtn { margin-right: auto; }
+    .cp-step {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 1px 8px;
+      border-radius: 50px;
+      background: #f1f5f9;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+      vertical-align: 3px;
+    }
+    .cp-choices {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .cp-choice {
+      position: relative;
+      display: block;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+    .cp-choice:hover { background: #fafbfc; }
+    /* The chosen card states it twice on purpose: the radio carries the meaning,
+       the ring carries the weight. */
+    .cp-choice:has(.import-radio:checked) {
+      background: #f8fafc;
+      border-color: var(--text);
+      box-shadow: 0 0 0 1px var(--text);
+    }
+    .cp-choice .import-radio { position: absolute; top: 16px; right: 16px; }
+    .cp-choice-name {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .cp-choice-desc {
+      display: block;
+      margin-top: 4px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    /* The import page's source rows bleed 16px so their selected tint can breathe
+       in the page column; inside a dialog that would push them into the body's
+       padding, so they bleed 12px to match it instead. */
+    .modal-body .cp-sources { margin-top: 12px; }
+    .modal-body .cp-sources .import-source { padding: 14px 12px; margin: 0 -12px; }
+    /* The fixed domain suffix beside the URL field. These two rules were written
+       for a field that never shipped, so this is the first user — and the suffix
+       takes --text-secondary rather than the #999 they carried (2.85:1 on white). */
+    .pb-url-suffix { color: var(--text-secondary); }
     .modal-header {
       display: flex;
       align-items: center;
@@ -2175,6 +2265,481 @@
 
 
     /* ==============================
+       Channel list menu
+       A floating card opened from the 9-dot button in the topbar's top-left
+       corner. Deliberately not a modal: no dimming layer, no centred dialog —
+       it drops out of the button and overlays whatever page is behind it, and
+       clicking outside or pressing Escape dismisses it.
+       ============================== */
+    .channel-menu {
+      position: fixed;
+      /* Anchored to the button's bottom-left corner, the real product's
+         --v-overlay-anchor-origin: bottom left rule. The button spans 17.5..45.5
+         (the topbar's 1px bottom border shrinks its content box to 63px, so
+         centring a 28px button lands it at 17.5), so 54 is its bottom edge + 8.5
+         — the reference's 8px offset, rounded up to a whole pixel so the card's
+         1px border stays crisp. left matches the topbar's 32px padding, which is
+         where the button starts. The menu therefore overlaps the topbar's bottom
+         10px, exactly as the real overlay does (theirs sits at top:54.5px). */
+      top: 54px;
+      left: 32px;
+      z-index: 300;
+      /* A column: the single card, then the one link that stays outside it */
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    /* ONE surface for both panes — the section rail and the panel beside it are
+       divided by a hairline inside this card rather than by a gap between two
+       cards, so the popover reads as one piece (and there is one shadow, not two
+       overlapping ones). */
+    .channel-menu-card {
+      display: flex;
+      align-items: stretch;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+      /* No channel count makes the popover grow past the screen. The real
+         overlay caps itself at 497px, which is what this number is; the vh term
+         is the same rule for short windows. The card is the cap, so the two panes
+         stay the same height and the divider still runs the full way down. */
+      max-height: min(497px, calc(100vh - 80px));
+      /* Never wider than the window it is anchored into; the list pane gives up
+         the width. The ≤768px rule stacks the panes before this matters. */
+      max-width: calc(100vw - 64px);
+    }
+
+    /* No account header inside the card: the real overlay is only the three
+       menu items (`role="menu" aria-label="Apps"`). The "Podbean Account" row the
+       screenshot shows belongs to the product's topbar, not to this popover.
+       Left pane: fixed width, with the card's own hairline as the divider — the
+       column stretches, so the line runs the full height of the card. */
+    .channel-menu-nav {
+      flex: 0 0 300px;
+      padding: 8px;
+      border-right: 1px solid var(--border);
+      /* three items today; scrolls rather than pushing the card taller if the
+         section list ever grows */
+      overflow-y: auto;
+    }
+    .channel-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 8px;
+      background: none;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .channel-menu-item:hover { background: #f8fafc; }
+    .channel-menu-item.is-active { background: #f1f5f9; }
+    .channel-menu-item-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--text);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    /* The three glyphs come from the real product's markup and each carries its
+       own aspect ratio, so they are sized by their width/height attributes
+       rather than by one shared rule — uniform sizing would flatten a 28×23
+       glyph and a 31×30 glyph into the same box. */
+    .channel-menu-item-arrow {
+      flex-shrink: 0;
+      /* margin-left, not a flex:1 label — only one row carries an arrow, so the
+         label does not need a rule of its own to push it to the edge */
+      margin-left: auto;
+      display: flex;
+      color: var(--text-secondary);
+    }
+    /* Inside a row the arrow is the hover affordance: it appears while the
+       pointer is on THAT row (the user asked for this explicitly — 「hover 在哪个
+       上面，哪个右侧动态出现向右的箭头」). Each row/card carries its own copy, so
+       the descendant selector can only ever reveal the arrow of the thing being
+       hovered, never its neighbour's. opacity, not display — the arrow keeps its
+       place in the layout, so the label does not jump as it comes and goes.
+       `.feature-card` is in both selectors because Ad Management's rows became cards. */
+    .channel-item .channel-menu-item-arrow,
+    .feature-card .channel-menu-item-arrow {
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .channel-item:hover .channel-menu-item-arrow,
+    .feature-card:hover .channel-menu-item-arrow { opacity: 1; }
+
+    /* Add-on features sits outside the card on purpose: it leaves the section
+       list rather than being a fourth section of it. */
+    .channel-menu-addon {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px 8px 16px;
+      background: none;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      text-align: left;
+      transition: color 0.15s;
+    }
+    .channel-menu-addon:hover { color: var(--primary); }
+    .channel-menu-addon svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* The right pane is a column so the list inside it can be the part that
+       scrolls: card (capped) → panel → list. Miss any link in that chain and the
+       list grows to 20×60px and spills out of the bottom of the card instead of
+       scrolling — measured, with 20 rows, as a 1200px list inside a 497px card.
+       min-height:0 on every link is what allows the shrink; a flex item's default
+       min-height is its content. */
+    .channel-menu-panels {
+      /* Width of the list pane, and therefore of the whole popover (300 nav + 1
+         divider + this). Widened 380 → 420 on 2026-10-16; it is a one-number
+         change. `min-width: 0` lets it give width back on a viewport narrower
+         than the card's max-width instead of pushing the popover off screen. */
+      width: 420px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    /* min-height: 0 is what lets the list below actually scroll instead of
+       stretching the card — a flex item's default min-height is its content. */
+    .channel-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    /* Search row: a plain line under the panel's top edge, with the same hairline
+       idiom the divider uses. The search is now its only child, so it takes the
+       whole width — and the 16px side padding lines the magnifier up with the
+       album art and the names in the rows below. */
+    .channel-panel-top {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      padding: 8px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .channel-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+    .channel-search svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--text-secondary);
+    }
+    .channel-search-input {
+      flex: 1;
+      min-width: 0;
+      padding: 0;
+      border: none;
+      outline: none;
+      background: none;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .channel-search-input::placeholder { color: var(--text-secondary); }
+    /* the house focus ring (see .import-radio:focus-visible) — this input had
+       `outline: none` and nothing to replace it, so keyboard focus was invisible */
+    .channel-search-input:focus-visible {
+      outline: 2px solid #94a3b8;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* The rows scroll; the footer does not, so "Create New Podcast" stays put
+       however many channels there are. */
+    .channel-list {
+      min-height: 0;
+      overflow-y: auto;
+    }
+    .channel-empty {
+      padding: 28px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .channel-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .channel-item:hover { background: #f8fafc; }
+    /* ---- Company Dashboard: a channel-list, exactly like Podcast Channels --- */
+    /* Same row shape, same structure (list only — no search row, no bottom action),
+       same behaviour: display-only divs, so the row's built-in pointer cursor is
+       given back here. `flex: 1` keeps it a real scroll region if the network ever
+       has enough shows to need one. */
+    .channel-panel[data-clm-panel="company"] { flex: 1; }
+    .channel-panel[data-clm-panel="company"] .channel-item { cursor: default; }
+    /* Artwork is a coloured initial — same --c / --c-bg idiom as the import
+       source tiles, so a real image can drop straight in later. */
+    .channel-item-art {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--c-bg, #f1f5f9);
+      color: var(--c, var(--text-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    /* Ad Management's rows use the same dark tile as the rail's icons instead of
+       the coloured artwork tile, with the white placard inside it. */
+    .channel-item-art.is-dark {
+      position: relative;
+      background: var(--text);
+      color: #fff;
+    }
+    .channel-item-placard {
+      padding: 1px 1px 1px 2px;
+      border-radius: 3px;
+      background: #fff;
+      color: var(--text);
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+    }
+    /* The small mark on the Dynamic Ad Insertion tile. Read off a screenshot, so
+       it is the one piece of this menu that is an approximation — swap it when
+       the real glyph turns up. */
+    .channel-item-badge {
+      position: absolute;
+      right: 5px;
+      bottom: 4px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .channel-item-name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    /* The channel the dashboard is showing */
+    .channel-item-check { display: none; color: var(--primary); }
+    .channel-item.is-current .channel-item-check { display: flex; }
+
+    /* The panel's bottom zone: both actions that leave the switcher, on ONE line
+       and pushed to the two edges — create lines up with the channel artwork above
+       it, the manage link with the right end of the rows.
+       The 6px side padding is deliberate: the buttons carry 10px of their own, so
+       their CONTENT lands on the rows' 16px inset rather than their boxes. Aligning
+       the boxes instead would leave the icons 10px short of the artwork.
+       Pinned, so it survives the list scrolling. */
+    .channel-panel-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+      padding: 10px 10px;
+      border-top: 1px solid var(--border);
+    }
+    .channel-manage-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      /* 10px, to match .channel-create-btn — the footer's 6px plus this is what
+         puts its right edge on the rows' 16px inset */
+      padding: 6px 10px;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .channel-manage-btn:hover { background: #f1f5f9; color: var(--text); }
+
+    /* The create action: the primary of the two footer actions, so it keeps the
+       heavier weight (13px / 600 / var(--text)) while Manage All below it is a
+       lighter link. It no longer needs the `margin-left: auto` it carried while it
+       sat in the top row — the footer centres its children. */
+    .channel-create-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: none;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .channel-create-btn:hover { background: #f1f5f9; }
+
+    /* ---- Ad Management: its two features as cards ---- */
+    .feature-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 8px;
+    }
+    .feature-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    /* Not clickable — the tint keeps it in step with the row hover elsewhere
+       without turning it into a button */
+    .feature-card:hover { background: #f8fafc; border-color: #d7dee7; }
+    .feature-card-text { flex: 1; min-width: 0; }
+    .feature-card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .feature-card-desc {
+      margin: 5px 0 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    /* ---- AI setup (the new-podcast path) ---- */
+    .ai-setup-prompt { margin-top: 24px; }
+    .ai-setup-textarea {
+      resize: vertical;
+      min-height: 104px;
+      padding: 10px 0;
+      line-height: 1.55;
+    }
+    .ai-setup-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .ai-setup-skip {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .ai-setup-skip:hover { color: var(--text); }
+    .ai-setup-result { margin-top: 32px; }
+    .ai-setup-result-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .ai-setup-result-title { font-size: 15px; font-weight: 600; color: var(--text); }
+    .ai-setup-again {
+      background: none;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: background 0.15s, color 0.15s;
+    }
+    .ai-setup-again:hover { background: #f1f5f9; color: var(--text); }
+    .ai-setup-card { border: 1px solid var(--border); border-radius: 12px; padding: 2px 20px; }
+    .ai-setup-row { display: flex; gap: 24px; padding: 16px 0; }
+    .ai-setup-row + .ai-setup-row { border-top: 1px solid var(--border); }
+    .ai-setup-key { flex: 0 0 104px; font-size: 13px; color: var(--text-secondary); padding-top: 2px; }
+    .ai-setup-val { flex: 1; min-width: 0; font-size: 14px; line-height: 1.6; color: var(--text); }
+    .ai-setup-art {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      border-radius: 12px;
+      background: #eef2f7;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .ai-setup-art-tag {
+      position: absolute;
+      left: 0;
+      bottom: 8px;
+      padding: 2px 6px;
+      border-radius: 0 50px 50px 0;
+      background: #1e293b;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+    /* the drafting state: the button is the only feedback until the draft lands */
+    .import-btn[disabled] { opacity: 0.6; cursor: default; }
+
+    /* ==============================
        Error states & Toast
        ============================== */
     .pb-field-error {
@@ -2216,30 +2781,51 @@
 
   <!-- ===== TOPBAR ===== -->
   <header class="topbar">
-    <button class="menu-toggle" onclick="toggleSidebar()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-    </button>
-
-    <div style="display:flex;align-items:center;gap:12px;">
-      <div class="logo-icon">
-        <img src="Podbeanicon.png" alt="Podcasting Smarter" style="width:34px;height:34px;border-radius:8px;display:block;" />
-      </div>
-      <span class="brand-text">Podcasting Smarter</span>
-      <a href="#" target="_blank" class="external-link" title="View Site">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <line x1="10" y1="14" x2="21" y2="3"></line>
+    <div class="topbar-left">
+      <!-- Channel list menu. aria-controls points at #channelMenu, which lives at
+           the end of the body next to the modals (it is position:fixed, so it is
+           not confined to the topbar's box). -->
+      <button class="channel-menu-btn" type="button" aria-haspopup="dialog" aria-expanded="false"
+              aria-label="Channel list menu" aria-controls="channelMenu">
+        <!-- Nine r=2.5 dots on a 20x20 grid — the reference's geometry, re-expressed
+             as plain circles so it renders without the product's external stylesheet. -->
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <circle cx="2.5" cy="2.5" r="2.5"></circle>
+          <circle cx="10" cy="2.5" r="2.5"></circle>
+          <circle cx="17.5" cy="2.5" r="2.5"></circle>
+          <circle cx="2.5" cy="10" r="2.5"></circle>
+          <circle cx="10" cy="10" r="2.5"></circle>
+          <circle cx="17.5" cy="10" r="2.5"></circle>
+          <circle cx="2.5" cy="17.5" r="2.5"></circle>
+          <circle cx="10" cy="17.5" r="2.5"></circle>
+          <circle cx="17.5" cy="17.5" r="2.5"></circle>
         </svg>
-      </a>
+      </button>
+
+      <button class="menu-toggle" onclick="toggleSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="logo-icon">
+          <img src="Podbeanicon.png" alt="Podcasting Smarter" style="width:34px;height:34px;border-radius:8px;display:block;" />
+        </div>
+        <span class="brand-text">Podcasting Smarter</span>
+        <a href="#" target="_blank" class="external-link" title="View Site">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
     </div>
 
     <div class="topbar-actions">
-      <button class="btn-new-episode">+ New Episode</button>
       <button class="icon-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -2316,7 +2902,7 @@
         <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
       </a>
       <div class="sub-menu">
-        <a href="#" class="active" data-page="podcast-basic">Podcast Info</a>
+        <a href="#" class="active" data-page="podcast-basic">Podcast Settings</a>
         <a href="#" data-page="feed">Feed</a>
         <a href="#" data-page="plugin">Plugin</a>
         <a href="#" data-page="import-to-podbean">Import to Podbean</a>
@@ -2333,10 +2919,9 @@
   <!-- ===== MAIN CONTENT ===== -->
   <div class="main-panel">
     <div class="content">
-      <!-- ===== Page: Podcast Info ===== -->
+      <!-- ===== Page: Podcast Settings ===== -->
       <div class="page-section active" id="page-podcast-basic">
-        <div class="page-heading-title">Podcast Info</div>
-        <p class="page-subtitle">Configure your podcast basic settings here. <a href="#" style="color:inherit;font-weight:500;">Learn more</a></p>
+        <div class="page-heading-title">Podcast Settings</div>
 
         <!-- Tabs -->
         <div class="pb-tabs">
@@ -2524,7 +3109,6 @@
       <!-- ===== Page: Feed ===== -->
       <div class="page-section" id="page-feed">
         <div class="page-heading-title">Feed</div>
-        <p class="page-subtitle">Manage your podcast feed and Apple Podcasts settings. <a href="#" style="color:inherit;">Learn more</a></p>
 
         <div class="pb-card" style="margin-top:24px;">
             <div class="info-row">
@@ -2617,7 +3201,6 @@
       <!-- ===== Page: Plugin ===== -->
       <div class="page-section" id="page-plugin">
         <div class="page-heading-title">Plugin</div>
-        <p class="page-subtitle">Manage your podcast plugins and integrations.</p>
 
         <div class="plugin-toolbar-wrap">
           <a href="https://apps.podbean.com" class="plugin-get-btn">Get more plugins</a>
@@ -3084,7 +3667,579 @@
           <span class="state-tag">已完成（媒体文件全部导完）</span>
         </div>
       </div>
+
+      <!-- ===== Page: AI setup — the destination of the Create New Podcast dialog's
+           "Start a new podcast" path. Mockup-only: no sidebar entry (the dialog is the
+           way in), and both the copy and the drafted values are MINE, not product copy. -->
+      <div class="page-section" id="page-ai-setup">
+        <div class="page-heading-title">Set up with Podbean AI</div>
+        <p class="page-subtitle">Tell Podbean AI what your podcast is about. It drafts the title, description and category for <strong id="aiSetupUrl">your new podcast</strong> — everything stays editable in Podcast Settings.</p>
+
+        <div class="ai-setup-prompt">
+          <div class="import-field" id="aiSetupField">
+            <label class="import-field-label" for="aiSetupPrompt">What is your podcast about?</label>
+            <textarea class="import-input ai-setup-textarea" id="aiSetupPrompt" rows="4" placeholder="A weekly show where two designers review the tools they actually use, and argue about the ones they don't."></textarea>
+            <div class="import-example">A sentence or two is enough — the more specific you are, the better the draft.</div>
+            <div class="pb-field-error"></div>
+          </div>
+          <div class="ai-setup-actions">
+            <button class="import-btn" type="button" id="aiSetupGenerate">Generate details</button>
+            <button class="ai-setup-skip" type="button" id="aiSetupSkip">Skip, I&rsquo;ll write them myself</button>
+          </div>
+        </div>
+
+        <div class="ai-setup-result" id="aiSetupResult" hidden>
+          <div class="ai-setup-result-head">
+            <div class="ai-setup-result-title">Draft from Podbean AI</div>
+            <button class="ai-setup-again" type="button" id="aiSetupAgain">Regenerate</button>
+          </div>
+          <div class="ai-setup-card">
+            <div class="ai-setup-row">
+              <div class="ai-setup-key">Title</div>
+              <div class="ai-setup-val" id="aiDraftTitle">Tools We Actually Use</div>
+            </div>
+            <div class="ai-setup-row">
+              <div class="ai-setup-key">Description</div>
+              <div class="ai-setup-val" id="aiDraftDesc">Two designers open their toolboxes. Every week we pick one tool we genuinely use, explain what it replaced, and argue about whether the trade-offs are worth it.</div>
+            </div>
+            <div class="ai-setup-row">
+              <div class="ai-setup-key">Category</div>
+              <div class="ai-setup-val" id="aiDraftCat">Arts &middot; Design</div>
+            </div>
+            <div class="ai-setup-row ai-setup-row--art">
+              <div class="ai-setup-key">Artwork</div>
+              <div class="ai-setup-val">
+                <div class="ai-setup-art"><span>TW</span><span class="ai-setup-art-tag">Draft</span></div>
+                <div class="import-example" style="margin-top:8px;">You can replace it with your own cover in Podcast Settings.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ai-setup-actions">
+            <button class="import-btn" type="button" id="aiSetupContinue">Continue to Podcast Settings</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Page: Profile — placeholder destination =====
+           "Manage All Podcast Channels" in the channel list menu lands here, so the
+           link has somewhere real to go. The page itself is NOT designed: this is a
+           stub, not a proposal, and it has no sidebar entry on purpose (the menu is
+           the way in). Replace the body once the real design exists. -->
+      <div class="page-section" id="page-profile">
+        <div class="page-heading-title">Profile</div>
+        <p class="page-subtitle">占位页面 —— 这是「Manage All Podcast Channels」的落点，页面内容还没设计（没有加侧边栏入口，只从频道菜单进入）。给我参考截图后我再按实际设计补上。</p>
+      </div>
     </div>
+
+      <!-- ===== Channel list menu (opened by the 9-dot button in the topbar) =====
+           Section rail on the left, one panel per section on the right. The card
+           holds only the three items the real overlay has — no account header.
+           Mockup note: there is only one real channel behind this dashboard, so
+           picking a channel moves the tick and closes the menu — it does not
+           switch the page's data. "Add-on features" and "Create New Podcast"
+           have no flow to open, so they say where they would go. -->
+      <div class="channel-menu" id="channelMenu" role="dialog" aria-label="Channel list menu" hidden>
+        <div class="channel-menu-card">
+          <div class="channel-menu-nav" role="menu" aria-label="Apps">
+            <button class="channel-menu-item is-active" type="button" role="menuitem" aria-current="true" data-clm-section="channels">
+              <span class="channel-menu-item-icon" aria-hidden="true">
+                <!-- The three glyphs below are the real product's paths. Each keeps
+                     its own viewBox aspect ratio; widths are the reference's
+                     scaled to 0.9 for a 36px tile. -->
+                <svg width="20" height="16.25" viewBox="0 0 28.349 23.031" fill="currentColor">
+                  <g transform="translate(-0.061 0.035)">
+                    <path d="M337.854,471.909a5.611,5.611,0,1,0,1.643,3.967,5.611,5.611,0,0,0-1.643-3.967m-3.97,6.917a2.949,2.949,0,1,1,2.949-2.949,2.949,2.949,0,0,1-2.949,2.949" transform="translate(-319.973 -458.491)"></path>
+                    <path d="M196.324,233.463a1.715,1.715,0,0,1-.917-.266,1.615,1.615,0,0,1-.5-2.271,10.34,10.34,0,0,1,3.671-3.339,10.575,10.575,0,0,1,5.023-1.262,10.434,10.434,0,0,1,7.323,2.948,10.235,10.235,0,0,1,1.377,1.654,1.615,1.615,0,0,1-.5,2.271,1.716,1.716,0,0,1-2.335-.484,6.922,6.922,0,0,0-.931-1.119,7.1,7.1,0,0,0-10.8,1.119,1.7,1.7,0,0,1-1.418.749" transform="translate(-189.692 -220.677)"></path>
+                    <path d="M26.728,9.832a1.7,1.7,0,0,1-1.418-.746,13.024,13.024,0,0,0-1.76-2.1,13.431,13.431,0,0,0-20.39,2.1,1.7,1.7,0,0,1-1.418.746,1.719,1.719,0,0,1-.917-.266A1.607,1.607,0,0,1,.332,7.3,16.522,16.522,0,0,1,6.2,1.983,16.952,16.952,0,0,1,14.23-.035a16.712,16.712,0,0,1,11.707,4.7,16.326,16.326,0,0,1,2.2,2.637,1.607,1.607,0,0,1-.5,2.264,1.719,1.719,0,0,1-.917.266" transform="translate(0)"></path>
+                  </g>
+                </svg>
+              </span>
+              <span>Podcast Channels</span>
+            </button>
+            <button class="channel-menu-item" type="button" role="menuitem" data-clm-section="ai">
+              <span class="channel-menu-item-icon" aria-hidden="true">
+                <svg width="28.4" height="27.2" viewBox="0 0 31.586 30.255" fill="currentColor">
+                  <g transform="translate(-20.935 -41.984)">
+                    <path d="M50.046,46.077H36.641l-.762-4.093H23.425a2.484,2.484,0,0,0-2.49,2.49V65.638a2.483,2.483,0,0,0,2.49,2.49H34.769l-.921,4.111H50.03a2.486,2.486,0,0,0,2.491-2.491V48.568a2.471,2.471,0,0,0-2.475-2.49Zm-16.2,8.157H30.5L29.39,61.8H26.2l1.111-7.567H23.805l.476-2.49h10.2l-.635,2.49ZM51.3,69.719a1.243,1.243,0,0,1-1.254,1.237H35.435l.619-2.856h4.681l-.921-5.093-.762-4.269-.983-5.5-.016.079-.11-.586.031.015-.968-5.426H50.063A1.244,1.244,0,0,1,51.3,48.57Z"></path>
+                    <path d="M624.554,326.907v6.2a.921.921,0,1,1-1.841,0v-6.2a.921.921,0,1,1,1.841,0Zm-3.873-2.841V335.95a.921.921,0,0,1-1.84,0V324.066a.921.921,0,0,1,1.571-.65A.966.966,0,0,1,620.68,324.066Zm-3.872,2.841v6.2a.921.921,0,0,1-1.84,0v-6.2a.921.921,0,0,1,1.571-.652A.967.967,0,0,1,616.809,326.907Z" transform="translate(-574.919 -272.117)"></path>
+                  </g>
+                </svg>
+              </span>
+              <span>Podbean AI</span>
+            </button>
+            <button class="channel-menu-item" type="button" role="menuitem" data-clm-section="ads">
+              <span class="channel-menu-item-icon" aria-hidden="true">
+                <!-- Two-tone brand glyph: the solid shapes take the tile's own
+                     colour so only the white outline and the ADS letters read. -->
+                <svg width="21.6" height="16.17" viewBox="0 0 30.004 22.471">
+                  <g transform="translate(-101 -399)">
+                    <g transform="translate(102.915 399)">
+                      <path fill="#1e293b" d="M3.83,0H22.344a4.311,4.311,0,0,1,3.83,4.249V21.21H0V4.249A4.311,4.311,0,0,1,3.83,0Z"></path>
+                      <path fill="currentColor" d="M3.830333709716797,1.600004196166992C2.949594497680664,1.600004196166992,1.600004196166992,2.786603927612305,1.600004196166992,4.248674392700195L1.600004196166992,19.61020278930664L24.57392311096191,19.61020278930664L24.57392311096191,4.248674392700195C24.57392311096191,2.786603927612305,23.22433471679688,1.600004196166992,22.34359359741211,1.600004196166992L3.830333709716797,1.600004196166992M3.830333709716797,3.814697265625e-06L22.34359359741211,3.814697265625e-06C24.10645294189453,3.814697265625e-06,26.17392349243164,1.902193069458008,26.17392349243164,4.248674392700195L26.17392349243164,21.21020317077637L3.814697265625e-06,21.21020317077637L3.814697265625e-06,4.248674392700195C3.814697265625e-06,1.902193069458008,2.067474365234375,3.814697265625e-06,3.830333709716797,3.814697265625e-06Z"></path>
+                    </g>
+                    <g transform="translate(101 415.96)">
+                      <path fill="#1e293b" d="M26.49239921569824,4.710978031158447L3.510900020599365,4.710978031158447C3.188390016555786,4.710978031158447,2.491359949111938,4.384568214416504,1.834820032119751,3.779648065567017C1.071020007133484,3.075888156890869,0.800000011920929,2.426198244094849,0.800000011920929,2.083668231964111C0.800000011920929,1.397258162498474,1.050599932670593,1.155488133430481,1.239099979400635,1.033338189125061C1.53672993183136,0.8404781818389893,1.944299936294556,0.7999981641769409,2.233799934387207,0.7999981641769409L9.483647346496582,0.7999981641769409C9.879277229309082,1.305639982223511,10.39218807220459,1.587408185005188,10.9394998550415,1.587408185005188L19.06469917297363,1.587408185005188C19.61174011230469,1.587408185005188,20.12435340881348,1.305695533752441,20.51983833312988,0.8000075817108154L27.76950073242188,0.7999981641769409C28.05920028686523,0.7999981641769409,28.46705055236816,0.840498149394989,28.76490020751953,1.03341817855835C28.95348930358887,1.15556812286377,29.20420074462891,1.397338151931763,29.20420074462891,2.083668231964111C29.20420074462891,2.426218271255493,28.93317031860352,3.075908184051514,28.16930961608887,3.779608249664307C27.51263999938965,4.384558200836182,26.81521034240723,4.710978031158447,26.49239921569824,4.710978031158447Z"></path>
+                      <path fill="currentColor" d="M26.47190475463867,3.910978078842163C26.62174415588379,3.885802030563354,27.09938049316406,3.677534580230713,27.62726974487305,3.191228151321411C28.24388694763184,2.623166799545288,28.39615058898926,2.173657178878784,28.40419578552246,2.080106258392334C28.40381050109863,1.890063285827637,28.37272262573242,1.73255467414856,28.32999038696289,1.704868197441101C28.25530052185059,1.656488180160522,28.06369018554688,1.599998116493225,27.76950073242188,1.599998116493225L20.87977409362793,1.600007176399231C20.37077331542969,2.108611822128296,19.74132919311523,2.387408256530762,19.06469917297363,2.387408256530762L10.9394998550415,2.387408256530762C10.26260471343994,2.387408256530762,9.63294792175293,2.108620166778564,9.123783111572266,1.599998116493225L2.233799934387207,1.599998116493225C1.939990043640137,1.599998116493225,1.748679995536804,1.656408190727234,1.674139976501465,1.704708099365234C1.631447434425354,1.732374787330627,1.600388765335083,1.889944434165955,1.600003719329834,2.080096244812012C1.608031868934631,2.173619508743286,1.760284781455994,2.623162269592285,2.376909971237183,3.191308259963989C2.904426574707031,3.677347421646118,3.381686210632324,3.885679483413696,3.531513929367065,3.910978078842163L26.47190475463867,3.910978078842163M26.49239921569824,5.510978221893311L3.510900020599365,5.510978221893311C2.917020082473755,5.510978221893311,2.046339988708496,5.062338352203369,1.292739987373352,4.367988109588623C0.483269989490509,3.622158050537109,-9.155273872352154e-09,2.768198251724243,-9.155273872352154e-09,2.083668231964111C-9.155273872352154e-09,0.2706981599330902,1.399549961090088,-1.842727670009481e-06,2.233799934387207,-1.842727670009481e-06L9.914369583129883,-1.842727670009481e-06C10.18511009216309,0.5006081461906433,10.55844020843506,0.787408173084259,10.9394998550415,0.787408173084259L19.06469917297363,0.787408173084259C19.44515037536621,0.787408173084259,19.81850051879883,0.5004081726074219,20.08901977539062,8.157272532116622e-06L27.76950073242188,-1.842727670009481e-06C28.60408973693848,-1.842727670009481e-06,30.00419998168945,0.2706981599330902,30.00419998168945,2.083668231964111C30.00419998168945,2.768258094787598,29.52088928222656,3.622208118438721,28.71134948730469,4.367988109588623C27.9576301574707,5.062338352203369,27.08663940429688,5.510978221893311,26.49239921569824,5.510978221893311Z"></path>
+                    </g>
+                    <path fill="currentColor" d="M17.107,34.107v-3.83A1.281,1.281,0,0,1,18.384,29h.638a1.921,1.921,0,0,1,1.915,1.915v2.554a1.921,1.921,0,0,1-1.915,1.915h-.638A1.281,1.281,0,0,1,17.107,34.107Zm1.277,0h.638a.64.64,0,0,0,.638-.638V30.915a.64.64,0,0,0-.638-.638h-.638ZM12,34.745v-3.83a1.915,1.915,0,0,1,3.83,0v3.83a.638.638,0,1,1-1.277,0V32.83H13.277v1.915a.638.638,0,1,1-1.277,0Zm1.277-3.192h1.277v-.638a.638.638,0,0,0-1.277,0Zm10.853,2.554H22.853a.638.638,0,0,0,0,1.277h1.277a1.915,1.915,0,0,0,0-3.83.638.638,0,1,1,0-1.277h1.277a.638.638,0,1,0,0-1.277H24.129a1.915,1.915,0,0,0,0,3.83.638.638,0,0,1,0,1.277ZM12.638,39.214H22.853a.638.638,0,0,0,0-1.277H12.638a.638.638,0,0,0,0,1.277ZM12,41.129a.64.64,0,0,0,.638.638h16.6a.638.638,0,1,0,0-1.277h-16.6A.64.64,0,0,0,12,41.129Z" transform="translate(94.107 373.192)"></path>
+                  </g>
+                </svg>
+              </span>
+              <span>Ad Management</span>
+            </button>
+            <button class="channel-menu-item" type="button" role="menuitem" data-clm-section="company">
+              <span class="channel-menu-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 3 2.9 11.2h2.6V20h5.1v-4.6h2.8V20h5.1v-8.8h2.6L12 3z"></path>
+                </svg>
+              </span>
+              <span>Company Dashboard</span>
+            </button>
+          </div>
+
+            <div class="channel-menu-panels">
+              <div class="channel-panel" data-clm-panel="channels">
+                <!-- The top row is the search, full width — nothing else competes
+                     with it, because that is the one control the panel's width
+                     actually limits. It is shown by JS only above five channels, and
+                     the ROW carries that state (`hidden`): the search is its only
+                     child, so hiding the input alone would leave an empty hairline
+                     row on a small account. -->
+                <div class="channel-panel-top" hidden>
+                  <div class="channel-search">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <circle cx="11" cy="11" r="7"></circle>
+                      <path d="M20 20l-3.5-3.5"></path>
+                    </svg>
+                    <input class="channel-search-input" type="text" placeholder="Search by podcast title" aria-label="Search channels" autocomplete="off">
+                  </div>
+                </div>
+                <div class="channel-list">
+                  <button class="channel-item is-current" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#1a9a6c;--c-bg:#e8f6f0;">PS</span>
+                    <span class="channel-item-name">Podcasting Smarter</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#e8710a;--c-bg:#fdf1e3;">OT</span>
+                    <span class="channel-item-name">ON THE WAY PODCAST</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#7c3aed;--c-bg:#f4efff;">TL</span>
+                    <span class="channel-item-name">The Late Shift</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#2563eb;--c-bg:#eaf1fe;">PB</span>
+                    <span class="channel-item-name">PB Video Demo</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#e8710a;--c-bg:#fdf1e3;">AB</span>
+                    <span class="channel-item-name">Ad Break Diaries</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#7c3aed;--c-bg:#f4efff;">BA</span>
+                    <span class="channel-item-name">The Backlog</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#2563eb;--c-bg:#eaf1fe;">CC</span>
+                    <span class="channel-item-name">Coffee & Changelog</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#1a9a6c;--c-bg:#e8f6f0;">DW</span>
+                    <span class="channel-item-name">Deep Work Diaries</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#e8710a;--c-bg:#fdf1e3;">FN</span>
+                    <span class="channel-item-name">Field Notes</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#7c3aed;--c-bg:#f4efff;">LG</span>
+                    <span class="channel-item-name">The Long Game</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#2563eb;--c-bg:#eaf1fe;">MH</span>
+                    <span class="channel-item-name">Maker's Hours</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#1a9a6c;--c-bg:#e8f6f0;">NS</span>
+                    <span class="channel-item-name">Night Shift Radio</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#e8710a;--c-bg:#fdf1e3;">OB</span>
+                    <span class="channel-item-name">Off-Brand</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#7c3aed;--c-bg:#f4efff;">SN</span>
+                    <span class="channel-item-name">Signals & Noise</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#2563eb;--c-bg:#eaf1fe;">ST</span>
+                    <span class="channel-item-name">Small Talk, Big Ideas</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#1a9a6c;--c-bg:#e8f6f0;">SB</span>
+                    <span class="channel-item-name">Studio B</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#e8710a;--c-bg:#fdf1e3;">SD</span>
+                    <span class="channel-item-name">Sunday Deep Dive</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#7c3aed;--c-bg:#f4efff;">TM</span>
+                    <span class="channel-item-name">Two Mics One Take</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#2563eb;--c-bg:#eaf1fe;">UH</span>
+                    <span class="channel-item-name">Under the Hood</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                  <button class="channel-item" type="button">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#1a9a6c;--c-bg:#e8f6f0;">WR</span>
+                    <span class="channel-item-name">Weekend Rewind</span>
+                    <span class="channel-item-check" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    </span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+
+                <div class="channel-empty" hidden>No channels match your search.</div>
+
+                <!-- Both actions that LEAVE the switcher live here, stacked: the
+                     create action back in the comfortable centred spot it had, and
+                     the way to the full channel list — which is where per-channel
+                     management (including deleting a channel) belongs. -->
+                <div class="channel-panel-foot">
+                  <button class="channel-create-btn" type="button">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Create New Podcast
+                  </button>
+                  <button class="channel-manage-btn" type="button">Manage All Podcasts</button>
+                </div>
+              </div>
+
+              <!-- Podbean AI holds one feature, so one card — the same card the Ad
+                   Management pane uses. The rail names the SECTION "Podbean AI"; the
+                   feature keeps its own product name. Description is my copy. -->
+              <div class="channel-panel" data-clm-panel="ai" hidden>
+                <div class="feature-cards">
+                  <div class="feature-card">
+                    <span class="channel-item-art is-dark" aria-hidden="true"><svg width="28.4" height="27.2" viewBox="0 0 31.586 30.255" fill="currentColor">
+                  <g transform="translate(-20.935 -41.984)">
+                    <path d="M50.046,46.077H36.641l-.762-4.093H23.425a2.484,2.484,0,0,0-2.49,2.49V65.638a2.483,2.483,0,0,0,2.49,2.49H34.769l-.921,4.111H50.03a2.486,2.486,0,0,0,2.491-2.491V48.568a2.471,2.471,0,0,0-2.475-2.49Zm-16.2,8.157H30.5L29.39,61.8H26.2l1.111-7.567H23.805l.476-2.49h10.2l-.635,2.49ZM51.3,69.719a1.243,1.243,0,0,1-1.254,1.237H35.435l.619-2.856h4.681l-.921-5.093-.762-4.269-.983-5.5-.016.079-.11-.586.031.015-.968-5.426H50.063A1.244,1.244,0,0,1,51.3,48.57Z"></path>
+                    <path d="M624.554,326.907v6.2a.921.921,0,1,1-1.841,0v-6.2a.921.921,0,1,1,1.841,0Zm-3.873-2.841V335.95a.921.921,0,0,1-1.84,0V324.066a.921.921,0,0,1,1.571-.65A.966.966,0,0,1,620.68,324.066Zm-3.872,2.841v6.2a.921.921,0,0,1-1.84,0v-6.2a.921.921,0,0,1,1.571-.652A.967.967,0,0,1,616.809,326.907Z" transform="translate(-574.919 -272.117)"></path>
+                  </g>
+                </svg></span>
+                    <div class="feature-card-text">
+                      <div class="feature-card-title">
+                        AI Podcast Creator
+                        <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                      </div>
+                      <p class="feature-card-desc">Turn a topic, a script or a document into a finished episode with Podbean AI.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ad Management lists features rather than channels. These two rows
+                   are display-only — nothing opens yet, so they are divs with no
+                   cursor and no hover, not buttons that swallow a click. -->
+              <!-- Ad Management's two features as CARDS (the user's pick): they are
+                   two independent products rather than a list you scan, and cards
+                   fill the pane's height so it no longer sits short of the rail.
+                   Still display-only, so cursor stays default — the hover tint and
+                   the arrow are affordance-matching with the rest of the popover,
+                   not a promise that something happens. Descriptions are MY copy. -->
+              <div class="channel-panel" data-clm-panel="ads" hidden>
+                <div class="feature-cards">
+                  <div class="feature-card">
+                    <span class="channel-item-art is-dark" aria-hidden="true"><span class="channel-item-placard">AD</span></span>
+                    <div class="feature-card-text">
+                      <div class="feature-card-title">
+                        Ads Marketplace
+                        <span class="channel-menu-item-arrow" aria-hidden="true">
+                          <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                            <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                          </svg>
+                        </span>
+                      </div>
+                      <p class="feature-card-desc">Find advertisers for this podcast and manage every campaign it runs.</p>
+                    </div>
+                  </div>
+                  <div class="feature-card">
+                    <span class="channel-item-art is-dark" aria-hidden="true">
+                      <span class="channel-item-placard">AD</span>
+                      <span class="channel-item-badge">+</span>
+                    </span>
+                    <div class="feature-card-text">
+                      <div class="feature-card-title">
+                        Dynamic Ad Insertion
+                        <span class="channel-menu-item-arrow" aria-hidden="true">
+                          <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                            <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                          </svg>
+                        </span>
+                      </div>
+                      <p class="feature-card-desc">Let ads be inserted into your episodes automatically, wherever you set them.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Company Dashboard lists the shows in this network (the reference
+                   screenshot showed a row with artwork + show name). Same row shape
+                   as the channel list, but display-only: they are divs, and the
+                   cursor override in the stylesheet keeps them from looking clickable. -->
+              <div class="channel-panel" data-clm-panel="company" hidden>
+                <div class="channel-list">
+                  <div class="channel-item">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#1a9a6c;--c-bg:#e8f6f0;">PN</span>
+                    <span class="channel-item-name">PBPBnetwork</span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </div>
+                  <div class="channel-item">
+                    <span class="channel-item-art" aria-hidden="true" style="--c:#e8710a;--c-bg:#fdf1e3;">OT</span>
+                    <span class="channel-item-name">ON THE WAY PODCAST</span>
+                    <span class="channel-menu-item-arrow" aria-hidden="true">
+                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <button class="channel-menu-addon" type="button" data-clm-toast="Opening add-on features…">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="7" cy="7" r="3.2"></circle>
+            <circle cx="17" cy="7" r="3.2"></circle>
+            <circle cx="7" cy="17" r="3.2"></circle>
+            <circle cx="17" cy="17" r="3.2"></circle>
+          </svg>
+          Add-on features
+        </button>
+      </div>
+
+      <!-- Modal: Create New Podcast — opened by the channel list menu's footer action.
+           One URL field plus the fork: start a new podcast or import an existing one.
+           The URL is the SHORT NAME only; the domain suffix is fixed and shown beside
+           the field, so the address cannot be mistyped. -->
+      <div class="modal-overlay" id="createPodcastModal">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <div class="modal-title">Create New Podcast <span class="cp-step" id="cpStepLabel">1 / 2</span></div>
+            <button class="modal-close" onclick="closeCreatePodcastModal()" aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Step 1: the fork. Two selectable cards, side by side, each with a real
+                 radio so the exclusivity is stated rather than implied by styling. -->
+            <div class="cp-step-panel" id="cpStep1">
+              <div class="import-field-label" id="cpModeLegend">What are you creating?</div>
+              <div class="cp-choices" role="radiogroup" aria-labelledby="cpModeLegend">
+                <label class="cp-choice">
+                  <input type="radio" class="import-radio" name="cpMode" value="new" checked />
+                  <span class="import-source-icon" style="--c:#2563eb;--c-bg:#eaf1fe">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                  </span>
+                  <span class="cp-choice-name">Start a new podcast</span>
+                  <span class="cp-choice-desc">An empty show, ready for your first episode.</span>
+                </label>
+                <label class="cp-choice">
+                  <input type="radio" class="import-radio" name="cpMode" value="import" />
+                  <span class="import-source-icon" style="--c:#7c3aed;--c-fg:#f4efff;--c-bg:#f4efff">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 20h16"/></svg>
+                  </span>
+                  <span class="cp-choice-name">Import an existing podcast</span>
+                  <span class="cp-choice-desc">Bring a show and its episodes in from an RSS feed or a video series.</span>
+                </label>
+              </div>
+            </div>
+            <!-- Step 2: the address, which is the new channel's URL on BOTH paths -->
+            <div class="cp-step-panel" id="cpStep2" hidden>
+              <div class="import-field" id="cpUrlField">
+                <label class="import-field-label" for="cpUrlInput">Podcast URL</label>
+                <div class="pb-url-wrap">
+                  <input class="import-input" id="cpUrlInput" type="text" placeholder="my-show" autocomplete="off" spellcheck="false" />
+                  <span class="pb-url-suffix">.podbean.com</span>
+                </div>
+                <div class="import-example" id="cpUrlHint">This becomes the address of the new channel. Letters, numbers and hyphens only.</div>
+                <div class="pb-field-error"></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="cancel-btn" id="cpBackBtn" hidden>Back</button>
+            <button class="cancel-btn" onclick="closeCreatePodcastModal()">Cancel</button>
+            <button class="save-btn" id="cpContinueBtn">Continue</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Modal: Edit Endnote -->
       <div class="modal-overlay" id="endnoteModal">
@@ -3506,14 +4661,14 @@
         e.preventDefault();
 
         // Special behavior for Settings:
-        // If clicking Settings from another page -> expand & navigate to Podcast Info
+        // If clicking Settings from another page -> expand & navigate to Podcast Settings
         // If already on a Settings page -> just toggle collapse, keep page content
         var isSettings = link.textContent.trim().includes('Settings');
         if (isSettings) {
           var settingsHasActive = sub.querySelector('a.active') !== null;
 
           if (!settingsHasActive) {
-            // Coming from another page: expand Settings, activate Podcast Info
+            // Coming from another page: expand Settings, activate Podcast Settings
             if (unsavedChanges) {
               pendingNav = function() {
                 document.querySelectorAll('.sidebar-nav a, .sidebar-nav .sub-menu a').forEach(function(a) { a.classList.remove('active'); });
@@ -3612,6 +4767,131 @@
     function closeEndnoteModal() {
       document.getElementById('endnoteModal').classList.remove('open');
     }
+
+    // ==============================================
+    // AI setup — where "Start a new podcast" lands
+    // ==============================================
+    (function initAiSetup() {
+      var field = document.getElementById('aiSetupField');
+      var prompt = document.getElementById('aiSetupPrompt');
+      var genBtn = document.getElementById('aiSetupGenerate');
+      var result = document.getElementById('aiSetupResult');
+      if (!field || !genBtn || !result) return;
+
+      // No model sits behind this mockup, so "drafting" is a short state change and
+      // the draft itself is static sample copy. What is being shown is the FLOW.
+      function draft() {
+        clearAllErrors();
+        if (!(prompt.value || '').trim()) {
+          showFieldError(field, 'Tell Podbean AI what your podcast is about.');
+          prompt.focus();
+          return;
+        }
+        genBtn.disabled = true;
+        genBtn.textContent = 'Drafting…';
+        clearTimeout(draft._t);
+        draft._t = setTimeout(function () {
+          genBtn.disabled = false;
+          genBtn.textContent = 'Generate details';
+          result.hidden = false;
+        }, 900);
+      }
+      // One place that returns the page to its starting state; the dialog calls it on
+      // the way in, so a second run never opens on the previous draft.
+      window.resetAiSetup = function () {
+        clearTimeout(draft._t);
+        genBtn.disabled = false;
+        genBtn.textContent = 'Generate details';
+        prompt.value = '';
+        result.hidden = true;
+        clearAllErrors();
+      };
+      genBtn.addEventListener('click', draft);
+      document.getElementById('aiSetupAgain').addEventListener('click', function () {
+        result.hidden = true;
+        draft();
+      });
+      document.getElementById('aiSetupSkip').addEventListener('click', function () { switchPage('podcast-basic'); });
+      document.getElementById('aiSetupContinue').addEventListener('click', function () { switchPage('podcast-basic'); });
+    })();
+
+    // ==============================================
+    // Create New Podcast dialog (from the channel list menu)
+    // ==============================================
+    // One owner for which step is showing. Step 2 differs by path only in its
+    // wording: the URL is the NEW channel's address either way (the source feed
+    // belongs to the import wizard, which is where "import" continues to).
+    function setCpStep(n) {
+      document.getElementById('cpStep1').hidden = n !== 1;
+      document.getElementById('cpStep2').hidden = n !== 2;
+      document.getElementById('cpStepLabel').textContent = n + ' / 2';
+      document.getElementById('cpBackBtn').hidden = n === 1;
+      clearAllErrors();
+      if (n === 1) return;
+      var mode = document.querySelector('input[name="cpMode"]:checked').value;
+      document.getElementById('cpUrlHint').textContent = (mode === 'import')
+        ? 'Your imported podcast takes this address too — its episodes come from your feed. Letters, numbers and hyphens only.'
+        : 'This becomes the address of your new podcast. Letters, numbers and hyphens only.';
+      document.getElementById('cpUrlInput').focus();
+    }
+    function openCreatePodcastModal() {
+      var modal = document.getElementById('createPodcastModal');
+      if (!modal) return;
+      // every open starts clean: the field, the errors, the choice and the step
+      document.getElementById('cpUrlInput').value = '';
+      modal.querySelector('input[name="cpMode"][value="new"]').checked = true;
+      modal.classList.add('open');
+      setCpStep(1);
+    }
+    function closeCreatePodcastModal() {
+      var modal = document.getElementById('createPodcastModal');
+      if (modal) modal.classList.remove('open');
+    }
+    // One owner for what Continue does with the URL and the choice.
+    function submitCreatePodcast() {
+      var input = document.getElementById('cpUrlInput');
+      var field = document.getElementById('cpUrlField');
+      var value = (input.value || '').trim();
+      clearAllErrors();
+      if (!value) {
+        showFieldError(field, 'Enter a URL for your podcast.');
+        input.focus();
+        return;
+      }
+      if (!/^[a-z0-9-]+$/i.test(value)) {
+        showFieldError(field, 'Use letters, numbers and hyphens only.');
+        input.focus();
+        return;
+      }
+      var mode = document.querySelector('input[name="cpMode"]:checked').value;
+      closeCreatePodcastModal();
+      // The choice has a consequence: importing continues into the import wizard;
+      // starting fresh goes into the AI setup step for the new channel. Nothing
+      // claims the podcast was created — this mockup has no backend to do that.
+      if (mode === 'import') { switchPage('import-to-podbean'); return; }
+      // Hand the URL over, so the next page can name the podcast being set up
+      document.getElementById('aiSetupUrl').textContent = value + '.podbean.com';
+      if (typeof window.resetAiSetup === 'function') window.resetAiSetup();
+      switchPage('ai-setup');
+    }
+    (function initCreatePodcastModal() {
+      var modal = document.getElementById('createPodcastModal');
+      if (!modal) return;
+      // Continue advances a step, and only submits from the last one
+      document.getElementById('cpContinueBtn').addEventListener('click', function () {
+        if (!document.getElementById('cpStep2').hidden) { submitCreatePodcast(); return; }
+        setCpStep(2);
+      });
+      document.getElementById('cpBackBtn').addEventListener('click', function () { setCpStep(1); });
+      modal.addEventListener('click', function (e) { if (e.target === this) closeCreatePodcastModal(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeCreatePodcastModal();
+      });
+      // Enter submits from the field, like the other forms in this file
+      document.getElementById('cpUrlInput').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') submitCreatePodcast();
+      });
+    })();
     function saveEndnote() {
       // Saving always applies to every episode — there is no narrower scope.
       closeEndnoteModal();
@@ -3725,7 +5005,7 @@
       }
     }
 
-    // Podcast Info tabs
+    // Podcast Settings tabs
     document.querySelectorAll('.pb-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         var tabId = this.getAttribute('data-pb-tab');
@@ -3752,13 +5032,13 @@
       }
     }
 
-    // Save button: Podcast Info
+    // Save button: Podcast Settings
     if (document.getElementById('podcastInfoSaveBtn')) {
       document.getElementById('podcastInfoSaveBtn').addEventListener('click', function() {
         var activePage = document.querySelector('.page-section.active');
         if (!activePage || activePage.id !== 'page-podcast-basic') return;
 
-        // Validate all Podcast Info tabs
+        // Validate all Podcast Settings tabs
         var errors = validatePodcastInfo();
         if (errors.length > 0) {
           // Switch to the first tab that has an error
@@ -4828,6 +6108,173 @@
       };
 
       render();
+    })();
+
+    // ==============================================
+    // Channel list menu — the 9-dot button in the topbar
+    // ==============================================
+    (function initChannelMenu() {
+      var btn = document.querySelector('.channel-menu-btn');
+      var menu = document.getElementById('channelMenu');
+      if (!btn || !menu) return;
+
+      var items = menu.querySelectorAll('.channel-menu-item');
+      var panels = menu.querySelectorAll('.channel-panel');
+
+      // One owner for the open state. The button's aria-expanded is what the CSS
+      // reads for the pressed look, so there is no second flag to drift.
+      function isOpen() { return !menu.hidden; }
+      function setOpen(open) {
+        menu.hidden = !open;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        // An account with 20 channels can have the one you are on scrolled out of
+        // sight, which makes the tick useless. Bring it into view when the menu
+        // opens — 'nearest' so a row that is already visible does not move the
+        // list, and the lookup happens here because the current row changes.
+        if (open) {
+          var here = menu.querySelector('.channel-item.is-current');
+          if (here) here.scrollIntoView({ block: 'nearest' });
+        } else {
+          // Closing clears the query: a filter left over from last time would
+          // silently hide channels the next time the menu opens.
+          if (searchInput) { searchInput.value = ''; applyFilter(); }
+        }
+      }
+
+      // One owner for which section is showing.
+      function showSection(key) {
+        var i;
+        for (i = 0; i < items.length; i++) {
+          var on = items[i].getAttribute('data-clm-section') === key;
+          items[i].classList.toggle('is-active', on);
+          // The visible active state is a class; this is its announced twin.
+          if (on) items[i].setAttribute('aria-current', 'true');
+          else items[i].removeAttribute('aria-current');
+        }
+        for (i = 0; i < panels.length; i++) {
+          panels[i].hidden = panels[i].getAttribute('data-clm-panel') !== key;
+        }
+      }
+
+      btn.addEventListener('click', function (e) {
+        // Without this the document listener below sees the same click and closes
+        // the menu again in the same tick — it would never appear to open.
+        e.stopPropagation();
+        setOpen(!isOpen());
+      });
+
+      var i;
+      // The pane changes on CLICK (and on keyboard focus), not on hover. It used to
+      // follow the pointer; the pane's height depends on its content, so merely
+      // moving the pointer across the rail shifted the pane's own controls by up to
+      // 438px — the footer's Create button went from y=501 to y=63 when the pointer
+      // crossed onto Podbean AI. A menu whose contents move while you aim at them is
+      // worse than one extra click, and clicking keeps the move deliberate. The rail
+      // rows still tint on hover (CSS) — the feedback stayed, the switching went.
+      for (i = 0; i < items.length; i++) {
+        (function (item) {
+          function select() { showSection(item.getAttribute('data-clm-section')); }
+          item.addEventListener('focus', select);
+          item.addEventListener('click', select);
+        })(items[i]);
+      }
+
+      // Picking a channel moves the tick and closes the menu. The dashboard's own
+      // data stays put: this mockup has one channel behind it, so claiming a
+      // switch happened would be a lie.
+      // Scoped to the channels panel on purpose: `.channel-item` is the row shape,
+      // and Ad Management's two display-only rows use it too. Selecting all of them
+      // handed those rows this handler, so clicking one closed the menu and stole
+      // the tick.
+      var rows = menu.querySelectorAll('.channel-panel[data-clm-panel="channels"] .channel-item');
+      for (i = 0; i < rows.length; i++) {
+        (function (row) {
+          row.addEventListener('click', function () {
+            var j;
+            for (j = 0; j < rows.length; j++) rows[j].classList.remove('is-current');
+            row.classList.add('is-current');
+            setOpen(false);
+          });
+        })(rows[i]);
+      }
+
+      // ---- channel search, above the list it filters ----
+      // The whole top row is the search now, so the ROW owns that visibility:
+      // revealing the input alone would leave an empty striped row on a small
+      // account. One element, one owner.
+      var searchRow = menu.querySelector('.channel-panel-top');
+      var searchInput = menu.querySelector('.channel-search-input');
+      var emptyState = menu.querySelector('.channel-empty');
+      // The threshold the user asked for: the search row appears only above five
+      // channels, so a four-channel account sees the plain list it saw before.
+      var SEARCH_THRESHOLD = 5;
+
+      // One owner for which rows are visible: the filtered rows and the empty
+      // state are derived in the same pass, so they cannot disagree.
+      function applyFilter() {
+        var q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        var shown = 0;
+        for (var k = 0; k < rows.length; k++) {
+          var name = rows[k].querySelector('.channel-item-name').textContent.toLowerCase();
+          var hit = !q || name.indexOf(q) !== -1;
+          rows[k].hidden = !hit;
+          if (hit) shown++;
+        }
+        if (emptyState) emptyState.hidden = shown !== 0;
+      }
+
+      if (searchRow && searchInput && rows.length > SEARCH_THRESHOLD) {
+        searchRow.hidden = false;
+        searchInput.addEventListener('input', applyFilter);
+      }
+
+      // The panel's bottom row leaves the switcher for the full channel list. It
+      // navigates rather than toasting, so it closes the menu first — and
+      // `switchPage` is the same function the sidebar uses, so the page it lands
+      // on is the normal one (no second copy of the page-switching logic).
+      // Create New Podcast opens the create/import dialog (it used to only toast).
+      var createBtn = menu.querySelector('.channel-create-btn');
+      if (createBtn) {
+        createBtn.addEventListener('click', function () {
+          setOpen(false);
+          openCreatePodcastModal();
+        });
+      }
+
+      var manageBtn = menu.querySelector('.channel-manage-btn');
+      if (manageBtn) {
+        manageBtn.addEventListener('click', function () {
+          setOpen(false);
+          switchPage('profile');
+        });
+      }
+
+      // Actions with no flow behind them: they say where they would go instead of
+      // pretending to navigate (same treatment as the free-plan upgrade CTA).
+      var actions = menu.querySelectorAll('[data-clm-toast]');
+      for (i = 0; i < actions.length; i++) {
+        (function (el) {
+          el.addEventListener('click', function () {
+            showToast(el.getAttribute('data-clm-toast'));
+            setOpen(false);
+          });
+        })(actions[i]);
+      }
+
+      document.addEventListener('click', function (e) {
+        if (!isOpen()) return;
+        if (menu.contains(e.target) || btn.contains(e.target)) return;
+        setOpen(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isOpen()) setOpen(false);
+      });
+
+      // The menu ships closed with the channels section active; syncing keeps the
+      // markup and the panels from having to agree by hand.
+      setOpen(false);
+      showSection('channels');
     })();
 
   </script>

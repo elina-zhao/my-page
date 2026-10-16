@@ -15,7 +15,7 @@
      - [2.3.1 Settings 菜单点击行为](#231-settings-菜单点击行为核心规则)
      - [2.3.2 通用规则](#232-通用规则)
      - [2.3.3 未保存修改时切换页面](#233-未保存修改时切换页面)
-3. [页面一：Podcast Info（播客信息）](#3-页面一podcast-info播客信息)
+3. [页面一：Podcast Settings（播客设置）](#3-页面一podcast-settings播客设置)
    - [3.0 页面结构](#30-页面结构)
      - [Tab 切换规则](#tab-切换规则)
      - [Tab 切换与未保存状态](#tab-切换与未保存状态)
@@ -66,14 +66,14 @@
    - [8.2 格式校验](#82-格式校验)
    - [8.3 保存前校验流程](#83-保存前校验流程)
 8. [附录：新老页面对比](#附录新老页面对比)
-   - [Podcast Info 页面变化说明](#新-mockup-变化说明)
+   - [Podcast Settings 页面变化说明](#新-mockup-变化说明)
    - [Feed 页面变化说明](#feed-页面变化说明)
 
 ---
 
 ## 1. 产品概述
 
-**Settings** 是播客仪表盘的核心配置模块，为用户提供对播客节目的全方位管理能力。模块涵盖三个子页面：Podcast Info（节目基本信息与元数据）、Feed（RSS 源与分发配置）、Plugin（插件集成管理）。
+**Settings** 是播客仪表盘的核心配置模块，为用户提供对播客节目的全方位管理能力。模块涵盖三个子页面：Podcast Settings（节目基本信息与元数据）、Feed（RSS 源与分发配置）、Plugin（插件集成管理）。
 
 ---
 
@@ -83,7 +83,7 @@
 
 ```
 Settings                              ← 一级导航（带箭头展开/收起）
-├── Podcast Info（播客信息）           ← 默认页，active 状态
+├── Podcast Settings（播客设置）           ← 默认页，active 状态
 ├── Feed（RSS 源管理）
 └── Plugin（插件管理）
 ```
@@ -109,8 +109,8 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 | 当前状态 | 点击 Settings 一级菜单 | 结果 |
 |---|---|---|
-| 在**非 Settings 页面**（如 Dashboard、Episodes 等） | 展开子菜单 + 默认选中 **Podcast Info** + 右侧内容切换到 Podcast Info 页面 | 子菜单展开，Podcast Info 高亮 |
-| 已在 **Settings 子页面**（Podcast Info / Feed / Plugin） | 仅切换子菜单的展开/收起状态，**右侧页面内容不变** | 子菜单收起或展开，内容不动 |
+| 在**非 Settings 页面**（如 Dashboard、Episodes 等） | 展开子菜单 + 默认选中 **Podcast Settings** + 右侧内容切换到 Podcast Settings 页面 | 子菜单展开，Podcast Settings 高亮 |
+| 已在 **Settings 子页面**（Podcast Settings / Feed / Plugin） | 仅切换子菜单的展开/收起状态，**右侧页面内容不变** | 子菜单收起或展开，内容不动 |
 
 #### 2.3.2 通用规则
 
@@ -119,7 +119,7 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 #### 2.3.3 未保存修改时切换页面
 
-各 Settings 子页面（Podcast Info、Feed）拥有独立的 Save bar。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：
+各 Settings 子页面（Podcast Settings、Feed）拥有独立的 Save bar。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：
 
 ```
 ┌─────────────────────────────────────┐
@@ -149,14 +149,13 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 ---
 
-## 3. 页面一：Podcast Info（播客信息）
+## 3. 页面一：Podcast Settings（播客设置）
 
 ### 3.0 页面结构
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Podcast Info                                 │
-│  Configure your podcast basic settings here.  │
+│  Podcast Settings                                 │
 │                                               │
 │  ┌──────────────────────────────────────────┐ │
 │  │  Basic  │ Author & Region │ Content Classification │  ← 横向 Tab
@@ -177,7 +176,7 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 #### Tab 切换与未保存状态
 
-三个 Tab 同属 Podcast Info 页面，共享同一个 Save bar。Tab 切换时处理策略如下：
+三个 Tab 同属 Podcast Settings 页面，共享同一个 Save bar。Tab 切换时处理策略如下：
 
 | 场景 | 处理方式 |
 |---|---|
@@ -191,7 +190,7 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 #### Save 校验与错误提示
 
-点击 Save 时，系统校验 Podcast Info 页面下的所有三个 Tab 的必填字段：
+点击 Save 时，系统校验 Podcast Settings 页面下的所有三个 Tab 的必填字段：
 
 | 步骤 | 行为 |
 |---|---|
@@ -363,8 +362,6 @@ Tab 标签状态：
 ```
 ┌──────────────────────────────────────────────┐
 │  Feed                                         │
-│  Manage your podcast feed and Apple Podcasts  │
-│  settings.                                    │
 │                                               │
 │  ┌──────────────────────────────────────────┐ │
 │  │  表单内容区域（无 Tab，单面板）           │ │
@@ -373,7 +370,7 @@ Tab 标签状态：
 └──────────────────────────────────────────────┘
 ```
 
-**保存规则：** Feed 页面拥有独立的 Save bar，与 Podcast Info 页面的 Save bar 互不影响。修改 Feed 字段后 Save bar 在该页面底部显示，保存时仅校验和提交 Feed 页面的字段。
+**保存规则：** Feed 页面拥有独立的 Save bar，与 Podcast Settings 页面的 Save bar 互不影响。修改 Feed 字段后 Save bar 在该页面底部显示，保存时仅校验和提交 Feed 页面的字段。
 
 ### 4.1 Podcast Feed URL（RSS 源地址）
 
@@ -467,7 +464,6 @@ Tab 标签状态：
 ```
 ┌──────────────────────────────────────────────┐
 │  Plugin                                       │
-│  Manage your podcast plugins and integrations │
 │                                               │
 │  ┌───── ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┐  │
 │  │ Get more plugins →                        │  │
@@ -795,7 +791,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 ### 7.1 Save Bar（底部保存栏）
 
-Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plugin 页面不包含 Save bar。
+Podcast Settings 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plugin 页面不包含 Save bar。
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -823,7 +819,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 
 **补充说明：**
 
-- **Podcast Info 页面 Save**：校验该页面下所有三个 Tab 的必填字段。有错误时自动切换到第一个出错 Tab、高亮错误字段、有错 Tab 标签显示 ⚠
+- **Podcast Settings 页面 Save**：校验该页面下所有三个 Tab 的必填字段。有错误时自动切换到第一个出错 Tab、高亮错误字段、有错 Tab 标签显示 ⚠
 - **Feed 页面 Save**：校验 Feed 页面的必填字段（Feed Website URL），格式校验（Verification Email、Episode Number Limit、Redirect URL）
 - **Plugin 页面**：无表单字段，无需 Save bar
 
@@ -887,10 +883,10 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 
 | 页面 | 字段 | 校验规则 | 错误提示 |
 |---|---|---|---|
-| Podcast Info | Podcast Title | 不能为空 | 见 3.1.1 |
-| Podcast Info | Brief Description | 不能为空，也不能为默认值 "New podcast weblog" | 见 3.1.2 |
-| Podcast Info | Podcast Category | 至少选择一个分类 | 见 3.1.3 |
-| Podcast Info | Podcast Logo | 必须有图片 | 见 3.1.4 |
+| Podcast Settings | Podcast Title | 不能为空 | 见 3.1.1 |
+| Podcast Settings | Brief Description | 不能为空，也不能为默认值 "New podcast weblog" | 见 3.1.2 |
+| Podcast Settings | Podcast Category | 至少选择一个分类 | 见 3.1.3 |
+| Podcast Settings | Podcast Logo | 必须有图片 | 见 3.1.4 |
 | Feed | Feed Website URL | 不能为空 | 见 4.4 |
 
 ### 8.2 格式校验
@@ -905,10 +901,10 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 
 ### 8.3 保存前校验流程
 
-各页面独立执行校验。以下为 Podcast Info 页面（含多 Tab）的校验流程：
+各页面独立执行校验。以下为 Podcast Settings 页面（含多 Tab）的校验流程：
 
 ```
-用户点击 Save（Podcast Info 页面）
+用户点击 Save（Podcast Settings 页面）
        │
        ▼
 ┌──────────────────────────────┐
@@ -963,7 +959,7 @@ Feed 页面校验流程类似，但无 Tab，校验失败时直接在错误字�
 | 字段 | 新 Mockup | 非 Business Plan 老页面 | Business Plan 老页面 |
 |---|---|---|---|
 | **Podcast Feed URL** | 有（只读 + 复制） | 有 | 有 |
-| **Content Explicit** | **移入 Podcast Info → Content Classification Tab** | 有 | 有 |
+| **Content Explicit** | **移入 Podcast Settings → Content Classification Tab** | 有 | 有 |
 | **Apple Podcasts Summary** | **已移除**（删除前台独立输入框；已填写过历史内容的用户仍可见，字段设为只读，并标注功能已停用；提供"Use Podcast Description"操作，用户确认后删除独立 Summary，让 `<itunes:summary>` 跟随 Podcast Description，不再提供修改旧 Summary 的能力；底层可暂时继续自动输出以最大化兼容性） | 有 | 有 |
 | **Podcast Website** | 改名为 **Custom Website URL**（原默认填入 Podbean website URL；现改为用户留空则使用 Podbean website URL，用户填写则使用填写的值） | 有 | 有 |
 | **Episode Link** | **已移除**（转移到 Episode 发布页面，名称为 "Custom Episode Link"） | 有 | 有 |
