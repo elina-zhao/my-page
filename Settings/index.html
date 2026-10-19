@@ -982,10 +982,11 @@
       color: var(--text-tertiary);
     }
 
-    /* Toggle row compact */
+    /* Toggle row compact — the label and its switch share one line, vertically
+       centred; the description sits underneath (2026-10-19). */
     .toggle-row-compact {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: 24px;
     }
@@ -996,8 +997,21 @@
     .info-content-item:has(.toggle-row-compact) .cc-item-label {
       color: var(--text);
     }
+    /* Each toggle row closes with a hairline (2026-10-19: the four Feed toggles
+       asked for one). Toggle rows have no input underline to end them the way the
+       text fields do, so the rule does that job and splits the stack: 12px + the
+       1px line + 12px keeps the original 24px rhythm between rows. `:has` again,
+       so the rule travels with the pattern. */
+    .info-content-item:has(.toggle-row-compact) {
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .info-content-item:has(.toggle-row-compact):last-child {
+      margin-bottom: 0;
+    }
     .toggle-row-compact .cc-item-label {
-      margin-bottom: 2px;
+      margin-bottom: 0;
     }
     .toggle-desc {
       font-size: 12px;
@@ -1005,9 +1019,13 @@
       margin: 0;
       line-height: 1.5;
     }
+    /* Description follows the label/switch line instead of sitting beside the
+       switch (2026-10-19). */
+    .toggle-row-compact + .toggle-desc {
+      margin-top: 2px;
+    }
     .toggle-row-compact .pb-switch {
       flex-shrink: 0;
-      margin-top: 4px;
     }
 
     /* Warning icon */
@@ -3203,16 +3221,14 @@
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Ownership Verification Email</span>
                 <div class="toggle-row-compact">
-                  <div>
-                    <p class="toggle-desc">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</p>
-                  </div>
+                  <span class="cc-item-label">Ownership Verification Email</span>
                   <span class="pb-switch">
                     <input type="checkbox" data-toggle="ownership-email-input" />
                     <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
                   </span>
                 </div>
+                <p class="toggle-desc">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</p>
                 <div id="ownership-email-input" style="display:none;margin-top:12px;">
                   <input type="email" class="pb-input" placeholder="Enter verification email" />
                   <div class="pb-field-error"></div>
@@ -3220,16 +3236,14 @@
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Alternative Website URL</span>
                 <div class="toggle-row-compact">
-                  <div>
-                    <p class="toggle-desc">Set your custom podcast website URL in the RSS feed.</p>
-                  </div>
+                  <span class="cc-item-label">Alternative Website URL</span>
                   <span class="pb-switch">
                     <input type="checkbox" data-toggle="custom-website-url-input" />
                     <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
                   </span>
                 </div>
+                <p class="toggle-desc">Set your custom podcast website URL in the RSS feed.</p>
                 <div id="custom-website-url-input" style="display:none;margin-top:12px;">
                   <input type="text" class="pb-input" placeholder="https://your-website.com" value="" />
                   <div class="pb-field-error"></div>
@@ -3238,16 +3252,14 @@
 
 
               <div class="info-content-item">
-                <span class="cc-item-label">Generate audio-only feed</span>
                 <div class="toggle-row-compact">
-                  <div>
-                    <p class="toggle-desc">Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don't accept video. Your video feed stays as it is.</p>
-                  </div>
+                  <span class="cc-item-label">Generate audio-only feed</span>
                   <span class="pb-switch">
                     <input type="checkbox" data-toggle="audio-only-feed-url" />
                     <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
                   </span>
                 </div>
+                <p class="toggle-desc">Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don't accept video. Your video feed stays as it is.</p>
                 <div id="audio-only-feed-url" style="display:none;margin-top:16px;">
                   <p class="toggle-desc" style="margin-bottom:8px;">Your audio-only feed is:</p>
                   <div class="feed-url-box">
@@ -3261,16 +3273,14 @@
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Redirect to a New Feed</span>
                 <div class="toggle-row-compact">
-                  <div>
-                    <p class="toggle-desc">Only enter your new podcast feed URL when you're ready to move away from Podbean.</p>
-                  </div>
+                  <span class="cc-item-label">Redirect to a New Feed</span>
                   <span class="pb-switch">
                     <input type="checkbox" data-toggle="redirect-feed-input" />
                     <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
                   </span>
                 </div>
+                <p class="toggle-desc">Only enter your new podcast feed URL when you're ready to move away from Podbean.</p>
                 <div id="redirect-feed-input" style="display:none;margin-top:12px;">
                   <input type="text" class="pb-input" placeholder="https://" />
                   <div class="pb-field-error"></div>
