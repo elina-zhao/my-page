@@ -306,7 +306,7 @@
       line-height: 1.5;
     }
 
-    /* ---- Tabs (Podcast Settings) ---- */
+    /* ---- Tabs (Podcast Info) ---- */
     /* The subtitle used to supply the space above the tabs on this page (4px
        heading margin + a 21px line + 24px of its own). With it gone the tabs
        would sit 4px under the heading, so this page's tab bar carries the gap —
@@ -381,8 +381,12 @@
     .cc-item-label {
       display: block;
       font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
+      /* Not bold: the label is a quiet caption, not a heading (2026-10-19). */
+      font-weight: 400;
+      /* #999 on white is 2.85:1 — below AA for 14px text. Used deliberately on
+         Podcast Info / Feed (2026-10-19); the required asterisk keeps its own
+         red, so the "this field matters" signal is unchanged. */
+      color: #999;
       margin-bottom: 6px;
     }
     .cc-item-label .required {
@@ -985,6 +989,13 @@
       justify-content: space-between;
       gap: 24px;
     }
+    /* A toggle row's title stays the original dark: it names a setting you switch
+       on, so it reads as a heading rather than a faded field label. Scoped by the
+       row's own structure (`:has`), not by page id or label text, so it follows
+       any toggle row added later (2026-10-19). */
+    .info-content-item:has(.toggle-row-compact) .cc-item-label {
+      color: var(--text);
+    }
     .toggle-row-compact .cc-item-label {
       margin-bottom: 2px;
     }
@@ -1321,7 +1332,7 @@
     .wiz-search-row { display: flex; align-items: flex-end; gap: 18px; }
     .wiz-search-row .import-input { flex: 1; }
     .wiz-search-row .import-btn { flex-shrink: 0; }
-    /* Same underline field language as .pb-input on Podcast Settings / Feed */
+    /* Same underline field language as .pb-input on Podcast Info / Feed */
     .import-input {
       width: 100%;
       padding: 8px 0;
@@ -2301,6 +2312,10 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
+      /* The pane paints a colour to the card's edges, so it has to be cut to the
+         card's radius — without this its square corners overpaint the rounded
+         ones, most visibly at the top-right where the tint meets the border. */
+      overflow: hidden;
       box-shadow: 0 16px 48px rgba(0,0,0,0.15);
       /* No channel count makes the popover grow past the screen. The real
          overlay caps itself at 497px, which is what this number is; the vh term
@@ -2319,8 +2334,13 @@
        column stretches, so the line runs the full height of the card. */
     .channel-menu-nav {
       flex: 0 0 300px;
-      padding: 8px;
-      border-right: 1px solid var(--border);
+      /* No top inset: the first row — the one that is usually active — starts at
+         the card's top edge, so the section colour runs to the top instead of
+         leaving a white band above it. Left/right/bottom keep their 8px. */
+      padding: 0 8px 8px;
+      /* No divider any more: the active row and the pane are one colour, so a
+         hairline would cut the surface it is meant to be continuous with. */
+      border-right: 0;
       /* three items today; scrolls rather than pushing the card taller if the
          section list ever grows */
       overflow-y: auto;
@@ -2342,8 +2362,39 @@
       text-align: left;
       transition: background 0.15s;
     }
+    /* Hover and "this is the section whose list you are looking at" must not look
+       alike: with a pane on the right, two rows tinted the same colour reads as
+       "both of these are open". Hover stays almost white; the active row is a
+       full step darker, and keeps its own value while the pointer is on it. */
     .channel-menu-item:hover { background: #f8fafc; }
-    .channel-menu-item.is-active { background: #f1f5f9; }
+    /* The active row is the SAME colour as the pane and runs edge to edge: it
+       crosses the nav's 8px gutter on BOTH sides, so no white strip is left down
+       its left (2026-10-19: 「一个菜单，active的时候，左侧也不要有白边」) and it
+       meets the pane with no seam on its right. +16px of width, -8px of margin
+       each side; the matching 16px of left/right padding keeps the icon, label
+       and chevron on exactly the same x as every other row. Square corners: at
+       the card's edge the only rounding left is the card's own 12px clip.
+       No :hover variant — a darker band would show a seam against the pane. */
+    .channel-menu-item.is-active {
+      background: #e6edf5;
+      width: calc(100% + 16px);
+      margin-left: -8px;
+      margin-right: -8px;
+      padding-left: 16px;
+      padding-right: 16px;
+      border-radius: 0;
+    }
+    /* A standing chevron on the two sections that open a LIST rather than a couple
+       of cards — a quiet "there is content to the right". Deliberately NOT
+       .channel-menu-item-arrow: that one belongs to rows/cards and stays invisible
+       until you point at it, whereas this hint is always on. */
+    .channel-menu-chevron {
+      margin-left: auto;
+      flex-shrink: 0;
+      display: flex;
+      color: var(--text-secondary);
+    }
+    .channel-menu-item:hover .channel-menu-chevron { color: var(--text); }
     .channel-menu-item-icon {
       width: 36px;
       height: 36px;
@@ -2370,6 +2421,17 @@
       display: flex;
       color: var(--text-secondary);
     }
+    /* The rail's LEAF sections (AI Podcast Creator, Ads Marketplace, Dynamic Ad
+       Insertion) carry the same → the rows do, and the same rule: invisible until
+       you point at that row. It is a → and not a chevron on purpose — a chevron
+       says "there is a list to the right", which is true of the two sections that
+       have a pane and false of these three, which go somewhere instead. */
+    .channel-menu-item .channel-menu-item-arrow {
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .channel-menu-item:hover .channel-menu-item-arrow,
+    .channel-menu-item:focus-visible .channel-menu-item-arrow { opacity: 1; }
     /* Inside a row the arrow is the hover affordance: it appears while the
        pointer is on THAT row (the user asked for this explicitly — 「hover 在哪个
        上面，哪个右侧动态出现向右的箭头」). Each row/card carries its own copy, so
@@ -2422,6 +2484,11 @@
       display: flex;
       flex-direction: column;
       min-height: 0;
+      /* The pane wears the active section's colour: which list you are looking at
+         is answered by the surface itself, not only by the row on the rail. The
+         nav paints the identical #e6edf5 into its active row, and the two meet
+         with no line between them. */
+      background: #e6edf5;
     }
     /* min-height: 0 is what lets the list below actually scroll instead of
        stretching the card — a flex item's default min-height is its content. */
@@ -2502,8 +2569,13 @@
       text-align: left;
       transition: background 0.15s;
     }
-    .channel-item:hover { background: #f8fafc; }
-    /* ---- Company Dashboard: a channel-list, exactly like Podcast Channels --- */
+    /* The pane is tinted (#e6edf5), so hover steps DOWN from the surface instead of
+       up from white. The current channel deliberately gets NO fill — the tick is
+       the whole marker (2026-10-19: 「二级列表中选中的channels 不要有active
+       背景色」), because a filled row on a tinted surface reads as a second
+       "selected" competing with the rail's active one. */
+    .channel-item:hover { background: #e0e0e0; }
+    /* ---- Organizations: a channel-list, exactly like Podcast Channels --- */
     /* Same row shape, same structure (list only — no search row, no bottom action),
        same behaviour: display-only divs, so the row's built-in pointer cursor is
        given back here. `flex: 1` keeps it a real scroll region if the network ever
@@ -2600,7 +2672,7 @@
       white-space: nowrap;
       transition: background 0.15s, color 0.15s;
     }
-    .channel-manage-btn:hover { background: #f1f5f9; color: var(--text); }
+    .channel-manage-btn:hover { background: #e0e0e0; color: var(--text); }
 
     /* The create action: the primary of the two footer actions, so it keeps the
        heavier weight (13px / 600 / var(--text)) while Manage All below it is a
@@ -2622,7 +2694,7 @@
       white-space: nowrap;
       transition: background 0.15s;
     }
-    .channel-create-btn:hover { background: #f1f5f9; }
+    .channel-create-btn:hover { background: #e0e0e0; }
 
     /* ---- Ad Management: its two features as cards ---- */
     .feature-cards {
@@ -2902,7 +2974,7 @@
         <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
       </a>
       <div class="sub-menu">
-        <a href="#" class="active" data-page="podcast-basic">Podcast Settings</a>
+        <a href="#" class="active" data-page="podcast-basic">Podcast Info</a>
         <a href="#" data-page="feed">Feed</a>
         <a href="#" data-page="plugin">Plugin</a>
         <a href="#" data-page="import-to-podbean">Import to Podbean</a>
@@ -2919,9 +2991,9 @@
   <!-- ===== MAIN CONTENT ===== -->
   <div class="main-panel">
     <div class="content">
-      <!-- ===== Page: Podcast Settings ===== -->
+      <!-- ===== Page: Podcast Info ===== -->
       <div class="page-section active" id="page-podcast-basic">
-        <div class="page-heading-title">Podcast Settings</div>
+        <div class="page-heading-title">Podcast Info</div>
 
         <!-- Tabs -->
         <div class="pb-tabs">
@@ -3124,13 +3196,6 @@
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Ownership Verification Email</span>
-                <p class="toggle-desc" style="margin-bottom:8px;">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</p>
-                <input type="email" class="pb-input" placeholder="Enter verification email" />
-                <div class="pb-field-error"></div>
-              </div>
-
-              <div class="info-content-item">
                 <span class="cc-item-label">Episode Number Limit</span>
                 <input type="number" class="pb-input" min="1" max="1999" value="100" />
                 <div class="pb-field-error"></div>
@@ -3138,10 +3203,37 @@
               </div>
 
               <div class="info-content-item">
-                <span class="cc-item-label">Custom Website URL</span>
-                <input type="text" class="pb-input" placeholder="Leave this field blank to use your Podbean podcast website URL." value="" />
-                <div class="pb-field-error"></div>
-                <span class="tips">Use your own website URL as the podcast website link in your RSS feed.</span>
+                <span class="cc-item-label">Ownership Verification Email</span>
+                <div class="toggle-row-compact">
+                  <div>
+                    <p class="toggle-desc">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</p>
+                  </div>
+                  <span class="pb-switch">
+                    <input type="checkbox" data-toggle="ownership-email-input" />
+                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
+                  </span>
+                </div>
+                <div id="ownership-email-input" style="display:none;margin-top:12px;">
+                  <input type="email" class="pb-input" placeholder="Enter verification email" />
+                  <div class="pb-field-error"></div>
+                </div>
+              </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Alternative Website URL</span>
+                <div class="toggle-row-compact">
+                  <div>
+                    <p class="toggle-desc">Set your custom podcast website URL in the RSS feed.</p>
+                  </div>
+                  <span class="pb-switch">
+                    <input type="checkbox" data-toggle="custom-website-url-input" />
+                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
+                  </span>
+                </div>
+                <div id="custom-website-url-input" style="display:none;margin-top:12px;">
+                  <input type="text" class="pb-input" placeholder="https://your-website.com" value="" />
+                  <div class="pb-field-error"></div>
+                </div>
               </div>
 
 
@@ -3151,12 +3243,12 @@
                   <div>
                     <p class="toggle-desc">Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don't accept video. Your video feed stays as it is.</p>
                   </div>
-                  <span class="pb-switch checked">
-                    <input type="checkbox" checked data-toggle="audio-only-feed-url" />
+                  <span class="pb-switch">
+                    <input type="checkbox" data-toggle="audio-only-feed-url" />
                     <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
                   </span>
                 </div>
-                <div id="audio-only-feed-url" style="margin-top:16px;">
+                <div id="audio-only-feed-url" style="display:none;margin-top:16px;">
                   <p class="toggle-desc" style="margin-bottom:8px;">Your audio-only feed is:</p>
                   <div class="feed-url-box">
                     <span class="feed-url-text">https://feed.podbean.com/channel519b/audio/feed.xml</span>
@@ -3673,7 +3765,7 @@
            way in), and both the copy and the drafted values are MINE, not product copy. -->
       <div class="page-section" id="page-ai-setup">
         <div class="page-heading-title">Set up with Podbean AI</div>
-        <p class="page-subtitle">Tell Podbean AI what your podcast is about. It drafts the title, description and category for <strong id="aiSetupUrl">your new podcast</strong> — everything stays editable in Podcast Settings.</p>
+        <p class="page-subtitle">Tell Podbean AI what your podcast is about. It drafts the title, description and category for <strong id="aiSetupUrl">your new podcast</strong> — everything stays editable in Podcast Info.</p>
 
         <div class="ai-setup-prompt">
           <div class="import-field" id="aiSetupField">
@@ -3710,12 +3802,12 @@
               <div class="ai-setup-key">Artwork</div>
               <div class="ai-setup-val">
                 <div class="ai-setup-art"><span>TW</span><span class="ai-setup-art-tag">Draft</span></div>
-                <div class="import-example" style="margin-top:8px;">You can replace it with your own cover in Podcast Settings.</div>
+                <div class="import-example" style="margin-top:8px;">You can replace it with your own cover in Podcast Info.</div>
               </div>
             </div>
           </div>
           <div class="ai-setup-actions">
-            <button class="import-btn" type="button" id="aiSetupContinue">Continue to Podcast Settings</button>
+            <button class="import-btn" type="button" id="aiSetupContinue">Continue to Podcast Info</button>
           </div>
         </div>
       </div>
@@ -3728,6 +3820,27 @@
       <div class="page-section" id="page-profile">
         <div class="page-heading-title">Profile</div>
         <p class="page-subtitle">占位页面 —— 这是「Manage All Podcast Channels」的落点，页面内容还没设计（没有加侧边栏入口，只从频道菜单进入）。给我参考截图后我再按实际设计补上。</p>
+      </div>
+
+      <!-- ===== Pages: the three LEAF destinations of the channel list menu =====
+           AI Podcast Creator, Ads Marketplace and Dynamic Ad Insertion have no
+           second-level list — clicking one leaves the popover and lands here. Like
+           Profile above they are stubs, not designs, and they carry no sidebar entry
+           on purpose: the menu is the only way in. Replace each body when the real
+           design is available. -->
+      <div class="page-section" id="page-ai-creator">
+        <div class="page-heading-title">AI Podcast Creator</div>
+        <p class="page-subtitle">占位页面 —— 这是频道菜单里「AI Podcast Creator」的落点，页面内容还没设计（没有侧边栏入口，只从频道菜单进入）。给我参考截图后我再按实际设计补上。</p>
+      </div>
+
+      <div class="page-section" id="page-ads-marketplace">
+        <div class="page-heading-title">Ads Marketplace</div>
+        <p class="page-subtitle">占位页面 —— 这是频道菜单里「Ads Marketplace」的落点，页面内容还没设计（没有侧边栏入口，只从频道菜单进入）。给我参考截图后我再按实际设计补上。</p>
+      </div>
+
+      <div class="page-section" id="page-dynamic-ad-insertion">
+        <div class="page-heading-title">Dynamic Ad Insertion</div>
+        <p class="page-subtitle">占位页面 —— 这是频道菜单里「Dynamic Ad Insertion」的落点，页面内容还没设计（没有侧边栏入口，只从频道菜单进入）。给我参考截图后我再按实际设计补上。</p>
       </div>
     </div>
 
@@ -3755,37 +3868,9 @@
                 </svg>
               </span>
               <span>Podcast Channels</span>
-            </button>
-            <button class="channel-menu-item" type="button" role="menuitem" data-clm-section="ai">
-              <span class="channel-menu-item-icon" aria-hidden="true">
-                <svg width="28.4" height="27.2" viewBox="0 0 31.586 30.255" fill="currentColor">
-                  <g transform="translate(-20.935 -41.984)">
-                    <path d="M50.046,46.077H36.641l-.762-4.093H23.425a2.484,2.484,0,0,0-2.49,2.49V65.638a2.483,2.483,0,0,0,2.49,2.49H34.769l-.921,4.111H50.03a2.486,2.486,0,0,0,2.491-2.491V48.568a2.471,2.471,0,0,0-2.475-2.49Zm-16.2,8.157H30.5L29.39,61.8H26.2l1.111-7.567H23.805l.476-2.49h10.2l-.635,2.49ZM51.3,69.719a1.243,1.243,0,0,1-1.254,1.237H35.435l.619-2.856h4.681l-.921-5.093-.762-4.269-.983-5.5-.016.079-.11-.586.031.015-.968-5.426H50.063A1.244,1.244,0,0,1,51.3,48.57Z"></path>
-                    <path d="M624.554,326.907v6.2a.921.921,0,1,1-1.841,0v-6.2a.921.921,0,1,1,1.841,0Zm-3.873-2.841V335.95a.921.921,0,0,1-1.84,0V324.066a.921.921,0,0,1,1.571-.65A.966.966,0,0,1,620.68,324.066Zm-3.872,2.841v6.2a.921.921,0,0,1-1.84,0v-6.2a.921.921,0,0,1,1.571-.652A.967.967,0,0,1,616.809,326.907Z" transform="translate(-574.919 -272.117)"></path>
-                  </g>
-                </svg>
+              <span class="channel-menu-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
               </span>
-              <span>Podbean AI</span>
-            </button>
-            <button class="channel-menu-item" type="button" role="menuitem" data-clm-section="ads">
-              <span class="channel-menu-item-icon" aria-hidden="true">
-                <!-- Two-tone brand glyph: the solid shapes take the tile's own
-                     colour so only the white outline and the ADS letters read. -->
-                <svg width="21.6" height="16.17" viewBox="0 0 30.004 22.471">
-                  <g transform="translate(-101 -399)">
-                    <g transform="translate(102.915 399)">
-                      <path fill="#1e293b" d="M3.83,0H22.344a4.311,4.311,0,0,1,3.83,4.249V21.21H0V4.249A4.311,4.311,0,0,1,3.83,0Z"></path>
-                      <path fill="currentColor" d="M3.830333709716797,1.600004196166992C2.949594497680664,1.600004196166992,1.600004196166992,2.786603927612305,1.600004196166992,4.248674392700195L1.600004196166992,19.61020278930664L24.57392311096191,19.61020278930664L24.57392311096191,4.248674392700195C24.57392311096191,2.786603927612305,23.22433471679688,1.600004196166992,22.34359359741211,1.600004196166992L3.830333709716797,1.600004196166992M3.830333709716797,3.814697265625e-06L22.34359359741211,3.814697265625e-06C24.10645294189453,3.814697265625e-06,26.17392349243164,1.902193069458008,26.17392349243164,4.248674392700195L26.17392349243164,21.21020317077637L3.814697265625e-06,21.21020317077637L3.814697265625e-06,4.248674392700195C3.814697265625e-06,1.902193069458008,2.067474365234375,3.814697265625e-06,3.830333709716797,3.814697265625e-06Z"></path>
-                    </g>
-                    <g transform="translate(101 415.96)">
-                      <path fill="#1e293b" d="M26.49239921569824,4.710978031158447L3.510900020599365,4.710978031158447C3.188390016555786,4.710978031158447,2.491359949111938,4.384568214416504,1.834820032119751,3.779648065567017C1.071020007133484,3.075888156890869,0.800000011920929,2.426198244094849,0.800000011920929,2.083668231964111C0.800000011920929,1.397258162498474,1.050599932670593,1.155488133430481,1.239099979400635,1.033338189125061C1.53672993183136,0.8404781818389893,1.944299936294556,0.7999981641769409,2.233799934387207,0.7999981641769409L9.483647346496582,0.7999981641769409C9.879277229309082,1.305639982223511,10.39218807220459,1.587408185005188,10.9394998550415,1.587408185005188L19.06469917297363,1.587408185005188C19.61174011230469,1.587408185005188,20.12435340881348,1.305695533752441,20.51983833312988,0.8000075817108154L27.76950073242188,0.7999981641769409C28.05920028686523,0.7999981641769409,28.46705055236816,0.840498149394989,28.76490020751953,1.03341817855835C28.95348930358887,1.15556812286377,29.20420074462891,1.397338151931763,29.20420074462891,2.083668231964111C29.20420074462891,2.426218271255493,28.93317031860352,3.075908184051514,28.16930961608887,3.779608249664307C27.51263999938965,4.384558200836182,26.81521034240723,4.710978031158447,26.49239921569824,4.710978031158447Z"></path>
-                      <path fill="currentColor" d="M26.47190475463867,3.910978078842163C26.62174415588379,3.885802030563354,27.09938049316406,3.677534580230713,27.62726974487305,3.191228151321411C28.24388694763184,2.623166799545288,28.39615058898926,2.173657178878784,28.40419578552246,2.080106258392334C28.40381050109863,1.890063285827637,28.37272262573242,1.73255467414856,28.32999038696289,1.704868197441101C28.25530052185059,1.656488180160522,28.06369018554688,1.599998116493225,27.76950073242188,1.599998116493225L20.87977409362793,1.600007176399231C20.37077331542969,2.108611822128296,19.74132919311523,2.387408256530762,19.06469917297363,2.387408256530762L10.9394998550415,2.387408256530762C10.26260471343994,2.387408256530762,9.63294792175293,2.108620166778564,9.123783111572266,1.599998116493225L2.233799934387207,1.599998116493225C1.939990043640137,1.599998116493225,1.748679995536804,1.656408190727234,1.674139976501465,1.704708099365234C1.631447434425354,1.732374787330627,1.600388765335083,1.889944434165955,1.600003719329834,2.080096244812012C1.608031868934631,2.173619508743286,1.760284781455994,2.623162269592285,2.376909971237183,3.191308259963989C2.904426574707031,3.677347421646118,3.381686210632324,3.885679483413696,3.531513929367065,3.910978078842163L26.47190475463867,3.910978078842163M26.49239921569824,5.510978221893311L3.510900020599365,5.510978221893311C2.917020082473755,5.510978221893311,2.046339988708496,5.062338352203369,1.292739987373352,4.367988109588623C0.483269989490509,3.622158050537109,-9.155273872352154e-09,2.768198251724243,-9.155273872352154e-09,2.083668231964111C-9.155273872352154e-09,0.2706981599330902,1.399549961090088,-1.842727670009481e-06,2.233799934387207,-1.842727670009481e-06L9.914369583129883,-1.842727670009481e-06C10.18511009216309,0.5006081461906433,10.55844020843506,0.787408173084259,10.9394998550415,0.787408173084259L19.06469917297363,0.787408173084259C19.44515037536621,0.787408173084259,19.81850051879883,0.5004081726074219,20.08901977539062,8.157272532116622e-06L27.76950073242188,-1.842727670009481e-06C28.60408973693848,-1.842727670009481e-06,30.00419998168945,0.2706981599330902,30.00419998168945,2.083668231964111C30.00419998168945,2.768258094787598,29.52088928222656,3.622208118438721,28.71134948730469,4.367988109588623C27.9576301574707,5.062338352203369,27.08663940429688,5.510978221893311,26.49239921569824,5.510978221893311Z"></path>
-                    </g>
-                    <path fill="currentColor" d="M17.107,34.107v-3.83A1.281,1.281,0,0,1,18.384,29h.638a1.921,1.921,0,0,1,1.915,1.915v2.554a1.921,1.921,0,0,1-1.915,1.915h-.638A1.281,1.281,0,0,1,17.107,34.107Zm1.277,0h.638a.64.64,0,0,0,.638-.638V30.915a.64.64,0,0,0-.638-.638h-.638ZM12,34.745v-3.83a1.915,1.915,0,0,1,3.83,0v3.83a.638.638,0,1,1-1.277,0V32.83H13.277v1.915a.638.638,0,1,1-1.277,0Zm1.277-3.192h1.277v-.638a.638.638,0,0,0-1.277,0Zm10.853,2.554H22.853a.638.638,0,0,0,0,1.277h1.277a1.915,1.915,0,0,0,0-3.83.638.638,0,1,1,0-1.277h1.277a.638.638,0,1,0,0-1.277H24.129a1.915,1.915,0,0,0,0,3.83.638.638,0,0,1,0,1.277ZM12.638,39.214H22.853a.638.638,0,0,0,0-1.277H12.638a.638.638,0,0,0,0,1.277ZM12,41.129a.64.64,0,0,0,.638.638h16.6a.638.638,0,1,0,0-1.277h-16.6A.64.64,0,0,0,12,41.129Z" transform="translate(94.107 373.192)"></path>
-                  </g>
-                </svg>
-              </span>
-              <span>Ad Management</span>
             </button>
             <button class="channel-menu-item" type="button" role="menuitem" data-clm-section="company">
               <span class="channel-menu-item-icon" aria-hidden="true">
@@ -3793,7 +3878,64 @@
                   <path d="M12 3 2.9 11.2h2.6V20h5.1v-4.6h2.8V20h5.1v-8.8h2.6L12 3z"></path>
                 </svg>
               </span>
-              <span>Company Dashboard</span>
+              <span>Organizations</span>
+              <span class="channel-menu-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+              </span>
+            </button>
+                        <button class="channel-menu-item" type="button" role="menuitem" data-clm-page="ai-creator">
+              <span class="channel-menu-item-icon" aria-hidden="true">
+  <svg width="28.4" height="27.2" viewBox="0 0 31.586 30.255" fill="currentColor">
+                    <g transform="translate(-20.935 -41.984)">
+                      <path d="M50.046,46.077H36.641l-.762-4.093H23.425a2.484,2.484,0,0,0-2.49,2.49V65.638a2.483,2.483,0,0,0,2.49,2.49H34.769l-.921,4.111H50.03a2.486,2.486,0,0,0,2.491-2.491V48.568a2.471,2.471,0,0,0-2.475-2.49Zm-16.2,8.157H30.5L29.39,61.8H26.2l1.111-7.567H23.805l.476-2.49h10.2l-.635,2.49ZM51.3,69.719a1.243,1.243,0,0,1-1.254,1.237H35.435l.619-2.856h4.681l-.921-5.093-.762-4.269-.983-5.5-.016.079-.11-.586.031.015-.968-5.426H50.063A1.244,1.244,0,0,1,51.3,48.57Z"></path>
+                      <path d="M624.554,326.907v6.2a.921.921,0,1,1-1.841,0v-6.2a.921.921,0,1,1,1.841,0Zm-3.873-2.841V335.95a.921.921,0,0,1-1.84,0V324.066a.921.921,0,0,1,1.571-.65A.966.966,0,0,1,620.68,324.066Zm-3.872,2.841v6.2a.921.921,0,0,1-1.84,0v-6.2a.921.921,0,0,1,1.571-.652A.967.967,0,0,1,616.809,326.907Z" transform="translate(-574.919 -272.117)"></path>
+                    </g>
+                  </svg>
+              </span>
+              <span>AI Podcast Creator</span>
+              <span class="channel-menu-item-arrow" aria-hidden="true">
+                <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                  <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                </svg>
+              </span>
+            </button>
+            <button class="channel-menu-item" type="button" role="menuitem" data-clm-page="ads-marketplace">
+              <span class="channel-menu-item-icon" aria-hidden="true">
+  <svg width="21.6" height="16.17" viewBox="0 0 30.004 22.471">
+                    <g transform="translate(-101 -399)">
+                      <g transform="translate(102.915 399)">
+                        <path fill="#1e293b" d="M3.83,0H22.344a4.311,4.311,0,0,1,3.83,4.249V21.21H0V4.249A4.311,4.311,0,0,1,3.83,0Z"></path>
+                        <path fill="currentColor" d="M3.830333709716797,1.600004196166992C2.949594497680664,1.600004196166992,1.600004196166992,2.786603927612305,1.600004196166992,4.248674392700195L1.600004196166992,19.61020278930664L24.57392311096191,19.61020278930664L24.57392311096191,4.248674392700195C24.57392311096191,2.786603927612305,23.22433471679688,1.600004196166992,22.34359359741211,1.600004196166992L3.830333709716797,1.600004196166992M3.830333709716797,3.814697265625e-06L22.34359359741211,3.814697265625e-06C24.10645294189453,3.814697265625e-06,26.17392349243164,1.902193069458008,26.17392349243164,4.248674392700195L26.17392349243164,21.21020317077637L3.814697265625e-06,21.21020317077637L3.814697265625e-06,4.248674392700195C3.814697265625e-06,1.902193069458008,2.067474365234375,3.814697265625e-06,3.830333709716797,3.814697265625e-06Z"></path>
+                      </g>
+                      <g transform="translate(101 415.96)">
+                        <path fill="#1e293b" d="M26.49239921569824,4.710978031158447L3.510900020599365,4.710978031158447C3.188390016555786,4.710978031158447,2.491359949111938,4.384568214416504,1.834820032119751,3.779648065567017C1.071020007133484,3.075888156890869,0.800000011920929,2.426198244094849,0.800000011920929,2.083668231964111C0.800000011920929,1.397258162498474,1.050599932670593,1.155488133430481,1.239099979400635,1.033338189125061C1.53672993183136,0.8404781818389893,1.944299936294556,0.7999981641769409,2.233799934387207,0.7999981641769409L9.483647346496582,0.7999981641769409C9.879277229309082,1.305639982223511,10.39218807220459,1.587408185005188,10.9394998550415,1.587408185005188L19.06469917297363,1.587408185005188C19.61174011230469,1.587408185005188,20.12435340881348,1.305695533752441,20.51983833312988,0.8000075817108154L27.76950073242188,0.7999981641769409C28.05920028686523,0.7999981641769409,28.46705055236816,0.840498149394989,28.76490020751953,1.03341817855835C28.95348930358887,1.15556812286377,29.20420074462891,1.397338151931763,29.20420074462891,2.083668231964111C29.20420074462891,2.426218271255493,28.93317031860352,3.075908184051514,28.16930961608887,3.779608249664307C27.51263999938965,4.384558200836182,26.81521034240723,4.710978031158447,26.49239921569824,4.710978031158447Z"></path>
+                        <path fill="currentColor" d="M26.47190475463867,3.910978078842163C26.62174415588379,3.885802030563354,27.09938049316406,3.677534580230713,27.62726974487305,3.191228151321411C28.24388694763184,2.623166799545288,28.39615058898926,2.173657178878784,28.40419578552246,2.080106258392334C28.40381050109863,1.890063285827637,28.37272262573242,1.73255467414856,28.32999038696289,1.704868197441101C28.25530052185059,1.656488180160522,28.06369018554688,1.599998116493225,27.76950073242188,1.599998116493225L20.87977409362793,1.600007176399231C20.37077331542969,2.108611822128296,19.74132919311523,2.387408256530762,19.06469917297363,2.387408256530762L10.9394998550415,2.387408256530762C10.26260471343994,2.387408256530762,9.63294792175293,2.108620166778564,9.123783111572266,1.599998116493225L2.233799934387207,1.599998116493225C1.939990043640137,1.599998116493225,1.748679995536804,1.656408190727234,1.674139976501465,1.704708099365234C1.631447434425354,1.732374787330627,1.600388765335083,1.889944434165955,1.600003719329834,2.080096244812012C1.608031868934631,2.173619508743286,1.760284781455994,2.623162269592285,2.376909971237183,3.191308259963989C2.904426574707031,3.677347421646118,3.381686210632324,3.885679483413696,3.531513929367065,3.910978078842163L26.47190475463867,3.910978078842163M26.49239921569824,5.510978221893311L3.510900020599365,5.510978221893311C2.917020082473755,5.510978221893311,2.046339988708496,5.062338352203369,1.292739987373352,4.367988109588623C0.483269989490509,3.622158050537109,-9.155273872352154e-09,2.768198251724243,-9.155273872352154e-09,2.083668231964111C-9.155273872352154e-09,0.2706981599330902,1.399549961090088,-1.842727670009481e-06,2.233799934387207,-1.842727670009481e-06L9.914369583129883,-1.842727670009481e-06C10.18511009216309,0.5006081461906433,10.55844020843506,0.787408173084259,10.9394998550415,0.787408173084259L19.06469917297363,0.787408173084259C19.44515037536621,0.787408173084259,19.81850051879883,0.5004081726074219,20.08901977539062,8.157272532116622e-06L27.76950073242188,-1.842727670009481e-06C28.60408973693848,-1.842727670009481e-06,30.00419998168945,0.2706981599330902,30.00419998168945,2.083668231964111C30.00419998168945,2.768258094787598,29.52088928222656,3.622208118438721,28.71134948730469,4.367988109588623C27.9576301574707,5.062338352203369,27.08663940429688,5.510978221893311,26.49239921569824,5.510978221893311Z"></path>
+                      </g>
+                      <path fill="currentColor" d="M17.107,34.107v-3.83A1.281,1.281,0,0,1,18.384,29h.638a1.921,1.921,0,0,1,1.915,1.915v2.554a1.921,1.921,0,0,1-1.915,1.915h-.638A1.281,1.281,0,0,1,17.107,34.107Zm1.277,0h.638a.64.64,0,0,0,.638-.638V30.915a.64.64,0,0,0-.638-.638h-.638ZM12,34.745v-3.83a1.915,1.915,0,0,1,3.83,0v3.83a.638.638,0,1,1-1.277,0V32.83H13.277v1.915a.638.638,0,1,1-1.277,0Zm1.277-3.192h1.277v-.638a.638.638,0,0,0-1.277,0Zm10.853,2.554H22.853a.638.638,0,0,0,0,1.277h1.277a1.915,1.915,0,0,0,0-3.83.638.638,0,1,1,0-1.277h1.277a.638.638,0,1,0,0-1.277H24.129a1.915,1.915,0,0,0,0,3.83.638.638,0,0,1,0,1.277ZM12.638,39.214H22.853a.638.638,0,0,0,0-1.277H12.638a.638.638,0,0,0,0,1.277ZM12,41.129a.64.64,0,0,0,.638.638h16.6a.638.638,0,1,0,0-1.277h-16.6A.64.64,0,0,0,12,41.129Z" transform="translate(94.107 373.192)"></path>
+                    </g>
+                  </svg>
+              </span>
+              <span>Ads Marketplace</span>
+              <span class="channel-menu-item-arrow" aria-hidden="true">
+                <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                  <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                </svg>
+              </span>
+            </button>
+            <button class="channel-menu-item" type="button" role="menuitem" data-clm-page="dynamic-ad-insertion">
+              <span class="channel-menu-item-icon" aria-hidden="true">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+    <path d="M12 7v7"></path>
+    <path d="M9 11l3 3 3-3"></path>
+  </svg>
+              </span>
+              <span>Dynamic Ad Insertion</span>
+              <span class="channel-menu-item-arrow" aria-hidden="true">
+                <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
+                  <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
+                </svg>
+              </span>
             </button>
           </div>
 
@@ -4072,79 +4214,7 @@
                 </div>
               </div>
 
-              <!-- Podbean AI holds one feature, so one card — the same card the Ad
-                   Management pane uses. The rail names the SECTION "Podbean AI"; the
-                   feature keeps its own product name. Description is my copy. -->
-              <div class="channel-panel" data-clm-panel="ai" hidden>
-                <div class="feature-cards">
-                  <div class="feature-card">
-                    <span class="channel-item-art is-dark" aria-hidden="true"><svg width="28.4" height="27.2" viewBox="0 0 31.586 30.255" fill="currentColor">
-                  <g transform="translate(-20.935 -41.984)">
-                    <path d="M50.046,46.077H36.641l-.762-4.093H23.425a2.484,2.484,0,0,0-2.49,2.49V65.638a2.483,2.483,0,0,0,2.49,2.49H34.769l-.921,4.111H50.03a2.486,2.486,0,0,0,2.491-2.491V48.568a2.471,2.471,0,0,0-2.475-2.49Zm-16.2,8.157H30.5L29.39,61.8H26.2l1.111-7.567H23.805l.476-2.49h10.2l-.635,2.49ZM51.3,69.719a1.243,1.243,0,0,1-1.254,1.237H35.435l.619-2.856h4.681l-.921-5.093-.762-4.269-.983-5.5-.016.079-.11-.586.031.015-.968-5.426H50.063A1.244,1.244,0,0,1,51.3,48.57Z"></path>
-                    <path d="M624.554,326.907v6.2a.921.921,0,1,1-1.841,0v-6.2a.921.921,0,1,1,1.841,0Zm-3.873-2.841V335.95a.921.921,0,0,1-1.84,0V324.066a.921.921,0,0,1,1.571-.65A.966.966,0,0,1,620.68,324.066Zm-3.872,2.841v6.2a.921.921,0,0,1-1.84,0v-6.2a.921.921,0,0,1,1.571-.652A.967.967,0,0,1,616.809,326.907Z" transform="translate(-574.919 -272.117)"></path>
-                  </g>
-                </svg></span>
-                    <div class="feature-card-text">
-                      <div class="feature-card-title">
-                        AI Podcast Creator
-                        <span class="channel-menu-item-arrow" aria-hidden="true">
-                      <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
-                        <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
-                      </svg>
-                    </span>
-                      </div>
-                      <p class="feature-card-desc">Turn a topic, a script or a document into a finished episode with Podbean AI.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Ad Management lists features rather than channels. These two rows
-                   are display-only — nothing opens yet, so they are divs with no
-                   cursor and no hover, not buttons that swallow a click. -->
-              <!-- Ad Management's two features as CARDS (the user's pick): they are
-                   two independent products rather than a list you scan, and cards
-                   fill the pane's height so it no longer sits short of the rail.
-                   Still display-only, so cursor stays default — the hover tint and
-                   the arrow are affordance-matching with the rest of the popover,
-                   not a promise that something happens. Descriptions are MY copy. -->
-              <div class="channel-panel" data-clm-panel="ads" hidden>
-                <div class="feature-cards">
-                  <div class="feature-card">
-                    <span class="channel-item-art is-dark" aria-hidden="true"><span class="channel-item-placard">AD</span></span>
-                    <div class="feature-card-text">
-                      <div class="feature-card-title">
-                        Ads Marketplace
-                        <span class="channel-menu-item-arrow" aria-hidden="true">
-                          <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
-                            <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
-                          </svg>
-                        </span>
-                      </div>
-                      <p class="feature-card-desc">Find advertisers for this podcast and manage every campaign it runs.</p>
-                    </div>
-                  </div>
-                  <div class="feature-card">
-                    <span class="channel-item-art is-dark" aria-hidden="true">
-                      <span class="channel-item-placard">AD</span>
-                      <span class="channel-item-badge">+</span>
-                    </span>
-                    <div class="feature-card-text">
-                      <div class="feature-card-title">
-                        Dynamic Ad Insertion
-                        <span class="channel-menu-item-arrow" aria-hidden="true">
-                          <svg width="14" height="9.34" viewBox="0 0 16 10.677" fill="currentColor">
-                            <path d="M137.966,256.35l.074-.084a.889.889,0,0,1,1.174-.074l.084.074,4.443,4.444a.889.889,0,0,1,.074,1.174l-.074.083-4.442,4.449a.889.889,0,0,1-1.333-1.174l.074-.084,2.924-2.928H128.889a.889.889,0,0,1-.883-.785l-.006-.1a.889.889,0,0,1,.785-.883l.1-.006h12.077l-2.926-2.928a.889.889,0,0,1-.074-1.174l.074-.084Z" transform="translate(-128 -256.006)"></path>
-                          </svg>
-                        </span>
-                      </div>
-                      <p class="feature-card-desc">Let ads be inserted into your episodes automatically, wherever you set them.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Company Dashboard lists the shows in this network (the reference
+              <!-- Organizations lists the shows in this network (the reference
                    screenshot showed a row with artwork + show name). Same row shape
                    as the channel list, but display-only: they are divs, and the
                    cursor override in the stylesheet keeps them from looking clickable. -->
@@ -4170,6 +4240,10 @@
                   </div>
                 </div>
               </div>
+
+              <!-- AI Podcast Creator, Ads Marketplace and Dynamic Ad Insertion are
+                   leaf ACTIONS in the rail, not sections: they carry a hover → and
+                   go somewhere, so they deliberately have no pane here. -->
             </div>
         </div>
 
@@ -4661,14 +4735,14 @@
         e.preventDefault();
 
         // Special behavior for Settings:
-        // If clicking Settings from another page -> expand & navigate to Podcast Settings
+        // If clicking Settings from another page -> expand & navigate to Podcast Info
         // If already on a Settings page -> just toggle collapse, keep page content
         var isSettings = link.textContent.trim().includes('Settings');
         if (isSettings) {
           var settingsHasActive = sub.querySelector('a.active') !== null;
 
           if (!settingsHasActive) {
-            // Coming from another page: expand Settings, activate Podcast Settings
+            // Coming from another page: expand Settings, activate Podcast Info
             if (unsavedChanges) {
               pendingNav = function() {
                 document.querySelectorAll('.sidebar-nav a, .sidebar-nav .sub-menu a').forEach(function(a) { a.classList.remove('active'); });
@@ -5005,7 +5079,7 @@
       }
     }
 
-    // Podcast Settings tabs
+    // Podcast Info tabs
     document.querySelectorAll('.pb-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         var tabId = this.getAttribute('data-pb-tab');
@@ -5032,13 +5106,13 @@
       }
     }
 
-    // Save button: Podcast Settings
+    // Save button: Podcast Info
     if (document.getElementById('podcastInfoSaveBtn')) {
       document.getElementById('podcastInfoSaveBtn').addEventListener('click', function() {
         var activePage = document.querySelector('.page-section.active');
         if (!activePage || activePage.id !== 'page-podcast-basic') return;
 
-        // Validate all Podcast Settings tabs
+        // Validate all Podcast Info tabs
         var errors = validatePodcastInfo();
         if (errors.length > 0) {
           // Switch to the first tab that has an error
@@ -5072,6 +5146,31 @@
         if (!activePage || activePage.id !== 'page-feed') return;
 
         var errors = [];
+
+        // Ownership Verification Email: an empty address is only an error while
+        // the toggle is ON — off means "do not add one", which is a valid choice.
+        var emailToggle = activePage.querySelector('[data-toggle="ownership-email-input"]');
+        var emailBox = document.getElementById('ownership-email-input');
+        if (emailToggle && emailToggle.checked && emailBox) {
+          var emailInput = emailBox.querySelector('.pb-input');
+          if (emailInput && emailInput.value.trim() === '') {
+            showFieldError(emailBox, 'Please enter your verification email');
+            errors.push({ el: emailInput });
+          }
+        }
+
+        // Alternative Website URL: same rule as the email above — an empty URL is only
+        // an error while the toggle is ON; off means "use the built-in Podbean
+        // website", which is a valid choice and needs no input.
+        var urlToggle = activePage.querySelector('[data-toggle="custom-website-url-input"]');
+        var urlBox = document.getElementById('custom-website-url-input');
+        if (urlToggle && urlToggle.checked && urlBox) {
+          var urlInput = urlBox.querySelector('.pb-input');
+          if (urlInput && urlInput.value.trim() === '') {
+            showFieldError(urlBox, 'Please enter your website URL');
+            errors.push({ el: urlInput });
+          }
+        }
 
         // Redirect to a New Feed: if the toggle is on, a new feed URL is required
         var redirectToggle = activePage.querySelector('[data-toggle="redirect-feed-input"]');
@@ -6173,7 +6272,12 @@
       // rows still tint on hover (CSS) — the feedback stayed, the switching went.
       for (i = 0; i < items.length; i++) {
         (function (item) {
-          function select() { showSection(item.getAttribute('data-clm-section')); }
+          // Leaf rail items carry no data-clm-section — they are actions, not
+          // sections, and showSection(null) would hide every pane.
+          function select() {
+            var key = item.getAttribute('data-clm-section');
+            if (key) showSection(key);
+          }
           item.addEventListener('focus', select);
           item.addEventListener('click', select);
         })(items[i]);
@@ -6247,6 +6351,19 @@
           setOpen(false);
           switchPage('profile');
         });
+      }
+
+      // The three LEAF rail items navigate: they have no pane, so a click leaves
+      // the popover and switches the page (the pages are stubs for now). This is
+      // the same `switchPage` the sidebar uses — no second copy of the routing.
+      var pageLinks = menu.querySelectorAll('[data-clm-page]');
+      for (i = 0; i < pageLinks.length; i++) {
+        (function (el) {
+          el.addEventListener('click', function () {
+            setOpen(false);
+            switchPage(el.getAttribute('data-clm-page'));
+          });
+        })(pageLinks[i]);
       }
 
       // Actions with no flow behind them: they say where they would go instead of

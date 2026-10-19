@@ -15,7 +15,7 @@
      - [2.3.1 Settings 菜单点击行为](#231-settings-菜单点击行为核心规则)
      - [2.3.2 通用规则](#232-通用规则)
      - [2.3.3 未保存修改时切换页面](#233-未保存修改时切换页面)
-3. [页面一：Podcast Settings（播客设置）](#3-页面一podcast-settings播客设置)
+3. [页面一：Podcast Info（播客信息）](#3-页面一podcast-info播客信息)
    - [3.0 页面结构](#30-页面结构)
      - [Tab 切换规则](#tab-切换规则)
      - [Tab 切换与未保存状态](#tab-切换与未保存状态)
@@ -36,9 +36,9 @@
 4. [页面二：Feed（RSS 源管理）](#4-页面二feedrss-源管理)
    - [4.0 页面结构](#40-页面结构)
    - [4.1 Podcast Feed URL](#41-podcast-feed-urlrss-源地址)
-   - [4.2 Ownership Verification Email](#42-ownership-verification-email所有者验证邮箱)
-   - [4.3 Episode Number Limit](#43-episode-number-limit剧集数量限制)
-   - [4.4 Feed Website URL](#44-feed-website-urlfeed-中的播客网站地址)
+   - [4.2 Episode Number Limit](#42-episode-number-limit剧集数量限制)
+   - [4.3 Ownership Verification Email](#43-ownership-verification-email所有者验证邮箱)
+   - [4.4 Alternative Website URL](#44-alternative-website-url)
    - [4.5 Redirect to a New Feed](#45-redirect-to-a-new-feedfeed-重定向)
 5. [页面三：Plugin（插件管理）](#5-页面三plugin插件管理)
    - [5.0 页面结构](#50-页面结构)
@@ -66,14 +66,14 @@
    - [8.2 格式校验](#82-格式校验)
    - [8.3 保存前校验流程](#83-保存前校验流程)
 8. [附录：新老页面对比](#附录新老页面对比)
-   - [Podcast Settings 页面变化说明](#新-mockup-变化说明)
+   - [Podcast Info 页面变化说明](#新-mockup-变化说明)
    - [Feed 页面变化说明](#feed-页面变化说明)
 
 ---
 
 ## 1. 产品概述
 
-**Settings** 是播客仪表盘的核心配置模块，为用户提供对播客节目的全方位管理能力。模块涵盖三个子页面：Podcast Settings（节目基本信息与元数据）、Feed（RSS 源与分发配置）、Plugin（插件集成管理）。
+**Settings** 是播客仪表盘的核心配置模块，为用户提供对播客节目的全方位管理能力。模块涵盖三个子页面：Podcast Info（节目基本信息与元数据）、Feed（RSS 源与分发配置）、Plugin（插件集成管理）。
 
 ---
 
@@ -83,7 +83,7 @@
 
 ```
 Settings                              ← 一级导航（带箭头展开/收起）
-├── Podcast Settings（播客设置）           ← 默认页，active 状态
+├── Podcast Info（播客信息）           ← 默认页，active 状态
 ├── Feed（RSS 源管理）
 └── Plugin（插件管理）
 ```
@@ -109,8 +109,8 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 | 当前状态 | 点击 Settings 一级菜单 | 结果 |
 |---|---|---|
-| 在**非 Settings 页面**（如 Dashboard、Episodes 等） | 展开子菜单 + 默认选中 **Podcast Settings** + 右侧内容切换到 Podcast Settings 页面 | 子菜单展开，Podcast Settings 高亮 |
-| 已在 **Settings 子页面**（Podcast Settings / Feed / Plugin） | 仅切换子菜单的展开/收起状态，**右侧页面内容不变** | 子菜单收起或展开，内容不动 |
+| 在**非 Settings 页面**（如 Dashboard、Episodes 等） | 展开子菜单 + 默认选中 **Podcast Info** + 右侧内容切换到 Podcast Info 页面 | 子菜单展开，Podcast Info 高亮 |
+| 已在 **Settings 子页面**（Podcast Info / Feed / Plugin） | 仅切换子菜单的展开/收起状态，**右侧页面内容不变** | 子菜单收起或展开，内容不动 |
 
 #### 2.3.2 通用规则
 
@@ -119,7 +119,7 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 #### 2.3.3 未保存修改时切换页面
 
-各 Settings 子页面（Podcast Settings、Feed）拥有独立的 Save bar。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：
+各 Settings 子页面（Podcast Info、Feed）拥有独立的 Save bar。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：
 
 ```
 ┌─────────────────────────────────────┐
@@ -149,13 +149,13 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 ---
 
-## 3. 页面一：Podcast Settings（播客设置）
+## 3. 页面一：Podcast Info（播客信息）
 
 ### 3.0 页面结构
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Podcast Settings                                 │
+│  Podcast Info                                 │
 │                                               │
 │  ┌──────────────────────────────────────────┐ │
 │  │  Basic  │ Author & Region │ Content Classification │  ← 横向 Tab
@@ -176,7 +176,7 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 #### Tab 切换与未保存状态
 
-三个 Tab 同属 Podcast Settings 页面，共享同一个 Save bar。Tab 切换时处理策略如下：
+三个 Tab 同属 Podcast Info 页面，共享同一个 Save bar。Tab 切换时处理策略如下：
 
 | 场景 | 处理方式 |
 |---|---|
@@ -190,7 +190,7 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 #### Save 校验与错误提示
 
-点击 Save 时，系统校验 Podcast Settings 页面下的所有三个 Tab 的必填字段：
+点击 Save 时，系统校验 Podcast Info 页面下的所有三个 Tab 的必填字段：
 
 | 步骤 | 行为 |
 |---|---|
@@ -370,7 +370,7 @@ Tab 标签状态：
 └──────────────────────────────────────────────┘
 ```
 
-**保存规则：** Feed 页面拥有独立的 Save bar，与 Podcast Settings 页面的 Save bar 互不影响。修改 Feed 字段后 Save bar 在该页面底部显示，保存时仅校验和提交 Feed 页面的字段。
+**保存规则：** Feed 页面拥有独立的 Save bar，与 Podcast Info 页面的 Save bar 互不影响。修改 Feed 字段后 Save bar 在该页面底部显示，保存时仅校验和提交 Feed 页面的字段。
 
 ### 4.1 Podcast Feed URL（RSS 源地址）
 
@@ -383,18 +383,7 @@ Tab 标签状态：
 
 **复制反馈：** 点击 Copy 后按钮文字切换为 "Copied!"，1.5 秒后恢复（待扩展）。
 
-### 4.2 Ownership Verification Email（所有者验证邮箱）
-
-| 属性 | 说明 |
-|---|---|
-| **类型** | 文本输入框（无需 Toggle，直接显示） |
-| **必填** | 否 |
-| **说明文字** | "Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast." |
-| **输入验证** | 标准 email 格式校验 |
-| **自动过期** | 48 小时后，email 自动从 RSS feed 中移除，输入框内容清空 |
-| **手动移除** | 用户清空输入框并保存，email 立即从 feed 中移除 |
-
-### 4.3 Episode Number Limit（剧集数量限制）
+### 4.2 Episode Number Limit（剧集数量限制）
 
 | 属性 | 说明 |
 |---|---|
@@ -415,16 +404,31 @@ Tab 标签状态：
 
 **校验逻辑：** 用户输入的值必须为整数，超过当前套餐上限时提示 **"Please enter a number between 1 and {limit}"**（`{limit}` 替换为对应套餐的上限值）；输入非整数时提示 **"Please enter a whole number"**。
 
-### 4.4 Custom Website URL
+### 4.3 Ownership Verification Email（所有者验证邮箱）
 
 | 属性 | 说明 |
 |---|---|
-| **名称** | 原名为 "Podcast Website"，后改为 **Feed Website URL**，现改为 **Custom Website URL** |
-| **类型** | URL 输入 |
-| **占位提示** | "Leave this field blank to use your Podbean podcast website URL." |
-| **必填** | 否（留空则使用默认 Podbean 播客网站 URL） |
-| **校验规则** | 可选 |
-| **辅助说明** | "Use your own website URL as the podcast website link in your RSS feed." |
+| **类型** | Toggle 开关 + 条件显示文本输入框 |
+| **默认状态** | 关闭；关闭时不显示输入框 |
+| **说明文字** | "Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast."（放在 Toggle 行的说明位） |
+| **必填** | 开启后必填；关闭时无需填写 |
+| **输入验证** | 开启后：不能为空（仅空格也算空），且需符合标准 email 格式 |
+| **错误提示** | 开启后为空：**"Please enter your verification email"**；格式不正确：**"Please enter a valid email address"** |
+| **自动过期** | 48 小时后，email 自动从 RSS feed 中移除，输入框内容清空 |
+| **手动移除** | 用户关闭 Toggle 并保存，email 立即从 feed 中移除 |
+
+### 4.4 Alternative Website URL
+
+| 属性 | 说明 |
+|---|---|
+| **名称** | 原名为 "Podcast Website"，后改为 **Feed Website URL**，再改为 **Custom Website URL**，现改为 **Alternative Website URL**（2026-10-19） |
+| **类型** | Toggle 开关 + 条件显示 URL 输入 |
+| **默认状态** | 关闭；关闭时不显示输入框，使用默认 Podbean 播客网站 URL |
+| **占位提示** | "https://your-website.com" |
+| **必填** | 开启后必填；关闭时无需填写（使用默认 Podbean 播客网站 URL） |
+| **校验规则** | 开启后不能为空（仅空格也算空）；URL 格式校验暂未实现 |
+| **错误提示** | 开启后为空：**"Please enter your website URL"** |
+| **辅助说明** | "Set your custom podcast website URL in the RSS feed."（放在 Toggle 行的说明位） |
 
 ### 4.5 Redirect to a New Feed（Feed 重定向）
 
@@ -791,7 +795,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 ### 7.1 Save Bar（底部保存栏）
 
-Podcast Settings 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plugin 页面不包含 Save bar。
+Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plugin 页面不包含 Save bar。
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -819,8 +823,8 @@ Podcast Settings 和 Feed 页面各自拥有独立的 Save bar，互不影响。
 
 **补充说明：**
 
-- **Podcast Settings 页面 Save**：校验该页面下所有三个 Tab 的必填字段。有错误时自动切换到第一个出错 Tab、高亮错误字段、有错 Tab 标签显示 ⚠
-- **Feed 页面 Save**：校验 Feed 页面的必填字段（Feed Website URL），格式校验（Verification Email、Episode Number Limit、Redirect URL）
+- **Podcast Info 页面 Save**：校验该页面下所有三个 Tab 的必填字段。有错误时自动切换到第一个出错 Tab、高亮错误字段、有错 Tab 标签显示 ⚠
+- **Feed 页面 Save**：校验 Feed 页面的必填字段（Alternative Website URL，仅开关开启时），格式校验（Verification Email、Episode Number Limit、Redirect URL）
 - **Plugin 页面**：无表单字段，无需 Save bar
 
 ### 7.2 修改检测
@@ -883,28 +887,28 @@ Podcast Settings 和 Feed 页面各自拥有独立的 Save bar，互不影响。
 
 | 页面 | 字段 | 校验规则 | 错误提示 |
 |---|---|---|---|
-| Podcast Settings | Podcast Title | 不能为空 | 见 3.1.1 |
-| Podcast Settings | Brief Description | 不能为空，也不能为默认值 "New podcast weblog" | 见 3.1.2 |
-| Podcast Settings | Podcast Category | 至少选择一个分类 | 见 3.1.3 |
-| Podcast Settings | Podcast Logo | 必须有图片 | 见 3.1.4 |
-| Feed | Feed Website URL | 不能为空 | 见 4.4 |
+| Podcast Info | Podcast Title | 不能为空 | 见 3.1.1 |
+| Podcast Info | Brief Description | 不能为空，也不能为默认值 "New podcast weblog" | 见 3.1.2 |
+| Podcast Info | Podcast Category | 至少选择一个分类 | 见 3.1.3 |
+| Podcast Info | Podcast Logo | 必须有图片 | 见 3.1.4 |
+| Feed | Alternative Website URL | 开关开启时不能为空 | 见 4.4 |
 
 ### 8.2 格式校验
 
 | 字段 | 规则 | 错误提示示例 |
 |---|---|---|
 | Ownership Verification Email | 合法 email 格式 | "Please enter a valid email address" |
-| Feed Website URL | 合法域名格式 | "Please enter a valid Website URL" |
+| Alternative Website URL | 开关开启时必填；合法域名格式 | "Please enter your website URL" / "Please enter a valid Website URL" |
 | Redirect URL | 合法 URL 格式（https） | "Please enter a valid feed URL" |
 | Podcast Logo 上传 | 通过文件选择器过滤，不支持的格式无法选中 | — |
 | Episode Number Limit | 必须为整数且不超过当前套餐上限 | "Please enter a whole number"（含小数时）；"Please enter a number between 1 and {limit}"（超过上限时） |
 
 ### 8.3 保存前校验流程
 
-各页面独立执行校验。以下为 Podcast Settings 页面（含多 Tab）的校验流程：
+各页面独立执行校验。以下为 Podcast Info 页面（含多 Tab）的校验流程：
 
 ```
-用户点击 Save（Podcast Settings 页面）
+用户点击 Save（Podcast Info 页面）
        │
        ▼
 ┌──────────────────────────────┐
@@ -959,13 +963,13 @@ Feed 页面校验流程类似，但无 Tab，校验失败时直接在错误字�
 | 字段 | 新 Mockup | 非 Business Plan 老页面 | Business Plan 老页面 |
 |---|---|---|---|
 | **Podcast Feed URL** | 有（只读 + 复制） | 有 | 有 |
-| **Content Explicit** | **移入 Podcast Settings → Content Classification Tab** | 有 | 有 |
+| **Content Explicit** | **移入 Podcast Info → Content Classification Tab** | 有 | 有 |
 | **Apple Podcasts Summary** | **已移除**（删除前台独立输入框；已填写过历史内容的用户仍可见，字段设为只读，并标注功能已停用；提供"Use Podcast Description"操作，用户确认后删除独立 Summary，让 `<itunes:summary>` 跟随 Podcast Description，不再提供修改旧 Summary 的能力；底层可暂时继续自动输出以最大化兼容性） | 有 | 有 |
-| **Podcast Website** | 改名为 **Custom Website URL**（原默认填入 Podbean website URL；现改为用户留空则使用 Podbean website URL，用户填写则使用填写的值） | 有 | 有 |
+| **Podcast Website** | 改名为 **Alternative Website URL**（原默认填入 Podbean website URL；现改为 **Toggle + 条件输入**：关闭则使用 Podbean website URL，开启后显示输入框，填写的值生效） | 有 | 有 |
 | **Episode Link** | **已移除**（转移到 Episode 发布页面，名称为 "Custom Episode Link"） | 有 | 有 |
 | **Episode Number Limit** | 有 | 有 | 有 |
 | **Episode Artwork Tag** | **已移除**（Podbean 将自动使用 `<itunes:image>` 标签输出单集封面，用户无需再选择具体的 RSS 标签类型。Media Content Tag → 已发布单集暂时保留现有 Feed 输出，新建单集或更新封面后改用 `<itunes:image>`；Not Set → 已发布单集继续不输出单集封面标签；New Episodes → 上传自定义封面时自动使用 `<itunes:image>`） | 有 | 有 |
-| **Ownership Verification Email** | 有 | 有 | 有 |
+| **Ownership Verification Email** | 有（**Toggle + 条件输入**） | 有 | 有 |
 | **Apple Podcasts Verification** | **移出**（转移到 Apple Podcasts 提交页面） | 有 | 有 |
 | **Remove from Apple Directory** | **已移除**（从普通设置中移除；为已开启的用户提供"关闭并移除标签"的过渡机制，已启用 `<itunes:block>` 的用户保留一个临时关闭入口） | 有 | 有 |
 | **Set Podcast New Feed URL** | **已移除**（改为迁移流程中的自动步骤：用户完成导入旧 Feed；平台自动将正确的 `<itunes:new-feed-url>` 添加到新 Feed。可长期保留。⚠ 用户更改 subdomain 时是否也自动添加此 tag，需技术确认） | 有 | 有 |
