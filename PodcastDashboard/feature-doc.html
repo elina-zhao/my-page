@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Podcast Dashboard — 功能文档</title>
+<style>
+  :root {
+    color-scheme: light;
+    --primary:#1a9a6c;
+    --primary-soft:#e8f6f0;
+    --ink:#16202f;
+    --ink-2:#475569;
+    --ink-3:#7b8798;
+    --line:#e6eaf0;
+    --line-strong:#d4dbe4;
+    --bg:#f6f7f9;
+    --paper:#ffffff;
+    --warn-bg:#fff8eb;
+    --warn-line:#f0c987;
+    --code-bg:#f3f5f8;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:15px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell {
+    display:grid;
+    grid-template-columns: 236px minmax(0, 1fr);
+    gap:48px;
+    max-width:1220px;
+    margin:0 auto;
+    padding:40px 32px 96px;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    grid-column:1 / -1;
+    border-bottom:1px solid var(--line-strong);
+    padding-bottom:26px;
+    margin-bottom:8px;
+  }
+  .eyebrow {
+    display:flex;align-items:center;gap:10px;
+    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--primary);font-weight:700;margin-bottom:14px;
+  }
+  .eyebrow::before {
+    content:"";width:26px;height:2px;background:var(--primary);border-radius:2px;
+  }
+  h1 {
+    margin:0 0 14px;
+    font-size:34px;
+    line-height:1.25;
+    letter-spacing:-.015em;
+    font-weight:750;
+  }
+  .meta {
+    display:flex;flex-wrap:wrap;gap:8px 10px;
+    margin-top:16px;
+  }
+  .chip {
+    display:inline-flex;align-items:baseline;gap:7px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:5px 14px;
+    font-size:12.5px;
+    color:var(--ink-2);
+  }
+  .chip b { color:var(--ink);font-weight:600; }
+  .chip code {
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12px;background:none;padding:0;color:var(--ink);
+  }
+
+  /* ---------- toc ---------- */
+  nav.toc {
+    position:sticky;
+    top:32px;
+    align-self:start;
+    max-height:calc(100vh - 64px);
+    overflow:auto;
+    padding-right:6px;
+  }
+  nav.toc .toc-label {
+    font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:700;margin-bottom:12px;
+  }
+  nav.toc ul { list-style:none;margin:0;padding:0; }
+  nav.toc ul ul { padding-left:14px;margin-top:2px; }
+  nav.toc li { margin:1px 0; }
+  nav.toc a {
+    display:block;
+    padding:5px 10px;
+    border-left:2px solid transparent;
+    border-bottom:none;
+    border-radius:0 6px 6px 0;
+    color:var(--ink-2);
+    text-decoration:none;
+    font-size:13px;
+    line-height:1.45;
+    transition:color .15s, background .15s, border-color .15s;
+  }
+  nav.toc > ul > li > a { font-weight:600; color:var(--ink); }
+  nav.toc ul ul a { font-size:12.5px; color:var(--ink-3); }
+  nav.toc a:hover { color:var(--primary); background:var(--primary-soft); }
+
+  /* ---------- content ---------- */
+  main {
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:44px 52px 56px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04), 0 12px 40px -24px rgba(16,24,40,.18);
+    min-width:0;
+  }
+  main > *:first-child { margin-top:0; }
+  h2 {
+    margin:56px 0 18px;
+    padding-top:26px;
+    border-top:1px solid var(--line);
+    font-size:23px;
+    line-height:1.35;
+    letter-spacing:-.01em;
+    font-weight:700;
+    scroll-margin-top:20px;
+  }
+  main > h2:first-of-type { margin-top:8px;padding-top:0;border-top:none; }
+  h3 {
+    margin:34px 0 12px;
+    font-size:17.5px;
+    font-weight:700;
+    color:#1f2937;
+    scroll-margin-top:20px;
+  }
+  h4 {
+    margin:26px 0 10px;
+    font-size:15px;
+    font-weight:700;
+    color:#1f2937;
+  }
+  p { margin:12px 0; }
+  strong { font-weight:650; }
+  a { color:var(--primary);text-decoration:none;border-bottom:1px solid rgba(26,154,108,.28); }
+  a:hover { border-bottom-color:var(--primary); }
+  hr { border:none;border-top:1px solid var(--line);margin:40px 0; }
+  ul, ol { margin:12px 0;padding-left:24px; }
+  li { margin:5px 0; }
+  li::marker { color:var(--ink-3); }
+
+  /* tables */
+  .table-wrap { margin:18px 0;overflow-x:auto; }
+  table {
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+    line-height:1.6;
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  thead th {
+    background:#f7f9fb;
+    color:var(--ink-2);
+    font-weight:650;
+    text-align:left;
+    font-size:12px;
+    letter-spacing:.045em;
+    text-transform:uppercase;
+    padding:10px 14px;
+    border-bottom:1px solid var(--line-strong);
+    white-space:nowrap;
+  }
+  tbody td {
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) { background:#fcfdfe; }
+  tbody td:first-child { color:var(--ink); }
+  th:first-child, td:first-child { min-width:148px; }
+
+  /* code */
+  pre {
+    background:var(--code-bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 20px;
+    overflow:auto;
+    margin:18px 0;
+    font-size:12.5px;
+    line-height:1.65;
+    color:#334155;
+  }
+  pre code { background:none;padding:0;font-size:inherit; }
+  code {
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    font-size:.86em;
+    background:var(--code-bg);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:1px 5px;
+    color:#334155;
+    white-space:nowrap;
+  }
+  pre code { border:none;background:none;white-space:pre; }
+
+  /* blockquotes */
+  blockquote {
+    margin:20px 0;
+    padding:14px 18px;
+    border-left:3px solid var(--line-strong);
+    background:#f8fafc;
+    border-radius:0 8px 8px 0;
+    color:var(--ink-2);
+    font-size:14px;
+  }
+  blockquote p { margin:0; }
+  blockquote.warn {
+    background:var(--warn-bg);
+    border:1px solid #f3d9a9;
+    border-left:4px solid var(--warn-line);
+    border-radius:0 10px 10px 0;
+    box-shadow:0 1px 2px rgba(120,82,15,.05);
+    color:#78520f;
+    padding:16px 20px;
+    margin:22px 0 30px;
+    font-size:14.5px;
+  }
+  blockquote.warn strong { color:#6b4a0b; }
+
+  footer {
+    grid-column:1 / -1;
+    margin-top:28px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    color:var(--ink-3);
+    font-size:12px;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+
+  /* Keep the left rail as long as the panel allows; only go horizontal on
+     genuinely narrow screens, and then pin the menu above the content. */
+  @media (max-width:1100px) {
+    .shell { grid-template-columns:200px minmax(0, 1fr); gap:30px; padding:32px 24px 80px; }
+    nav.toc a { font-size:12.5px; padding:4px 9px; }
+    main { padding:34px 36px 44px; }
+  }
+  @media (max-width:900px) {
+    .shell { grid-template-columns:168px minmax(0, 1fr); gap:20px; padding:28px 18px 72px; }
+    nav.toc a { font-size:12px; padding:4px 7px; }
+    main { padding:30px 26px 40px; }
+    h1 { font-size:30px; }
+  }
+  @media (max-width:640px) {
+    .shell { grid-template-columns:1fr; gap:16px; padding:24px 16px 64px; }
+    nav.toc {
+      position:sticky; top:0; z-index:5; order:-1;
+      max-height:none; overflow:visible;
+      background:var(--bg); border-bottom:1px solid var(--line);
+      margin:0 -16px; padding:10px 0 11px;
+    }
+    nav.toc .toc-label { display:none; }
+    nav.toc ul { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:6px; padding:0 16px; }
+    nav.toc ul ul { display:none; }
+    nav.toc li { display:block; margin:0; flex:0 0 auto; }
+    nav.toc a {
+      border:1px solid var(--line); border-left:1px solid var(--line);
+      border-radius:999px; padding:5px 11px; white-space:nowrap;
+      background:var(--paper); color:var(--ink-2);
+    }
+    nav.toc > ul > li > a { color:var(--ink); }
+    main { order:1; padding:28px 22px 40px; }
+    h1 { font-size:28px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="masthead">
+    <div class="eyebrow">Product Spec · Podcast Dashboard</div>
+    <h1>Podcast Dashboard — 功能文档</h1>
+    <div class="meta">
+      <span class="chip"><b>文档对象</b> <code>index.html（Podcast Dashboard 仪表板页面）</code></span>
+      <span class="chip"><b>编写日期</b> 2026-08-31</span>
+      <span class="chip"><b>最后更新</b> 2026-10-20 09:47</span>
+    </div>
+  </header>
+  <nav class="toc">
+    <div class="toc-label">目录</div>
+    <ul>
+<li><a href="#sec-1-项目概述">1. 项目概述</a></li>
+<li><a href="#sec-2-核心功能模块">2. 核心功能模块</a><ul>
+<li><a href="#sec-2-1-统计卡片-stat-cards">2.1 统计卡片（Stat Cards）</a></li>
+<li><a href="#sec-2-2-下载趋势图-downloads-trending">2.2 下载趋势图（Downloads Trending）</a></li>
+<li><a href="#sec-2-3-单集表现表-episode-performance">2.3 单集表现表（Episode Performance）</a></li>
+<li><a href="#sec-2-4-成就系统-achievements">2.4 成就系统（Achievements）</a></li>
+<li><a href="#sec-2-5-最近评论-recent-comments">2.5 最近评论（Recent Comments）</a></li>
+<li><a href="#sec-2-6-播客资源-podcast-resources">2.6 播客资源（Podcast Resources）</a></li>
+<li><a href="#sec-2-7-引导流程-onboarding">2.7 引导流程（Onboarding）</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-响应式设计">3. 响应式设计</a></li>
+</ul>
+  </nav>
+  <main>
+    
+
+<hr />
+<blockquote class="warn">
+<p>⚠️ <strong>请注意</strong>：本功能文档根据当前版本整理，可能存在遗漏或理解偏差。如与线上实际表现不一致，请再次确认。</p>
+</blockquote>
+<h2 id="sec-1-项目概述">1. 项目概述</h2>
+<p><code>index.html</code> 是播客创作者后台仪表板。侧边栏共四个页面，其中三个是同一套数据面板的不同状态：</p>
+<table>
+<thead>
+<tr>
+<th>页面（侧边栏入口）</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Onboarding</td>
+<td>新用户开播引导；已产生下载数据时，改为展示数据视图（与 Dashboard 相同的统计卡片、下载趋势图和单集表现表）</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>数据总览基准页：统计卡片、下载趋势图、单集表现表、成就、最近评论、播客资源</td>
+</tr>
+<tr>
+<td>Dashboard (v2)</td>
+<td>与 Dashboard 布局一致；评论卡片为空状态（账号已关闭评论功能）</td>
+</tr>
+<tr>
+<td>Dashboard (v3)</td>
+<td>与 Dashboard 布局一致，整页演示全新播客：数据全为 0、徽章为空、没有评论</td>
+</tr>
+</tbody>
+</table>
+<p>三个 Dashboard 页面结构相同，差异只在数据状态和评论卡片的内容。</p>
+<hr />
+<h2 id="sec-2-核心功能模块">2. 核心功能模块</h2>
+<h3 id="sec-2-1-统计卡片-stat-cards">2.1 统计卡片（Stat Cards）</h3>
+<p>页面顶部一行 4 张卡片：<strong>Yesterday、7 Days、30 Days、All Time</strong>，分别展示对应时间范围的下载量，并配一条迷你趋势线。全新播客状态下（Dashboard (v3)）四个数字均为 0，趋势线为平线。</p>
+<h3 id="sec-2-2-下载趋势图-downloads-trending">2.2 下载趋势图（Downloads Trending）</h3>
+<p>主内容区顶部的大幅折线图，展示最近 14 天的下载趋势：</p>
+<ul>
+<li>标题下方左侧显示近 14 天下载总量（标注 "Last 14 days"）与环比变化，旁边标注 "vs previous 14 days"</li>
+<li>鼠标悬停可查看对应日期的数值</li>
+<li>点击右上角 "View more →" 进入 Stats Overview（数据总览）页面</li>
+</ul>
+<p>全新播客状态（Dashboard (v3)）下，头部数字为 0、环比为 +0%，图表只画一条贴着 0 的平线。</p>
+<h3 id="sec-2-3-单集表现表-episode-performance">2.3 单集表现表（Episode Performance）</h3>
+<p>表格列出各单集的下载表现，两列指标：<strong>First Week</strong>（首周）与 <strong>First Month</strong>（首月）。没有数据的单集显示占位符 "—"。表格行悬停有高亮。</p>
+<ul>
+<li>点击单集标题进入 Stats Episodes Trending 页面，并在该页面选中对应的 Episode</li>
+<li>点击卡片右上角 "View more →" 进入 Stats Episodes Performance 页面</li>
+</ul>
+<p>全新播客状态（Dashboard (v3)）下没有单集，表格位置显示空状态（图标 + "No data found."），并隐藏 "View more →"。</p>
+<h3 id="sec-2-4-成就系统-achievements">2.4 成就系统（Achievements）</h3>
+<p>卡片顶部展示当前选中徽章的大图，旁边是 <strong>Share（分享）</strong> 按钮；下方是两个徽章格子，分别对应两个徽章家族。</p>
+<p><strong>两个徽章家族</strong></p>
+<p>徽章分为发布类和下载类两个家族，按照实际 Badge 阶梯进行展示。</p>
+<p><strong>格子的显示规则</strong></p>
+<ul>
+<li>发布类固定在前，下载类在后。</li>
+<li>某家族已解锁徽章：显示该家族<strong>最新</strong>的一枚（亮），并标注解锁月份。</li>
+<li>某家族还没有徽章：显示该家族的第一枚（灰）。</li>
+</ul>
+<p><strong>切换与分享</strong></p>
+<ul>
+<li>两个格子可点选：点击已点亮的格子，顶部大图切换为那一枚徽章。</li>
+<li>选中状态每个页面各自独立，默认展示第一个点亮的格子。</li>
+<li>点击 Share 打开分享菜单，菜单中显示 Facebook 与 X 图标。</li>
+<li>点击图标即可分享，分享内容会自动带上当前徽章的图片和文字；分享对象始终跟随顶部大图展示的徽章。</li>
+</ul>
+<p><strong>零徽章状态</strong></p>
+<p>两个家族都没有徽章时（新播客）：顶部改为 "No badges yet" 空状态并隐藏 Share；两个格子都变灰、都不可点，分别显示两个家族的第一枚徽章，提示用户如何解锁第一枚徽章。</p>
+<p><strong>其他规则</strong></p>
+<ul>
+<li>某家族全部解锁时，显示最高阈值那一枚，不再显示"下一枚"。</li>
+<li>同一家族一次解锁多枚时只占一格，取阈值最高的那枚。</li>
+</ul>
+<h3 id="sec-2-5-最近评论-recent-comments">2.5 最近评论（Recent Comments）</h3>
+<p>三个 Dashboard 页面的右下角都有该卡片，标题统一为 "Recent Comments"，内容按页面状态区分：</p>
+<table>
+<thead>
+<tr>
+<th>页面</th>
+<th>卡片内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard</td>
+<td>评论列表：头像、作者、评论正文（最多 2 行）、关联单集与时间；右上角 "View more →" 进入评论详情</td>
+</tr>
+<tr>
+<td>Dashboard (v2)</td>
+<td>用户关闭评论功能时的空状态：灰色对话框图标 + "No comments" + "Commenting is turned off for your account."，没有按钮或链接</td>
+</tr>
+<tr>
+<td>Dashboard (v3)</td>
+<td>空状态：灰色对话框图标 + "No comments yet" + "Your latest comments will show up here."</td>
+</tr>
+</tbody>
+</table>
+<p>两个空状态在卡片内垂直居中。</p>
+<h3 id="sec-2-6-播客资源-podcast-resources">2.6 播客资源（Podcast Resources）</h3>
+<p>Dashboard 与 Dashboard (v2) 页面底部各有一组资源卡片，为创作者提供教程入口，两列布局。</p>
+<p>该内容块为新增内容块，卡片中的文章目前为占位内容，需要 BO 提供相应功能后进行配置和替换。</p>
+<p>每张卡片均为上图下文结构，整张卡片可点击（当前为占位链接）。</p>
+<h3 id="sec-2-7-引导流程-onboarding">2.7 引导流程（Onboarding）</h3>
+<p>面向新用户的引导页，页面标题为 <strong>"Get your podcast ready"</strong>，副标题为 "Complete the key steps to publish, distribute, and grow your show."。</p>
+<p><strong>步骤视图</strong></p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>标题与说明</th>
+<th>按钮</th>
+<th>点击后进入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Set up your podcast</strong> — Set up your podcast profile and basic information.</td>
+<td>Setup</td>
+<td>Settings &gt; Podcast Info 页面</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Publish your first episode</strong> — Upload your first episode and make your show live.</td>
+<td>Publish</td>
+<td>Episodes 页面</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Submit to podcast platforms</strong> — Reach listeners on Spotify, Apple Podcasts, and more.</td>
+<td>Submit</td>
+<td>Distribution &gt; Podcast Apps 页面</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>第 1 步卡片内附 "Already have a show? Import existing podcast to Podbean" 链接，点击进入 Import to Podbean 页面。</li>
+<li>点击各步骤的按钮会完成该步骤，并进入上表对应的页面。</li>
+<li>页面不显示进度条，完成情况由三步各自的圆圈状态表示（未完成 / 已完成），圆圈本身不可点击。</li>
+<li>用户通过该步骤的按钮完成操作，完成后圆圈状态随之更新。</li>
+<li>未完成与已完成步骤的标题、圆圈和按钮样式见设计稿。</li>
+<li>底部 "Skip the Guide →" 可跳过引导，直接进入 Dashboard。</li>
+<li>提示文案 "You will see your podcast statistics here after you get a few downloads." 与 "Getting started resources" 资源区都位于步骤视图内，切换到数据视图时一并隐藏。</li>
+<li>"Getting started resources" 资源区需要 BO 新增相应功能来配置内容。</li>
+</ul>
+<p><strong>数据视图</strong></p>
+<p>已产生下载数据后，引导页切换为数据视图。</p>
+<p>具体达到多少下载数据才会切换为数据视图，需要由开发确认。</p>
+<hr />
+<h2 id="sec-3-响应式设计">3. 响应式设计</h2>
+<p>页面需适配不同屏幕尺寸，在各类设备上保持布局完整、内容清晰可读。</p>
+  </main>
+  <footer>
+    <span>来源：<code>index.html-功能文档.md</code></span>
+    <span>Podcast Dashboard · 内部设计文档</span>
+  </footer>
+</div>
+</body>
+</html>
