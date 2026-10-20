@@ -1,0 +1,2630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Settings 功能说明文档 — Podcast Dashboard</title>
+<style>
+  :root {
+    --primary: #1a9a6c;
+    --bg: #ffffff;
+    --text: #1e293b;
+    --text-secondary: #64748b;
+    --text-tertiary: #94a3b8;
+    --border: #e2e8f0;
+    --rail-w: 320px;
+    --bar-h: 64px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* no page-wide smooth scroll: this document is ~28,000px tall and a
+     chapter jump across it would animate for well over a second */
+
+  body {
+    font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: #dbeafe; }
+
+  a { color: inherit; }
+
+  :focus-visible { outline: 2px solid #94a3b8; outline-offset: 2px; border-radius: 4px; }
+
+  /* ==============================
+     TOPBAR
+     ============================== */
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: var(--bar-h);
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 200;
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .brand img { width: 30px; height: 30px; border-radius: 7px; display: block; }
+  .brand-name { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+
+  .topbar-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+
+  .doc-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+  .version-pill {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 2px 10px;
+    line-height: 1.6;
+  }
+  .updated { font-size: 12.5px; color: var(--text-tertiary); }
+
+  /* mobile rail trigger */
+  .rail-toggle {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    background: #fff;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .rail-toggle:hover { background: #f8fafc; }
+
+  /* ==============================
+     LEFT ANCHOR RAIL
+     ============================== */
+  .doc-rail {
+    position: fixed;
+    top: var(--bar-h);
+    left: 0;
+    bottom: 0;
+    width: var(--rail-w);
+    background: #fff;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 22px 12px 56px;
+    z-index: 120;
+  }
+  .doc-rail::-webkit-scrollbar { width: 10px; }
+  .doc-rail::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 8px; border: 3px solid #fff; }
+  .doc-rail::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+  .rail-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 12px 12px;
+  }
+  .rail-label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .toc-count { font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; }
+
+  .toc { display: flex; flex-direction: column; }
+
+  .toc-row {
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    transition: background 0.12s;
+  }
+  .toc-row:hover { background: #f8fafc; }
+  .toc-row.is-active { background: #f1f5f9; }
+
+  .toc-link {
+    flex: 1;
+    min-width: 0;
+    display: block;
+    padding: 7px 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .toc-row.lvl2 { margin-top: 8px; }
+  .toc-row.lvl2:first-child { margin-top: 0; }
+  .toc-row.lvl2 .toc-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+  .toc-row.lvl3 .toc-link { padding-left: 24px; }
+  .toc-row.lvl4 .toc-link { padding-left: 44px; font-size: 12.5px; }
+  .toc-row.is-active .toc-link { color: var(--text); font-weight: 600; }
+
+  .toc-toggle {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    margin-right: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: none;
+    color: var(--text-tertiary);
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .toc-toggle:hover { background: #e2e8f0; color: var(--text); }
+  .toc-toggle svg { transition: transform 0.15s; }
+  .toc-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
+
+  .toc-children { display: flex; flex-direction: column; }
+  .toc-children[hidden] { display: none; }
+
+  .rail-overlay {
+    display: none;
+    position: fixed;
+    inset: var(--bar-h) 0 0 0;
+    background: rgba(15, 23, 42, 0.32);
+    z-index: 110;
+  }
+  .rail-overlay.show { display: block; }
+
+  /* ==============================
+     CONTENT
+     ============================== */
+  /* the topbar is fixed, so the first 64px of the page flow sits under it */
+  .doc-main { margin-left: var(--rail-w); padding: calc(var(--bar-h) + 44px) 56px 140px; }
+
+  .doc-body { max-width: 960px; margin: 0 auto; }
+
+  .doc-body h1 {
+    font-size: 30px;
+    line-height: 1.35;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+    scroll-margin-top: 88px;
+  }
+
+  /* version / date / status strip — the element is a blockquote in the source,
+     so the selector has to out-rank the generic quote rule below */
+  .doc-body blockquote.doc-meta {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.9;
+  }
+  .doc-body blockquote.doc-meta p { margin: 0; font-size: 13px; }
+
+  /* top-of-document disclaimer — deliberately the loudest thing on the page:
+     it says the whole document below may be wrong */
+  .doc-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 18px 0 30px;
+    padding: 14px 18px;
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-left: 4px solid #d97706;
+    border-radius: 10px;
+  }
+  .doc-notice-icon { flex-shrink: 0; width: 19px; height: 19px; margin-top: 2px; color: #b45309; }
+  .doc-notice p { margin: 0; font-size: 14px; line-height: 1.7; color: #78350f; }
+  /* room for two: `.doc-body strong` is equally specific and comes later,
+     so this has to out-rank it to keep the bold lead amber, not slate */
+  .doc-body .doc-notice strong { color: #7c2d12; font-weight: 700; }
+
+  .doc-body h2 {
+    font-size: 23px;
+    line-height: 1.4;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 56px 0 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: 88px;
+  }
+  .doc-body h2:first-of-type { margin-top: 40px; }
+
+  .doc-body h3 {
+    font-size: 17.5px;
+    line-height: 1.45;
+    font-weight: 600;
+    margin: 38px 0 12px;
+    scroll-margin-top: 88px;
+  }
+
+  .doc-body h4 {
+    font-size: 15px;
+    line-height: 1.5;
+    font-weight: 600;
+    margin: 28px 0 8px;
+    scroll-margin-top: 88px;
+  }
+
+  .h-anchor {
+    margin-left: 8px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.12s;
+  }
+  .doc-body h2:hover .h-anchor,
+  .doc-body h3:hover .h-anchor,
+  .doc-body h4:hover .h-anchor,
+  .h-anchor:focus { opacity: 1; }
+
+  .doc-body p { margin: 0 0 16px; }
+
+  .doc-body ul,
+  .doc-body ol { margin: 8px 0 18px; padding-left: 22px; }
+  .doc-body li { margin: 5px 0; }
+  .doc-body li > ul,
+  .doc-body li > ol { margin: 6px 0 4px; }
+  .doc-body li::marker { color: var(--text-tertiary); }
+
+  .doc-body strong { font-weight: 600; color: var(--text); }
+  .doc-body em { font-style: italic; }
+  .doc-body del { color: var(--text-tertiary); }
+
+  .doc-body a[href^="http"] { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
+  .doc-body a[href^="http"]:hover { color: #147a55; }
+  .doc-body a[href^="#"] { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
+
+  .doc-body code {
+    font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.88em;
+    background: #f1f5f9;
+    color: #334155;
+    padding: 1px 5px;
+    border-radius: 4px;
+    word-break: break-word;
+  }
+
+  .doc-body pre {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 16px 0 24px;
+    line-height: 1.65;
+  }
+  .doc-body pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 12.5px;
+    color: #334155;
+    white-space: pre;
+    word-break: normal;
+  }
+
+  .doc-body blockquote {
+    margin: 18px 0 22px;
+    padding: 12px 18px;
+    background: #f8fafc;
+    border-left: 3px solid #cbd5e1;
+    border-radius: 0 8px 8px 0;
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    line-height: 1.75;
+  }
+  .doc-body blockquote p { margin: 0; font-size: 13.5px; }
+  .doc-body blockquote p + p { margin-top: 8px; }
+  .doc-body blockquote strong { color: var(--text); }
+
+  .doc-body hr { display: none; }
+
+  /* tables live in their own scroll box so wide rules don't blow out the column */
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin: 16px 0 24px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .doc-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .doc-body th {
+    background: #f8fafc;
+    color: var(--text);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .doc-body td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eef2f7;
+    vertical-align: top;
+    color: #334155;
+  }
+  .doc-body tbody tr:last-child td { border-bottom: 0; }
+  .doc-body tbody tr:hover { background: #fbfcfe; }
+  .doc-body td code { font-size: 12px; }
+  .doc-body td > :last-child { margin-bottom: 0; }
+
+  /* ==============================
+     RESPONSIVE
+     ============================== */
+  @media (max-width: 1180px) {
+    .doc-main { padding: calc(var(--bar-h) + 40px) 40px 120px; }
+  }
+
+  @media (max-width: 1080px) {
+    .rail-toggle { display: inline-flex; }
+    .doc-rail {
+      transform: translateX(-100%);
+      transition: transform 0.22s ease;
+      box-shadow: 8px 0 28px rgba(15, 23, 42, 0.08);
+      z-index: 130;
+    }
+    .doc-rail.open { transform: translateX(0); }
+    .doc-main { margin-left: 0; }
+    .doc-name { display: none; }
+    .topbar-divider { display: none; }
+  }
+
+  @media (max-width: 640px) {
+    .doc-main { padding: calc(var(--bar-h) + 28px) 20px 96px; }
+    .doc-body h1 { font-size: 24px; }
+    .doc-body h2 { font-size: 20px; }
+    .topbar { padding: 0 16px; }
+    .brand-name, .updated { display: none; }
+  }
+
+  @media print {
+    .topbar, .doc-rail, .rail-overlay, .rail-toggle, .h-anchor { display: none !important; }
+    .doc-main { margin: 0; padding: 0; }
+    .doc-body { max-width: none; }
+    .doc-body h2 { page-break-after: avoid; }
+    .doc-body h3, .doc-body h4 { page-break-after: avoid; }
+    .table-wrap { overflow: visible; }
+    tr, pre, blockquote { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button type="button" class="rail-toggle" id="railToggle" aria-expanded="false" aria-controls="docRail">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+      目录
+    </button>
+    <a class="brand" href="#doc-top">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAH4AAAB+CAYAAADiI6WIAAAAAXNSR0IArs4c6QAAB+VJREFUeF7tnU1OMk0Qx3tOIBzBAyBxXBP1AIYTkJDA2g3u1b1u3JOQcALiAdSwBhM4gEcATzBPavK27zgCXf0x3dVDsdHnoWfq41f/6p6eEZIsyzKx53V3dyeen5/3vc3/H0EGRqOReHp6+uNpsgv8er0W/X5fLJfLCEJjF1UZSNNUTCYT0Wq1fob+AT+fz0W32xWbzUZ1Pn4/ogw0m00xm81Ep9PJvf4FHpR+eXnJ0CMCquMqwP/4+MiV/wv8xcUFt3edTEY4Ftr+YrH4Hzwv5CKkaOgyLPhyxa9WK9Futw1Pw4fFmIEc/HA4FOPxOEb/2WfDDCTb7TZrNBqGh/NhsWYgmU6nWa/Xi9V/9tswA8lgMMi4zRtmL+LDkjRNM96hi5igoetJs9nMeJfOMHsRH5YIIfbepIk4LnZdkQEGf6QlwuAZ/JFm4EjDZsUz+CPNwJGGzYpn8EeagSMNmxXP4I80A0caNiuewR9pBo40bFY8g69nBq6urvLA5E8ZJTxGXnzBY8fF1/v7e/5P+bNu2amV4iXc+/v7nbBt4D0+Pv4UQh2KIXrwABtAlxVtAxlzLMCHLvHw8IAZTm5MlOBDwd5HT3aDmIogKvCQWNnGyUnoP4egCGIoAPLgqakbW3DUuwBZ8LECLxcG1Q5AEnwMLR2rfDmOWgGQAl8XlR8qCioFQAb829ub90syXdW6Gk8BfnDwoHKAXvVLbrqUd+jKduWOno99gZAFEBR8VXO5hFzcbTMpLIAvCwAKoopiCAU/GHjX0AG2LWhMcchrdJf7CSHgBwHvaj6X26bwM8T+ucvi9Q3fO3gX0KW6Q8De1RVcdQGI5/r6GtN4rMd4BW8LnRrwcvZddABf8L2Bt4XuuxXaSMq2AHzA9wLeBjp1lR8qEJsCqBp+5eBtgrdVuc6DGeXrfFd32ELGf6goKwVvEzQsckwWb663fV3cZbPxybb498GvDLwpdJMWZ5NYnbncFoLplGcqgiCKP/Bp6Hv90YXuC7jLW62mgkgS0Ki7VyWKNwlOV02m6nGXOpHvFJqsBUx81xWFKk7n4E2g6wTl66aOKnHF900KwAS+y5YfHLwOdJOi0gFoM1YXvkkB6+RKFYtz8LpzO2buCjWXq5JnO/ebwMfkC+N3UPCY1mWSHEzgVY7BxCXt63YxsuCxcxemNcYIXQKtAj4mZ9iCdq54DCxMAJjzYIMsP5gBx8n/K/9tnasHLnTnY4zyXakd4ncOHk56KAgMdDiH7lqhXAS2D2ZADLZF4BK+TgfBCKIS8MX5C36Xz7EBdMw2LKb69wXn+qaO7b12bKHb5gwDuzimUvC6zqi6hep8rlVRtGdTjLrwVXG6eJ8ceJMWr9tSbRJnWgBVFqVJPKTAmyQ1hJpM/PRZnJhCIAUeeykoAwsB3fT6m8EfKEcd8CGhm8Bn8AfAY1soBegyDGyxUvK5sut4zByzb4xqcWeiHMwjWDbP6Kt8zhPt+H66TY5Jgj+kel3opjd3ZBFg77WrdhmprehJgi/On3LnzASEqw9E0mnR5aJ1vZlkq3LSGzi2wWHXCTp2dODrnDfkWFKXc7aJwC60TOzUDX5twFcJXRaK7hrDpMB8HVML8FW0930A6qL86MH7hC6LgeIqXbdTRA8ecw1dbNXwu/zrGPi9fI2PSWAdWn7U4HXUjlGpzvlib/lRg8eoXfdaWmfTh9puHKZbyTHRgseq0xQOpqgwXUQHhs+xtQZv045V27AAKea5PlrwKkXaQNe582baUXyqe5etKMFj1OgCPMZOrO2+tuBdKVHVWRi8x96FWdgx+MNAolS8CrzLRZdK8S6mFI+a+TEVJXjM3MuKr6HiMeBdzb0qxbuy41v1tVW8CyCqKQVgueosDB6ZAdX9dxfzvErtDB4Jy+UwFXh5Fw77wGTZN4zaY13Y5QULf5HsEoivc2HmefDFpOVjoJue21d+VHaiBQ+BYVSvq3ws9JjbfNSKB+exqpfw4ee+1q9zO1a3mFTqC/F+1IrXUX0xucUncEy+fCjmuV3mIXrwOqp3paxYL+GK8UcPXrZvl18OdKhA6qD26Of4IiCdRZmp8usCvVbgq1Z+naDXDrzuSh+jfN2HNTHnpDCmFnP8rkS6aP0mmz8UoGJ8qC14GbzuBxXWVeHlYqg9+GLA5e+KhffklwwDcMyHL2LUFMOYowIfAxBfPjJ4X5kmZofBEwPiyx0G7yvTxOwweGJAfLnD4H1lmpgdBk8MiC93GLyvTBOzw+CJAfHlDoP3lWlidhg8MSC+3GHwvjJNzA6DJwbElztJs9nMNpuNL3tsh0gGkjRNs+VyScQddsNXBpLBYJCNx2Nf9tgOkQwk0+k06/V6RNxhN3xlINlut1mj0fBlj+0QyUCSZVk2HA4Ft3siRDy5kYNfrVai3W57MslmKGQgBw+O3N3diefnZwo+sQ8VZ2A0Gokf8GDr4uJC8KVdxVkPfPo0TcVisfgNfr1e59/1zhs6gelUZL7ZbOaPk7dard/gwd58PhfdbpfhV5T8UKcF6LPZTHQ6ndyFX61eOgXK7/f73PZDUXJsF9r7ZDLJlS5fO8HLN3nB55hAgNPBQu7p6emP5YPgYTRc6r28vPB1fgBoNiYHg4G4vb0VZ2dnO0+jBC+P+v7+Fq+vr/nfl31+foqvry9eB9iQcXgszN+np6fi/Pw8/0Com5sbcXJyctDCP5fPqcvFdUAuAAAAAElFTkSuQmCC" alt="" />
+      <span class="brand-name">Podcasting Smarter</span>
+    </a>
+    <span class="topbar-divider" aria-hidden="true"></span>
+    <span class="doc-name">Settings 功能说明文档</span>
+  </div>
+  <div class="topbar-right">
+    <span class="version-pill">v1.2</span>
+    <span class="updated">更新于 2026-10-20</span>
+  </div>
+</header>
+
+<div class="rail-overlay" id="railOverlay"></div>
+
+<aside class="doc-rail" id="docRail">
+  <div class="rail-head">
+    <span class="rail-label">目录</span>
+    <span class="toc-count">9 章 · 36 节 · 15 条细则</span>
+  </div>
+  <nav class="toc" aria-label="文档目录">
+<div class="toc-row lvl2" data-id="sec-1"><a class="toc-link" href="#sec-1">1. 产品概述</a></div><div class="toc-row lvl2" data-id="sec-2"><a class="toc-link" href="#sec-2">2. 导航与页面结构</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-2" aria-label="展开 2. 导航与页面结构 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-2" data-parent="sec-2"><div class="toc-row lvl3" data-id="sec-2-1" data-parent="sec-2"><a class="toc-link" href="#sec-2-1">2.1 侧边栏层级</a></div><div class="toc-row lvl3" data-id="sec-2-2" data-parent="sec-2"><a class="toc-link" href="#sec-2-2">2.2 交互逻辑</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-2-2" aria-label="展开 2.2 交互逻辑 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-2-2" data-parent="sec-2-2" hidden><div class="toc-row lvl4" data-id="sec-2-2-1" data-parent="sec-2-2"><a class="toc-link" href="#sec-2-2-1">2.2.1 未保存修改时切换页面</a></div></div></div><div class="toc-row lvl2" data-id="sec-3"><a class="toc-link" href="#sec-3">3. 页面一：Podcast Info（播客信息）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-3" aria-label="展开 3. 页面一：Podcast Info（播客信息） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-3" data-parent="sec-3"><div class="toc-row lvl3" data-id="sec-3-0" data-parent="sec-3"><a class="toc-link" href="#sec-3-0">3.0 页面结构</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-3-0" aria-label="展开 3.0 页面结构 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-3-0" data-parent="sec-3-0" hidden><div class="toc-row lvl4" data-id="tab-切换规则" data-parent="sec-3-0"><a class="toc-link" href="#tab-切换规则">Tab 切换规则</a></div><div class="toc-row lvl4" data-id="tab-切换与未保存状态" data-parent="sec-3-0"><a class="toc-link" href="#tab-切换与未保存状态">Tab 切换与未保存状态</a></div><div class="toc-row lvl4" data-id="save-校验与错误提示" data-parent="sec-3-0"><a class="toc-link" href="#save-校验与错误提示">Save 校验与错误提示</a></div></div><div class="toc-row lvl3" data-id="sec-3-1" data-parent="sec-3"><a class="toc-link" href="#sec-3-1">3.1 Basic 标签页（基础信息）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-3-1" aria-label="展开 3.1 Basic 标签页（基础信息） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-3-1" data-parent="sec-3-1" hidden><div class="toc-row lvl4" data-id="sec-3-1-1" data-parent="sec-3-1"><a class="toc-link" href="#sec-3-1-1">3.1.1 Podcast Title（播客标题）</a></div><div class="toc-row lvl4" data-id="sec-3-1-2" data-parent="sec-3-1"><a class="toc-link" href="#sec-3-1-2">3.1.2 Brief Description（简介）</a></div><div class="toc-row lvl4" data-id="sec-3-1-3" data-parent="sec-3-1"><a class="toc-link" href="#sec-3-1-3">3.1.3 Podcast Category（播客分类）</a></div><div class="toc-row lvl4" data-id="sec-3-1-4" data-parent="sec-3-1"><a class="toc-link" href="#sec-3-1-4">3.1.4 Podcast Logo（播客封面）</a></div></div><div class="toc-row lvl3" data-id="sec-3-2" data-parent="sec-3"><a class="toc-link" href="#sec-3-2">3.2 Author &amp; Region 标签页（作者与区域）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-3-2" aria-label="展开 3.2 Author &amp; Region 标签页（作者与区域） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-3-2" data-parent="sec-3-2" hidden><div class="toc-row lvl4" data-id="sec-3-2-1" data-parent="sec-3-2"><a class="toc-link" href="#sec-3-2-1">3.2.1 Author（作者）</a></div><div class="toc-row lvl4" data-id="sec-3-2-2" data-parent="sec-3-2"><a class="toc-link" href="#sec-3-2-2">3.2.2 Copyright（版权信息）</a></div><div class="toc-row lvl4" data-id="sec-3-2-3" data-parent="sec-3-2"><a class="toc-link" href="#sec-3-2-3">3.2.3 Language（语言）</a></div><div class="toc-row lvl4" data-id="sec-3-2-4" data-parent="sec-3-2"><a class="toc-link" href="#sec-3-2-4">3.2.4 Country of Origin（原产国/分发区域）</a></div><div class="toc-row lvl4" data-id="sec-3-2-5" data-parent="sec-3-2"><a class="toc-link" href="#sec-3-2-5">3.2.5 Timezone（时区）</a></div></div><div class="toc-row lvl3" data-id="sec-3-3" data-parent="sec-3"><a class="toc-link" href="#sec-3-3">3.3 Content Classification 标签页（内容分类）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-3-3" aria-label="展开 3.3 Content Classification 标签页（内容分类） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-3-3" data-parent="sec-3-3" hidden><div class="toc-row lvl4" data-id="sec-3-3-1" data-parent="sec-3-3"><a class="toc-link" href="#sec-3-3-1">3.3.1 Podcast Type（播客类型）</a></div><div class="toc-row lvl4" data-id="sec-3-3-2" data-parent="sec-3-3"><a class="toc-link" href="#sec-3-3-2">3.3.2 Content Explicit（内容分级）</a></div></div></div><div class="toc-row lvl2" data-id="sec-4"><a class="toc-link" href="#sec-4">4. 页面二：Feed（RSS 源管理）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-4" aria-label="展开 4. 页面二：Feed（RSS 源管理） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-4" data-parent="sec-4"><div class="toc-row lvl3" data-id="sec-4-0" data-parent="sec-4"><a class="toc-link" href="#sec-4-0">4.0 页面结构</a></div><div class="toc-row lvl3" data-id="sec-4-1" data-parent="sec-4"><a class="toc-link" href="#sec-4-1">4.1 Podcast Feed URL（RSS 源地址）</a></div><div class="toc-row lvl3" data-id="sec-4-2" data-parent="sec-4"><a class="toc-link" href="#sec-4-2">4.2 Episode Number Limit（剧集数量限制）</a></div><div class="toc-row lvl3" data-id="sec-4-3" data-parent="sec-4"><a class="toc-link" href="#sec-4-3">4.3 Ownership Verification Email（所有者验证邮箱）</a></div><div class="toc-row lvl3" data-id="sec-4-4" data-parent="sec-4"><a class="toc-link" href="#sec-4-4">4.4 Alternative Website URL</a></div><div class="toc-row lvl3" data-id="sec-4-5" data-parent="sec-4"><a class="toc-link" href="#sec-4-5">4.5 Generate audio-only feed（生成纯音频 feed）</a></div><div class="toc-row lvl3" data-id="sec-4-6" data-parent="sec-4"><a class="toc-link" href="#sec-4-6">4.6 Redirect to a New Feed（Feed 重定向）</a></div></div><div class="toc-row lvl2" data-id="sec-5"><a class="toc-link" href="#sec-5">5. 页面三：Plugin（插件管理）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-5" aria-label="展开 5. 页面三：Plugin（插件管理） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-5" data-parent="sec-5"><div class="toc-row lvl3" data-id="sec-5-0" data-parent="sec-5"><a class="toc-link" href="#sec-5-0">5.0 页面结构</a></div><div class="toc-row lvl3" data-id="sec-5-1" data-parent="sec-5"><a class="toc-link" href="#sec-5-1">5.1 插件列表</a></div><div class="toc-row lvl3" data-id="sec-5-2" data-parent="sec-5"><a class="toc-link" href="#sec-5-2">5.2 插件操作</a></div><div class="toc-row lvl3" data-id="sec-5-3" data-parent="sec-5"><a class="toc-link" href="#sec-5-3">5.3 插件编辑弹窗</a></div><div class="toc-row lvl3" data-id="sec-5-4" data-parent="sec-5"><a class="toc-link" href="#sec-5-4">5.4 Get More Plugins</a></div></div><div class="toc-row lvl2" data-id="sec-6"><a class="toc-link" href="#sec-6">6. 页面四：Import to Podbean（导入）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-6" aria-label="展开 6. 页面四：Import to Podbean（导入） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-6" data-parent="sec-6"><div class="toc-row lvl3" data-id="sec-6-0" data-parent="sec-6"><a class="toc-link" href="#sec-6-0">6.0 页面结构</a></div><div class="toc-row lvl3" data-id="sec-6-1" data-parent="sec-6"><a class="toc-link" href="#sec-6-1">6.1 入口：选择来源</a></div><div class="toc-row lvl3" data-id="sec-6-2" data-parent="sec-6"><a class="toc-link" href="#sec-6-2">6.2 步骤一：填写地址</a></div><div class="toc-row lvl3" data-id="sec-6-3" data-parent="sec-6"><a class="toc-link" href="#sec-6-3">6.3 步骤二：范围与输出类型</a></div><div class="toc-row lvl3" data-id="sec-6-4" data-parent="sec-6"><a class="toc-link" href="#sec-6-4">6.4 步骤三：格式与可选设置</a></div><div class="toc-row lvl3" data-id="sec-6-5" data-parent="sec-6"><a class="toc-link" href="#sec-6-5">6.5 导入状态（Import 之后）</a></div><div class="toc-row lvl3" data-id="sec-6-6" data-parent="sec-6"><a class="toc-link" href="#sec-6-6">6.6 301 Redirect 校验与完成态</a></div><div class="toc-row lvl3" data-id="sec-6-7" data-parent="sec-6"><a class="toc-link" href="#sec-6-7">6.7 免费账号（Free plan）：不能开始导入</a></div><div class="toc-row lvl3" data-id="sec-6-8" data-parent="sec-6"><a class="toc-link" href="#sec-6-8">6.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus</a></div></div><div class="toc-row lvl2" data-id="sec-7"><a class="toc-link" href="#sec-7">7. 全局交互规则</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-7" aria-label="展开 7. 全局交互规则 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-7" data-parent="sec-7"><div class="toc-row lvl3" data-id="sec-7-1" data-parent="sec-7"><a class="toc-link" href="#sec-7-1">7.1 Save Bar（底部保存栏）</a></div><div class="toc-row lvl3" data-id="sec-7-2" data-parent="sec-7"><a class="toc-link" href="#sec-7-2">7.2 修改检测</a></div><div class="toc-row lvl3" data-id="sec-7-3" data-parent="sec-7"><a class="toc-link" href="#sec-7-3">7.3 自定义下拉选择器</a></div><div class="toc-row lvl3" data-id="sec-7-5" data-parent="sec-7"><a class="toc-link" href="#sec-7-5">7.5 页面切换</a></div></div><div class="toc-row lvl2" data-id="sec-8"><a class="toc-link" href="#sec-8">8. 数据校验规则</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-8" aria-label="展开 8. 数据校验规则 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-sec-8" data-parent="sec-8"><div class="toc-row lvl3" data-id="sec-8-1" data-parent="sec-8"><a class="toc-link" href="#sec-8-1">8.1 必填字段</a></div><div class="toc-row lvl3" data-id="sec-8-2" data-parent="sec-8"><a class="toc-link" href="#sec-8-2">8.2 格式与长度校验</a></div><div class="toc-row lvl3" data-id="sec-8-3" data-parent="sec-8"><a class="toc-link" href="#sec-8-3">8.3 保存前校验流程</a></div></div><div class="toc-row lvl2" data-id="附录新老页面对比"><a class="toc-link" href="#附录新老页面对比">附录：新老页面对比</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-附录新老页面对比" aria-label="展开 附录：新老页面对比 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div><div class="toc-children" id="grp-附录新老页面对比" data-parent="附录新老页面对比"><div class="toc-row lvl3" data-id="podcast-info-页面变化说明" data-parent="附录新老页面对比"><a class="toc-link" href="#podcast-info-页面变化说明">Podcast Info 页面变化说明</a></div><div class="toc-row lvl3" data-id="feed-页面变化说明" data-parent="附录新老页面对比"><a class="toc-link" href="#feed-页面变化说明">Feed 页面变化说明</a></div></div>
+</nav>
+</aside>
+
+<main class="doc-main">
+  <article class="doc-body">
+<h1 id="doc-top">Podcast Dashboard — Settings 模块功能说明文档<a class="h-anchor" href="#doc-top" aria-label="本节链接">#</a></h1>
+<blockquote class="doc-meta">
+<p>版本：v1.2<br />
+最后更新：2026-10-20<br />
+状态：产品需求说明</p>
+</blockquote>
+<div class="doc-notice" role="note">
+<svg class="doc-notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+<p><strong>请注意：</strong> 本功能文档根据当前版本整理，可能存在遗漏或理解偏差。如与线上实际表现不一致，请再次确认。</p>
+</div>
+<hr />
+<h2 id="sec-1">1. 产品概述<a class="h-anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<p><strong>Settings</strong> 是播客仪表盘的核心配置模块，包含四个子页面：Podcast Info（节目基本信息与元数据）、Feed（RSS 源与分发配置）、Plugin（插件集成管理）、Import to Podbean（从其他平台导入节目）。</p>
+<hr />
+<h2 id="sec-2">2. 导航与页面结构<a class="h-anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<h3 id="sec-2-1">2.1 侧边栏层级<a class="h-anchor" href="#sec-2-1" aria-label="本节链接">#</a></h3>
+<pre><code>Settings                              ← 一级导航（带箭头展开/收起）
+├── Podcast Info（播客信息）           ← 默认页，active 状态
+├── Feed（RSS 源管理）
+├── Plugin（插件管理）
+└── Import to Podbean（导入）
+</code></pre>
+<ul>
+<li>Settings 是一级导航条目，点击后展开 / 收起其子菜单。</li>
+<li>四个子页面在同一内容区内切换，不发生整页跳转。</li>
+<li>进入 Settings 时默认展示 <strong>Podcast Info</strong>。</li>
+</ul>
+<h3 id="sec-2-2">2.2 交互逻辑<a class="h-anchor" href="#sec-2-2" aria-label="本节链接">#</a></h3>
+<h4 id="sec-2-2-1">2.2.1 未保存修改时切换页面<a class="h-anchor" href="#sec-2-2-1" aria-label="本节链接">#</a></h4>
+<p>Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbean 没有 Save bar）。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：</p>
+<pre><code>┌─────────────────────────────────────┐
+│                                     │
+│         Unsaved Changes             │
+│                                     │
+│  You have unsaved changes. Do you   │
+│  want to leave without saving?      │
+│                                     │
+│           [ Stay ]  [ Leave ]       │
+│                                     │
+└─────────────────────────────────────┘
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>元素</th>
+<th>文字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标题</td>
+<td><strong>Unsaved Changes</strong></td>
+</tr>
+<tr>
+<td>提示文案</td>
+<td>You have unsaved changes. Do you want to leave without saving?</td>
+</tr>
+<tr>
+<td>Stay 按钮</td>
+<td><strong>Stay</strong></td>
+</tr>
+<tr>
+<td>Leave 按钮</td>
+<td><strong>Leave</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>点击 <strong>Stay</strong></td>
+<td>关闭弹窗，停留在当前页面，所有未保存修改保留</td>
+</tr>
+<tr>
+<td>点击 <strong>Leave</strong></td>
+<td>丢弃所有未保存修改，切换到目标页面，Save bar 隐藏</td>
+</tr>
+<tr>
+<td>点击遮罩 / 按 Esc</td>
+<td>同 Stay，不切换页面</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-3">3. 页面一：Podcast Info（播客信息）<a class="h-anchor" href="#sec-3" aria-label="本节链接">#</a></h2>
+<h3 id="sec-3-0">3.0 页面结构<a class="h-anchor" href="#sec-3-0" aria-label="本节链接">#</a></h3>
+<pre><code>┌──────────────────────────────────────────────┐
+│  Podcast Info                                 │
+│                                               │
+│  ┌──────────────────────────────────────────┐ │
+│  │  Basic  │ Author &amp; Region │ Content Classification │  ← 横向 Tab
+│  └──────────────────────────────────────────┘ │
+│                                               │
+│  ┌──────────────────────────────────────────┐ │
+│  │  表单内容区域（随 Tab 切换）              │ │
+│  │                                          │ │
+│  └──────────────────────────────────────────┘ │
+└──────────────────────────────────────────────┘
+</code></pre>
+<h4 id="tab-切换规则">Tab 切换规则<a class="h-anchor" href="#tab-切换规则" aria-label="本节链接">#</a></h4>
+<ul>
+<li>三个 Tab 横向排列，底部有下划线指示当前激活项</li>
+<li>点击 Tab 只切换面板内容，不触发页面跳转</li>
+<li>切换页面后自动回到第一个 Tab（Basic）</li>
+</ul>
+<h4 id="tab-切换与未保存状态">Tab 切换与未保存状态<a class="h-anchor" href="#tab-切换与未保存状态" aria-label="本节链接">#</a></h4>
+<p>三个 Tab 同属 Podcast Info 页面，共享同一个 Save bar。Tab 切换时处理策略如下：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>处理方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tab A 有未保存的修改 → 点击 Tab B</td>
+<td>修改<strong>保留在表单状态中</strong>，不会丢失；Tab B 展示其字段（默认值或之前已保存的值）</td>
+</tr>
+<tr>
+<td>Tab B 继续修改 → 再切回 Tab A</td>
+<td>Tab A 中之前的修改依然保留</td>
+</tr>
+<tr>
+<td>任意 Tab 有修改</td>
+<td>Save bar 保持显示</td>
+</tr>
+<tr>
+<td>点击 Save</td>
+<td>校验<strong>所有 Tab</strong> 的必填字段 → 见下文 <a href="#save-校验与错误提示">Save 校验与错误提示</a></td>
+</tr>
+<tr>
+<td>点击 Cancel</td>
+<td>清空所有 Tab 的未保存修改，恢复至上次保存值</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="save-校验与错误提示">Save 校验与错误提示<a class="h-anchor" href="#save-校验与错误提示" aria-label="本节链接">#</a></h4>
+<p>点击 Save 时，系统校验 Podcast Info 页面下的所有三个 Tab 的必填字段：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 校验</td>
+<td>遍历三个 Tab 的所有可见字段，执行校验规则</td>
+</tr>
+<tr>
+<td>2. 有错误</td>
+<td>自动切换到<strong>第一个包含错误</strong>的 Tab；该 Tab 内第一个错误字段下方显示错误提示，并滚动到可视区域；所有包含错误的 Tab 标签变为红色</td>
+</tr>
+<tr>
+<td>3. 全部通过</td>
+<td>一次性提交所有 Tab 的字段值，Toast 提示 <strong>&quot;Saved successfully&quot;</strong>，Save bar 隐藏</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>错误标识：</strong> 有错误的 Tab 标签变红，点击可切换到该 Tab 查看原因；修复后由下次 Save 重新判定；点击 Cancel 一并清除。</p>
+<hr />
+<h3 id="sec-3-1">3.1 Basic 标签页（基础信息）<a class="h-anchor" href="#sec-3-1" aria-label="本节链接">#</a></h3>
+<h4 id="sec-3-1-1">3.1.1 Podcast Title（播客标题）<a class="h-anchor" href="#sec-3-1-1" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>单行文本输入</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>是（标有红色 *）</td>
+</tr>
+<tr>
+<td><strong>产品默认值</strong></td>
+<td><code>The {subdomain}&#x27;s Podcast</code> — 创建播客频道时自动生成，其中 <code>{subdomain}</code> 为用户注册时分配的子域名</td>
+</tr>
+<tr>
+<td><strong>占位提示</strong></td>
+<td>&quot;Make a clear, concise name for your title&quot;</td>
+</tr>
+<tr>
+<td><strong>输入样式</strong></td>
+<td>下划线输入框，聚焦时高亮</td>
+</tr>
+<tr>
+<td><strong>校验规则</strong></td>
+<td>不能为空，且最多 200 字符（见 8.2）</td>
+</tr>
+<tr>
+<td><strong>错误提示</strong></td>
+<td>为空：&quot;Please enter a podcast title&quot;；超长：&quot;Please enter no more than 200 characters&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<p>示例：子域名为 <code>elinazplus</code>，默认标题为 <code>The elinazplus&#x27;s Podcast</code>。</p>
+<h4 id="sec-3-1-2">3.1.2 Brief Description（简介）<a class="h-anchor" href="#sec-3-1-2" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>富文本编辑器</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>是（标有红色 *）</td>
+</tr>
+<tr>
+<td><strong>产品默认值</strong></td>
+<td>&quot;New podcast weblog&quot; — 频道创建时自动填入</td>
+</tr>
+<tr>
+<td><strong>工具栏</strong></td>
+<td>Undo / Redo；Bold / Italic / Underline；Link — 共 7 个按钮</td>
+</tr>
+<tr>
+<td><strong>校验规则</strong></td>
+<td>不能为空，不能保留默认值 &quot;New podcast weblog&quot;，且最多 50,000 字符（见 8.2）</td>
+</tr>
+<tr>
+<td><strong>错误提示</strong></td>
+<td>为空或仍是默认值：&quot;Please enter a brief description&quot;；超长：&quot;Please enter no more than 50,000 characters&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="sec-3-1-3">3.1.3 Podcast Category（播客分类）<a class="h-anchor" href="#sec-3-1-3" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>分类下拉选择器 + 「+」按钮</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>是（标有红色 *）；至少选择一个分类</td>
+</tr>
+<tr>
+<td><strong>占位文字</strong></td>
+<td>&quot;Select a category&quot;（未选择时）</td>
+</tr>
+<tr>
+<td><strong>提示文字</strong></td>
+<td>&quot;Apple Podcasts only recognizes the first category and subcategory.&quot;</td>
+</tr>
+<tr>
+<td><strong>分类数量</strong></td>
+<td>默认显示 1 行；点击「+」增加一行，<strong>最多 3 行</strong>，达到上限后「+」隐藏</td>
+</tr>
+<tr>
+<td><strong>删除分类</strong></td>
+<td>第 2、3 行各有一个删除按钮，可单独移除；第 1 行不可删除</td>
+</tr>
+<tr>
+<td><strong>校验规则</strong></td>
+<td>Save 时至少选择一个分类；空值或仍为占位文字 &quot;Select a category&quot; 均视为未选择</td>
+</tr>
+<tr>
+<td><strong>错误提示</strong></td>
+<td>&quot;Please select a podcast category&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="sec-3-1-4">3.1.4 Podcast Logo（播客封面）<a class="h-anchor" href="#sec-3-1-4" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>图片预览 + 模板下拉 + 上传按钮</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>是（标有红色 *）</td>
+</tr>
+<tr>
+<td><strong>预览</strong></td>
+<td>正方形图片展示当前封面</td>
+</tr>
+<tr>
+<td><strong>模板选择</strong></td>
+<td>下拉展示内置模板；选择模板后预览随之更新</td>
+</tr>
+<tr>
+<td><strong>上传按钮</strong></td>
+<td>&quot;Upload image&quot;；点击打开文件选择器，只接受 JPG / PNG；选中合法图片后进入 <strong>Image Editor</strong>，用户编辑并确认后预览更新为新图片</td>
+</tr>
+<tr>
+<td><strong>图片要求</strong></td>
+<td><code>Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork.</code> 后面跟一个 <strong>Details</strong> 链接</td>
+</tr>
+<tr>
+<td><strong>校验规则</strong></td>
+<td>选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；Save 时封面不能为空（见 8.1）</td>
+</tr>
+<tr>
+<td><strong>错误提示</strong></td>
+<td>格式错误：&quot;Please upload a JPG or PNG image&quot;；为空：&quot;Please upload a podcast logo&quot;（文案待确认）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="sec-3-2">3.2 Author &amp; Region 标签页（作者与区域）<a class="h-anchor" href="#sec-3-2" aria-label="本节链接">#</a></h3>
+<h4 id="sec-3-2-1">3.2.1 Author（作者）<a class="h-anchor" href="#sec-3-2-1" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>单行文本输入</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>占位提示</strong></td>
+<td>&quot;Enter author or owner name&quot;</td>
+</tr>
+<tr>
+<td><strong>产品默认值</strong></td>
+<td><code>{subdomain}</code> — 频道创建时自动填入用户的子域名</td>
+</tr>
+<tr>
+<td><strong>校验规则</strong></td>
+<td>最多 225 字符；超过时 Save 拦截并提示 &quot;Please enter no more than 225 characters&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="sec-3-2-2">3.2.2 Copyright（版权信息）<a class="h-anchor" href="#sec-3-2-2" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>单行文本输入</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>占位提示</strong></td>
+<td>&quot;Copyright 2026 All rights reserved.&quot;</td>
+</tr>
+<tr>
+<td><strong>产品默认值</strong></td>
+<td>&quot;Copyright {currentYear} All rights reserved.&quot; — 年份取频道创建时的当前年份</td>
+</tr>
+<tr>
+<td><strong>校验规则</strong></td>
+<td>最多 200 字符；超过时 Save 拦截并提示 &quot;Please enter no more than 200 characters&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="sec-3-2-3">3.2.3 Language（语言）<a class="h-anchor" href="#sec-3-2-3" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>下拉选择器</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>是，但产品中始终有预设值，不会出现未选中的空状态</td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td>按账号 / 浏览器语言预选（如 <code>English [en]</code>）</td>
+</tr>
+<tr>
+<td><strong>选项</strong></td>
+<td>播客平台支持的语言列表（完整 ISO 语言代码待补齐）</td>
+</tr>
+<tr>
+<td><strong>行为</strong></td>
+<td>点击展开选项列表，选中后更新触发器文字，并触发 Save bar 显示</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="sec-3-2-4">3.2.4 Country of Origin（原产国/分发区域）<a class="h-anchor" href="#sec-3-2-4" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>下拉选择器 + 条件显示的多选控件</td>
+</tr>
+<tr>
+<td><strong>解释文字</strong></td>
+<td>Defines the intended market/territory where the podcast is relevant to the consumer.</td>
+</tr>
+<tr>
+<td><strong>选项</strong></td>
+<td><strong>Global</strong>、<strong>Specific countries</strong></td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td>Global</td>
+</tr>
+<tr>
+<td><strong>交互</strong></td>
+<td>选择 <strong>Global</strong> 时不显示额外控件；选择 <strong>Specific countries</strong> 时出现国家多选框，支持输入 <strong>Search countries</strong> 过滤、以标签（chip）形式多选、可逐个移除</td>
+</tr>
+<tr>
+<td><strong>选项数据</strong></td>
+<td>覆盖常见国家/地区，按字母序排列</td>
+</tr>
+<tr>
+<td><strong>必填规则</strong></td>
+<td>选择 Specific countries 时，<strong>至少选择一个国家</strong>；Global 不受此约束</td>
+</tr>
+<tr>
+<td><strong>错误提示</strong></td>
+<td>&quot;Please select at least one country&quot;（出现在多选框下方）</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="sec-3-2-5">3.2.5 Timezone（时区）<a class="h-anchor" href="#sec-3-2-5" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>下拉选择器</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>是，但产品中始终有预设值，不会出现未选中的空状态</td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td>取账号所在时区（如 <code>(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</code>）；是否按用户 IP 自动判断，待产品确认</td>
+</tr>
+<tr>
+<td><strong>辅助提示</strong></td>
+<td><code>Current time: Jun 16, 2026, 10:21 AM</code></td>
+</tr>
+<tr>
+<td><strong>行为</strong></td>
+<td>当前时间按所选时区显示并实时更新；切换时区后立即按新时区刷新</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="sec-3-3">3.3 Content Classification 标签页（内容分类）<a class="h-anchor" href="#sec-3-3" aria-label="本节链接">#</a></h3>
+<h4 id="sec-3-3-1">3.3.1 Podcast Type（播客类型）<a class="h-anchor" href="#sec-3-3-1" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>下拉选择器</td>
+</tr>
+<tr>
+<td><strong>选项</strong></td>
+<td>Episodic、Serial</td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td>Episodic</td>
+</tr>
+<tr>
+<td><strong>辅助说明</strong></td>
+<td>&quot;Choose how episodes are ordered on your podcast website and in your RSS feed.&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Episodic</strong> 按发布时间倒序，<strong>Serial</strong> 按发布顺序排列。</p>
+<h4 id="sec-3-3-2">3.3.2 Content Explicit（内容分级）<a class="h-anchor" href="#sec-3-3-2" aria-label="本节链接">#</a></h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>下拉选择器</td>
+</tr>
+<tr>
+<td><strong>选项</strong></td>
+<td>Clean / False、Explicit / True</td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td>Clean / False</td>
+</tr>
+<tr>
+<td><strong>辅助说明</strong></td>
+<td>&quot;Specify whether your podcast contains explicit content.&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-4">4. 页面二：Feed（RSS 源管理）<a class="h-anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
+<h3 id="sec-4-0">4.0 页面结构<a class="h-anchor" href="#sec-4-0" aria-label="本节链接">#</a></h3>
+<pre><code>┌──────────────────────────────────────────────┐
+│  Feed                                         │
+│                                               │
+│  ┌──────────────────────────────────────────┐ │
+│  │  表单内容区域（无 Tab，单面板）           │ │
+│  └──────────────────────────────────────────┘ │
+└──────────────────────────────────────────────┘
+</code></pre>
+<p><strong>保存规则：</strong> Feed 有独立 Save bar，仅校验和提交本页字段（见 7.1）。</p>
+<p>字段顺序：Podcast Feed URL → Episode Number Limit → Ownership Verification Email → Alternative Website URL → Generate audio-only feed → Redirect to a New Feed。</p>
+<h3 id="sec-4-1">4.1 Podcast Feed URL（RSS 源地址）<a class="h-anchor" href="#sec-4-1" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>只读展示 + 复制按钮</td>
+</tr>
+<tr>
+<td><strong>内容</strong></td>
+<td>当前播客的 RSS feed 地址（只读）</td>
+</tr>
+<tr>
+<td><strong>交互</strong></td>
+<td>点击 <strong>Copy</strong> 把 URL 写入剪贴板，按钮短暂显示 <strong>Copied!</strong> 作为反馈</td>
+</tr>
+<tr>
+<td><strong>说明</strong></td>
+<td>当用户更改 subdomain 或设置自己的域名后，Feed URL 会立即同步更新</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-2">4.2 Episode Number Limit（剧集数量限制）<a class="h-anchor" href="#sec-4-2" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>数字输入</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td>100</td>
+</tr>
+<tr>
+<td><strong>辅助说明</strong></td>
+<td>&quot;Limit the number of episodes included in your RSS feed.&quot;</td>
+</tr>
+<tr>
+<td><strong>校验规则</strong></td>
+<td>非空值必须是整数，且落在 <code>1</code> 到当前套餐上限之间；空值不报错</td>
+</tr>
+<tr>
+<td><strong>错误提示</strong></td>
+<td>&quot;Please enter a whole number between 1 and {plan limit}&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>套餐上限：</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>套餐</th>
+<th>上限值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unlimited Audio Plan</td>
+<td>999</td>
+</tr>
+<tr>
+<td>Unlimited Plus Plan</td>
+<td>1999</td>
+</tr>
+<tr>
+<td>Business Plan</td>
+<td>2999</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-3">4.3 Ownership Verification Email（所有者验证邮箱）<a class="h-anchor" href="#sec-4-3" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>Toggle 开关 + 条件显示文本输入框</td>
+</tr>
+<tr>
+<td><strong>默认状态</strong></td>
+<td>关闭；关闭时不显示输入框</td>
+</tr>
+<tr>
+<td><strong>说明文字</strong></td>
+<td>&quot;Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.&quot;（放在 Toggle 行的说明位）</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>开启后必填；关闭时无需填写</td>
+</tr>
+<tr>
+<td><strong>校验</strong></td>
+<td>开启后为空（含仅空格）→ 报错；非空时校验 email 格式，不合法 → 报错</td>
+</tr>
+<tr>
+<td><strong>错误提示</strong></td>
+<td>为空：&quot;Please enter your verification email&quot;；格式错误：&quot;Please enter a valid email address&quot;</td>
+</tr>
+<tr>
+<td><strong>自动过期</strong></td>
+<td>48 小时后，email 自动从 RSS feed 中移除，输入框内容清空</td>
+</tr>
+<tr>
+<td><strong>手动移除</strong></td>
+<td>用户关闭 Toggle 并保存，email 立即从 feed 中移除</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-4">4.4 Alternative Website URL<a class="h-anchor" href="#sec-4-4" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>Toggle 开关 + 条件显示 URL 输入</td>
+</tr>
+<tr>
+<td><strong>默认状态</strong></td>
+<td>关闭；关闭时不显示输入框，使用默认 Podbean 播客网站 URL</td>
+</tr>
+<tr>
+<td><strong>占位提示</strong></td>
+<td>&quot;https://your-website.com&quot;</td>
+</tr>
+<tr>
+<td><strong>必填</strong></td>
+<td>开启后必填；关闭时无需填写（使用默认 Podbean 播客网站 URL）</td>
+</tr>
+<tr>
+<td><strong>校验</strong></td>
+<td>开启后为空（含仅空格）→ 报错；非空时校验 URL 格式（要求主机名带点，允许省略协议），不合法 → 报错</td>
+</tr>
+<tr>
+<td><strong>错误提示</strong></td>
+<td>为空：&quot;Please enter your website URL&quot;；格式错误：&quot;Please enter a valid URL&quot;</td>
+</tr>
+<tr>
+<td><strong>辅助说明</strong></td>
+<td>&quot;Set your custom podcast website URL in the RSS feed.&quot;（放在 Toggle 行的说明位）</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-5">4.5 Generate audio-only feed（生成纯音频 feed）<a class="h-anchor" href="#sec-4-5" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>Toggle 开关 + 条件展示的只读 feed 地址 + Copy</td>
+</tr>
+<tr>
+<td><strong>默认状态</strong></td>
+<td>关闭；关闭时不展示地址</td>
+</tr>
+<tr>
+<td><strong>说明文字</strong></td>
+<td>&quot;Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don&#x27;t accept video. Your video feed stays as it is.&quot;</td>
+</tr>
+<tr>
+<td><strong>展开内容</strong></td>
+<td>一行 &quot;Your audio-only feed is:&quot;，下面是系统生成的音频 feed 地址与 <strong>Copy</strong> 按钮；复制后给出与 4.1 一致的 <strong>Copied!</strong> 反馈</td>
+</tr>
+<tr>
+<td><strong>行为</strong></td>
+<td>该开关只控制这一段的展示，不影响 Feed 页面其他字段</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-6">4.6 Redirect to a New Feed（Feed 重定向）<a class="h-anchor" href="#sec-4-6" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>类型</strong></td>
+<td>Toggle 开关 + 条件显示 URL 输入 + 危险警告</td>
+</tr>
+<tr>
+<td><strong>说明文字</strong></td>
+<td>&quot;Only enter your new podcast feed URL when you&#x27;re ready to move away from Podbean.&quot;</td>
+</tr>
+<tr>
+<td><strong>默认状态</strong></td>
+<td>关闭</td>
+</tr>
+<tr>
+<td><strong>占位提示</strong></td>
+<td>&quot;https://&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>开启后展示：</strong></p>
+<pre><code>┌──────────────────────────────────────────────┐
+│  ⚠ Warning! Your Podbean feed will be         │
+│  redirected to the new feed URL immediately.   │
+│                                              │
+│  [___________________________]  ← URL 输入框  │
+└──────────────────────────────────────────────┘
+</code></pre>
+<p><strong>安全机制：</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Toggle 开启</td>
+<td>显示警告条 + URL 输入框</td>
+</tr>
+<tr>
+<td>输入为空时保存</td>
+<td>阻止保存并提示 <strong>&quot;Please enter your new feed URL&quot;</strong></td>
+</tr>
+<tr>
+<td>重定向 URL 格式</td>
+<td>必须是显式 <code>https://</code> 的合法 URL；不符合时提示 <strong>&quot;Please enter a valid HTTPS URL&quot;</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-5">5. 页面三：Plugin（插件管理）<a class="h-anchor" href="#sec-5" aria-label="本节链接">#</a></h2>
+<h3 id="sec-5-0">5.0 页面结构<a class="h-anchor" href="#sec-5-0" aria-label="本节链接">#</a></h3>
+<pre><code>┌──────────────────────────────────────────────┐
+│  Plugin                   [Get more plugins] │
+│                                              │
+│  [logo] Episode Endnote  [Expired]   ✎  ✕    │
+│         描述文字…                            │
+│  ──────────────────────────────────────────── │
+│  [logo] Episode Tags    [Expired]      ✕     │
+│         描述文字…                            │
+└──────────────────────────────────────────────┘
+</code></pre>
+<p>页面没有 Save bar：插件操作即时生效（编辑走弹窗，删除走确认弹窗）。</p>
+<h3 id="sec-5-1">5.1 插件列表<a class="h-anchor" href="#sec-5-1" aria-label="本节链接">#</a></h3>
+<p>Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名称 + <code>Expired</code> 徽标 + 描述 + 右侧操作按钮。行与行之间只有一条上边框，外框不带卡片样式。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>插件</th>
+<th>描述</th>
+<th>可编辑</th>
+<th>可删除</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Episode Endnote</strong></td>
+<td>Add a customizable endnote that appears at the end of your episode descriptions, ideal for including social media links, promotional details.</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td><strong>Episode Tags</strong></td>
+<td>Episode Tags can be used to organize the episodes on your podcast site. You can add tags in Podbean when creating or editing an episode.</td>
+<td><strong>否</strong>（只有删除按钮）</td>
+<td>是</td>
+</tr>
+<tr>
+<td><strong>Import Files from Dropbox</strong></td>
+<td>Import files directly from your Dropbox account to your Podbean Media Manager.</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td><strong>SEO Meta Tags</strong></td>
+<td>This plugin makes it very easy for you to manage SEO titles, keywords and descriptions for your podcast site.</td>
+<td>是</td>
+<td>是</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>插件过期时，行内显示 <strong>Expired</strong> 徽标，编辑与删除操作仍可用。</li>
+<li><strong>空状态</strong>：删除全部插件后，列表隐藏、显示居中的 &quot;Take your podcast to the next level by adding popular plugins and services.&quot;。</li>
+</ul>
+<h3 id="sec-5-2">5.2 插件操作<a class="h-anchor" href="#sec-5-2" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>按钮</th>
+<th>出现在</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Edit（铅笔）</strong></td>
+<td>Episode Endnote / Import Files from Dropbox / SEO Meta Tags</td>
+<td>打开对应编辑弹窗（见 5.3）</td>
+</tr>
+<tr>
+<td><strong>Delete（×）</strong></td>
+<td>全部四行</td>
+<td>打开 <strong>Delete Plugin</strong> 确认弹窗</td>
+</tr>
+<tr>
+<td><strong>Get more plugins</strong></td>
+<td>页面右上角</td>
+<td>打开 <code>https://apps.podbean.com</code>（当前标签页）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>删除确认弹窗：</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>元素</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标题</td>
+<td><strong>Delete Plugin</strong></td>
+</tr>
+<tr>
+<td>正文</td>
+<td><code>Are you sure you want to delete “{插件名}”? Its settings will be removed from your podcast. This action cannot be undone.</code></td>
+</tr>
+<tr>
+<td>按钮</td>
+<td>左 <strong>Cancel</strong>、右 <strong>Delete</strong>（红色 pill 按钮）</td>
+</tr>
+<tr>
+<td>关闭方式</td>
+<td>Cancel、点击遮罩、Esc 都只关闭、不删除；打开时焦点落在 <strong>Delete</strong></td>
+</tr>
+<tr>
+<td>确认后</td>
+<td>移除该行 → toast <strong><code>{插件名} deleted</code></strong> → 若列表已空，显示空状态</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-5-3">5.3 插件编辑弹窗<a class="h-anchor" href="#sec-5-3" aria-label="本节链接">#</a></h3>
+<p>三个插件共用一套弹窗外壳：标题 + 关闭 ×、高度随内容、底部右侧操作区（深色 pill 按钮）。<strong>Dropbox 是例外</strong>：它的 Refresh 按钮留在表格内，弹窗没有底部操作区。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>插件</th>
+<th>弹窗标题</th>
+<th>内容</th>
+<th>底部操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Episode Endnote</strong></td>
+<td>Episode Endnote</td>
+<td>富文本编辑器（与 Brief Description 同一套工具栏：Undo/Redo、Bold/Italic/Underline、Link）；下方一条信息提示 <strong>Saving will apply this endnote to all episodes.</strong></td>
+<td><strong>Cancel</strong> / <strong>Save</strong>；Save 关闭弹窗并 toast <code>Endnote saved to all episodes</code></td>
+</tr>
+<tr>
+<td><strong>Import Files from Dropbox</strong></td>
+<td>Import Files from Dropbox</td>
+<td>说明面板：<code>Click on the button below to import files from your Dropbox to your Podbean Media Manager.</code> + <strong>Select Files from Dropbox</strong> 按钮（带 Dropbox 图标）+ <code>Max allowed file size is 3GB.</code>；下方表格 Filename / Size / Status，空态 <code>No importing dropbox files.</code>，表格右下角 <strong>Refresh</strong></td>
+<td><strong>无底部操作区</strong></td>
+</tr>
+<tr>
+<td><strong>SEO Meta Tags</strong></td>
+<td><strong>Custom Meta Tags</strong></td>
+<td>单行标签 <strong>Meta Tags :</strong> 在上、全宽多行文本框在下（可纵向拉伸）；文本框内以文本形式展示一段 <code>&lt;meta name=&quot;keywords&quot; …&gt;</code> 示例</td>
+<td>只有 <strong>Save changes</strong>（无 Cancel），保存后关闭并 toast <code>Meta tags saved</code></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>三个弹窗都能用 ×、点击遮罩、Esc 关闭。</li>
+<li>Meta Tags 的弹窗标题与行名不同（行叫 <strong>SEO Meta Tags</strong>，弹窗叫 <strong>Custom Meta Tags</strong>）。</li>
+</ul>
+<h3 id="sec-5-4">5.4 Get More Plugins<a class="h-anchor" href="#sec-5-4" aria-label="本节链接">#</a></h3>
+<p>页面右上角的 <strong>Get more plugins</strong> 是外部链接，指向 <code>https://apps.podbean.com</code>，在当前标签页打开。</p>
+<hr />
+<h2 id="sec-6">6. 页面四：Import to Podbean（导入）<a class="h-anchor" href="#sec-6" aria-label="本节链接">#</a></h2>
+<p>把一个已有的播客（或视频系列）连同剧集导入 Podbean。页面只负责选择来源，随后的三步在居中弹窗内逐屏完成；点 <strong>Import</strong> 后弹窗关闭，页面接管导入状态、重定向校验与完成态。</p>
+<h3 id="sec-6-0">6.0 页面结构<a class="h-anchor" href="#sec-6-0" aria-label="本节链接">#</a></h3>
+<pre><code>【页面】
+┌────────────────────────────────────────────────────┐
+│  Import to Podbean                                 │
+│  Import an existing podcast or video series…       │
+│                                                    │
+│  [ RSS Feed URL → ]      [ Video to Podcast → ]    │
+│                                                    │
+│  （Import 之后：来源卡片隐藏，改为导入结果区）     │
+└────────────────────────────────────────────────────┘
+
+【弹窗 · 约 930 × 730，内容列 560】
+┌────────────────────────────────────────────────────┐
+│  1 / 3                                           × │
+│                                                    │
+│  Enter your feed URL                               │
+│                                                    │
+│  RSS Feed URL                                      │
+│  ────────────────────────────────────────          │
+│  Example: https://feeds.podbean.org/…              │
+│                                                    │
+│                        [ Back ]   [ Next ]         │
+└────────────────────────────────────────────────────┘
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>承载方式</strong></td>
+<td><strong>三步在弹窗内逐屏切换</strong>，一次只显示一步</td>
+</tr>
+<tr>
+<td><strong>弹窗尺寸</strong></td>
+<td>约 930 × 730，最大不超过视口的 94% / 92%；内容列 560px 居中，步骤标题 24px / 600</td>
+</tr>
+<tr>
+<td><strong>步骤标记</strong></td>
+<td>头部左侧 <code>1 / 3</code>，随步骤更新</td>
+</tr>
+<tr>
+<td><strong>步骤标题</strong></td>
+<td>随步骤与来源变化（见 6.2–6.4）；它只是标题，<strong>不是可点击的步骤导航</strong></td>
+</tr>
+<tr>
+<td><strong>返回</strong></td>
+<td>页脚左下 <strong>Back</strong>，步骤一不显示；× / 点击遮罩 / Esc 关闭整个向导并回到来源选择</td>
+</tr>
+<tr>
+<td><strong>前进</strong></td>
+<td>页脚右下 <strong>Next</strong>，步骤三变为 <strong>Import</strong>；<strong>YouTube 路径在 Search 之前整个页脚隐藏</strong>（见 6.2）</td>
+</tr>
+<tr>
+<td><strong>关闭后的焦点</strong></td>
+<td>回到打开弹窗的那张来源卡片</td>
+</tr>
+<tr>
+<td><strong>导入开始后</strong></td>
+<td>弹窗关闭，页面进入导入结果区（见 6.5），来源卡片同时隐藏</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-6-1">6.1 入口：选择来源<a class="h-anchor" href="#sec-6-1" aria-label="本节链接">#</a></h3>
+<p>来源是<strong>两张并排的按钮卡片</strong>，不是单选组：点哪一张，就以哪个来源直接打开向导的步骤一。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>卡片</th>
+<th>说明文字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RSS Feed URL</strong></td>
+<td>You have a podcast hosted on another platform, or a collection of episodes in an RSS feed.</td>
+</tr>
+<tr>
+<td><strong>Video to Podcast</strong></td>
+<td>You have video content that you want to publish as a podcast.</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>页面上<strong>没有 Next</strong>：选择来源 = 打开弹窗，向导里不再有「选择来源」这一步。</li>
+<li>付费 / Unlimited Audio 账号：点击进入步骤一（见 6.2）。</li>
+<li><strong>免费账号</strong>：点击不打开弹窗，先弹升级提示（见 6.7）。</li>
+<li>关掉弹窗后来源卡片仍在原处，可以换一个来源重来；已填过的地址在本次会话内保留。</li>
+</ul>
+<h3 id="sec-6-2">6.2 步骤一：填写地址<a class="h-anchor" href="#sec-6-2" aria-label="本节链接">#</a></h3>
+<p>步骤标题：RSS → <strong>Enter your feed URL</strong>；Video → <strong>Choose your video source</strong>。</p>
+<p><strong>来源为 RSS Feed URL</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>元素</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>字段标签</td>
+<td>RSS Feed URL</td>
+</tr>
+<tr>
+<td>占位符</td>
+<td><code>https://feeds.example.com/myshow.xml</code></td>
+</tr>
+<tr>
+<td>提示</td>
+<td><code>Example: https://feeds.podbean.org/elinazplus/feed.xml</code>（灰色）</td>
+</tr>
+<tr>
+<td>必填</td>
+<td>是</td>
+</tr>
+<tr>
+<td>错误提示</td>
+<td><strong>&quot;Please enter your RSS feed URL&quot;</strong>（字段下方，聚焦输入框）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>来源为 Video to Podcast</strong></p>
+<p>视频内部还有两个来源，用一行 <strong>Content Source</strong> 下拉框切换，切换后下方字段整体替换。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Content Source</th>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>YouTube Playlist</strong>（默认）</td>
+<td><strong>YouTube channel handle</strong>：下划线输入框，占位符 <code>e.g. @podbean</code>，右侧 <strong>Search</strong> 按钮</td>
+<td>提示：<code>Search for your YouTube channel and choose the playlist you want to convert.</code></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>YouTube Playlist</strong> 下拉框 —— <strong>只有点过 Search 之后才出现</strong></td>
+<td>提示：We will retrieve <strong>the latest 10 videos</strong> and sync future content as you prefer.（正文色，不是灰色）</td>
+</tr>
+<tr>
+<td><strong>RSS Feed URL</strong></td>
+<td><strong>RSS Feed</strong> 输入框，占位符 <code>Enter your RSS feed URL</code></td>
+<td>提示：We will retrieve <strong>the latest 10 videos</strong>, convert them into MP3 and sync future content as you prefer.（正文色）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Search 是必经步骤，检索前 Next 不出现</strong>：handle 为空时点 Search → <strong>&quot;Please enter your YouTube channel handle&quot;</strong>；handle 有值 → 播放列表下拉与页脚同时出现，并 toast <code>Playlists loaded</code>。</li>
+<li><strong>检索之前整个页脚隐藏</strong>（步骤一没有 Back）。</li>
+<li>Search 会把播放列表重置为第一个结果；handle、播放列表在步骤间往返与切换 Content Source 时保留。</li>
+<li>video + RSS Feed 路径：空值报 <strong>&quot;Please enter your video RSS feed URL&quot;</strong>。</li>
+<li><strong>排版</strong>：弹窗内所有带标签的行都是<strong>标签在上、控件在下</strong>，标签 14px / 500 字重、次要灰色，控件占满 560px 宽；行距保持一致。</li>
+<li><strong>输入即清错</strong>：字段一旦有内容，行内错误立刻消失。</li>
+</ul>
+<h3 id="sec-6-3">6.3 步骤二：范围与输出类型<a class="h-anchor" href="#sec-6-3" aria-label="本节链接">#</a></h3>
+<p>步骤二问什么，取决于来源：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>来源</th>
+<th>步骤标题</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RSS Feed URL</strong></td>
+<td><strong>What should we bring over?</strong></td>
+<td>导入范围二选一</td>
+</tr>
+<tr>
+<td><strong>Video to Podcast → RSS Feed URL</strong></td>
+<td><strong>What should we bring over?</strong></td>
+<td>同上（同一个组）</td>
+</tr>
+<tr>
+<td><strong>Video to Podcast → YouTube Playlist</strong></td>
+<td><strong>What kind of podcast should this become?</strong></td>
+<td>输出类型二选一</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>导入范围（单选，默认第一项）</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>选项下方说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Podcast details and episodes</strong>（默认）</td>
+<td>Bring over your podcast information along with its episodes.</td>
+</tr>
+<tr>
+<td><strong>Episodes only</strong></td>
+<td>Import episodes and keep your current podcast details.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>输出类型（单选，默认第一项）</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Convert to Audio Podcasts</strong>（默认）</td>
+<td>转成音频播客</td>
+</tr>
+<tr>
+<td><strong>Convert to Video Podcasts</strong></td>
+<td>转成视频播客</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>选项框整行宽、单列排列</strong>，说明文字直接显示在标题下方，不放 ⓘ。</li>
+<li><strong>组内没有可见 legend</strong>：步骤标题就是问题本身；单选组以同一句问句作为可访问名称。</li>
+<li>「What should we bring over?」这一组由 <strong>RSS 与 video + RSS 共用</strong>，选择在两条路径间共享。</li>
+<li><strong>Unlimited Audio 限制</strong>：YouTube 路径选 <strong>Convert to Video Podcasts</strong> 时，两个选项下方出现提示 <strong>Converting to a video podcast needs Unlimited Plus.</strong> + 链接 <strong>See upgrade plans</strong>，右下角 Next 保留原位但 <strong>禁用</strong>（见 6.8）。</li>
+</ul>
+<h3 id="sec-6-4">6.4 步骤三：格式与可选设置<a class="h-anchor" href="#sec-6-4" aria-label="本节链接">#</a></h3>
+<p>步骤三的内容随来源变化，三条路径共用同一个条款勾选框。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>来源</th>
+<th>步骤标题</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RSS Feed URL</strong></td>
+<td><strong>What audio format should we use?</strong></td>
+<td>音频格式二选一</td>
+</tr>
+<tr>
+<td><strong>Video to Podcast → YouTube</strong></td>
+<td><strong>Optional settings</strong></td>
+<td>两个独立勾选项</td>
+</tr>
+<tr>
+<td><strong>Video to Podcast → RSS</strong></td>
+<td><strong>Optional settings</strong></td>
+<td>一个独立勾选项（Sync future content）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>音频格式（仅 RSS 来源）</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>选项下方说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Convert to .mp3</strong>（默认）</td>
+<td>Convert imported audio files to the MP3 format.</td>
+</tr>
+<tr>
+<td><strong>Use original format</strong></td>
+<td>Keep imported audio files in their existing format.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>可选设置（仅 video 来源）</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>默认</th>
+<th>ⓘ 提示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sync future content</strong></td>
+<td>不勾选</td>
+<td>Automatically import and publish newly added content from your connected content source.</td>
+</tr>
+<tr>
+<td><strong>Import YouTube Thumbnail as podcast and episode logos</strong></td>
+<td>不勾选</td>
+<td>Note: The YouTube Thumbnail may not fit the square podcast and episode logo.（只保留方形适配提醒）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>缩略图这一项<strong>只在 YouTube 路径出现</strong>；video + RSS 路径只有 Sync future content。</li>
+<li>两条提示都只在悬停 / 键盘聚焦时出现。</li>
+</ul>
+<p><strong>条款与按钮（三条路径共用）</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>条款文案</td>
+<td>三选一：RSS → &quot;…rights to <strong>this podcast</strong>…&quot;；video + YouTube → &quot;…rights to <strong>this YouTube Content</strong>…&quot;；video + RSS → &quot;…rights to <strong>this content</strong>…&quot;</td>
+</tr>
+<tr>
+<td>必勾</td>
+<td>是。未勾选就点 <strong>Import</strong>，条款行标红并滚动到可见区域，不开始导入</td>
+</tr>
+<tr>
+<td>文字样式</td>
+<td>正文色、500 字重，不作灰色脚注</td>
+</tr>
+<tr>
+<td>按钮</td>
+<td>页脚左 <strong>Back</strong>、右 <strong>Import</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>选择在步骤间往返时保留（格式、两个勾选项都不重置）。</p>
+<h3 id="sec-6-5">6.5 导入状态（Import 之后）<a class="h-anchor" href="#sec-6-5" aria-label="本节链接">#</a></h3>
+<p>点 <strong>Import</strong> 后：弹窗关闭、页面 toast <code>Import started</code>、来源卡片隐藏，页面下方出现导入结果区。</p>
+<p><strong>RSS 路径：状态卡片 + 重定向三步</strong></p>
+<p>状态卡片（琥珀色提示卡）只承载状态与刷新：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>卡片里显示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>复制中</td>
+<td>一段话：<code>Importing your episode info. Depending on how many episodes your feed has, it can take a few minutes. You can leave this page while it works.</code> + 下方居左的 <strong>Refresh status</strong> 按钮</td>
+</tr>
+<tr>
+<td>剧集信息已复制</td>
+<td><strong>整段换成一句</strong> <code>Set redirect to complete the import.</code>，Refresh 退场，<strong>Check redirect 解锁</strong></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>页面在导入期间自动轮询导入状态；用户也可以点击 <strong>Refresh status</strong> 手动刷新。</li>
+<li>卡片无标题、无关闭按钮。</li>
+</ul>
+<p>卡片下方是 <strong>Next, set up the redirect</strong> 区块：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Wait for the import to finish.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Copy your new Podbean feed URL and set it as the redirect target in your old hosting platform.（下方为新 feed 地址与 <strong>Copy</strong> 按钮；复制后 toast <code>Feed URL copied</code>）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Come back and run the redirect check once your host has applied it.</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>若步骤三选了 <strong>Convert to .mp3</strong>，三步之后多一句：<code>Your episodes are converted to .mp3 as soon as the redirect is live, so the podcast is ready to submit to Spotify.</code>；选 Use original format 时不显示。</li>
+<li>区块底部是 <strong>Check redirect</strong> 按钮：导入未完成前 <code>disabled</code>，状态变为 <code>Set redirect to complete the import.</code> 后可点。</li>
+</ul>
+<p><strong>Video 路径：没有状态卡片、没有重定向区块</strong></p>
+<p>Import 之后直接进入「正在导入」：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>元素</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>琥珀状态条</strong>（最上方）</td>
+<td><code>Importing your media files — we&#x27;ll email you once they&#x27;re done.</code></td>
+</tr>
+<tr>
+<td><strong>已连接的内容源</strong></td>
+<td><code>Connected Content Source: &lt;链接&gt;</code>——YouTube 路径显示所选<strong>播放列表名</strong>，video + RSS 显示填的 <strong>feed 地址</strong></td>
+</tr>
+<tr>
+<td><strong>设置开关</strong></td>
+<td><code>Sync future content</code>（YouTube 与 RSS 都有）与 <code>Import YouTube Thumbnail as podcast and episode logos</code>（仅 YouTube）；默认状态与步骤三一致，开关与勾选项双向同步</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>开关和步骤三的勾选项是<strong>同一个设置</strong>：渲染时对齐，切换开关即写回步骤三的选项。</li>
+<li>视频导入完成后通过邮件通知用户；页面内不再提供额外出口。</li>
+</ul>
+<h3 id="sec-6-6">6.6 301 Redirect 校验与完成态<a class="h-anchor" href="#sec-6-6" aria-label="本节链接">#</a></h3>
+<p><strong>重定向是触发真实音频文件导入的标志</strong>——不设置重定向，音频文件不会被导入。</p>
+<p><strong>Check redirect 的两种结果：</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>结果</th>
+<th>界面表现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>未检测到重定向</strong></td>
+<td>弹出居中报错弹框：标题 <strong>Redirect not detected</strong>；正文 <code>We couldn&#x27;t find your old feed pointing at this Podbean feed. Check the redirect is live on your old hosting platform, then try again — a new redirect can take a few minutes to propagate.</code>；单个 <strong>OK</strong> 关闭（遮罩 / Esc 亦可）；打开时焦点在 OK</td>
+</tr>
+<tr>
+<td><strong>检测成功</strong></td>
+<td>toast <code>Redirect is working</code>；重定向区块整体替换为完成态；同时隐藏状态卡片</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>校验成功后的完成态：</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>元素</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>状态条</strong>（琥珀，最上方）</td>
+<td><code>Importing your media files — we&#x27;ll email you once they&#x27;re done.</code></td>
+</tr>
+<tr>
+<td><strong>建议说明</strong></td>
+<td>We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across.（正文色）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>这一状态<strong>没有出口</strong>：没有 Next，也没有重新导入入口；状态卡片隐藏。</li>
+</ul>
+<p><strong>文件全部导完（Import complete 状态）：</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>元素</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>状态条（琥珀）</td>
+<td><code>Import complete — 16 successful, 0 failed.</code></td>
+</tr>
+<tr>
+<td>建议说明</td>
+<td>与上一状态同一句</td>
+</tr>
+<tr>
+<td><strong>What you can do next</strong></td>
+<td>两条建议 + 一条可折叠项：<br>1. You can review the <strong>podcast information</strong> and adjust the show settings.<br>2. You can review the <strong>episode list</strong> and edit any episodes.<br>3. <strong>Optionally, import downloads.</strong>（默认收起；展开后含 CSV 导入说明、<code>Import CSV File</code> 按钮与两段合规声明）</td>
+</tr>
+<tr>
+<td>重新导入</td>
+<td>Click <strong>here</strong> if you want to re-import content. —— 点击回到 Import to Podbean 页面</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-6-7">6.7 免费账号（Free plan）：不能开始导入<a class="h-anchor" href="#sec-6-7" aria-label="本节链接">#</a></h3>
+<p>免费账号在<strong>来源卡片处即被拦截</strong>：点击任一来源卡片不打开向导，先弹出升级提示。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>点击的卡片</th>
+<th>结果（免费账号）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RSS Feed URL</code></td>
+<td>弹升级弹框，正文点名 <strong>Unlimited Audio</strong></td>
+</tr>
+<tr>
+<td><code>Video to Podcast</code></td>
+<td>弹升级弹框，正文点名 <strong>Unlimited Audio</strong> 与 <strong>Unlimited Plus</strong></td>
+</tr>
+<tr>
+<td>任意卡片（paid / audio 账号）</td>
+<td>直接进入弹窗步骤一</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>弹框内容</strong>：标题 <strong>Upgrade to import to Podbean</strong>；正文按来源切换（RSS：<code>RSS imports are available on the Unlimited Audio plan, which brings your episodes and show details into Podbean.</code>；video：<code>Video imports are available on Unlimited Audio, or Unlimited Plus for publishing as a video podcast.</code>）；正文下方一枚 <strong>Enjoy a 14-day free trial</strong> 胶囊（薄荷绿，太阳图标，50px 圆角，不使用黄色）；按钮左 <strong>Not now</strong>、右 <strong>See upgrade plans</strong>（深色 pill），弹框宽度保证按钮不换行。</li>
+<li><strong>动作</strong>：<code>Not now</code>、遮罩、Esc 都只关闭；<code>See upgrade plans</code> 关闭后 toast <code>Opening upgrade plans…</code>（本页不承载计费流程）。关闭后焦点回到触发的那张来源卡片。</li>
+</ul>
+<h3 id="sec-6-8">6.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus<a class="h-anchor" href="#sec-6-8" aria-label="本节链接">#</a></h3>
+<p><strong>能力边界</strong>：Unlimited Audio 可以导入 RSS 与视频，但只能发布为<strong>音频</strong>播客。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>audio 账号行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RSS Feed URL</code></td>
+<td>正常进入弹窗，全流程可用</td>
+</tr>
+<tr>
+<td><code>Video to Podcast</code> → YouTube → <code>Convert to Audio Podcasts</code></td>
+<td>正常继续到步骤三</td>
+</tr>
+<tr>
+<td><code>Video to Podcast</code> → YouTube → <code>Convert to Video Podcasts</code></td>
+<td>步骤二出现升级提示，右下角 <strong>Next 禁用</strong></td>
+</tr>
+<tr>
+<td><code>Video to Podcast</code> → RSS Feed URL</td>
+<td>不受影响（视频 RSS 一律转 MP3，输出本来就是音频）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>步骤二的提示</strong>：紧跟在两张输出卡片下面，文案 <code>Converting to a video podcast needs Unlimited Plus.</code> + 文字链接 <code>See upgrade plans</code>。</li>
+<li><strong>禁用而不是隐藏</strong>：<strong>Next</strong> 保留原位，<code>disabled</code> 并降低不透明度。</li>
+<li><strong>状态联动</strong>：该限制由「套餐为 Unlimited Audio + 步骤二 + 视频来源 + 已选 Convert to Video Podcasts」共同决定；退回步骤一、换来源或改选音频都会立即解除。</li>
+<li><strong>链接打开同一个升级弹框</strong>，正文换成：<code>Converting to a video podcast needs Unlimited Plus. Unlimited Audio publishes imported videos as audio.</code>；关闭后焦点回到这条链接。</li>
+</ul>
+<hr />
+<h2 id="sec-7">7. 全局交互规则<a class="h-anchor" href="#sec-7" aria-label="本节链接">#</a></h2>
+<h3 id="sec-7-1">7.1 Save Bar（底部保存栏）<a class="h-anchor" href="#sec-7-1" aria-label="本节链接">#</a></h3>
+<p>Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plugin 与 Import to Podbean 页面不包含 Save bar。</p>
+<pre><code>┌──────────────────────────────────────────────┐
+│  …页面内容…                                   │
+│                                               │
+│  ┌────────────────────────────────────────┐  │
+│  │                              Cancel   Save│  │
+│  └────────────────────────────────────────┘  │
+└──────────────────────────────────────────────┘
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>定位</strong></td>
+<td>固定在内容区底部；左侧让开侧边栏宽度</td>
+</tr>
+<tr>
+<td><strong>默认状态</strong></td>
+<td>隐藏</td>
+</tr>
+<tr>
+<td><strong>显示条件</strong></td>
+<td>当前页面的表单任意字段发生更改时变为可见</td>
+</tr>
+<tr>
+<td><strong>子项</strong></td>
+<td>Cancel 按钮、Save 按钮（右对齐）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>按钮行为（各页面独立）：</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>按钮</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cancel</td>
+<td>隐藏当前页面的 Save bar，当前页面所有字段恢复到上次保存时的值</td>
+</tr>
+<tr>
+<td>Save</td>
+<td>校验当前页面的必填、格式与长度规则（见 8.1 / 8.2）；有错误则定位到错误字段；全部通过则提交成功，Toast 提示 <strong>&quot;Saved successfully&quot;</strong>，Save bar 隐藏</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>各页面范围：</strong></p>
+<ul>
+<li><strong>Podcast Info</strong>：校验三个 Tab 的必填与长度规则（见 8.2）；有错时切到第一个出错 Tab，字段与 Tab 标签标红</li>
+<li><strong>Feed</strong>：校验三个开关开启后的必填项与格式，以及 Episode Number Limit 的整数与上限（见 8.2）</li>
+<li><strong>Plugin / Import to Podbean</strong>：无 Save bar，插件操作即时生效，导入状态由结果区承担</li>
+</ul>
+<h3 id="sec-7-2">7.2 修改检测<a class="h-anchor" href="#sec-7-2" aria-label="本节链接">#</a></h3>
+<p>以下操作均会触发 Save bar 显示：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>控件类型</th>
+<th>监听事件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文本输入框</td>
+<td>input / change</td>
+</tr>
+<tr>
+<td>富文本编辑器</td>
+<td>input</td>
+</tr>
+<tr>
+<td>自定义下拉选择器</td>
+<td>change（选中新选项时）</td>
+</tr>
+<tr>
+<td>单选按钮</td>
+<td>change</td>
+</tr>
+<tr>
+<td>Toggle 开关</td>
+<td>change</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-7-3">7.3 自定义下拉选择器<a class="h-anchor" href="#sec-7-3" aria-label="本节链接">#</a></h3>
+<pre><code>┌─────────────────────┐
+│  Selected Option  ▼ │  ← 触发器
+└─────────┬───────────┘
+          │ 点击展开
+    ┌─────┴───────────┐
+    │ Option 1  (选中) │  ← 激活项高亮
+    │ Option 2        │
+    │ Option 3        │
+    └─────────────────┘  ← 点击外部关闭
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>打开 / 关闭</strong></td>
+<td>点击触发器展开；点击页面其他位置关闭；同一时间只展开一个下拉</td>
+</tr>
+<tr>
+<td><strong>选中反馈</strong></td>
+<td>被选项高亮，触发器文字更新为选中项</td>
+</tr>
+<tr>
+<td><strong>保存联动</strong></td>
+<td>选中后触发当前页面的 Save bar 显示</td>
+</tr>
+<tr>
+<td><strong>键盘操作</strong></td>
+<td>触发器与选项均可通过键盘聚焦与选择，Esc 关闭当前下拉</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-7-5">7.5 页面切换<a class="h-anchor" href="#sec-7-5" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>侧边栏点击子菜单</td>
+<td>切换主内容区页面，并重置到该页面的第一个 Tab</td>
+</tr>
+<tr>
+<td>未保存修改时切换</td>
+<td>弹出 <strong>Unsaved Changes</strong> 确认弹框（见 2.2.1）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-8">8. 数据校验规则<a class="h-anchor" href="#sec-8" aria-label="本节链接">#</a></h2>
+<h3 id="sec-8-1">8.1 必填字段<a class="h-anchor" href="#sec-8-1" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>页面</th>
+<th>字段</th>
+<th>校验规则</th>
+<th>错误提示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Podcast Info</td>
+<td>Podcast Title</td>
+<td>去空格后不能为空</td>
+<td>Please enter a podcast title</td>
+</tr>
+<tr>
+<td>Podcast Info</td>
+<td>Brief Description</td>
+<td>去空格后不能为空，也不能是默认值 &quot;New podcast weblog&quot;</td>
+<td>Please enter a brief description</td>
+</tr>
+<tr>
+<td>Podcast Info</td>
+<td>Podcast Category</td>
+<td>至少选择一个分类，不能为空或占位文字 &quot;Select a category&quot;</td>
+<td>Please select a podcast category</td>
+</tr>
+<tr>
+<td>Podcast Info</td>
+<td>Podcast Logo</td>
+<td>封面不能为空</td>
+<td>Please upload a podcast logo（文案待确认）</td>
+</tr>
+<tr>
+<td>Podcast Info</td>
+<td>Country of Origin</td>
+<td>仅当选择 <strong>Specific countries</strong> 时：至少选一个国家</td>
+<td>Please select at least one country</td>
+</tr>
+<tr>
+<td>Feed</td>
+<td>Ownership Verification Email</td>
+<td>仅开关开启时：不能为空（仅空格也算空）</td>
+<td>Please enter your verification email</td>
+</tr>
+<tr>
+<td>Feed</td>
+<td>Alternative Website URL</td>
+<td>仅开关开启时：不能为空</td>
+<td>Please enter your website URL</td>
+</tr>
+<tr>
+<td>Feed</td>
+<td>Redirect to a New Feed</td>
+<td>仅开关开启时：不能为空</td>
+<td>Please enter your new feed URL</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-8-2">8.2 格式与长度校验<a class="h-anchor" href="#sec-8-2" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>校验要求</th>
+<th>错误提示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Podcast Title</td>
+<td>最多 200 字符</td>
+<td>Please enter no more than 200 characters</td>
+</tr>
+<tr>
+<td>Brief Description</td>
+<td>最多 50,000 字符</td>
+<td>Please enter no more than 50,000 characters</td>
+</tr>
+<tr>
+<td>Author</td>
+<td>最多 225 字符</td>
+<td>Please enter no more than 225 characters</td>
+</tr>
+<tr>
+<td>Copyright</td>
+<td>最多 200 字符</td>
+<td>Please enter no more than 200 characters</td>
+</tr>
+<tr>
+<td>Ownership Verification Email</td>
+<td>合法 email 格式</td>
+<td>Please enter a valid email address</td>
+</tr>
+<tr>
+<td>Alternative Website URL</td>
+<td>合法域名/URL 格式；允许省略协议</td>
+<td>Please enter a valid URL</td>
+</tr>
+<tr>
+<td>Redirect URL</td>
+<td>合法 URL，必须显式 <code>https://</code></td>
+<td>Please enter a valid HTTPS URL</td>
+</tr>
+<tr>
+<td>Episode Number Limit</td>
+<td>整数，且在套餐上限内（999 / 1999 / 2999）</td>
+<td>Please enter a whole number between 1 and {plan limit}</td>
+</tr>
+<tr>
+<td>Podcast Logo 上传</td>
+<td>仅接受 JPG / PNG 文件</td>
+<td>Please upload a JPG or PNG image</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>「错误提示」统一为 <code>Please enter …</code> / <code>Please upload …</code> 句式，句末不加句号，长度类只替换数字；<code>{plan limit}</code> 随套餐替换为 999 / 1999 / 2999。校验失败时字段标红并聚焦第一个错误字段，Podcast Info 还会把出错 Tab 标红。</p>
+</blockquote>
+<h3 id="sec-8-3">8.3 保存前校验流程<a class="h-anchor" href="#sec-8-3" aria-label="本节链接">#</a></h3>
+<p>Podcast Info 与 Feed 各自独立执行校验，互不影响。</p>
+<p><strong>Podcast Info（三个 Tab 一起校验）：</strong></p>
+<pre><code>用户点击 Save（Podcast Info 页面）
+       │
+       ▼
+┌──────────────────────────────┐
+│ 遍历所有 Tab 的必填字段       │
+│ 执行 8.1 / 8.2 中的规则       │
+└─────────────┬────────────────┘
+              │
+         ┌────┴────┐
+         │ 通过？   │
+         └────┬────┘
+              │
+    ┌─────────┴──────────┐          ┌─────────────────────────────────────────────────┐
+    │ 是 → 提交所有 Tab     │          │ 否 → 自动切换到第一个有错的 Tab                │
+    │ Toast:              │          │ 定位到第一个错误字段并聚焦                     │
+    │ &quot;Saved successfully&quot;│          │ 有错 Tab 标签变红                              │
+    │ Save bar 隐藏        │          │ 用户修完后再次点击 Save                        │
+    └──────────────────────┘          └─────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>错误标识</strong>：有错误的 Tab 标签变红，不加角标；Tab 内错误字段变红、下方显示行内提示并聚焦。</li>
+<li><strong>修完后</strong>：下一次 Save 前重新判定；点击 Cancel 一并清除。</li>
+</ul>
+<p><strong>Feed（无 Tab）：</strong> 校验失败时直接在错误字段下方显示提示并聚焦第一个错误字段；通过则 toast <strong>&quot;Saved successfully&quot;</strong>、Save bar 隐藏、当前值成为新的「已保存状态」。</p>
+<hr />
+<h2 id="附录新老页面对比">附录：新老页面对比<a class="h-anchor" href="#附录新老页面对比" aria-label="本节链接">#</a></h2>
+<h3 id="podcast-info-页面变化说明">Podcast Info 页面变化说明<a class="h-anchor" href="#podcast-info-页面变化说明" aria-label="本节链接">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>新版页面</th>
+<th>非 Business Plan 用户老页面</th>
+<th>Business Plan 用户老页面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>布局</strong></td>
+<td>分为 3 个 Tab：<strong>Basic</strong>、<strong>Author &amp; Region</strong>、<strong>Content Classification</strong></td>
+<td>单页纵向排列，所有字段一次性展示</td>
+<td>单页纵向排列，所有字段一次性展示</td>
+</tr>
+<tr>
+<td><strong>Podcast Title</strong></td>
+<td>Basic Tab</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Brief Description</strong></td>
+<td>Basic Tab</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Podcast Category</strong></td>
+<td>Basic Tab（最多 3 个分类）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Podcast Logo</strong></td>
+<td>Basic Tab</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Author / Owner</strong></td>
+<td>Author &amp; Region Tab，重命名为 <strong>Author</strong></td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>Author &amp; Region Tab</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Copyright</strong></td>
+<td>Author &amp; Region Tab</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Country Of Origin</strong></td>
+<td>Author &amp; Region Tab（Global / Specific countries 下拉）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Timezone</strong></td>
+<td>Author &amp; Region Tab（仅 &quot;Current time: ...&quot;）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Podcast Type</strong></td>
+<td>Content Classification Tab</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Content Explicit</strong></td>
+<td>Content Classification Tab（从 Feed 页面移入）</td>
+<td>有（Feed 页面）</td>
+<td>有（Feed 页面）</td>
+</tr>
+<tr>
+<td><strong>Episode Download Link</strong></td>
+<td><strong>已移除</strong>（Business 在 Advanced Options 中控制）</td>
+<td>Show</td>
+<td>Show</td>
+</tr>
+<tr>
+<td><strong>Share on Podcast Site</strong></td>
+<td><strong>已移除</strong>（Business 在 Advanced Options 中控制）</td>
+<td>Show（不可控）</td>
+<td>Hidden</td>
+</tr>
+<tr>
+<td><strong>Comments</strong></td>
+<td><strong>已移除</strong>（Business 在 Advanced Options 中控制）</td>
+<td>Enable（不可控）</td>
+<td>Enable</td>
+</tr>
+<tr>
+<td><strong>Removing Podbean Brand</strong></td>
+<td><strong>已移除</strong>（Business 在 Advanced Options 中控制）</td>
+<td>No（有控制按钮，点击升级）</td>
+<td>No（有控制按钮）</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="feed-页面变化说明">Feed 页面变化说明<a class="h-anchor" href="#feed-页面变化说明" aria-label="本节链接">#</a></h3>
+<blockquote>
+<p><strong>注：</strong> Business Plan 用户的 Private Channel 默认不显示 Feed 页面及其菜单项。</p>
+</blockquote>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>新版页面</th>
+<th>非 Business Plan 老页面</th>
+<th>Business Plan 老页面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Podcast Feed URL</strong></td>
+<td>有（只读 + 复制）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Content Explicit</strong></td>
+<td><strong>移入 Podcast Info → Content Classification Tab</strong></td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Apple Podcasts Summary</strong></td>
+<td><strong>已移除</strong>（历史内容用户仍可见，字段只读并标注已停用；提供 &quot;Use Podcast Description&quot;，确认后独立 Summary 删除，<code>&lt;itunes:summary&gt;</code> 跟随 Podcast Description）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Podcast Website</strong></td>
+<td>改名为 <strong>Alternative Website URL</strong>（原默认填入 Podbean website URL；现改为 <strong>Toggle + 条件输入</strong>：关闭则使用 Podbean website URL，开启后显示输入框，填写的值生效）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Episode Link</strong></td>
+<td><strong>已移除</strong>（转移到 Episode 发布页面，名称为 &quot;Custom Episode Link&quot;）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Episode Number Limit</strong></td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Generate audio-only feed</strong></td>
+<td><strong>新增</strong>（Toggle + 条件展示只读 feed 地址与 Copy）</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>Episode Artwork Tag</strong></td>
+<td><strong>已移除</strong>（统一用 <code>&lt;itunes:image&gt;</code> 输出单集封面，用户无需再选 RSS 标签类型）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Ownership Verification Email</strong></td>
+<td>有（<strong>Toggle + 条件输入</strong>）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Apple Podcasts Verification</strong></td>
+<td><strong>移出</strong>（转移到 Apple Podcasts 提交页面）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Remove from Apple Directory</strong></td>
+<td><strong>已移除</strong>（从普通设置中移除；为已开启的用户提供&quot;关闭并移除标签&quot;的过渡机制，已启用 <code>&lt;itunes:block&gt;</code> 的用户保留一个临时关闭入口）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Set Podcast New Feed URL</strong></td>
+<td><strong>已移除</strong>（改为迁移流程自动写入 <code>&lt;itunes:new-feed-url&gt;</code>，可长期保留。⚠ 更改 subdomain 是否也自动写入，需技术确认）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>Redirect to a New Feed</strong></td>
+<td>有（Toggle + 条件 URL 输入 + 危险警告）</td>
+<td>有</td>
+<td>有</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>新版 Feed 页面字段总数从 13 个精简为 6 个</strong>（5 个原有字段 + 新增的 Generate audio-only feed）。标注「待确认」的条目需产品团队进一步确认。</p>
+</article>
+</main>
+
+<script>
+(function () {
+  var rail = document.getElementById('docRail');
+  var overlay = document.getElementById('railOverlay');
+  var railToggle = document.getElementById('railToggle');
+
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.toc-row'));
+  var byId = {};
+  rows.forEach(function (r) { byId[r.getAttribute('data-id')] = r; });
+
+  var heads = Array.prototype.slice.call(
+    document.querySelectorAll('.doc-body h2, .doc-body h3, .doc-body h4')
+  );
+  var current = null;
+
+  function setGroup(id, open) {
+    var group = document.getElementById('grp-' + id);
+    if (!group) return;
+    group.hidden = !open;
+    var btn = document.querySelector('.toc-toggle[aria-controls="grp-' + id + '"]');
+    if (btn) btn.setAttribute('aria-expanded', String(open));
+  }
+
+  // A detail row sits inside a collapsed group, which may itself sit inside a
+  // collapsed chapter — open every ancestor so the row is actually on screen.
+  function reveal(id) {
+    var row = byId[id];
+    if (!row) return;
+    var owner = row.getAttribute('data-parent');
+    while (owner) {
+      setGroup(owner, true);
+      var parentRow = byId[owner];
+      owner = parentRow ? parentRow.getAttribute('data-parent') : null;
+    }
+  }
+
+  function setActive(id) {
+    if (id === current) return;
+    current = id;
+    rows.forEach(function (r) {
+      var on = r.getAttribute('data-id') === id;
+      r.classList.toggle('is-active', on);
+      var link = r.querySelector('.toc-link');
+      if (link) {
+        if (on) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+    });
+    reveal(id);
+
+    var row = byId[id];
+    if (!row) return;
+    var rb = row.getBoundingClientRect();
+    var lb = rail.getBoundingClientRect();
+    if (rb.top < lb.top + 8 || rb.bottom > lb.bottom - 8) {
+      rail.scrollTop += rb.top - lb.top - lb.height / 2 + rb.height / 2;
+    }
+  }
+
+  function spy() {
+    var line = 96;
+    var active = heads[0];
+    for (var i = 0; i < heads.length; i++) {
+      if (heads[i].getBoundingClientRect().top <= line) active = heads[i];
+      else break;
+    }
+    if (active) setActive(active.id);
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () { spy(); ticking = false; });
+  }, { passive: true });
+
+  document.querySelectorAll('.toc-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var id = btn.getAttribute('aria-controls').replace(/^grp-/, '');
+      var group = document.getElementById('grp-' + id);
+      if (group) setGroup(id, group.hidden);
+    });
+  });
+
+  document.querySelectorAll('.toc-link').forEach(function (a) {
+    a.addEventListener('click', function () {
+      setRail(false);
+    });
+  });
+
+  function setRail(open) {
+    if (!railToggle) return;
+    rail.classList.toggle('open', open);
+    overlay.classList.toggle('show', open);
+    railToggle.setAttribute('aria-expanded', String(open));
+  }
+  if (railToggle) {
+    railToggle.addEventListener('click', function () {
+      setRail(!rail.classList.contains('open'));
+    });
+    overlay.addEventListener('click', function () { setRail(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setRail(false);
+    });
+  }
+
+  window.addEventListener('load', function () {
+    if (location.hash) {
+      var id = decodeURIComponent(location.hash.slice(1));
+      reveal(id);
+    }
+    spy();
+  });
+  spy();
+})();
+</script>
+</body>
+</html>

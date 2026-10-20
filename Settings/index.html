@@ -386,12 +386,13 @@
     .cc-item-label {
       display: block;
       font-size: 14px;
-      /* Not bold: the label is a quiet caption, not a heading (2026-10-19). */
-      font-weight: 400;
-      /* #999 on white is 2.85:1 — below AA for 14px text. Used deliberately on
-         Podcast Info / Feed (2026-10-19); the required asterisk keeps its own
-         red, so the "this field matters" signal is unchanged. */
-      color: #999;
+      /* Field labels read as labels, not captions: 500 weight, full text colour
+         (2026-10-20). The old #999 at 400 was 2.85:1 on white — below AA and
+         reported as too faint on Podcast Title / Brief Description; the user
+         then asked for black outright. Values stay 400, so weight carries the
+         label/value split. */
+      font-weight: 500;
+      color: var(--text);
       margin-bottom: 6px;
     }
     .cc-item-label .required {
@@ -560,6 +561,11 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+    }
+    .pb-logo-upload-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
     .pb-upload-btn {
       display: inline-flex;
@@ -3063,7 +3069,6 @@
     .pb-input.is-error { border-bottom-color: #dc2626; }
     .pb-editor.is-error .pb-editor-body { border-bottom: 2px solid #dc2626; }
     .pb-tab.has-error { color: #dc2626; }
-    .pb-tab.has-error::after { content: ' ⚠'; }
     .pb-toast {
       position: fixed;
       bottom: 80px;
@@ -3250,7 +3255,7 @@
 
               <div class="info-content-item">
                 <span class="cc-item-label">Podcast Title <span class="required">*</span></span>
-                <input type="text" class="pb-input" placeholder="Make a clear, concise name for your title" value="My Awesome Podcast" />
+                <input type="text" class="pb-input" id="pbTitleInput" placeholder="Make a clear, concise name for your title" value="My Awesome Podcast" />
                 <div class="pb-field-error"></div>
               </div>
 
@@ -3273,7 +3278,7 @@
                       </button>
                     </div>
                   </div>
-                  <div class="pb-editor-body" contenteditable="true">
+                  <div class="pb-editor-body" id="pbDescBody" contenteditable="true">
                     <p>Welcome to My Awesome Podcast! We discuss technology, design, and the future of digital media.</p>
                   </div>
                 </div>
@@ -3302,10 +3307,14 @@
                   </div>
                   <div class="pb-logo-controls">
                     <div class="pb-vs" style="max-width:200px;"><span>Podbean Default v4</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
-                    <button class="pb-upload-btn">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                      Upload image
-                    </button>
+                    <div class="pb-logo-upload-wrap" id="logoUploadWrap">
+                      <button class="pb-upload-btn" type="button" id="logoUploadBtn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Upload image
+                      </button>
+                      <input type="file" id="logoFileInput" accept=".jpg,.jpeg,.png,image/jpeg,image/png" hidden />
+                      <div class="pb-field-error"></div>
+                    </div>
                     <div class="pb-logo-hints">Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork. <a href="#">Details</a></div>
                   </div>
                 </div>
@@ -3321,12 +3330,14 @@
 
               <div class="info-content-item">
                 <span class="cc-item-label">Author</span>
-                <input type="text" class="pb-input" placeholder="Enter author or owner name" value="John Doe" />
+                <input type="text" class="pb-input" id="pbAuthorInput" placeholder="Enter author or owner name" value="John Doe" />
+                <div class="pb-field-error"></div>
               </div>
 
               <div class="info-content-item">
                 <span class="cc-item-label">Copyright</span>
-                <input type="text" class="pb-input" placeholder="Copyright 2026 All rights reserved." value="Copyright 2026 My Awesome Podcast. All rights reserved." />
+                <input type="text" class="pb-input" id="pbCopyrightInput" placeholder="Copyright 2026 All rights reserved." value="Copyright 2026 My Awesome Podcast. All rights reserved." />
+                <div class="pb-field-error"></div>
               </div>
 
               <div class="info-content-item">
@@ -3438,7 +3449,7 @@
 
               <div class="info-content-item">
                 <span class="cc-item-label">Episode Number Limit</span>
-                <input type="number" class="pb-input" min="1" max="1999" value="100" />
+                <input type="number" class="pb-input" id="feedEpisodeLimit" min="1" max="1999" value="100" />
                 <div class="pb-field-error"></div>
                 <span class="tips">Limit the number of episodes included in your RSS feed.</span>
               </div>
@@ -3453,7 +3464,7 @@
                 </div>
                 <p class="toggle-desc">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</p>
                 <div id="ownership-email-input" style="display:none;margin-top:12px;">
-                  <input type="email" class="pb-input" placeholder="Enter verification email" />
+                  <input type="email" class="pb-input" id="feedEmailInput" placeholder="Enter verification email" />
                   <div class="pb-field-error"></div>
                 </div>
               </div>
@@ -3468,7 +3479,7 @@
                 </div>
                 <p class="toggle-desc">Set your custom podcast website URL in the RSS feed.</p>
                 <div id="custom-website-url-input" style="display:none;margin-top:12px;">
-                  <input type="text" class="pb-input" placeholder="https://your-website.com" value="" />
+                  <input type="text" class="pb-input" id="feedWebsiteInput" placeholder="https://your-website.com" value="" />
                   <div class="pb-field-error"></div>
                 </div>
               </div>
@@ -3505,7 +3516,7 @@
                 </div>
                 <p class="toggle-desc">Only enter your new podcast feed URL when you're ready to move away from Podbean.</p>
                 <div id="redirect-feed-input" style="display:none;margin-top:12px;">
-                  <input type="text" class="pb-input" placeholder="https://" />
+                  <input type="text" class="pb-input" id="feedRedirectInput" placeholder="https://" />
                   <div class="pb-field-error"></div>
                   <span class="pb-warning">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
@@ -5405,7 +5416,20 @@
         var activePage = document.querySelector('.page-section.active');
         if (!activePage || activePage.id !== 'page-feed') return;
 
+        clearAllErrors();
         var errors = [];
+
+        // Episode Number Limit: a filled value must be a whole number inside the
+        // plan's cap. An empty field is left to the required rule (it is not one).
+        var episodeInput = document.getElementById('feedEpisodeLimit');
+        if (episodeInput && episodeInput.value.trim() !== '') {
+          var episodeValue = Number(episodeInput.value.trim());
+          if (Math.floor(episodeValue) !== episodeValue || episodeValue < 1 || episodeValue > EPISODE_LIMIT_MAX) {
+            var episodeItem = episodeInput.closest('.info-content-item');
+            if (episodeItem) showFieldError(episodeItem, 'Please enter a whole number between 1 and ' + EPISODE_LIMIT_MAX);
+            errors.push({ el: episodeInput });
+          }
+        }
 
         // Ownership Verification Email: an empty address is only an error while
         // the toggle is ON — off means "do not add one", which is a valid choice.
@@ -5413,9 +5437,15 @@
         var emailBox = document.getElementById('ownership-email-input');
         if (emailToggle && emailToggle.checked && emailBox) {
           var emailInput = emailBox.querySelector('.pb-input');
-          if (emailInput && emailInput.value.trim() === '') {
-            showFieldError(emailBox, 'Please enter your verification email');
-            errors.push({ el: emailInput });
+          if (emailInput) {
+            var emailValue = emailInput.value.trim();
+            if (emailValue === '') {
+              showFieldError(emailBox, 'Please enter your verification email');
+              errors.push({ el: emailInput });
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+              showFieldError(emailBox, 'Please enter a valid email address');
+              errors.push({ el: emailInput });
+            }
           }
         }
 
@@ -5426,20 +5456,33 @@
         var urlBox = document.getElementById('custom-website-url-input');
         if (urlToggle && urlToggle.checked && urlBox) {
           var urlInput = urlBox.querySelector('.pb-input');
-          if (urlInput && urlInput.value.trim() === '') {
-            showFieldError(urlBox, 'Please enter your website URL');
-            errors.push({ el: urlInput });
+          if (urlInput) {
+            var urlValue = urlInput.value.trim();
+            if (urlValue === '') {
+              showFieldError(urlBox, 'Please enter your website URL');
+              errors.push({ el: urlInput });
+            } else if (!isValidUrl(urlValue, false)) {
+              showFieldError(urlBox, 'Please enter a valid URL');
+              errors.push({ el: urlInput });
+            }
           }
         }
 
-        // Redirect to a New Feed: if the toggle is on, a new feed URL is required
+        // Redirect to a New Feed: if the toggle is on, a new feed URL is required,
+        // and it must be an explicit https:// address.
         var redirectToggle = activePage.querySelector('[data-toggle="redirect-feed-input"]');
         var redirectBox = document.getElementById('redirect-feed-input');
         if (redirectToggle && redirectToggle.checked && redirectBox) {
           var redirectInput = redirectBox.querySelector('.pb-input');
-          if (redirectInput && redirectInput.value.trim() === '') {
-            showFieldError(redirectBox, 'Please enter your new feed URL');
-            errors.push({ el: redirectInput });
+          if (redirectInput) {
+            var redirectValue = redirectInput.value.trim();
+            if (redirectValue === '') {
+              showFieldError(redirectBox, 'Please enter your new feed URL');
+              errors.push({ el: redirectInput });
+            } else if (!isValidUrl(redirectValue, true)) {
+              showFieldError(redirectBox, 'Please enter a valid HTTPS URL');
+              errors.push({ el: redirectInput });
+            }
           }
         }
 
@@ -5457,6 +5500,32 @@
         showToast();
       });
     }
+
+    // Podcast Logo: the upload button opens a real file picker. Only JPG/PNG pass —
+    // the picker filters by accept, and this change handler is the guard the
+    // picker cannot provide (a user can always switch it to "All files").
+    (function initLogoUpload() {
+      var btn = document.getElementById('logoUploadBtn');
+      var file = document.getElementById('logoFileInput');
+      var wrap = document.getElementById('logoUploadWrap');
+      if (!btn || !file || !wrap) return;
+      btn.addEventListener('click', function() { file.click(); });
+      file.addEventListener('change', function() {
+        var picked = file.files && file.files[0];
+        if (!picked) return;
+        var allowed = /^image\/(jpeg|png)$/.test(picked.type) || /\.(jpe?g|png)$/i.test(picked.name);
+        if (!allowed) {
+          showFieldError(wrap, 'Please upload a JPG or PNG image');
+          file.value = '';
+          return;
+        }
+        var errEl = wrap.querySelector('.pb-field-error');
+        if (errEl) { errEl.textContent = ''; errEl.classList.remove('is-visible'); }
+        var preview = document.querySelector('#page-podcast-basic .pb-logo-preview img');
+        if (preview) preview.src = URL.createObjectURL(picked);
+        file.value = '';
+      });
+    })();
 
     // Switch toggle click
     // One switch behaviour, shared by the page's own switches and by the clones
@@ -5609,6 +5678,28 @@
       }
     }
 
+    // Feed demo plan limit — the mockup runs as Unlimited Plus (999 / 1999 / 2999 by plan).
+    var EPISODE_LIMIT_MAX = 1999;
+
+    // URL check shared by the two Feed URL fields. A bare domain is accepted for
+    // the website field (the scheme is assumed); the redirect field requires an
+    // explicit https:// because that is the rule the field states.
+    function isValidUrl(value, requireHttps) {
+      var v = value.trim();
+      if (v === '') return false;
+      if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(v)) {
+        if (requireHttps) return false;
+        v = 'https://' + v;
+      }
+      try {
+        var u = new URL(v);
+        if (u.hostname.indexOf('.') < 1) return false;
+        return requireHttps ? u.protocol === 'https:' : (u.protocol === 'http:' || u.protocol === 'https:');
+      } catch (e) {
+        return false;
+      }
+    }
+
     function validatePodcastInfo() {
       clearAllErrors();
       var errors = [];
@@ -5618,22 +5709,28 @@
       var basicItems = basic ? basic.querySelectorAll('.info-content-item') : [];
       if (basicItems.length >= 1) {
         // Podcast Title
-        var titleInput = basicItems[0].querySelector('.pb-input');
+        var titleInput = document.getElementById('pbTitleInput') || basicItems[0].querySelector('.pb-input');
         if (titleInput) {
           var tv = titleInput.value.trim();
           if (tv === '') {
             showFieldError(basicItems[0], 'Please enter a podcast title');
+            errors.push({ tabId: 'basic', el: titleInput });
+          } else if (tv.length > 200) {
+            showFieldError(basicItems[0], 'Please enter no more than 200 characters');
             errors.push({ tabId: 'basic', el: titleInput });
           }
         }
       }
       if (basicItems.length >= 2) {
         // Brief Description
-        var descBody = basicItems[1].querySelector('.pb-editor-body');
+        var descBody = document.getElementById('pbDescBody') || basicItems[1].querySelector('.pb-editor-body');
         if (descBody) {
           var dv = descBody.textContent.trim();
           if (dv === '' || dv === 'New podcast weblog') {
             showFieldError(basicItems[1], 'Please enter a brief description');
+            errors.push({ tabId: 'basic', el: descBody });
+          } else if (dv.length > 50000) {
+            showFieldError(basicItems[1], 'Please enter no more than 50,000 characters');
             errors.push({ tabId: 'basic', el: descBody });
           }
         }
@@ -5652,6 +5749,22 @@
       }
 
       // --- Metadata Tab ---
+      // Author → no more than 225 characters (product limit)
+      var authorInput = document.getElementById('pbAuthorInput');
+      if (authorInput && authorInput.value.length > 225) {
+        var authorItem = authorInput.closest('.info-content-item');
+        if (authorItem) showFieldError(authorItem, 'Please enter no more than 225 characters');
+        errors.push({ tabId: 'metadata', el: authorInput });
+      }
+
+      // Copyright → no more than 200 characters
+      var copyrightInput = document.getElementById('pbCopyrightInput');
+      if (copyrightInput && copyrightInput.value.length > 200) {
+        var copyrightItem = copyrightInput.closest('.info-content-item');
+        if (copyrightItem) showFieldError(copyrightItem, 'Please enter no more than 200 characters');
+        errors.push({ tabId: 'metadata', el: copyrightInput });
+      }
+
       // Country of Origin → "Specific countries" requires at least one country
       var countryModeOpt = document.querySelector('#dropdown-country-mode .pb-select-option.selected');
       var countryMode = countryModeOpt ? countryModeOpt.getAttribute('data-value') : 'global';
