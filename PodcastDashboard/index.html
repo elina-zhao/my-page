@@ -17,7 +17,9 @@
   /* Base .content is 1440px (podbean-base.css); the onboarding column is narrower.
      The width is derived from whichever page is actually visible, so it needs no
      JS state kept in sync and can't go stale if the page is switched. */
-  .content:has(> #page-dashboard:not([style*="none"])) { max-width:1320px; }
+  .content:has(> #page-dashboard:not([style*="none"])),
+  .content:has(> #page-onboarding-import:not([style*="none"])),
+  .content:has(> #page-onboarding-private:not([style*="none"])) { max-width:1320px; }
   .onboard-container { margin:0 auto; }
   .onboard-header { text-align:center;margin-top:40px;margin-bottom:36px; }
   .onboard-title { font-size:26px;font-weight:700;color:var(--text);margin-bottom:10px; }
@@ -54,12 +56,12 @@
   .onboard-item-desc { font-size:13px;color:var(--text-secondary);transition:color .2s; }
   .onboard-item-btn {
     display:inline-flex;align-items:center;padding:8px 18px;
-    background:var(--primary);color:#fff;border:none;border-radius:7px;
+    background:#1e293b;color:#fff;border:none;border-radius:7px;
     font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;
     text-decoration:none;white-space:nowrap;flex-shrink:0;
     transition:all .15s;
   }
-  .onboard-item-btn:hover { background:#14805a; }
+  .onboard-item-btn:hover { background:#334155; }
   .onboard-item.completed .onboard-item-btn {
     background:#e2e8f0;color:#94a3b8;
   }
@@ -77,6 +79,23 @@
   .onboard-section-head { margin-bottom:18px; }
   .onboard-section-title { font-size:17px;font-weight:600;color:var(--text);margin-bottom:5px; }
   .onboard-section-desc { font-size:13px;color:var(--text-secondary); }
+
+  /* ── Onboarding (import) — same checklist language as Onboarding ──
+     The circles are status indicators, never controls: the step the user is on
+     gets a green ring, and a step only turns into a filled green check when the
+     action behind it actually happened. */
+  .onboard-item.is-current { background:#fff; }
+  .onboard-checkbox.is-current {
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(26,154,108,.12);
+  }
+  .onboard-item.is-current .onboard-item-title { font-size:16px; }
+  .import-hint {
+    text-align:center;padding:24px 0 0;
+    color:var(--text-secondary);font-size:14px;
+  }
+  #page-onboarding-import .onboard-item-desc strong { color:var(--text);font-weight:600; }
+  #page-onboarding-import .onboard-checklist { margin-bottom:24px; }
 
   /* ── Dashboard v2 (Analytics) ──────────── */
   .dash-layout { display:flex;gap:28px;align-items:flex-start;overflow:hidden;margin-bottom:28px; }
@@ -299,13 +318,6 @@
   .sidebar-nav .nav-icon { width: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .sidebar-nav .nav-icon svg { width: 18px; height: 18px; }
 
-  .btn-new-episode {
-    display:inline-flex;align-items:center;padding:7px 18px;
-    background:#1e293b;color:#fff;border:none;border-radius:50px;
-    font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;
-    transition:background .15s;white-space:nowrap;
-  }
-  .btn-new-episode:hover { background:#334155; }
   .menu-toggle { display:none;width:36px;height:36px;border:none;background:transparent;cursor:pointer;color:var(--text);align-items:center;justify-content:center;border-radius:6px; }
   .menu-toggle:hover { background:#f1f5f9; }
   .sidebar-overlay { display:none; }
@@ -367,7 +379,6 @@
     <span style="font-size:15px;font-weight:600;color:var(--text);">Podcasting Smarter</span> <a href="podcast-website.html" target="_blank" style="display:inline-flex;color:#94a3b8;text-decoration:none;margin-left:2px;" title="View Site"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
   </div>
   <div class="topbar-actions">
-    <button class="btn-new-episode">+ New Episode</button>
     <button class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
     <div class="avatar">EZ</div>
   </div>
@@ -379,6 +390,14 @@
       <a href="#" data-page="dashboard" onclick="switchDashboard('dashboard');return false;">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
         Onboarding
+      </a>
+      <a href="#" data-page="onboarding-import" onclick="switchDashboard('onboarding-import');return false;">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v10"/><polyline points="8 9 12 13 16 9"/><path d="M4 15v3.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V15"/></svg></span>
+        Onboarding (import)
+      </a>
+      <a href="#" data-page="onboarding-private" onclick="switchDashboard('onboarding-private');return false;">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+        Onboarding (private)
       </a>
       <a href="#" class="active" data-page="dashboard-v2" onclick="switchDashboard('dashboard-v2');return false;">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
@@ -877,7 +896,7 @@
         <div class="onboard-container">
           <div class="onboard-header">
             <h1 class="onboard-title">Get your podcast ready</h1>
-            <p class="onboard-subtitle">Complete the key steps to publish, distribute, and grow your show.</p>
+            <p class="onboard-subtitle">Here are some useful tips to help you get started on your podcasting journey.</p>
           </div>
 
           <!-- Steps view when no data yet -->
@@ -891,7 +910,7 @@
                   </div>
                   <div class="onboard-item-content">
                     <div class="onboard-item-title">Set up your podcast</div>
-                    <div class="onboard-item-desc">Set up your podcast profile and basic information.</div>
+                    <div class="onboard-item-desc">Set up your podcast’s basic details and briefly describe what it’s about.</div>
                     <div style="margin-top:10px;font-size:13px;color:var(--text-secondary);">
                       Already have a show? <a href="#" style="color:var(--primary);font-weight:500;text-decoration:none;" onclick="switchDashboard('dashboard-v2');return false;">Import existing podcast to Podbean</a>
                     </div>
@@ -1053,6 +1072,217 @@
 
         </div>
       </div>
+
+      <!-- ═══════════ Onboarding (import) ═══════════ -->
+      <div id="page-onboarding-import" class="page-content" style="display:none;">
+        <div class="onboard-container">
+          <div class="onboard-header">
+            <h1 class="onboard-title">Get your podcast ready</h1>
+            <p class="onboard-subtitle">Here are some useful tips to help you get started on your podcasting journey.</p>
+          </div>
+
+          <div class="onboard-checklist">
+
+            <!-- Step 1 — the step the user is on. The circle is a status indicator, not a control. -->
+            <div class="onboard-item is-current" data-step="import">
+              <div class="onboard-item-left">
+                <div class="onboard-checkbox is-current" aria-label="Current step">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="onboard-item-content">
+                  <div class="onboard-item-title">Import existing podcast to Podbean</div>
+                  <div class="onboard-item-desc">Bring your existing podcast or video series over in just 3 simple steps.</div>
+                </div>
+              </div>
+              <a href="#" class="onboard-item-btn">Import</a>
+            </div>
+
+            <!-- Step 2 — locked until an episode is published -->
+            <div class="onboard-item" data-step="publish">
+              <div class="onboard-item-left">
+                <div class="onboard-checkbox" aria-label="Not started">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="onboard-item-content">
+                  <div class="onboard-item-title">Publish new episodes</div>
+                  <div class="onboard-item-desc">Go to publish or schedule new episodes on Podbean. Your imported episodes will also be listed there.</div>
+                </div>
+              </div>
+              <a href="#" class="onboard-item-btn">Publish</a>
+            </div>
+
+            <!-- Step 3 — locked until the show is promoted -->
+            <div class="onboard-item" data-step="promote">
+              <div class="onboard-item-left">
+                <div class="onboard-checkbox" aria-label="Not started">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="onboard-item-content">
+                  <div class="onboard-item-title">Submit to podcast platforms</div>
+                  <div class="onboard-item-desc">Reach listeners on Spotify, Apple Podcasts, and more.</div>
+                </div>
+              </div>
+              <a href="#" class="onboard-item-btn">Submit</a>
+            </div>
+
+          </div>
+
+          <div class="onboard-footer">
+            <a href="#" class="onboard-skip" onclick="switchDashboard('dashboard-v2');return false;">Skip the Guide →</a>
+          </div>
+
+          <div class="import-hint">You will see your podcast statistics here after you get a few downloads.</div>
+
+        <!-- Starter resources -->
+        <div class="onboard-section">
+          <div class="onboard-section-head">
+            <div class="onboard-section-title">Getting started resources</div>
+            <div class="onboard-section-desc">New to podcasting? Start with these.</div>
+          </div>
+          <div class="resource-grid">
+            <a href="#" class="resource-card">
+              <div class="resource-thumb thumb-green">
+                <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="258" cy="44" r="56" fill="rgba(255,255,255,.08)"/><circle cx="60" cy="152" r="44" fill="rgba(255,255,255,.07)"/>
+<path d="M94 76a56 56 0 0 1 112 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+<rect x="82" y="72" width="20" height="32" rx="10" fill="rgba(255,255,255,.9)"/>
+<rect x="198" y="72" width="20" height="32" rx="10" fill="rgba(255,255,255,.9)"/>
+<rect x="128" y="40" width="44" height="70" rx="22" fill="none" stroke="#fff" stroke-width="5"/>
+<path d="M139 60h22M139 70h22M139 80h22" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="3" stroke-linecap="round"/>
+<path d="M116 90v4a34 34 0 0 0 68 0v-4" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+<path d="M150 128v14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+<path d="M133 142h34" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+              </div>
+              <div class="resource-body">
+                <div class="resource-title">Recording Your First Episode: Gear and Room Checklist</div>
+              </div>
+            </a>
+            <a href="#" class="resource-card">
+              <div class="resource-thumb thumb-pink">
+                <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="66" cy="38" r="50" fill="rgba(255,255,255,.08)"/><circle cx="252" cy="150" r="46" fill="rgba(255,255,255,.07)"/>
+<rect x="58" y="30" width="108" height="118" rx="12" fill="none" stroke="#fff" stroke-width="5"/>
+<circle cx="88" cy="60" r="9" fill="rgba(255,255,255,.9)"/>
+<path d="M66 128l30-34 24 26 16-16 20 26" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M190 60h74" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+<path d="M190 82h56" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="6" stroke-linecap="round"/>
+<path d="M190 104h66" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="6" stroke-linecap="round"/>
+<path d="M190 126h42" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="6" stroke-linecap="round"/></svg>
+              </div>
+              <div class="resource-body">
+                <div class="resource-title">Cover Art and Show Naming Guidelines</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ Onboarding (private) ═══════════ -->
+      <div id="page-onboarding-private" class="page-content" style="display:none;">
+        <div class="onboard-container">
+          <div class="onboard-header">
+            <h1 class="onboard-title">Get your podcast ready</h1>
+            <p class="onboard-subtitle">Here are some useful tips to help you get started on your podcasting journey.</p>
+          </div>
+
+          <div class="onboard-checklist">
+
+            <!-- Step 1 — same copy as the Onboarding page -->
+            <div class="onboard-item" data-step="setup">
+              <div class="onboard-item-left">
+                <div class="onboard-checkbox" aria-label="Not started">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="onboard-item-content">
+                  <div class="onboard-item-title">Set up your podcast</div>
+                  <div class="onboard-item-desc">Set up your podcast’s basic details and briefly describe what it’s about.</div>
+                  <div style="margin-top:10px;font-size:13px;color:var(--text-secondary);">
+                    Already have a show? <a href="#" style="color:var(--primary);font-weight:500;text-decoration:none;" onclick="switchDashboard('onboarding-import');return false;">Import existing podcast to Podbean</a>
+                  </div>
+                </div>
+              </div>
+              <a href="#" class="onboard-item-btn">Setup</a>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="onboard-item" data-step="publish-private">
+              <div class="onboard-item-left">
+                <div class="onboard-checkbox" aria-label="Not started">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="onboard-item-content">
+                  <div class="onboard-item-title">Publish private episodes</div>
+                  <div class="onboard-item-desc">Upload and publish your first private episode. Only your members can access your private podcast by logging in.</div>
+                </div>
+              </div>
+              <a href="#" class="onboard-item-btn">Publish</a>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="onboard-item" data-step="members">
+              <div class="onboard-item-left">
+                <div class="onboard-checkbox" aria-label="Not started">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="onboard-item-content">
+                  <div class="onboard-item-title">Assign private members</div>
+                  <div class="onboard-item-desc">Add or manage the members who have access to your private podcast.</div>
+                </div>
+              </div>
+              <a href="https://www.podbean.org/site/enterpriseManage/members" target="_blank" rel="noopener" class="onboard-item-btn">Manage</a>
+            </div>
+
+          </div>
+
+          <div class="onboard-footer">
+            <a href="#" class="onboard-skip" onclick="switchDashboard('dashboard-v2');return false;">Skip the Guide →</a>
+          </div>
+
+          <div class="import-hint">You will see your podcast statistics here after you get a few downloads.</div>
+
+            <!-- Starter resources -->
+          <div class="onboard-section">
+            <div class="onboard-section-head">
+              <div class="onboard-section-title">Getting started resources</div>
+              <div class="onboard-section-desc">New to podcasting? Start with these.</div>
+            </div>
+            <div class="resource-grid">
+              <a href="#" class="resource-card">
+                <div class="resource-thumb thumb-green">
+                  <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="258" cy="44" r="56" fill="rgba(255,255,255,.08)"/><circle cx="60" cy="152" r="44" fill="rgba(255,255,255,.07)"/>
+  <path d="M94 76a56 56 0 0 1 112 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  <rect x="82" y="72" width="20" height="32" rx="10" fill="rgba(255,255,255,.9)"/>
+  <rect x="198" y="72" width="20" height="32" rx="10" fill="rgba(255,255,255,.9)"/>
+  <rect x="128" y="40" width="44" height="70" rx="22" fill="none" stroke="#fff" stroke-width="5"/>
+  <path d="M139 60h22M139 70h22M139 80h22" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M116 90v4a34 34 0 0 0 68 0v-4" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  <path d="M150 128v14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  <path d="M133 142h34" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+                </div>
+                <div class="resource-body">
+                  <div class="resource-title">Recording Your First Episode: Gear and Room Checklist</div>
+                </div>
+              </a>
+              <a href="#" class="resource-card">
+                <div class="resource-thumb thumb-pink">
+                  <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"><circle cx="66" cy="38" r="50" fill="rgba(255,255,255,.08)"/><circle cx="252" cy="150" r="46" fill="rgba(255,255,255,.07)"/>
+  <rect x="58" y="30" width="108" height="118" rx="12" fill="none" stroke="#fff" stroke-width="5"/>
+  <circle cx="88" cy="60" r="9" fill="rgba(255,255,255,.9)"/>
+  <path d="M66 128l30-34 24 26 16-16 20 26" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M190 60h74" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M190 82h56" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M190 104h66" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M190 126h42" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="6" stroke-linecap="round"/></svg>
+                </div>
+                <div class="resource-body">
+                  <div class="resource-title">Cover Art and Show Naming Guidelines</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
 
     </div>
   </div>

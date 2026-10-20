@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Podcast Dashboard — 功能文档</title>
 <style>
-  :root {
+:root {
     color-scheme: light;
     --primary:#1a9a6c;
     --primary-soft:#e8f6f0;
@@ -290,9 +290,9 @@
     <div class="eyebrow">Product Spec · Podcast Dashboard</div>
     <h1>Podcast Dashboard — 功能文档</h1>
     <div class="meta">
-      <span class="chip"><b>文档对象</b> <code>index.html（Podcast Dashboard 仪表板页面）</code></span>
+      <span class="chip"><b>文档对象</b> <code>`index.html`（Podcast Dashboard 仪表板页面）</code></span>
       <span class="chip"><b>编写日期</b> 2026-08-31</span>
-      <span class="chip"><b>最后更新</b> 2026-10-20 09:47</span>
+      <span class="chip"><b>最后更新</b> 2026-10-20 14:14</span>
     </div>
   </header>
   <nav class="toc">
@@ -307,47 +307,54 @@
 <li><a href="#sec-2-5-最近评论-recent-comments">2.5 最近评论（Recent Comments）</a></li>
 <li><a href="#sec-2-6-播客资源-podcast-resources">2.6 播客资源（Podcast Resources）</a></li>
 <li><a href="#sec-2-7-引导流程-onboarding">2.7 引导流程（Onboarding）</a></li>
-</ul>
-</li>
+<li><a href="#sec-2-8-导入引导-onboarding-import">2.8 导入引导（Onboarding (import)）</a></li>
+<li><a href="#sec-2-9-私有播客引导-onboarding-private">2.9 私有播客引导（Onboarding (private)）</a></li>
+</ul></li>
 <li><a href="#sec-3-响应式设计">3. 响应式设计</a></li>
 </ul>
   </nav>
   <main>
-    
-
-<hr />
+    <hr />
 <blockquote class="warn">
 <p>⚠️ <strong>请注意</strong>：本功能文档根据当前版本整理，可能存在遗漏或理解偏差。如与线上实际表现不一致，请再次确认。</p>
 </blockquote>
 <h2 id="sec-1-项目概述">1. 项目概述</h2>
-<p><code>index.html</code> 是播客创作者后台仪表板。侧边栏共四个页面，其中三个是同一套数据面板的不同状态：</p>
+<p><code>index.html</code> 是播客创作者后台仪表板。侧边栏共六个页面，其中三个是同一套引导步骤清单的不同场景，另外三个是同一套数据面板的不同状态：</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>页面（侧边栏入口）</th>
 <th>内容</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Onboarding</td>
 <td>新用户开播引导；已产生下载数据时，改为展示数据视图（与 Dashboard 相同的统计卡片、下载趋势图和单集表现表）</td>
 </tr>
-<tr>
+<tr class="even">
+<td>Onboarding (import)</td>
+<td>已有播客的导入引导：导入现有播客、发布新单集、提交到播客平台</td>
+</tr>
+<tr class="odd">
+<td>Onboarding (private)</td>
+<td>私有播客引导：基础设置、发布私有单集、分配私有成员</td>
+</tr>
+<tr class="even">
 <td>Dashboard</td>
 <td>数据总览基准页：统计卡片、下载趋势图、单集表现表、成就、最近评论、播客资源</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Dashboard (v2)</td>
 <td>与 Dashboard 布局一致；评论卡片为空状态（账号已关闭评论功能）</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Dashboard (v3)</td>
 <td>与 Dashboard 布局一致，整页演示全新播客：数据全为 0、徽章为空、没有评论</td>
 </tr>
 </tbody>
 </table>
-<p>三个 Dashboard 页面结构相同，差异只在数据状态和评论卡片的内容。</p>
+<p>三个引导页结构相同，都使用同一套步骤清单卡片，差异只在步骤内容；三个 Dashboard 页面结构相同，差异只在数据状态和评论卡片的内容。</p>
 <hr />
 <h2 id="sec-2-核心功能模块">2. 核心功能模块</h2>
 <h3 id="sec-2-1-统计卡片-stat-cards">2.1 统计卡片（Stat Cards）</h3>
@@ -355,18 +362,18 @@
 <h3 id="sec-2-2-下载趋势图-downloads-trending">2.2 下载趋势图（Downloads Trending）</h3>
 <p>主内容区顶部的大幅折线图，展示最近 14 天的下载趋势：</p>
 <ul>
-<li>标题下方左侧显示近 14 天下载总量（标注 "Last 14 days"）与环比变化，旁边标注 "vs previous 14 days"</li>
+<li>标题下方左侧显示近 14 天下载总量（标注 “Last 14 days”）与环比变化，旁边标注 “vs previous 14 days”</li>
 <li>鼠标悬停可查看对应日期的数值</li>
-<li>点击右上角 "View more →" 进入 Stats Overview（数据总览）页面</li>
+<li>点击右上角 “View more →” 进入 Stats Overview（数据总览）页面</li>
 </ul>
 <p>全新播客状态（Dashboard (v3)）下，头部数字为 0、环比为 +0%，图表只画一条贴着 0 的平线。</p>
 <h3 id="sec-2-3-单集表现表-episode-performance">2.3 单集表现表（Episode Performance）</h3>
-<p>表格列出各单集的下载表现，两列指标：<strong>First Week</strong>（首周）与 <strong>First Month</strong>（首月）。没有数据的单集显示占位符 "—"。表格行悬停有高亮。</p>
+<p>表格列出各单集的下载表现，两列指标：<strong>First Week</strong>（首周）与 <strong>First Month</strong>（首月）。没有数据的单集显示占位符 “—”。表格行悬停有高亮。</p>
 <ul>
 <li>点击单集标题进入 Stats Episodes Trending 页面，并在该页面选中对应的 Episode</li>
-<li>点击卡片右上角 "View more →" 进入 Stats Episodes Performance 页面</li>
+<li>点击卡片右上角 “View more →” 进入 Stats Episodes Performance 页面</li>
 </ul>
-<p>全新播客状态（Dashboard (v3)）下没有单集，表格位置显示空状态（图标 + "No data found."），并隐藏 "View more →"。</p>
+<p>全新播客状态（Dashboard (v3)）下没有单集，表格位置显示空状态（图标 + “No data found.”），并隐藏 “View more →”。</p>
 <h3 id="sec-2-4-成就系统-achievements">2.4 成就系统（Achievements）</h3>
 <p>卡片顶部展示当前选中徽章的大图，旁边是 <strong>Share（分享）</strong> 按钮；下方是两个徽章格子，分别对应两个徽章家族。</p>
 <p><strong>两个徽章家族</strong></p>
@@ -385,33 +392,37 @@
 <li>点击图标即可分享，分享内容会自动带上当前徽章的图片和文字；分享对象始终跟随顶部大图展示的徽章。</li>
 </ul>
 <p><strong>零徽章状态</strong></p>
-<p>两个家族都没有徽章时（新播客）：顶部改为 "No badges yet" 空状态并隐藏 Share；两个格子都变灰、都不可点，分别显示两个家族的第一枚徽章，提示用户如何解锁第一枚徽章。</p>
+<p>两个家族都没有徽章时（新播客）：顶部改为 “No badges yet” 空状态并隐藏 Share；两个格子都变灰、都不可点，分别显示两个家族的第一枚徽章，提示用户如何解锁第一枚徽章。</p>
 <p><strong>其他规则</strong></p>
 <ul>
-<li>某家族全部解锁时，显示最高阈值那一枚，不再显示"下一枚"。</li>
+<li>某家族全部解锁时，显示最高阈值那一枚，不再显示“下一枚”。</li>
 <li>同一家族一次解锁多枚时只占一格，取阈值最高的那枚。</li>
 </ul>
 <h3 id="sec-2-5-最近评论-recent-comments">2.5 最近评论（Recent Comments）</h3>
-<p>三个 Dashboard 页面的右下角都有该卡片，标题统一为 "Recent Comments"，内容按页面状态区分：</p>
+<p>三个 Dashboard 页面的右下角都有该卡片，标题统一为 “Recent Comments”，内容按页面状态区分：</p>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
-<tr>
+<tr class="header">
 <th>页面</th>
 <th>卡片内容</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Dashboard</td>
-<td>评论列表：头像、作者、评论正文（最多 2 行）、关联单集与时间；右上角 "View more →" 进入评论详情</td>
+<td>评论列表：头像、作者、评论正文（最多 2 行）、关联单集与时间；右上角 “View more →” 进入评论详情</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Dashboard (v2)</td>
-<td>用户关闭评论功能时的空状态：灰色对话框图标 + "No comments" + "Commenting is turned off for your account."，没有按钮或链接</td>
+<td>用户关闭评论功能时的空状态：灰色对话框图标 + “No comments” + “Commenting is turned off for your account.”，没有按钮或链接</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Dashboard (v3)</td>
-<td>空状态：灰色对话框图标 + "No comments yet" + "Your latest comments will show up here."</td>
+<td>空状态：灰色对话框图标 + “No comments yet” + “Your latest comments will show up here.”</td>
 </tr>
 </tbody>
 </table>
@@ -421,11 +432,17 @@
 <p>该内容块为新增内容块，卡片中的文章目前为占位内容，需要 BO 提供相应功能后进行配置和替换。</p>
 <p>每张卡片均为上图下文结构，整张卡片可点击（当前为占位链接）。</p>
 <h3 id="sec-2-7-引导流程-onboarding">2.7 引导流程（Onboarding）</h3>
-<p>面向新用户的引导页，页面标题为 <strong>"Get your podcast ready"</strong>，副标题为 "Complete the key steps to publish, distribute, and grow your show."。</p>
+<p>面向新用户的引导页，页面标题为 <strong>“Get your podcast ready”</strong>，副标题为 “Here are some useful tips to help you get started on your podcasting journey.”。</p>
 <p><strong>步骤视图</strong></p>
 <table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
 <thead>
-<tr>
+<tr class="header">
 <th>步骤</th>
 <th>标题与说明</th>
 <th>按钮</th>
@@ -433,19 +450,19 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>1</td>
-<td><strong>Set up your podcast</strong> — Set up your podcast profile and basic information.</td>
+<td><strong>Set up your podcast</strong> — Set up your podcast’s basic details and briefly describe what it’s about.</td>
 <td>Setup</td>
 <td>Settings &gt; Podcast Info 页面</td>
 </tr>
-<tr>
+<tr class="even">
 <td>2</td>
 <td><strong>Publish your first episode</strong> — Upload your first episode and make your show live.</td>
 <td>Publish</td>
 <td>Episodes 页面</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>3</td>
 <td><strong>Submit to podcast platforms</strong> — Reach listeners on Spotify, Apple Podcasts, and more.</td>
 <td>Submit</td>
@@ -454,21 +471,98 @@
 </tbody>
 </table>
 <ul>
-<li>第 1 步卡片内附 "Already have a show? Import existing podcast to Podbean" 链接，点击进入 Import to Podbean 页面。</li>
+<li>第 1 步卡片内附 “Already have a show? Import existing podcast to Podbean” 链接，点击进入 Import to Podbean 页面。</li>
 <li>点击各步骤的按钮会完成该步骤，并进入上表对应的页面。</li>
 <li>页面不显示进度条，完成情况由三步各自的圆圈状态表示（未完成 / 已完成），圆圈本身不可点击。</li>
 <li>用户通过该步骤的按钮完成操作，完成后圆圈状态随之更新。</li>
 <li>未完成与已完成步骤的标题、圆圈和按钮样式见设计稿。</li>
-<li>底部 "Skip the Guide →" 可跳过引导，直接进入 Dashboard。</li>
-<li>提示文案 "You will see your podcast statistics here after you get a few downloads." 与 "Getting started resources" 资源区都位于步骤视图内，切换到数据视图时一并隐藏。</li>
-<li>"Getting started resources" 资源区需要 BO 新增相应功能来配置内容。</li>
+<li>底部 “Skip the Guide →” 可跳过引导，直接进入 Dashboard。</li>
+<li>提示文案 “You will see your podcast statistics here after you get a few downloads.” 与 “Getting started resources” 资源区都位于步骤视图内，切换到数据视图时一并隐藏。</li>
+<li>“Getting started resources” 资源区需要 BO 新增相应功能来配置内容。</li>
 </ul>
 <p><strong>数据视图</strong></p>
 <p>已产生下载数据后，引导页切换为数据视图。</p>
 <p>具体达到多少下载数据才会切换为数据视图，需要由开发确认。</p>
+<h3 id="sec-2-8-导入引导-onboarding-import">2.8 导入引导（Onboarding (import)）</h3>
+<p>面向已有播客创作者的导入引导页，复用 Onboarding 的步骤清单卡片与页面结构，页面标题同为 <strong>“Get your podcast ready”</strong>，副标题同为 “Here are some useful tips to help you get started on your podcasting journey.”。</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>步骤</th>
+<th>标题与说明</th>
+<th>按钮</th>
+<th>点击后进入</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><strong>Import existing podcast to Podbean</strong> — Bring your existing podcast or video series over in just 3 simple steps.</td>
+<td>Import</td>
+<td>Import to Podbean 页面</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><strong>Publish new episodes</strong> — Go to publish or schedule new episodes on Podbean. Your imported episodes will also be listed there.</td>
+<td>Publish</td>
+<td>Episodes 页面</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><strong>Submit to podcast platforms</strong> — Reach listeners on Spotify, Apple Podcasts, and more.</td>
+<td>Submit</td>
+<td>Distribution &gt; Podcast Apps 页面</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sec-2-9-私有播客引导-onboarding-private">2.9 私有播客引导（Onboarding (private)）</h3>
+<p>面向私有播客创作者的引导页，页面标题与副标题、步骤清单卡片、底部提示与资源区均与 Onboarding 一致。</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>步骤</th>
+<th>标题与说明</th>
+<th>按钮</th>
+<th>点击后进入</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><strong>Set up your podcast</strong> — Set up your podcast’s basic details and briefly describe what it’s about.</td>
+<td>Setup</td>
+<td>Settings &gt; Podcast Info 页面</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><strong>Publish private episodes</strong> — Upload and publish your first private episode. Only your members can access your private podcast by logging in.</td>
+<td>Publish</td>
+<td>Episodes 页面（发布私有单集）</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><strong>Assign private members</strong> — Add or manage the members who have access to your private podcast.</td>
+<td>Manage</td>
+<td>私有成员管理页面（企业管理后台 private members 页面）</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="sec-3-响应式设计">3. 响应式设计</h2>
 <p>页面需适配不同屏幕尺寸，在各类设备上保持布局完整、内容清晰可读。</p>
+
   </main>
   <footer>
     <span>来源：<code>index.html-功能文档.md</code></span>
