@@ -217,7 +217,12 @@
       flex-direction: column;
       gap: 1px;
       overflow: hidden;
-      max-height: 300px;
+      /* The cap exists only so the collapse can be animated — it is not a
+         design limit. It sat at 300px while Settings had 7 entries (~300px);
+         the 8th (Import to Podbean (audio)) took the content to 350px and the
+         tail was silently clipped by overflow:hidden. Keep real headroom above
+         the current content height (measured 350). */
+      max-height: 460px;
       transition: max-height 0.25s ease, opacity 0.2s ease;
       opacity: 1;
     }
@@ -1289,7 +1294,7 @@
       margin-top: 3px;
     }
     /* Nothing is preselected (picking IS the task), but a greyed-out dead button
-       explains nothing — so Continue stays live and says what's missing. */
+       explains nothing — so Next stays live and says what's missing. */
     .import-pick-error {
       display: none;
       color: #dc2626;
@@ -1335,10 +1340,9 @@
        its own, so the gap between two of them has to be declared here. */
     .import-field + .import-field { margin-top: 26px; }
 
-    /* Video step 2: the content source is a labelled dropdown row — label on the
-       left, control taking the rest — matching the reference layout. The fixed
-       150px label column is what keeps "Content Source" and "YouTube Playlist"
-       starting the dropdowns at the same x. */
+    /* A labelled row: label on the left, control taking the rest. In the import
+       dialog the only user left is the YouTube Playlist picker (the content
+       source became a radio group, and the modal stacks this row anyway). */
     .wiz-dd-row { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; }
     .wiz-dd-row .import-field-label { flex: 0 0 150px; margin-bottom: 0; }
     .wiz-dd-row .pb-custom-select,
@@ -1377,44 +1381,33 @@
     }
 
     /* Saved / completed state */
-    /* The running line under the status — 14px, so it reads as part of the
-       status rather than as fine print. It needs its own class: .import-example
-       is shared with the URL hints, which stay at 12px. */
+    /* The status line and its running sentence in one paragraph — 14px, so it
+       reads as the card's own voice rather than as fine print. It needs its own
+       class: .import-example is shared with the URL hints, which stay at 12px.
+       Body colour (--text = #1e293b), because this is now the card's only text
+       and has to carry the status itself. No top margin: it is the card's first
+       child since the chip above it was removed (2026-10-20). */
     .wiz-result-note {
       font-size: 14px;
-      color: var(--text-tertiary);
+      color: var(--text);
       line-height: 1.6;
-      margin: 8px 0 0;
+      margin: 0;
     }
 
-    /* The import status is a plain header, not a card: the chip carries the
-       state, and a box around it only added noise. Padding goes with the box —
-       keeping it would indent the title 16px inside the column that everything
-       else aligns to. */
+    /* The running import is a status CARD — the same amber surface the
+       completion state uses for its standing notice, because both say "this is
+       still moving". It began as a plain header on white; the card is what
+       separates the status from the redirect instructions under it. */
     .import-saved {
-      padding: 0;
+      padding: 20px 24px 22px;
       border: none;
-      border-radius: 0;
-      background: transparent;
+      border-radius: 8px;
+      background: #fdf7e3;
     }
-    .import-saved-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .import-saved-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 10px;
-      border-radius: 999px;
-      background: #f0fdf4;
-      color: #16a34a;
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
+    /* The white status chip (and the 500-weight "copied" line that replaced it
+       in place) were removed on 2026-10-20: the status is now the first
+       sentence of .wiz-result-note, so both states speak at one weight and one
+       colour, and .is-complete no longer changes the type. */
     .import-saved-value {
       display: flex;
       align-items: center;
@@ -1670,7 +1663,7 @@
     .pb-check-line:has(.wiz-info-wrap) { position: relative; }
 
     /* No rule above the buttons: the step's own content already ends with a
-       separator, and a second line right above Continue read as a stray edge. */
+       separator, and a second line right above Next read as a stray edge. */
     .wiz-nav {
       display: flex;
       align-items: center;
@@ -1679,15 +1672,6 @@
     }
     /* No Back button: a step's own header is the only way back, so the nav is
        just the forward action. */
-
-    /* Free plan: step 3's forward button becomes the upgrade CTA, with the
-       trial note beside it — the reference has the two on one row. */
-    .wiz-free-actions {
-      display: inline-flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .wiz-free-trial { font-size: 14px; color: var(--text); white-space: nowrap; }
 
     /* ---- Import flow dialog: 930 × 730, one numbered step per screen ---- */
     /* The page only asks where the episodes come from; the flow gets a proper
@@ -1752,9 +1736,16 @@
       font-size: 15px;
       padding: 9px 0;
     }
-    .import-flow-panel .wiz-dd-row { gap: 14px; margin-bottom: 26px; }
-    .import-flow-panel .wiz-dd-row .import-field-label { flex: 0 0 120px; }
+    /* Label above the control, like every other field in this dialog: the
+       side-by-side 120px label column belonged to the wide in-page wizard and
+       reads as a table inside the 560px modal column. */
+    .import-flow-panel .wiz-dd-row { display: block; margin-bottom: 26px; }
+    .import-flow-panel .wiz-dd-row .import-field-label { margin-bottom: 6px; }
     .import-flow-panel .import-example { font-size: 12.5px; margin-top: 10px; }
+    /* A hint that states what the import will do (rather than what to type) is
+       body copy, not fine print: it takes the text colour while the "Example:"
+       lines keep the grey. */
+    .import-example.is-note { color: var(--text); }
 
     /* Option rows are full-width boxes here (the reference), not bare rows:
        the box is the target and the ring is the answer. */
@@ -1764,7 +1755,9 @@
       max-width: none;
     }
     .wiz-choice-item {
-      align-items: center;
+      /* top-aligned now that an option carries a description: the radio sits
+         on the title's line, not halfway down a three-line box */
+      align-items: flex-start;
       gap: 14px;
       padding: 16px 18px;
       border: 1px solid #e2e8f0;
@@ -1776,8 +1769,46 @@
       border-color: var(--text);
       box-shadow: 0 0 0 1px var(--text);
     }
-    .wiz-choice-item .import-radio { margin-top: 0; }
+    .wiz-choice-item .import-radio { margin-top: 3px; }
     .wiz-choice-title { font-size: 15px; }
+    /* The explanation sits under the label (the reference's shape): secondary
+       weight so it explains the option without competing with it. */
+    .wiz-choice-desc {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    /* Unlimited Audio account: choosing video output is blocked (and Next is
+       disabled), so the reason sits right under the pair in the status bar's
+       amber — this is a restriction, and amber already means "needs attention"
+       here. `hidden` needs its own guard: the rule below is display:block only
+       through the class, so [hidden] still wins, but keep the pair explicit. */
+    .wiz-plan-note {
+      margin: 14px 0 0;
+      padding: 12px 16px;
+      border-radius: 6px;
+      background: #fdf7e3;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .wiz-plan-note[hidden] { display: none; }
+    .wiz-plan-link {
+      margin-left: 4px;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+    .wiz-plan-link:focus-visible { outline: 2px solid #94a3b8; outline-offset: 2px; border-radius: 3px; }
 
     /* The video path's two independent options follow the same box language. */
     .import-flow-options { display: flex; flex-direction: column; gap: 12px; }
@@ -1793,9 +1824,12 @@
     .import-flow-options .pb-check-line:hover { border-color: #cbd5e1; }
     .import-flow-panel .pb-check-line input[type="checkbox"] { margin-top: 0; }
 
+    /* Not fine print: this is the agreement the Import button requires, so it
+       reads in body colour and medium weight rather than as grey small text. */
     #wizAgreeLine {
-      font-size: 12.5px;
-      color: var(--text-secondary);
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
       line-height: 1.6;
     }
 
@@ -1815,8 +1849,16 @@
       font-size: 15px;
       font-weight: 500;
     }
+    /* A blocked step keeps its Next in place, greyed — removing it would move
+       the footer and read as a broken bar. */
+    .import-flow-footer .save-btn:disabled,
+    .import-flow-footer .save-btn:disabled:hover {
+      background: #1e293b;
+      /* .45 matches the file's other disabled pill (.import-btn:disabled) */
+      opacity: 0.45;
+      cursor: default;
+    }
     #importFlowNext { margin-left: auto; }
-    .import-flow-footer .wiz-free-actions { margin-left: auto; gap: 14px; }
     .import-flow-back { height: 44px; padding: 0 16px; font-size: 15px; }
     /* Before Search produces a playlist there is no forward action and no Back
        (step 1), so the bar would be an empty stripe — take it away entirely. */
@@ -1850,39 +1892,30 @@
       .import-flow-footer { padding: 14px 20px; }
     }
 
-    /* Live import status — the same chip in the result card and beside the
-       wait step, with the refresh action that resolves it */
-    .wiz-status-chip {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 10px;
-      border-radius: 999px;
-      background: #f0fdf4;
-      color: #16a34a;
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .wiz-wait {
+    /* Live import status — the card's text line is the state surface; the action
+       that resolves it sits under it, aligned with the text's left edge
+       (2026-10-20, the user: the Refresh status button sits on the left). */
+    .import-saved-actions {
       display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
+      justify-content: flex-start;
+      margin-top: 16px;
     }
+    /* The same dark pill as the page's primary action, on purpose: while the
+       import runs this is the only thing there is to do on the screen. */
     .wiz-refresh-btn {
-      height: 26px;
-      padding: 0 12px;
-      background: #fff;
-      color: var(--text);
-      border: 1px solid #cfd6e0;
+      height: 36px;
+      padding: 0 20px;
+      background: var(--text);
+      color: #fff;
+      border: none;
       border-radius: 50px;
       font-family: inherit;
-      font-size: 12.5px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
+      transition: background 0.15s;
     }
-    .wiz-refresh-btn:hover { background: #f8fafc; border-color: var(--text-secondary); }
+    .wiz-refresh-btn:hover { background: #334155; }
     .wiz-refresh-btn[hidden] { display: none; }
     /* the feed URL sits with the instruction that tells you to copy it */
     .wiz-next-feed { margin: 10px 0 12px 30px; }
@@ -1919,8 +1952,6 @@
        instead. (The pre-check state keeps the indent: there it aligns with the
        step labels.) */
     .wiz-result.is-done { margin-left: 0; }
-    /* the status chip retires with the flow it was reporting on */
-    .import-saved-badge[hidden] { display: none; }
 
     /* ---- Completion state, after the redirect check ---- */
     /* Body colour, not the secondary grey: this is standing advice the user is
@@ -2039,7 +2070,6 @@
       margin: 36px 0 0;
     }
 
-    .wiz-result-title { font-size: 16px; font-weight: 600; color: var(--text); }
     .pb-check-line.is-terms {
       margin-top: 20px;
       padding-top: 20px;
@@ -2054,7 +2084,7 @@
     .pb-check-line[hidden],
     .wiz-option-row[hidden],
     .import-btn[hidden],
-    .wiz-free-actions[hidden],
+    .import-saved-actions[hidden],
     #wizResultNext[hidden],
     .channel-menu[hidden],
     .channel-panel[hidden],
@@ -2452,6 +2482,35 @@
       transition: background 0.15s;
     }
     .modal-confirm .btn-danger:hover { background: #b91c1c; }
+
+    /* Free plan: picking an import source opens this prompt instead of the
+       wizard. The shared confirm shell is 420px wide with 102px buttons, so
+       "See upgrade plans" would wrap — this one dialog gets more width and
+       auto-sized pills. Id-scoped so every other confirm keeps its shape. */
+    #importUpgradeModal .modal-confirm { width: 500px; }
+    #importUpgradeModal .modal-confirm-actions button {
+      width: auto;
+      height: 46px;
+      padding: 0 26px;
+    }
+    /* The trial is the reason to act, so it gets its own object between the
+       explanation and the buttons rather than a third line of body copy. */
+    #importUpgradeModal .modal-confirm-desc { margin-bottom: 18px; }
+    .upgrade-trial {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 26px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      /* Mint, not amber: yellow read as a warning. Green is the "go / good
+         news" signal for the trial. Emerald-100 / emerald-800 = 6.78:1. */
+      background: #d1fae5;
+      color: #065f46;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .upgrade-trial svg { color: #047857; flex-shrink: 0; }
 
 
     /* ==============================
@@ -3157,9 +3216,12 @@
         <a href="#" data-page="feed">Feed</a>
         <a href="#" data-page="plugin">Plugin</a>
         <a href="#" data-page="import-to-podbean">Import to Podbean</a>
-        <!-- Mockup-only entry: the same wizard in free-plan mode. It resolves to
-             the import page-section (see PAGE_SECTION_ALIAS in switchPage) and
-             only flips the mode, so there is no second copy of the wizard. -->
+        <!-- Mockup-only entries: the same wizard on a different plan. Each
+             resolves to the import page-section (see PAGE_SECTION_ALIAS in
+             switchPage) and only flips the plan mode, so there is no second
+             copy of the wizard. "audio" = Unlimited Audio (no video podcast
+             output); "free" = imports are gated at the source picker. -->
+        <a href="#" data-page="import-audio">Import to Podbean (audio)</a>
         <a href="#" data-page="import-free">Import to Podbean (free)</a>
         <a href="#" data-page="import-complete">Import to Podbean (complete)</a>
         <a href="#" data-page="rss-import-states">导入状态说明</a>
@@ -3587,10 +3649,10 @@
           </button>
         </div>
 
-        <!-- Result — the dialog closes after Start import and the page takes over -->
+        <!-- Result — the dialog closes after Import and the page takes over -->
         <div class="wiz-result" id="wizPanelResult" hidden>
 
-          <!-- Video: no status card at all — Start import lands straight on the
+          <!-- Video: no status card at all — Import lands straight on the
                importing screen, which is the amber bar plus the two settings
                step 3 collected. Those are the same settings, so each row mirrors
                its checkbox and writes back to it. -->
@@ -3611,14 +3673,22 @@
           </div>
 
           <div class="import-saved">
-            <div class="import-saved-head">
-              <span class="wiz-result-title" id="wizResultTitle">RSS import</span>
-              <span class="import-saved-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <span id="wizResultBadge" aria-live="polite">Importing&hellip;</span>
-              </span>
+            <!-- Status and running sentence are ONE paragraph: the status text
+                 sits directly before the sentence, so the card reads as one
+                 thought instead of a chip with a caption under it (2026-10-20,
+                 the user: "Importing your episode info 文字直接放在…前面").
+                 The line lives in the markup, not only in the JS: the
+                 "导入状态说明" review page clones this block before any import
+                 has run, and it must clone the copy it is meant to show. It is
+                 also the live region — this line changes (copying →
+                 "Set redirect to complete the import."). -->
+            <!-- data-done is the copied-state line. It lives here, not only in
+                 the JS, so the review page's "copied" card can take it from the
+                 clone — one copy of the sentence, no drift. -->
+            <div class="wiz-result-note" id="wizResultNote" aria-live="polite" data-done="Set redirect to complete the import.">Importing your episode info. Depending on how many episodes your feed has, it can take a few minutes. You can leave this page while it works.</div>
+            <div class="import-saved-actions" id="wizStatusActions">
+              <button type="button" class="wiz-refresh-btn" id="wizRefreshBtn">Refresh status</button>
             </div>
-            <div class="wiz-result-note" id="wizResultNote"></div>
           </div>
 
           <div class="wiz-next" id="wizResultNext">
@@ -3628,11 +3698,7 @@
             <div class="import-substeps">
               <div class="import-substep">
                 <span class="import-substep-num">1</span>
-                <span class="wiz-wait">
-                  <span>Wait for the import to finish.</span>
-                  <span class="wiz-status-chip" id="wizImportStatus" aria-live="polite">Importing&hellip;</span>
-                  <button type="button" class="wiz-refresh-btn" id="wizRefreshBtn">Refresh status</button>
-                </span>
+                <span>Wait for the import to finish.</span>
               </div>
               <div class="import-substep">
                 <span class="import-substep-num">2</span>
@@ -3708,10 +3774,18 @@
       <!-- ===== Page: "RSS feed 导入状态说明" — mockup-only review view ===== -->
       <div class="page-section" id="page-rss-import-states">
         <div class="page-heading-title">导入状态说明</div>
-        <p class="page-subtitle">导入相关的四种状态并排放在一页上，便于评审对照。每张卡片各自复刻该状态下整个内容区的样子——页面大标题与 tagline 四种状态共用，始终都在。卡片里的内容由脚本从真实区块克隆而来，所以真实文案改动时这里不会过期。</p>
+        <p class="page-subtitle">导入相关的六种状态并排放在一页上，便于评审对照。每张卡片各自复刻该状态下整个内容区的样子——页面大标题与 tagline 六种状态共用，始终都在。卡片里的内容由脚本从真实区块克隆而来，所以真实文案改动时这里不会过期。</p>
+
+        <div class="state-card" id="stateCardCopying">
+          <span class="state-tag">RSS · 导入中（正在导入剧集信息）</span>
+        </div>
+
+        <div class="state-card" id="stateCardCopied">
+          <span class="state-tag">RSS · 剧集已复制（等待设置重定向）</span>
+        </div>
 
         <div class="state-card" id="stateCardNow">
-          <span class="state-tag">RSS · 正在导入（剧集名单已拷完，媒体文件仍在导入）</span>
+          <span class="state-tag">RSS · 重定向已生效（剧集名单已拷完，媒体文件仍在导入）</span>
         </div>
 
         <div class="state-card" id="stateCardVideo">
@@ -4412,6 +4486,25 @@
         </div>
       </div>
 
+      <!-- Free plan: picking an import source opens this prompt first. It is
+           the only place a free account meets the plan requirement — the
+           wizard itself stays identical to the paid one and is never reached.
+           The description names the plan for the source that was clicked. -->
+      <div class="modal-overlay" id="importUpgradeModal">
+        <div class="modal-confirm" role="dialog" aria-modal="true" aria-labelledby="importUpgradeTitle" aria-describedby="importUpgradeDesc">
+          <div class="modal-confirm-title" id="importUpgradeTitle">Upgrade to import to Podbean</div>
+          <p class="modal-confirm-desc" id="importUpgradeDesc"></p>
+          <span class="upgrade-trial">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>
+            Enjoy a 14-day free trial
+          </span>
+          <div class="modal-confirm-actions">
+            <button type="button" class="btn-stay" id="importUpgradeDismiss">Not now</button>
+            <button type="button" class="btn-primary" id="importUpgradePlans">See upgrade plans</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Unsaved Changes Modal -->
       <div class="modal-overlay" id="unsavedModal">
         <div class="modal-confirm">
@@ -4463,6 +4556,9 @@
                   <!-- Video: a YouTube playlist or a video RSS feed, picked first,
                        then the field that belongs to it. -->
                   <div id="wizModeVideo" hidden>
+                    <!-- Two items only, so it stays a dropdown: the field below then
+                         reads as whatever this row is set to, and the step keeps
+                         one control above one field. -->
                     <div class="wiz-dd-row">
                       <div class="import-field-label">Content Source</div>
                       <div class="pb-custom-select">
@@ -4476,8 +4572,9 @@
 
                     <div id="wizVideoYt">
                       <div class="import-field" id="wizYtHandleField">
+                        <div class="import-field-label">YouTube channel handle</div>
                         <div class="wiz-search-row">
-                          <input type="text" class="import-input" id="wizYtHandle" placeholder="Your YouTube channel handle (e.g. @podbean)" />
+                          <input type="text" class="import-input" id="wizYtHandle" placeholder="e.g. @podbean" />
                           <button type="button" class="import-btn" id="wizYtSearchBtn">Search</button>
                         </div>
                         <div class="pb-field-error" id="wizYtHandleError"></div>
@@ -4496,7 +4593,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="import-example">We will retrieve <b>the latest 10 videos</b> and sync future content as you prefer.</div>
+                        <div class="import-example is-note">We will retrieve <b>the latest 10 videos</b> and sync future content as you prefer.</div>
                       </div>
                     </div>
 
@@ -4507,7 +4604,7 @@
                           <input type="text" class="import-input" id="wizVideoRssInput" placeholder="Enter your RSS feed URL" />
                         </div>
                         <div class="pb-field-error" id="wizVideoRssError"></div>
-                        <div class="import-example">We will retrieve <b>the latest 10 videos</b>, convert them into MP3 and sync future content as you prefer.</div>
+                        <div class="import-example is-note">We will retrieve <b>the latest 10 videos</b>, convert them into MP3 and sync future content as you prefer.</div>
                       </div>
                     </div>
                   </div>
@@ -4516,13 +4613,15 @@
                 <!-- Step 2 · scope for RSS, podcast type for YouTube. The two are
                      different questions, so they are different groups. -->
                 <div class="import-flow-panel" data-flow-step="2" hidden>
-                  <div class="wiz-choice" id="wizScopeChoice" role="radiogroup" aria-labelledby="wizScopeLegend">
-                    <div class="wiz-choice-legend" id="wizScopeLegend">What should we bring over?</div>
+                  <!-- The question is the step's own title, so the group needs no
+                       visible legend; aria-label keeps the name for screen readers. -->
+                  <div class="wiz-choice" id="wizScopeChoice" role="radiogroup" aria-label="What should we bring over?">
                     <div class="wiz-choice-items">
                       <label class="wiz-choice-item">
                         <input type="radio" class="import-radio" name="wizScope" value="all" checked />
                         <span class="wiz-choice-text">
-                          <span class="wiz-choice-title">Podcast details and episodes<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizScopeAllInfo" aria-label="What this includes"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizScopeAllInfo" role="tooltip"></span></span></span>
+                          <span class="wiz-choice-title">Podcast details and episodes</span>
+                          <span class="wiz-choice-desc">Bring over your podcast information along with its episodes.</span>
                         </span>
                       </label>
 
@@ -4530,13 +4629,13 @@
                         <input type="radio" class="import-radio" name="wizScope" value="episodes" />
                         <span class="wiz-choice-text">
                           <span class="wiz-choice-title">Episodes only</span>
+                          <span class="wiz-choice-desc">Import episodes and keep your current podcast details.</span>
                         </span>
                       </label>
                     </div>
                   </div>
 
-                  <div class="wiz-choice" id="wizTypeChoice" role="radiogroup" aria-labelledby="wizTypeLegend" hidden>
-                    <div class="wiz-choice-legend" id="wizTypeLegend">What kind of podcast should this become?</div>
+                  <div class="wiz-choice" id="wizTypeChoice" role="radiogroup" aria-label="What kind of podcast should this become?" hidden>
                     <div class="wiz-choice-items">
                       <label class="wiz-choice-item">
                         <input type="radio" class="import-radio" name="wizOutput" value="audio" checked />
@@ -4552,18 +4651,25 @@
                         </span>
                       </label>
                     </div>
+                    <!-- Unlimited Audio accounts: video output is the one thing
+                         this plan cannot publish, so the reason appears beside
+                         the choice and Next stays put but disabled. -->
+                    <p class="wiz-plan-note" id="wizPlanNote" hidden>
+                      Converting to a video podcast needs Unlimited Plus.
+                      <button type="button" class="wiz-plan-link" id="wizPlanUpgrade">See upgrade plans</button>
+                    </p>
                   </div>
                 </div>
 
                 <!-- Step 3 · audio format for RSS, content options for video. -->
                 <div class="import-flow-panel" data-flow-step="3" hidden>
-                  <div class="wiz-choice" id="wizFormatChoice" role="radiogroup" aria-labelledby="wizFormatLegend">
-                    <div class="wiz-choice-legend" id="wizFormatLegend">What audio format should we use?</div>
+                  <div class="wiz-choice" id="wizFormatChoice" role="radiogroup" aria-label="What audio format should we use?">
                     <div class="wiz-choice-items">
                       <label class="wiz-choice-item">
                         <input type="radio" class="import-radio" name="wizFormat" value="mp3" checked />
                         <span class="wiz-choice-text">
-                          <span class="wiz-choice-title">Convert to .mp3<span class="wiz-info-wrap"><button type="button" class="wiz-info" aria-describedby="wizFormatConvertInfo" aria-label="When the conversion runs"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 7.5h.01"/></svg></button><span class="wiz-info-tip" id="wizFormatConvertInfo" role="tooltip"></span></span></span>
+                          <span class="wiz-choice-title">Convert to .mp3</span>
+                          <span class="wiz-choice-desc">Convert imported audio files to the MP3 format.</span>
                         </span>
                       </label>
 
@@ -4571,6 +4677,7 @@
                         <input type="radio" class="import-radio" name="wizFormat" value="keep" />
                         <span class="wiz-choice-text">
                           <span class="wiz-choice-title">Use original format</span>
+                          <span class="wiz-choice-desc">Keep imported audio files in their existing format.</span>
                         </span>
                       </label>
                     </div>
@@ -4603,12 +4710,7 @@
 
           <div class="modal-footer import-flow-footer" id="importFlowFooter">
             <button type="button" class="cancel-btn import-flow-back" id="importFlowBack" hidden>Back</button>
-            <button type="button" class="save-btn" id="importFlowNext">Continue</button>
-            <!-- Free plan: step 3's forward action becomes the upgrade CTA. -->
-            <span class="wiz-free-actions" id="wizFreeActions" hidden>
-              <button type="button" class="save-btn" id="wizUpgradeBtn">Upgrade to Unlimited Audio Plan for Imports</button>
-              <span class="wiz-free-trial">Enjoy a 14-day free trial!</span>
-            </span>
+            <button type="button" class="save-btn" id="importFlowNext">Next</button>
           </div>
         </div>
       </div>
@@ -5206,7 +5308,10 @@
     // entry resolves to the import page-section and only flips a flag. A second
     // copy of the 3-step wizard (markup + IIFE) would drift from this one the
     // first time either was edited, and this file has no version control.
-    var PAGE_SECTION_ALIAS = { 'import-free': 'import-to-podbean' };
+    var PAGE_SECTION_ALIAS = { 'import-free': 'import-to-podbean', 'import-audio': 'import-to-podbean' };
+    // The mockup menu entries that share the import page, and the plan each one
+    // demonstrates. Anything else is the full (Unlimited Plus) plan.
+    var IMPORT_PLAN_BY_PAGE = { 'import-free': 'free', 'import-audio': 'audio' };
 
     function switchPage(page) {
       document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
@@ -5214,10 +5319,10 @@
       if (!target) return;
       target.classList.add('active');
 
-      // Only the two import entries touch the plan mode — every other page
-      // leaves the wizard exactly as it was left.
+      // Only the import entries touch the plan mode — every other page leaves
+      // the wizard exactly as it was left.
       if (target.id === 'page-import-to-podbean' && typeof window.setImportMode === 'function') {
-        window.setImportMode(page === 'import-free');
+        window.setImportMode(IMPORT_PLAN_BY_PAGE[page] || 'paid');
       }
 
       // Capture initial state of the new page
@@ -5694,11 +5799,14 @@
     // the design; it would not ship as a menu item.
     // ==============================================
     (function initImportStatesPage() {
+      var copyingCard = document.getElementById('stateCardCopying');
+      var copiedCard = document.getElementById('stateCardCopied');
       var nowCard = document.getElementById('stateCardNow');
       var videoCard = document.getElementById('stateCardVideo');
       var videoRssCard = document.getElementById('stateCardVideoRss');
       var doneCard = document.getElementById('stateCardDone');
-      if (!nowCard || !videoCard || !videoRssCard || !doneCard) return;
+      if (!copyingCard || !copiedCard || !nowCard || !videoCard ||
+          !videoRssCard || !doneCard) return;
 
       // The cards are CLONES of the live blocks rather than hand-copied markup,
       // so this page cannot fall out of step with the real screens when their
@@ -5720,9 +5828,37 @@
 
       var head = document.getElementById('importPageHead');
       // every screen carries the same page head — it is never hidden in the wizard
-      [nowCard, videoCard, videoRssCard, doneCard].forEach(function (card) {
+      [copyingCard, copiedCard, nowCard, videoCard, videoRssCard, doneCard].forEach(function (card) {
         cloneInto(card, head);
       });
+
+      // The copying screen is the page exactly as Import leaves it: the status
+      // card (its line already reading "Importing your episode info. …" in the
+      // markup, with Refresh status under it) and the redirect block below it,
+      // whose Check redirect is still disabled. Both are cloned, so a copy
+      // change on the real screen reaches this card without being retyped.
+      function statusCardClone(host) {
+        var copy = cloneInto(host, document.querySelector('#wizPanelResult .import-saved'));
+        var next = cloneInto(host, document.getElementById('wizResultNext'));
+        return { card: copy, next: next };
+      }
+      statusCardClone(copyingCard);
+
+      // The copied screen is the SAME card one state later. Its state is applied
+      // to the clone rather than cloned, because the live block is in the copying
+      // state at load; the sentence itself still comes from the markup
+      // (data-done), so it is not retyped here.
+      (function buildCopiedCard() {
+        var parts = statusCardClone(copiedCard);
+        if (!parts.card) return;
+        parts.card.classList.add('is-complete');
+        var note = parts.card.querySelector('.wiz-result-note');
+        note.textContent = note.getAttribute('data-done');
+        parts.card.querySelector('.import-saved-actions').hidden = true;
+        var btn = parts.next && parts.next.querySelector('.import-btn');
+        if (btn) btn.disabled = false;   // the redirect check is unlocked here
+      })();
+
       cloneInto(nowCard, document.getElementById('wizResultDone'));
 
       // The connected-source value is written by the wizard at run time, so each
@@ -5764,40 +5900,29 @@
 
       var TERMS_LINK = ' <a href="https://www.podbean.com/podbean-terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.';
 
-      // The ⓘ on "Podcast details and episodes". Both sources show the same
-      // group and the same list of what arrives, so the text is defined once and
-      // pointed at twice — as two copies they would drift apart.
-      var SCOPE_INFO = 'Brings over the episodes, the show details and Apple Podcasts settings.';
-
       var SOURCES = {
         rss: {
           name: 'RSS Feed URL',
-          resultTitle: 'RSS import',
           fieldLabel: 'RSS Feed URL',
           requiredMsg: 'Please enter your RSS feed URL',
-          scopeInfo: SCOPE_INFO,
-          formatConvertDesc: 'Converts your audio after you complete the 301 redirect.',
           placeholder: 'https://feeds.example.com/myshow.xml',
           hint: 'Example: https://feeds.podbean.org/elinazplus/feed.xml',
-          // the button is "Start import", so the quoted word in the terms follows
-          // it rather than the reference's "Import"
-          terms: 'By clicking “Start import,” you confirm that you own the rights to this podcast and that you agree to Podbean’s' + TERMS_LINK,
+          // the button is "Import", so the quoted word in the terms follows it
+          terms: 'By clicking “Import,” you confirm that you own the rights to this podcast and that you agree to Podbean’s' + TERMS_LINK,
           redirect: true
         },
         video: {
           name: 'Video to Podcast',
-          resultTitle: 'Video import',
           // the videos can come from a YouTube playlist or a video RSS feed,
           // so step 1 asks which one before showing its field
           ytRequiredMsg: 'Please enter your YouTube channel handle',
           ytSearchMsg: 'Click Search to load the playlists for this channel',
           rssRequiredMsg: 'Please enter your video RSS feed URL',
-          scopeInfo: SCOPE_INFO,
           // the video import has no redirect, and the wording follows whichever
           // of the two video sources was used
           terms: {
-            youtube: 'By clicking “Start import,” you confirm that you own the rights to this YouTube Content and that you agree to Podbean’s' + TERMS_LINK,
-            rss: 'By clicking “Start import,” you confirm that you own the rights to this content and that you agree to Podbean’s' + TERMS_LINK
+            youtube: 'By clicking “Import,” you confirm that you own the rights to this YouTube Content and that you agree to Podbean’s' + TERMS_LINK,
+            rss: 'By clicking “Import,” you confirm that you own the rights to this content and that you agree to Podbean’s' + TERMS_LINK
           },
           // product copy, supplied by the user — verbatim. Shared by step 3's row
           // and by the importing screen's row, so the two cannot disagree.
@@ -5812,11 +5937,14 @@
       var step = 1;      // 1 | 2 | 3 | 'result'
       var urls = {};     // what step 1 captured, remembered per source
 
-      // Free-plan demo. It is this same flow with one mode flag: at step 3 a
-      // free account cannot start the import, so the forward action becomes the
-      // upgrade CTA. Set through window.setImportMode, which switchPage calls for
-      // the "Import to Podbean (free)" menu entry.
-      var freeMode = false;
+      // Plan demo. One flow, one plan flag, three behaviours:
+      //   'paid'  → everything works (the real Unlimited Plus plan)
+      //   'audio' → RSS works; a video import works only as an audio podcast,
+      //             so step 2 blocks "Convert to Video Podcasts"
+      //   'free'  → nothing works: both sources open the upgrade prompt
+      // Set through window.setImportMode, which switchPage calls for the
+      // "(audio)" and "(free)" menu entries.
+      var planMode = 'paid';
 
       // Video only: which of the two video sources is chosen, and what was typed
       // into each. Kept apart from `urls` because a YouTube import is identified
@@ -5831,11 +5959,23 @@
       var backBtn = document.getElementById('importFlowBack');
       var nextBtn = document.getElementById('importFlowNext');
       var footer = document.getElementById('importFlowFooter');
-      var freeActions = document.getElementById('wizFreeActions');
-      var upgradeBtn = document.getElementById('wizUpgradeBtn');
       var flowBody = modal.querySelector('.import-flow-body');
       var picker = document.getElementById('importSourcePicker');
       var resultArea = document.getElementById('wizPanelResult');
+
+      // The free plan's only gate. Copy is per source because the plan that
+      // would unblock the import depends on where the episodes come from.
+      var upgradePrompt = document.getElementById('importUpgradeModal');
+      var upgradeDesc = document.getElementById('importUpgradeDesc');
+      var upgradeDismiss = document.getElementById('importUpgradeDismiss');
+      var upgradePlans = document.getElementById('importUpgradePlans');
+      var upgradeReturnBtn = null;
+      var UPGRADE_DESC = {
+        rss: 'RSS imports are available on the Unlimited Audio plan, which brings your episodes and show details into Podbean.',
+        video: 'Video imports are available on Unlimited Audio, or Unlimited Plus for publishing as a video podcast.',
+        // reached from step 2 on the audio plan, not from the source picker
+        plus: 'Converting to a video podcast needs Unlimited Plus. Unlimited Audio publishes imported videos as audio.'
+      };
 
       // step 1
       var field = modal.querySelector('#wizModeRss .import-field');
@@ -5860,9 +6000,9 @@
       function stepTitle() {
         if (step === 1) return key === 'video' ? 'Choose your video source' : 'Enter your feed URL';
         if (step === 2) {
-          return (key === 'video' && videoSrc === 'youtube') ? 'Podcast type' : 'Import scope';
+          return (key === 'video' && videoSrc === 'youtube') ? 'What kind of podcast should this become?' : 'What should we bring over?';
         }
-        return key === 'video' ? 'Options' : 'Audio format';
+        return key === 'video' ? 'Optional settings' : 'What audio format should we use?';
       }
 
       // The import's live state. Only one place owns it, so the card chip, the
@@ -5876,7 +6016,7 @@
       function applyDoneState() {
         if (step !== 'result') return;
         var inCompletion = redirectDone;
-        // The video path skips the status card entirely: Start import lands
+        // The video path skips the status card entirely: Import lands
         // straight on the importing screen (amber bar + the two settings).
         var isVideo = key === 'video';
         document.getElementById('wizResultDone').hidden = !inCompletion;
@@ -5886,19 +6026,27 @@
         // card has nothing left to say.
         var saved = resultArea.querySelector('.import-saved');
         if (saved) saved.hidden = isVideo || inCompletion;
-        var badge = resultArea.querySelector('.import-saved-badge');
-        if (badge) badge.hidden = inCompletion;
         resultArea.classList.toggle('is-done', inCompletion);
       }
+      // The idle line is owned by the markup — the review page clones this card
+      // before any import has run — so it is read once here rather than retyped.
+      var resultNote = document.getElementById('wizResultNote');
+      var resultNoteIdle = resultNote.textContent;
       function setImportState(done) {
         importDone = done;
-        var word = done ? 'Episodes copied' : 'Copying episodes…';
-        document.getElementById('wizImportStatus').textContent = word;
-        document.getElementById('wizResultBadge').textContent = word;
+        // Copying: the status line. Copied: the whole line is replaced, so the
+        // "Importing your episode info." lead-in inside it goes with it and the
+        // card speaks only the next step.
+        resultNote.textContent = done
+          ? resultNote.getAttribute('data-done')
+          : resultNoteIdle;
         document.getElementById('wizRedirectBtn').disabled = !done;
+        // The status card owns the refresh action, so the button and the row
+        // that spaces it leave together — a hidden button inside a live wrapper
+        // would leave 16px of nothing under the line.
         document.getElementById('wizRefreshBtn').hidden = done;
-        // "we are copying your episodes in the background" stops being true
-        document.getElementById('wizResultNote').hidden = done;
+        document.getElementById('wizStatusActions').hidden = done;
+        resultNote.closest('.import-saved').classList.toggle('is-complete', done);
       }
 
       // Step 1 holds two different forms. The RSS source keeps its single URL
@@ -5957,6 +6105,19 @@
         document.getElementById('wizTypeChoice').hidden = !isYt;
       }
 
+      // Unlimited Audio can import a video as an audio podcast, but it cannot
+      // publish one. One derivation owns both halves of that answer — the note
+      // and the disabled Next — so the two cannot disagree.
+      var planNote = document.getElementById('wizPlanNote');
+      var planUpgrade = document.getElementById('wizPlanUpgrade');
+      function applyPlanGate() {
+        var blocked = planMode === 'audio' && step === 2 &&
+          key === 'video' && videoSrc === 'youtube' &&
+          !!modal.querySelector('input[name="wizOutput"][value="video"]:checked');
+        planNote.hidden = !blocked;
+        nextBtn.disabled = blocked;
+      }
+
       // Step 3 is the audio format for RSS, and the content options for video.
       function renderStep3() {
         var s3 = SOURCES[key];
@@ -5969,27 +6130,25 @@
         document.getElementById('wizThumbLine').hidden = !isYt;
 
         document.getElementById('wizAgreeText').innerHTML = isVideo ? s3.terms[videoSrc] : s3.terms;
-        document.getElementById('wizScopeAllInfo').textContent = s3.scopeInfo;
-        if (s3.formatConvertDesc) {
-          document.getElementById('wizFormatConvertInfo').textContent = s3.formatConvertDesc;
-        }
+        // No ⓘ on the scope or format options: each now carries its explanation
+        // as visible text under the label, so a tooltip would only repeat it.
         if (isVideo) {
           document.getElementById('wizSyncInfo').textContent = s3.syncInfo;
           document.getElementById('wizThumbInfo').textContent = s3.thumbInfo;
         }
       }
 
-      // Free plan only: which plan the step-3 choices need, so the CTA names the
-      // one that would actually unblock this import. Everything the wizard can
-      // import comes out as audio — video + RSS Feed URL is converted to MP3 with
-      // no say in the matter — so "Unlimited Plus" is needed in exactly one case:
-      // a YouTube playlist published as a video podcast.
-      function upgradePlanLabel() {
-        var wantsVideo = key === 'video' && videoSrc === 'youtube' &&
-          !!modal.querySelector('input[name="wizOutput"][value="video"]:checked');
-        return wantsVideo
-          ? 'Upgrade to Unlimited Plus Plan for Imports'
-          : 'Upgrade to Unlimited Audio Plan for Imports';
+      // Open/close is one owner each, so the free gate cannot leave the prompt
+      // open behind the wizard or strand focus on a row that is no longer there.
+      function openUpgradePrompt(source, trigger) {
+        upgradeDesc.textContent = UPGRADE_DESC[source] || UPGRADE_DESC.rss;
+        upgradeReturnBtn = trigger || null;
+        upgradePrompt.classList.add('open');
+        upgradePlans.focus();
+      }
+      function closeUpgradePrompt() {
+        upgradePrompt.classList.remove('open');
+        if (upgradeReturnBtn && document.contains(upgradeReturnBtn)) upgradeReturnBtn.focus();
       }
 
       // The footer is one row: Back left, the forward action right. The YouTube
@@ -5998,13 +6157,10 @@
       function applyFooterState() {
         var waitingForPlaylist = step === 1 && key === 'video' &&
           videoSrc === 'youtube' && !ytSearched;
-        var freeCta = freeMode && step === 3;
-        nextBtn.hidden = waitingForPlaylist || freeCta;
-        freeActions.hidden = !(freeCta && !waitingForPlaylist);
+        nextBtn.hidden = waitingForPlaylist;
         // Nothing left in the bar on step 1 before the search: no Back, no
         // forward action. An empty bar would read as a broken footer.
         footer.hidden = waitingForPlaylist;
-        if (freeCta) upgradeBtn.textContent = upgradePlanLabel();
       }
 
       // The importing screen shows the two step-3 settings as switches. They are
@@ -6032,7 +6188,6 @@
         var mp3Note = document.getElementById('wizMp3Note');
         var wantsMp3 = !!modal.querySelector('input[name="wizFormat"][value="mp3"]:checked');
         mp3Note.hidden = !(s4.redirect && wantsMp3);
-        document.getElementById('wizResultTitle').textContent = s4.resultTitle;
         // the video importing screen names the connected source and shows the
         // two settings step 3 collected
         if (key === 'video') {
@@ -6044,9 +6199,10 @@
           syncResultSwitches();
         }
         setImportState(false);
-        document.getElementById('wizResultNote').textContent = s4.redirect
-          ? 'Importing runs in the background — you can leave this page while it works. Depending on how many episodes your feed has, it can take a few minutes.'
-          : 'Importing runs in the background — you can leave this page while it works. A large channel can take a while to process.';
+        // The running line's copy is owned by the markup (#wizResultNote): the
+        // review page clones it before any import has run, so a second copy
+        // here could drift from what that clone shows. The video path never
+        // shows this line — applyDoneState() hides the whole status card.
         applyDoneState();
       }
 
@@ -6057,15 +6213,15 @@
         titleEl.textContent = stepTitle();
         stepLabel.textContent = step + ' / 3';
         backBtn.hidden = step === 1;
-        nextBtn.textContent = step === 3 ? 'Start import' : 'Continue';
-        // The terms line authorises the Start import button; with no such button
-        // on the free flow there is nothing to agree to.
-        agreeLine.hidden = freeMode;
+        nextBtn.textContent = step === 3 ? 'Import' : 'Next';
 
         if (step === 1) renderStep1();
         else if (step === 2) renderStep2();
         else if (step === 3) renderStep3();
 
+        // Clears itself on every non-blocked state, so leaving step 2 can never
+        // leave a disabled Next behind.
+        applyPlanGate();
         applyFooterState();
 
         picker.hidden = step === 'result';
@@ -6104,10 +6260,9 @@
       }
       window.closeImportFlow = closeImportFlow;
 
-      // Start import leaves the dialog: the page takes over with the running
+      // Import leaves the dialog: the page takes over with the running
       // import, the redirect steps and the completion state.
       function startImport() {
-        if (freeMode) return;
         if (!agree.checked) {
           agreeLine.classList.add('is-error');
           agreeLine.scrollIntoView({ block: 'nearest' });
@@ -6122,9 +6277,14 @@
         window.scrollTo(0, 0);
       }
 
+      // The gate: a free account never enters the wizard. Both sources are
+      // gated here rather than inside the flow, so the upgrade prompt is the
+      // first thing the click produces — no URL form, no step 3.
       picker.querySelectorAll('[data-import-source]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          openImportFlow(btn.getAttribute('data-import-source'), btn);
+          var source = btn.getAttribute('data-import-source');
+          if (planMode === 'free') { openUpgradePrompt(source, btn); return; }
+          openImportFlow(source, btn);
         });
       });
 
@@ -6275,26 +6435,41 @@
         applyDoneState();
       });
 
-      // The output pair is the only step-3 choice the free CTA's plan name
-      // depends on, so switching between audio and video refreshes the label.
+      // Step 2's output pair is what the audio plan gates; the note's link opens
+      // the same prompt, with copy about Plus rather than about importing.
       modal.querySelectorAll('input[name="wizOutput"]').forEach(function (radio) {
-        radio.addEventListener('change', function () {
-          if (freeMode && step === 3) upgradeBtn.textContent = upgradePlanLabel();
-        });
+        radio.addEventListener('change', applyPlanGate);
+      });
+      planUpgrade.addEventListener('click', function () {
+        openUpgradePrompt('plus', planUpgrade);
       });
 
-      // The upgrade CTA is the free flow's terminal action. There is no billing
-      // flow in this mockup, so it says where it would go.
-      upgradeBtn.addEventListener('click', function () {
+      // The upgrade prompt's two exits. There is no billing flow in this
+      // mockup, so the plan action says where it would go; "Not now" closes
+      // and returns focus to the control that opened it.
+      upgradeDismiss.addEventListener('click', closeUpgradePrompt);
+      upgradePrompt.addEventListener('click', function (e) {
+        if (e.target === this) closeUpgradePrompt();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && upgradePrompt.classList.contains('open')) closeUpgradePrompt();
+      });
+      upgradePlans.addEventListener('click', function () {
+        closeUpgradePrompt();
         showToast('Opening upgrade plans…');
       });
 
-      // One owner for the plan mode, called by switchPage for the two import menu
-      // entries.
-      window.setImportMode = function (isFree) {
-        if (freeMode === isFree) return;
-        freeMode = isFree;
-        if (modal.classList.contains('open')) render();
+      // One owner for the plan mode, called by switchPage for every entry on the
+      // import page. An open wizard re-renders so a blocked state appears or
+      // clears at once, and no dialog outlives the plan it was opened under.
+      window.setImportMode = function (mode) {
+        if (planMode === mode) return;
+        planMode = mode;
+        if (upgradePrompt.classList.contains('open')) closeUpgradePrompt();
+        if (modal.classList.contains('open')) {
+          if (mode === 'free') { closeImportFlow(); return; }
+          render();
+        }
       };
 
       render();

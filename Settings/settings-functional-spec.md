@@ -55,6 +55,7 @@
    - [6.5 301 Redirect 校验](#65-301-redirect-校验)
    - [6.6 校验成功后的完成态](#66-校验成功后的完成态)
    - [6.7 免费账号（Free plan）：不能开始导入](#67-免费账号free-plan不能开始导入)
+   - [6.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus](#68-unlimited-audio-账号audio-plan视频播客需要-plus)
 7. [全局交互规则](#7-全局交互规则)
    - [7.1 Save Bar（底部保存栏）](#71-save-bar底部保存栏)
    - [7.2 修改检测](#72-修改检测)
@@ -528,7 +529,7 @@ Tab 标签状态：
 | **已完成步骤** | 折叠为一行标题（带勾选标记） |
 | **未到步骤** | 仅显示标题，不可点击 |
 | **返回** | **没有 Back 按钮**——返回只通过点击上一步的标题完成（见下条）。底部永远只有前进按钮 |
-| **步骤冻结** | 点击 **Start import** 之后，**步骤 1 与步骤 2 不可再返回编辑**；点击其标题只展开一行只读信息（步骤 1 → 所选来源名，步骤 2 → 已填写的地址；Video 路径下为 `YouTube Playlist · 播放列表名` 或视频 RSS 地址） |
+| **步骤冻结** | 点击 **Import** 之后，**步骤 1 与步骤 2 不可再返回编辑**；点击其标题只展开一行只读信息（步骤 1 → 所选来源名，步骤 2 → 已填写的地址；Video 路径下为 `YouTube Playlist · 播放列表名` 或视频 RSS 地址） |
 
 ### 6.1 步骤一：选择来源
 
@@ -539,7 +540,7 @@ Tab 标签状态：
 | **RSS Feed URL** | 播客托管在其它平台，或已有一份 RSS feed |
 | **Video to Podcast** | 有视频内容，希望以播客形式发布 |
 
-Continue 是唯一的入口按钮：未选择时点击 Continue，在列表下方显示行内错误「Please choose an import source」并聚焦第一个单选项，不进入下一步。
+Next 是唯一的入口按钮：未选择时点击 Next，在列表下方显示行内错误「Please choose an import source」并聚焦第一个单选项，不进入下一步。
 
 ### 6.2 步骤二：填写地址
 
@@ -551,20 +552,21 @@ Continue 是唯一的入口按钮：未选择时点击 Continue，在列表下�
 |---|---|---|
 | RSS Feed URL | 是 | 提示：Example: https://feeds.podbean.org/elinazplus/feed.xml |
 
-**来源为 Video to Podcast**：视频本身也有两个来源，用一行「Content Source」下拉框切换，切换后下方字段整体替换。
+**来源为 Video to Podcast**：视频本身也有两个来源，用一行「Content Source」下拉框切换，切换后下方字段整体替换。**下拉框是最终形态（2026-10-20 当天来回试过一次）**：先按用户要求改成两个单选项框，逐项对比后用户判断「还是改为原来的下拉框的方式吧，那样比现在的布局更好理解」，于是改回 `.pb-vs[data-select="video-src"]` + `#dropdown-video-src`。理由是：只有两项、且字段紧随其下时，下拉框把"一行控制 + 一个字段"的节奏保住了；选项框版本把字段塞进被选中的框里，结构是对的，但这一屏读起来变成了卡片里套表格。**说明文字（「Import the latest videos from a playlist on a channel.」等两句）随选项框一起去掉了。**
 
 | Content Source | 字段 | 说明 |
 |---|---|---|
-| **YouTube Playlist**（默认） | YouTube channel handle：无字段标签，占位符 “Your YouTube channel handle (e.g. @podbean)”，右侧贴一枚 **Search** 按钮 | 提示：「Search for your YouTube channel and choose the playlist you want to convert.」 |
-| | YouTube Playlist 下拉框 —— **只有点过 Search 之后才出现** | 提示：「We will retrieve **the latest 10 videos** and sync future content as you prefer.」 |
+| **YouTube Playlist**（默认） | YouTube channel handle：**有字段标签「YouTube channel handle」**，占位符只放例子 “e.g. @podbean”，右侧贴一枚 **Search** 按钮 | 提示：「Search for your YouTube channel and choose the playlist you want to convert.」 |
+| | YouTube Playlist 下拉框 —— **只有点过 Search 之后才出现** | 提示：「We will retrieve **the latest 10 videos** and sync future content as you prefer.」——**用正文字色 `--text`，不是灰色**（2026-10-20，用户要求。这两句说明的是"导入会做什么"，不是"该填什么"，所以按正文读；`Example:` 那类仍保持灰） |
 | **RSS Feed URL** | RSS Feed 输入框 | 提示：「We will retrieve **the latest 10 videos**, convert them into MP3 and sync future content as you prefer.」 |
 
-- **Search 是必经步骤，而且 Continue 按钮在检索之前根本不出现**（2026-10-15）：点 Search 出结果后，播放列表下拉与 **Continue** 同时出现——在此之前没有可继续的东西。切换 Content Source 到 RSS Feed URL 时按钮立刻恢复显示；已经检索过的状态下在步骤间往返，按钮保持显示（检索结果不会因为来回切步骤而丢失）。
+- **Search 是必经步骤，而且 Next 按钮在检索之前根本不出现**（2026-10-15）：点 Search 出结果后，播放列表下拉与 **Next** 同时出现——在此之前没有可继续的东西。切换 Content Source 到 RSS Feed URL 时按钮立刻恢复显示；已经检索过的状态下在步骤间往返，按钮保持显示（检索结果不会因为来回切步骤而丢失）。
   - handle 为空时点 Search → 「Please enter your YouTube channel handle」。
   - 「Click Search to load the playlists for this channel」这条校验仍留在代码里作为兜底；按钮隐藏后正常路径下已经触发不到，保留是为了将来按钮若被别的方式显示出来也不会跳过播放列表。
 - Search 会把播放列表重置为第一个结果（换一个 channel 就是另一组播放列表）；handle 与已选播放列表在步骤间往返、以及来回切换 Content Source 时都会保留。
-- 三个带标签的行（Content Source / YouTube Playlist / RSS Feed）共用 150px 的标签列，因此控件起始位置对齐；handle 一行没有标签，输入框占满宽度、Search 贴在右侧。
-- 字段未填写时点击 Continue，在字段下方显示行内错误提示，不进入下一步。
+- **选项自带字段时的摆放规则（2026-10-20 的讨论结论，仍成立）**：字段放在**控件正下方**、与控件左边缘对齐、全宽；不要插在两个选项中间（单选组会被拦腰截断），也不要把另一个选项的字段置灰显示（假 affordance）。当天短暂实现过"字段长在被选中的选项框内部"（`.wiz-choice-item.has-body` → `.wiz-choice-head` + `.wiz-choice-body`，body 是 `<label>` 的兄弟节点，因为 `<label>` 里不能再放可标记控件），并把 `.wiz-choice-body { margin:14px 0 0 30px; padding-top:14px; border-top:1px solid #e9eef4 }` 这套样式加进了文件；**改回下拉框后这些类与规则一并删除**（没有别的使用者）。若将来又要在选项框里放字段，可以按这段描述重建，注意 `<label>` 的嵌套限制。
+- **带标签的行（Content Source / YouTube Playlist / RSS Feed）改为标签在上、控件在下（2026-10-20，用户：「Choose your video source 步骤中的 label 和设置也应该是上下放置」）。** 弹框内 `.wiz-dd-row` 由 `display:flex` 改成 `display:block`，标签恢复 `.import-field-label` 自带的 `margin-bottom: 6px`，控件占满 560px 列宽（实测 560）。**原来的 150px 标签列（弹框里覆盖成 120px）只在页内宽版向导里成立，放进 560px 的弹框列就像一张两列表格。** 基类 `.wiz-dd-row` 保持 flex — 页内旧样式仍在使用。handle 一行不占标签行，标签与 Search 按钮分处上下两行。
+- 字段未填写时点击 Next，在字段下方显示行内错误提示，不进入下一步。
 
 ### 6.3 步骤三：确认并开始
 
@@ -576,17 +578,20 @@ Continue 是唯一的入口按钮：未选择时点击 Continue，在列表下�
 
 | 选项 | 说明 |
 |---|---|
-| **Podcast details and episodes**（默认） | 剧集与节目资料（标题、简介、封面、分类及 Apple Podcasts 设置）均从 feed 带入，**覆盖当前节目资料** |
-| **Episodes only** | 只带入剧集，现有节目资料保持不变 |
+| **Podcast details and episodes**（默认） | 剧集与节目资料（标题、简介、封面、分类及 Apple Podcasts 设置）均从 feed 带入，**覆盖当前节目资料**；选项下方说明文字：**Bring over your podcast information along with its episodes.** |
+| **Episodes only** | 只带入剧集，现有节目资料保持不变；选项下方说明文字：**Import episodes and keep your current podcast details.** |
 
-「Podcast details and episodes」右侧的 ⓘ 文案：**「Brings over the episodes, the show details and Apple Podcasts settings.」**（2026-10-15 统一：这一组在 RSS 路径与 video + RSS Feed URL 路径共用，此前两条路径各写一版——video 那版写的是「…and the video titles and artwork.」，用户要求两条路径统一。代码里改成**只定义一次**（`SCOPE_INFO` 常量，两处 `scopeInfo` 引用它），避免以后改一边漏一边。）
+**每个选项的下方带一行说明文字（2026-10-20，按用户给的参考图）**：`.wiz-choice-desc`（14px、`--text-secondary`、行高 1.5、距标题 6px）；因为选项从单行变成两行，`.wiz-choice-item` 的 `align-items` 由 `center` 改成 `flex-start`，单选框加 `margin-top: 3px` 对齐标题首行。
+- **原先「Podcast details and episodes」右侧的 ⓘ 已删除（2026-10-20，用户要求）**：说明文字现在直接可见，tooltip 只会重复它。`#wizScopeAllInfo`、`SCOPE_INFO` 常量与 `scopeInfo` 字段随之移除。ⓘ 的旧文案曾为「Brings over the episodes, the show details and Apple Podcasts settings.」（原为两条路径各写一版，2026-10-15 统一为一份常量）。
 
 音频格式（单选，二选一）
 
 | 选项 | 说明 |
 |---|---|
-| **Convert to .mp3**（默认） | 重编码为 .mp3。Spotify 只接受 .mp3，此选项供需要提交到 Spotify 的用户使用；转换在重定向完成后进行（ⓘ 提示） |
-| **Use original format** | 保持原有音频格式 |
+| **Convert to .mp3**（默认） | 重编码为 .mp3。Spotify 只接受 .mp3，此选项供需要提交到 Spotify 的用户使用；转换在重定向完成后进行；选项下方说明文字：**Convert imported audio files to the MP3 format.** |
+| **Use original format** | 保持原有音频格式；选项下方说明文字：**Keep imported audio files in their existing format.** |
+
+**「Convert to .mp3」右侧的 ⓘ 已删除（2026-10-20，用户要求）**，理由同上：说明文字已在选项内可见。`#wizFormatConvertInfo` 与 `formatConvertDesc` 字段一并移除。视频路径「Optional settings」下两个勾选项的 ⓘ（Sync future content / Import YouTube Thumbnail）**保留**——它们是独立开关，说明文字放不下，tooltip 仍是合适的形式。
 
 **来源为 Video to Podcast**
 
@@ -594,7 +599,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 **① Content Source = YouTube Playlist**
 
-输出类型（单选，二选一，**有可见组标题**：「What kind of podcast should this become?」）
+输出类型（单选，二选一；**「What kind of podcast should this become?」是该步的大标题，不再另设组标题**，2026-10-20）
 
 | 选项 | 说明 |
 |---|---|
@@ -603,7 +608,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 **选项下面不带 tagline**（2026-10-15 删除）。原先跟组挂在下面、随选择切换的一句说明（音频 → 「Reach a wider audience and attract new listeners by leveraging popular directories such as Apple Podcasts, Spotify, and more.」；视频 → 「Reach viewers as well as listeners…」）被去掉了。理由：两个选项名本身已经说清结果，而在步骤三这个位置——来源、范围、格式都已经定完——再补一句"选音频有什么好处"也影响不了任何决定。这一步的选项一律不带 tagline。
 
-两个互相独立的勾选项（各带 ⓘ 提示），共用一个**轻标题「Options」**：
+两个互相独立的勾选项（各带 ⓘ 提示）。**这一步的标题是「Optional settings」（2026-10-20，用户：「Options 标题改为 Optional 表明用户可以选择或不选择」）——用了名词短语而不是光秃秃的 "Optional"：标题要说这一屏是什么，顺带说明它可跳过；单一个形容词放在标题位置读起来像状态标签。两个勾选默认都不勾，所以"可以不选"这件事由标题、勾选状态和 Import 按钮三者一起说清。**
 
 | 选项 | 默认 | ⓘ 提示文案 |
 |---|---|---|
@@ -616,7 +621,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 > We will retrieve **the latest 10 videos and convert them into MP3** audio format for your podcasts, automatically publishing them。
 
-然后接**与 RSS 路径完全相同的那一组**「What should we bring over?」（Podcast details and episodes / Episodes only），最后是「Options」下的 **Sync future content**。
+然后接**与 RSS 路径完全相同的那一组**「What should we bring over?」（Podcast details and episodes / Episodes only），最后是「Optional settings」下的 **Sync future content**。
 
 - **这一组是和 RSS 路径共用的同一个组，不是复制一份。** 两条路径问的是同一个问题——勾选/不勾选正好对应「Podcast details and episodes」/「Episodes only」。复制还会带来一个真实故障：两组会共用 `name="wizScope"`，浏览器把它们当成同一组，选中一边会清掉另一边。
 - 副作用是选择在两条路径间共享（在 RSS 路径选了 Episodes only，切到 video + RSS 仍是 Episodes only）。这是想要的行为。
@@ -624,10 +629,12 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 **排版规则（三条路径统一，2026-10-15 定稿）**
 
-- 每个组都有**加粗组标题**（15px/600）：互斥选择用问句（What should we bring over? / What audio format should we use? / What kind of podcast should this become?），各自独立的开关用标题「Options」——轻重的差别是刻意想做的，但目前两者其实用的是同一个 `.wiz-choice-legend` 样式，**并未真正做出差别**，待定。
+- **「What should we bring over?」与「What audio format should we use?」不再作为组标题显示——它们就是该步的大标题（2026-10-20，用户：「Import scope，Audio format 不要了，What should we bring over? What audio format should we use? 作为标题」）。** `stepTitle()` 直接返回这两句问句，`#wizScopeLegend` / `#wizFormatLegend` 两个可见的 legend 元素删除；radiogroup 的可访问名改由 `aria-label` 提供同一句问句，避免一个组既无可见标题又无名字。标题行到第一个选项的间距由 `.import-flow-title-row` 的 `margin-bottom: 36px` 提供（实测 36px），与步骤一「标题 → 输入框」同一节奏。
+  - **video + YouTube 路径第 2 步也合并了（2026-10-20，用户：「去掉 Podcast type， What kind of podcast should this become? 作为标题」）**：`stepTitle()` 返回该问句，`#wizTypeLegend` 删除、radiogroup 改用 `aria-label`。到这一步，**所有单选组都不再有自己的可见 legend**——问句一律由步骤标题承担，`.wiz-choice-legend` 目前**没有使用者**（样式保留，将来若要给独立开关加轻标题可以直接用）。
+  - **独立开关**那一组不再有可见的组标题：这一屏的步骤标题就是「Optional settings」（2026-10-20 由「Options」改名），组标题会变成同一句话的第二行；互斥选择同样靠步骤标题发问。
   - 组标题统一**只点出维度（axis）**，由选项去说结果。所以音频/视频这一组问的是 kind（What kind of podcast should this become?），而不是重复选项里的 audio / video——原先的「What should we publish?」正是因为 publish 既不指向 audio 也不指向 video 而被换掉（2026-10-15）。
 - 并排单选组的宽度上限 **760px**（`.wiz-choice-items`），组说明句用同一量度。此前每列被拉到 656px，而标签只有 100–200px，右半页全空。
-- 选项标题维持 14px/400，勾选项标签 14px `--text`；条款行用细线与上方隔开，作为页脚。
+- 选项标题维持 14px/400，勾选项标签 14px `--text`；条款行用细线与上方隔开，作为页脚。**条款文字是正文色 + 500 字重（13px），不是浅灰小字（2026-10-20，用户：「这文字要黑体 因为这个是用户必须同意的」）**——`#wizAgreeLine` 原先写着 `font-size:12.5px; color:var(--text-secondary)`，把它当法务小字处理；既然 Import 按钮必须勾它才能点，它就该读起来像一条要求，而不是脚注。实测改后 `rgb(30,41,59)` / 500 / 13px。
 - **JS 用 `[hidden]` 切换显隐的元素，若自身带 `display`，必须补一条 `[hidden] { display: none }` 守卫**：作者样式会盖过 `[hidden]` 的 UA `display:none`。`.pb-check-line`（`display:flex`）此前就漏了这条，导致 video + RSS 路径上本该隐藏的 **Import YouTube Thumbnail 一直显示**（2026-10-15 修）。
 
 两条提示都只在悬停 / 键盘聚焦时出现。缩略图这一项影响的是**播客与剧集两处 logo**——选项名本身已写明（2026-10-15 从「Import YouTube Thumbnail」改过来），所以 ⓘ 里只留「缩略图可能不适配方形的 logo」这一条提醒。
@@ -637,14 +644,26 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 | 项目 | 说明 |
 |---|---|
 | 条款文案 | 三选一：来源 RSS → "…rights to **this podcast**…"；video + YouTube Playlist → "…rights to **this YouTube Content**…"；video + RSS Feed URL → "…rights to **this content**…"。勾选框必勾，未勾选时点击按钮给该行加红 |
-| 按钮 | 底部**只有前进按钮**：步骤 1 / 2 为 Continue，步骤 3 为 **Start import**。没有 Back 按钮，返回靠点击上一步标题 |
+| 按钮 | 底部**只有前进按钮**：步骤 1 / 2 为 Next，步骤 3 为 **Import**。没有 Back 按钮，返回靠点击上一步标题 |
 | 条款位置 | 在按钮**下方**（2026-10-15 改），与真实产品一致：按钮是选项列表的收尾，条款作为其下的法务行，上面用一条细线隔开。它仍是必勾项——未勾选就点按钮，会在按钮下方的这一行标红提示 |
 
 ### 6.4 导入状态
 
-开始导入后，页面顶部显示导入状态卡片，并在重定向步骤旁重复同一状态：
+开始导入后，页面顶部显示导入状态卡片。**状态与它的操作都在这一张卡片里**（2026-10-20 简化：原先第 1 步旁还有一枚同文案的状态胶囊和 Refresh 按钮，等于同一件事说了三遍——卡片 badge 一次、说明段一次、胶囊再一次；现在只由卡片承载）：
 
-**Video 路径：点 Start import 后直接进入「正在导入」页，没有状态卡片**（2026-10-15 定稿）。视频导入没有 301 重定向，也就不需要「Refresh status / Check redirect」那一套，所以视频路径**不显示** `RSS import / Video import` 那张状态卡片，也不显示重定向区块。它的结果区只有：
+**这张卡的视觉（2026-10-20，用户：「改为 Import in progress 类似的文字……用黄色状态卡。Refresh status 按钮为黑色 醒目」）：**
+
+| 元素 | 处理 |
+|---|---|
+| 底色 | **琥珀 `#fdf7e3`**，8px 圆角，`padding: 20px 24px 22px`——与完成态的琥珀条同一块面料、同一个含义（"还在进行中"），页面因此只有一种"进行中"的黄 |
+| 标题 | **卡内的 `RSS import` 已删除**（2026-10-20，用户：「在 import-saved-head 中 RSS import 这个不要了」）。页面大标题已经是 `Import to Podbean`，卡片再报一次导的是什么只是重复。`#wizResultTitle`、`.wiz-result-title` 与两份 `SOURCES[*].resultTitle` 一并删除 |
+| 状态行 | **状态句与说明段合成一段**：**`Importing your episode info. Depending on how many episodes your feed has, it can take a few minutes. You can leave this page while it works.`**（2026-10-20，用户：「Importing your episode info 文字直接放在 Depending on… 前面」）。原先是一个白底胶囊单独占一行，现在状态句就是这段的第一句，卡片用一段话说清「在做什么 → 要等多久 → 可以离开」。文案沿用三次定稿的 `Importing your episode info`（`Copying episodes…` → `Import in progress` → 这一句） |
+| 文字颜色 | 整段 **`#1e293b`（即 `--text`）**、字重 **400**（2026-10-20，用户：「字体颜色都是用#1e293b」）。说明段原为 `#475569`；现在这段是卡片里唯一的文字，要自己承担状态，所以用正文色而不是灰 |
+| Refresh status | **深色 pill**（36px 高、`var(--text)` 底、白字、50px 圆角），与页面主按钮 `.import-btn` 同款——导入进行中它就是这一屏唯一可做的事，理应是最醒目的控件。**居左**，左边缘与状态行对齐（2026-10-20，用户：「Refresh status 按钮居左放置」） |
+
+
+
+**Video 路径：点 Import 后直接进入「正在导入」页，没有状态卡片**（2026-10-15 定稿）。视频导入没有 301 重定向，也就不需要「Refresh status / Check redirect」那一套，所以视频路径**不显示**「状态行 + Refresh status」那张状态卡片，也不显示重定向区块。它的结果区只有：
 
 | 元素 | 内容 |
 |---|---|
@@ -668,14 +687,14 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
   - **`&& step === 'result'` 这半句不能少**：只写 `isVideo` 会让视频路径在步骤 1–3 上也隐藏标记，用户就点不到步骤标题、无法返回上一步。这是实际写错过一次、被探针当场抓到的。
 
 
-| 状态 | 文案 | 表现 |
+| 状态 | 卡片里显示 | 表现 |
 |---|---|---|
-| 复制中 | `Copying episodes…` | 状态胶囊；Check redirect 保持禁用 |
-| 复制完成 | `Episodes copied` | 状态胶囊；**Check redirect 变为可点击** |
+| 复制中 | 状态行 `Importing your episode info. Depending on…` + 下方**居左**的 **Refresh status**（深色 pill） | Check redirect 保持禁用 |
+| 复制完成 | **整段状态行换成一句 `Set redirect to complete the import.`，Refresh 一起退场**（2026-10-20，用户：「RSS import / Episodes copied 这个不要了，黄色卡片里面显示 Set redirect to complete the import.」；同日「不要加粗」）——此时卡片的任务从「报状态」变成「说下一步」，但这一行**仍是 14px / 400 字重 / `#1e293b`**，与进行中那段同字号同颜色，没有加粗 | **Check redirect 变为可点击** |
 
 | 控件 | 位置 | 说明 |
 |---|---|---|
-| **Refresh status** | 第 1 步「Wait for the import to finish.」旁 | 点击后状态变为 `Episodes copied`（Mockup 中以一次点击代表轮询到完成） |
+| **Refresh status** | 状态卡片内，状态行下方**居左**（2026-10-20 从第 1 步旁移来，同日由右对齐改为居左） | 点击后卡片换成 `Set redirect to complete the import.` 并解锁 Check redirect（Mockup 中以一次点击代表轮询到完成）。它在卡片里，所以视频路径与完成态随卡片一起隐藏，不需要单独判断 |
 | **状态命名原则** | — | 状态文案必须**指明范围**（是「复制完成」而非笼统的「完成」）——因为音频文件要等重定向之后才真正导入，笼统的“完成”会被误解为整件事已经结束 |
 
 > 导入复制完成之前，页面上**不出现任何重新导入的入口**。
@@ -688,7 +707,7 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 | # | 内容 |
 |---|---|
-| 1 | Wait for the import to finish.（旁有状态胶囊与 Refresh status） |
+| 1 | Wait for the import to finish.（**只有这一句**；状态与 Refresh status 在页面顶部的状态卡片里，2026-10-20 起不在这里重复） |
 | 2 | Copy your new Podbean feed URL and set it as the redirect target in your old hosting platform.（下方为新 feed 地址与 Copy 按钮） |
 | 3 | Come back and run the redirect check once your host has applied it. |
 
@@ -722,12 +741,11 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 - 状态卡片在完成态整张隐藏（见下表），小标题的 CSS 类、× 的按钮样式与它的 click 处理器都随之删除。
 - **同一天还短暂加过一行「来源行」（`From <类型> · <地址>`），随后按用户要求删除。** 当时的理由是「只写类型没信息量、地址才让用户确认导的是哪条」，但最终判断是这一屏不需要它：状态条已经说明发生了什么，建议说明负责下一步，来源属于步骤二的输入，不必回述。`#wizDoneSource`、它的 CSS 与 `render()` 里的填充语句都已一并删除。
 
-进入完成态时同时发生三处调整：
+进入完成态时同时发生两处调整：
 
 | 调整 | 原因 |
 |---|---|
-| **隐藏整张状态卡片** | 卡片标题（`RSS import`）与胶囊都随「小标题并入状态条」一起去掉了，卡片会变成空壳。**注意这是双向设置的**：非完成态（导入进行中）卡片仍是运行状态面，显示 `RSS import` + `Copying episodes…`，所以不能只隐藏一次 |
-| **隐藏状态胶囊**（`Episodes copied`） | 同上，状态已由琥珀条承载 |
+| **隐藏整张状态卡片** | 卡内标题与白底胶囊都已在 2026-10-20 删除；复制完成后状态行也只剩一句 `Set redirect to complete the import.`，而完成态的状态面是琥珀条，卡片留下来只是重复。**注意这是双向设置的**：非完成态（导入进行中）卡片仍是运行状态面（状态行 + Refresh status），所以不能只隐藏一次 |
 | **内容与页面标题左对齐**（去掉步骤内容的 36px 缩进） | 完成态不再显示步骤标记，缩进失去对齐对象；导入中的状态保留缩进，因为它对齐的是步骤名 |
 
 **文件导入完成后的状态**（比上一状态更晚一步）：
@@ -742,9 +760,11 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 > **Mockup 入口说明**：侧边栏 Settings 下另有一项 **Import to Podbean (complete)**，直接展示上述「文件导入完成后」的页面状态——仅为便于评审，**不属于最终产品的菜单项**。
 
-> **第二个 Mockup 入口：导入状态说明**（2026-10-15）。侧边栏 Settings 下新增一项同名条目，把导入相关的**四种状态**并排放在一页上供对照，方便评审。同样是 **mockup 专用、不属于最终产品的菜单项**。四种状态：① RSS 正在导入（流内完成态）② YouTube Playlist 正在导入 ③ video + RSS Feed URL 正在导入 ④ 已完成（文件全部导完）。实现要点：
+> **第二个 Mockup 入口：导入状态说明**（2026-10-15；2026-10-20 由四种状态扩到**六种**）。侧边栏 Settings 下新增一项同名条目，把导入相关的**每一种状态**并排放在一页上供对照，方便评审。同样是 **mockup 专用、不属于最终产品的菜单项**。六种状态，按流程顺序：① **RSS 导入中（正在导入剧集信息）**——按钮点下去之后的那一屏，含状态卡片与重定向三步 ② **RSS 剧集已复制（等待设置重定向）**——同一张卡片的下一态：状态行换成一句 `Set redirect to complete the import.`、Refresh 退场、Check redirect 解锁 ③ RSS 重定向已生效（流内完成态）④ YouTube Playlist 正在导入 ⑤ video + RSS Feed URL 正在导入 ⑥ 已完成（文件全部导完）。**没有收录的两项**：重定向校验失败的弹框（它是弹框、不是一屏，且只会盖在某屏之上）与各套餐门槛（免费账号升级拦截、Unlimited Audio 的 video 限制）——它们属于入口/校验，不是导入过程中的状态。实现要点：
 > - 四张卡片（`.state-card` / `.state-tag`）各自复刻一屏的**整个内容区**，含四屏共用的页面大标题与 tagline（用户要求完整复刻）。
-> - **卡片内容由脚本从真实区块克隆而来**（`#importPageHead`、`#wizResultDone`、`#wizResultVideo`、`#page-import-complete .wiz-done`），不是手抄的 markup——这一页被改了十几次的文案很容易手抄过期，克隆让它在结构上不可能过期。
+> - **卡片内容由脚本从真实区块克隆而来**（`#importPageHead`、`#wizPanelResult .import-saved` + `#wizResultNext`（导入中 **与** 已复制两张卡共用 `statusCardClone()`）、`#wizResultDone`、`#wizResultVideo`、`#page-import-complete .wiz-done`），不是手抄的 markup——这一页被改了十几次的文案很容易手抄过期，克隆让它在结构上不可能过期。
+>   - **「已复制」那张卡是把状态"施加"到克隆体上，而不是克隆一个状态**：加载时真实区块还停在复制中，所以克隆后加 `.is-complete`、把状态行整句换成 `data-done` 的文案、隐藏 Refresh 行、解锁 Check redirect；唯一那句文案从 `#wizResultNote` 的 `data-done` 属性读——**属性会被 `cloneNode` 带过去**，所以句子仍然只有一份（写在这个属性里），JS 也只是读它。整句替换同时带走克隆体里的状态句，所以不需要再单独隐藏任何标题或胶囊（head 已在 2026-10-20 删除）。
+>   - **导入中那张卡能克隆，是因为那一屏的初始文案本来就写在 markup 里**：`#wizResultNote` 的 `Importing your episode info. Depending on…` 整段都不只由 JS 写入（`setImportState()` 只负责在两种状态间切换整段文字）。克隆发生在页面初始化时，此时还没有任何导入跑过，写在 JS 里的文案就克隆不到——这是 2026-10-20 加卡时踩到的前提。复制完成后的那句 `Set redirect to complete the import.` 相反，它**只**存在于 `data-done` 属性里，因为没有任何卡片要克隆那一屏。
 > - 两张 video 卡片共用 `fillVideoCard(card, sourceText, hasThumbnail)`：写入「已连接内容源」的示例值（YouTube 用播放列表名、video RSS 用 feed 地址），并在 `hasThumbnail === false` 时隐藏缩略图那一行——**按 `[data-mirrors="wizThumb"]` 选，不能用 id**，因为 `cloneInto` 会把所有 id 剥掉。
 > - 克隆时会**剥掉所有 `id` 与 `aria-controls`**：重复 id 会让 `getElementById` 指到克隆体上，把真实页面的连线弄坏。折叠行与开关分别复用 `wireCollapsible(toggle, panel)` 和 `wireSwitch(el)`——**这两个都必须做成可复用的函数**，因为克隆体是在页面初始化之后才生成的，`querySelectorAll(...)` 那一轮永远够不到它们。
 > - **这个 `.page-section` 必须是 `.content` 的子元素**，不能是它的兄弟——放进 `</div>` 之后会拿到错误的列宽（`x230..1737` 而正确值为 `x352..1616`）。验证方式是对同一个元素做**差分测量**：把已知正确页面激活后量一次，再量新页面，两者必须一致。
@@ -753,41 +773,51 @@ video 的步骤三还要再按步骤二所选的 **Content Source** 分成两种
 
 ### 6.7 免费账号（Free plan）：不能开始导入
 
-> **Mockup 入口**：侧边栏 Settings 下新增一项 **Import to Podbean (free)**，展示**免费账号**走到步骤三时的状态。与 Import to Podbean (complete)、导入状态说明 一样，**仅用于评审，不属于最终产品的菜单项**。
+> **Mockup 入口**：侧边栏 Settings 下的 **Import to Podbean (free)**，展示免费账号点击导入来源时被**入口拦截**的状态。与 Import to Podbean (complete)、导入状态说明 一样，**仅用于评审，不属于最终产品的菜单项**。
 
-**实现方式：同一个向导 + 一个模式开关。** 本页的三步向导只有**一份** markup 和**一份** JS（`initImportWizard`），免费版不是第二份拷贝：
+**实现方式：同一个向导 + 一个模式开关，开关只作用于入口。** 免费版不是第二份拷贝：
 
-- 侧边栏那条 `data-page="import-free"` 经 `PAGE_SECTION_ALIAS = { 'import-free': 'import-to-podbean' }` 解析到**同一个 `.page-section`**；`switchPage()` 仅当目标 section 是它时调用 `window.setImportMode(page === 'import-free')`。
-- **为什么不做第二份**：三步向导的 markup 加 IIFE 有几百行且 id 密集，本文件既无 git 也无备份，两份拷贝第一次只改一侧就开始漂移——而且免费版的步骤一/步骤二本来就必须和付费版逐像素一致。
-- `setImportMode` 只做两件事：改 `freeMode`、`render()`。**它不重置向导**——已做的选择全部保留，于是在两条菜单之间来回点就是对比同一步在两种模式下差异的最快方式（有意为之，不是副作用）。
+- 侧边栏 `data-page="import-free"` 经 `PAGE_SECTION_ALIAS = { 'import-free': 'import-to-podbean' }` 解析到**同一个 `.page-section`**；`switchPage()` 仅当目标 section 是它时按 `IMPORT_PLAN_BY_PAGE` 映射调用 `window.setImportMode('free')`（同一张表里 `'import-audio' → 'audio'`，其余入口 → `'paid'`）。
+- **为什么不做第二份**：三步向导的 markup 加 IIFE 有几百行且 id 密集，本文件既无 git 也无备份，两份拷贝第一次只改一侧就开始漂移。
+- `setImportMode(mode)` 接收 `'paid' | 'audio' | 'free'`：切换菜单时关闭不属于当前模式的弹框；若向导正开着，切到 `free` 会直接关掉，切到 `audio` / `paid` 则重新 `render()`，让步骤二的套餐限制立刻出现或消失。
 
-**差异只出现在步骤三（Review and start）**；步骤一、步骤二与付费版完全一致（参考图里免费账号同样能选来源、填地址，限制落在"开始"这一步）。
+**门槛在来源条目上（2026-10-20 改版）。** `#importSourcePicker` 的两个按钮在 `freeMode` 下不再调用 `openImportFlow`，而是先打开 `#importUpgradeModal`：
 
-| 免费版步骤三 | 付费版 |
+| 点击的条目 | 结果（免费账号） |
 |---|---|
-| `Start import` 按钮**隐藏** | 显示 |
-| 原按钮的位置改为升级 CTA，右侧跟一句 `Enjoy a 14-day free trial!` | 无 |
-| Terms of Service 勾选行**隐藏** | 显示 |
-| 选项（bring over / audio format / 音视频输出 / Options）**照常可交互** | 一致 |
+| `RSS Feed URL` | 弹升级弹框，正文点名 **Unlimited Audio** |
+| `Video to Podcast` | 弹升级弹框，正文点名 **Unlimited Audio** 与 **Unlimited Plus** |
+| 任意条目（paid / audio 账号） | 直接进入三步向导，行为不变 |
 
-- **升级按钮的文案取决于选项**，派生自当前选择而不是存一份副本（`upgradePlanLabel()` 读的是当前来源 + `input[name="wizOutput"][value="video"]:checked`）：
+- **视频来源为什么同时点名两个套餐**：输出类型（音频 / 视频播客）要到向导步骤二才选，入口处无法只给一个答案；视频 RSS 一定转 MP3，只有「发布为视频播客」需要 Unlimited Plus。
+- **弹框复用 `.modal-confirm` 轻量确认壳**（`#importUpgradeModal`）：标题 `Upgrade to import to Podbean`，正文按来源切换，正文下方是一枚 `Enjoy a 14-day free trial` 的激励胶囊（`.upgrade-trial`，薄荷绿底 `#d1fae5` / 文字 `#065f46`，50px 圆角，前面一个太阳图标；**不要用黄色**——黄色在这一页读起来像警告）——它是"为什么现在升级"的理由，所以做成独立对象，而不是正文的第三行。按钮左 `Not now`、右 `See upgrade plans`（深色 pill）。这个弹框单独放宽到 500px 并让按钮宽度自适应——共享壳的 420px / 102px 会把 `See upgrade plans` 挤成两行。
+- **动作**：`Not now`、遮罩、Esc 都只关闭；`See upgrade plans` 关闭后弹 toast `Opening upgrade plans…`（本 mockup 没有计费流程，不假装跳转）。关闭后焦点回到触发的那一行来源，与其他弹框的焦点规则一致。
+- **旧实现已删除**：免费账号曾经可以走完步骤一、二，直到步骤三才看到升级 CTA（`#wizFreeActions`、`Enjoy a 14-day free trial!`、`upgradePlanLabel()`、条款行隐藏、`wizOutput` 监听、`if (freeMode) return`）。用户要先填完 URL 或搜索频道才知道自己不能用；现在点击即告知，也直接说明需要哪个套餐。**向导在两种模式下完全一致，免费模式走不到步骤一。**
 
-| 路径 | 输出 | CTA 文案 |
-|---|---|---|
-| RSS Feed URL | 音频 | `Upgrade to Unlimited Audio Plan for Imports` |
-| Video + YouTube Playlist，选 `Convert to Audio Podcasts` | 音频 | `Upgrade to Unlimited Audio Plan for Imports` |
-| Video + YouTube Playlist，选 `Convert to Video Podcasts` | 视频 | `Upgrade to Unlimited Plus Plan for Imports` |
-| Video + RSS Feed URL | 音频（强制转 MP3，用户没有选择） | `Upgrade to Unlimited Audio Plan for Imports` |
+**验证方式**：探针分别点击两个来源 ×（付费 / 免费）：付费进入向导步骤一，免费弹出升级弹框且向导未打开；断言正文包含对应套餐、`Not now` / 遮罩 / Esc 均关闭并归还焦点、`See upgrade plans` 弹 toast 并关闭；切回付费菜单后来源点击恢复、升级弹框不会残留；外加 `window errors = none`、无重复 id、无横向溢出。可见性断言用 `getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0`——`.modal-overlay` 是 `position: fixed`，`offsetParent` 恒为 `null`，不能用来判断它是否可见。
 
-  - 因此 `Convert to Audio Podcasts / Convert to Video Podcasts` 这一组**必须在切换时刷新 CTA 文案**——页面上没有别的东西监听这组 radio，不刷新的话文案会停在上一次选择对应的方案。
-  - 四条路径里只有"视频播客"需要 Plus：视频 RSS 一定转 MP3，所以它不是例外。
+---
 
-- **CTA 放在 `#wizNav` 内部**，而不是另外追加在面板末尾。`render()` 把 `nav` 移动到当前步骤 body 的末尾，把 CTA 放进同一个 nav，它自然落在 `Start import` 原来的位置，不必再维护一套 append 顺序（这正是条款行排在按钮后面需要的那套顺序）。
-- **条款行随按钮一起隐藏**：它授权的是"点击 Start import"，没有按钮就没有授权对象，参考图的免费流程里也没有这一行。`.pb-check-line[hidden]` 的 `display:none` 守卫早就在，所以隐藏是真隐藏。
-- 升级按钮点击后**只弹 toast** `Opening upgrade plans…`：本 mockup 没有计费流程，与其假装跳转，不如说明它要去哪。**它不会开始导入**——`#wizNext` 的 step 3 分支开头有 `if (freeMode) return;`（按钮已隐藏，这条是兜底，与 YouTube 搜索那条同类）。因此免费版**永远到不了导入中 / 完成态**，步骤三之后没有出路。
-- **两条菜单在步骤三之前长得一模一样**（页头也没有 Free 标识）——这是评审时的选择：限制只落在"开始"这一步，不做提前劝退。若要一眼分辨当前模式，最小的改法是在页头标题旁加一个 `Free plan` chip（`#importPageHead` 一直被渲染，见 6.0）。
+### 6.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus
 
-**验证方式**：探针跑通全部四条路径 ×（付费 / 免费），断言 CTA 文案、试用文案、`Start import` 与条款行的可见性、两者不会同时出现、升级点击弹 toast 且不进入导入、切回付费菜单后按钮与条款行复原、免费模式下步骤一/二仍只有一个 Continue 按钮，外加 `window errors = none`、无重复 id、无横向溢出。可见性一律用 `offsetParent` 断言，**不读 `hidden` 属性**——作者样式会盖掉 `[hidden]`，本文件已经因为这个漏掉过一次真实缺陷。
+> **Mockup 入口**：侧边栏 Settings 下的 **Import to Podbean (audio)**，位于 Import to Podbean 与 (free) 之间。与 (free) 一样，它解析到同一个 `.page-section`，只切换套餐模式（`planMode = 'audio'`），**仅用于评审**。
+
+**能力边界**：Unlimited Audio 可以导入 RSS 与视频，但只能发布为**音频**播客。
+
+| 入口 | audio 账号行为 |
+|---|---|
+| `RSS Feed URL` | 正常进入三步向导，全流程可用 |
+| `Video to Podcast` → YouTube → `Convert to Audio Podcasts` | 正常继续到步骤三 |
+| `Video to Podcast` → YouTube → `Convert to Video Podcasts` | 步骤二出现升级提示，右下角 `Next` **禁用** |
+| `Video to Podcast` → RSS Feed URL | 不受影响（视频 RSS 一律转 MP3，输出本来就是音频） |
+
+- **步骤二的提示**：`#wizPlanNote` 紧跟在两张输出卡片下面，文案 `Converting to a video podcast needs Unlimited Plus.` + 文字链接 `See upgrade plans`（`.wiz-plan-link`）；琥珀底色沿用"需要注意"的语义。
+- **禁用而不是隐藏**：`#importFlowNext` 保留原位，`disabled` + `opacity: .45`（`.import-flow-footer .save-btn:disabled`）。把它藏起来会让页脚整体左移，读起来像页脚坏了。
+- **`applyPlanGate()` 是唯一的状态派生**：`planMode === 'audio' && step === 2 && key === 'video' && videoSrc === 'youtube' && wizOutput=video` 同时决定提示条的 `hidden` 和按钮的 `disabled`，并在每次 `render()` 里跑一次，所以退回步骤一、换来源、切回音频都会立刻解除。
+- **链接打开同一个升级弹框**（`openUpgradePrompt('plus', link)`），正文换成 `plus` 条目：`Converting to a video podcast needs Unlimited Plus. Unlimited Audio publishes imported videos as audio.`；关闭后焦点回到这条链接。
+- **`planMode` 取代了原来的 `freeMode` 布尔值**（`'paid' | 'audio' | 'free'`）：来源条的点击门槛只在 `'free'` 生效；`setImportMode` 在两种模式间切换时会让开着的向导重新渲染，或直接关闭它。
+
+**验证方式**：探针跑 `audio` 模式下 RSS 全流程、YouTube 默认音频继续到步骤三、切到视频输出后提示条出现且 `Next.disabled === true`、再切回音频后两者复原、视频 RSS 不受影响、链接弹框文案与焦点归还；再跑 `paid` 下同样的视频输出不受限制、`free` 下两个来源仍被入口拦截；外加 `window errors = none`、无重复 id、无横向溢出。
 
 ---
 
