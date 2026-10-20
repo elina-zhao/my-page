@@ -279,7 +279,9 @@
     }
 
     .page-heading-title {
-      font-size: 28px;
+      /* 32px across every page (2026-10-20). The review view's cloned cards keep
+         their own 24px rule below — they are scaled-down replicas inside a card. */
+      font-size: 32px;
       font-weight: 700;
       color: var(--text);
       margin-bottom: 4px;
@@ -391,13 +393,13 @@
 
     .cc-item-label {
       display: block;
-      font-size: 14px;
-      /* Field labels read as labels, not captions: 500 weight, full text colour
+      font-size: 15px;
+      /* Field labels read as labels, not captions: 600 weight, full text colour
          (2026-10-20). The old #999 at 400 was 2.85:1 on white — below AA and
          reported as too faint on Podcast Title / Brief Description; the user
-         then asked for black outright. Values stay 400, so weight carries the
-         label/value split. */
-      font-weight: 500;
+         then asked for black outright, then for 15px / 600. Input values stay
+         14px / 400, so weight and size carry the label/value split. */
+      font-weight: 600;
       color: var(--text);
       margin-bottom: 6px;
     }
