@@ -233,7 +233,9 @@
       padding-bottom: 0;
     }
     .sidebar-nav .sub-menu a {
-      font-size: 14px;
+      /* 16px to match the top-level items — the whole left menu is one size
+         (2026-10-20). */
+      font-size: 16px;
       padding: 7px 14px;
       border-radius: 50px;
       color: rgb(102, 102, 102);
@@ -325,7 +327,11 @@
     }
     .pb-tab {
       padding: 12px 0;
-      font-size: 14px;
+      /* Buttons do not inherit the page font, so without this the 500 weight is
+         rendered by the UA's default face (no medium cut) and reads as regular
+         — the tabs looked lighter than the rest of the page at 18px. */
+      font-family: inherit;
+      font-size: 18px;
       font-weight: 500;
       color: #999;
       background: none;
@@ -435,7 +441,7 @@
 
     .tips {
       display: block;
-      font-size: 12px;
+      font-size: 14px;
       color: #999;
       margin-top: 6px;
       line-height: 1.5;
@@ -523,14 +529,14 @@
     .pb-cat-add:hover { border-bottom-color: var(--text); color: var(--text); }
 
     .pb-note {
-      font-size: 12px;
+      font-size: 14px;
       color: #999;
       margin-top: 6px;
       line-height: 1.5;
     }
     .pb-note a { color: var(--text); text-decoration: underline; }
     .pb-logo-hints {
-      font-size: 12px;
+      font-size: 14px;
       color: #999;
       margin-top: 6px;
       line-height: 1.5;
@@ -791,7 +797,7 @@
       border-width: 0 2px 2px 0;
       transform: rotate(45deg) translate(-1px, -1px);
     }
-    .pb-multi-empty { padding: 12px; font-size: 13px; color: #999; }
+    .pb-multi-empty { padding: 12px; font-size: 14px; color: #999; }
 
     .pb-vs.is-error { border-bottom-color: #dc2626; }
 
@@ -905,7 +911,7 @@
     /* Warning helper text */
     .pb-warning {
       display: block;
-      font-size: 12px;
+      font-size: 14px;
       color: #b45309;
       margin-top: 6px;
       line-height: 1.5;
@@ -989,7 +995,7 @@
       flex: 1;
     }
     .number-input-hint {
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text-tertiary);
     }
 
@@ -1025,7 +1031,7 @@
       margin-bottom: 0;
     }
     .toggle-desc {
-      font-size: 12px;
+      font-size: 14px;
       color: #999;
       margin: 0;
       line-height: 1.5;
@@ -1167,7 +1173,7 @@
       margin-bottom: 2px;
     }
     .plugin-item-desc {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-tertiary);
       line-height: 1.5;
       margin: 0;
@@ -1294,7 +1300,7 @@
     }
     .import-source-desc {
       display: block;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-tertiary);
       line-height: 1.5;
       margin-top: 3px;
@@ -1304,7 +1310,7 @@
     .import-pick-error {
       display: none;
       color: #dc2626;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.4;
       margin-top: 12px;
     }
@@ -1380,7 +1386,7 @@
     .import-input:focus { border-bottom-color: var(--text); }
     .import-input.is-error { border-bottom-color: #dc2626; }
     .import-example {
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text-tertiary);
       line-height: 1.5;
       margin-top: 8px;
@@ -1614,7 +1620,7 @@
       padding: 10px 12px;
       background: var(--text);
       color: #fff;
-      font-size: 12.5px;
+      font-size: 14px;
       font-weight: 400;
       line-height: 1.5;
       border-radius: 8px;
@@ -1747,7 +1753,7 @@
        reads as a table inside the 560px modal column. */
     .import-flow-panel .wiz-dd-row { display: block; margin-bottom: 26px; }
     .import-flow-panel .wiz-dd-row .import-field-label { margin-bottom: 6px; }
-    .import-flow-panel .import-example { font-size: 12.5px; margin-top: 10px; }
+    .import-flow-panel .import-example { font-size: 14px; margin-top: 10px; }
     /* A hint that states what the import will do (rather than what to type) is
        body copy, not fine print: it takes the text colour while the "Example:"
        lines keep the grey. */
@@ -1797,7 +1803,7 @@
       padding: 12px 16px;
       border-radius: 6px;
       background: #fdf7e3;
-      font-size: 13.5px;
+      font-size: 14px;
       line-height: 1.6;
       color: var(--text);
     }
@@ -1833,7 +1839,7 @@
     /* Not fine print: this is the agreement the Import button requires, so it
        reads in body colour and medium weight rather than as grey small text. */
     #wizAgreeLine {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text);
       font-weight: 500;
       line-height: 1.6;
@@ -1938,7 +1944,7 @@
     /* The gate on the redirect: darker than the fine print below it, because
        getting this order wrong breaks the subscriber hand-off. */
     .wiz-next-lead {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text);
       line-height: 1.6;
       margin: 0 0 20px;
@@ -1947,7 +1953,7 @@
     /* Only shown when the user asked for .mp3 — the conversion is triggered by
        the redirect, so it belongs beside the redirect, not in step 3 alone */
     .wiz-next-note {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-secondary);
       line-height: 1.6;
       margin: 0;
@@ -2179,7 +2185,7 @@
     .cp-choice-desc {
       display: block;
       margin-top: 4px;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.5;
       color: var(--text-secondary);
     }
@@ -2228,7 +2234,7 @@
     .db-select-btn:hover { background: #f5f5f5; border-color: #b8b8b8; }
     .db-select-btn svg { flex-shrink: 0; }
     .db-import-hint {
-      font-size: 13px;
+      font-size: 14px;
       color: #999;
       margin: 12px 0 0;
     }
@@ -2333,7 +2339,7 @@
       align-items: center;
       gap: 8px;
       margin-top: 16px;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-tertiary);
       line-height: 1.5;
       flex-shrink: 0;
@@ -2794,7 +2800,7 @@
     .channel-empty {
       padding: 28px 20px;
       text-align: center;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-secondary);
     }
 
@@ -2970,7 +2976,7 @@
     }
     .feature-card-desc {
       margin: 5px 0 0;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.5;
       color: var(--text-secondary);
     }
@@ -3060,7 +3066,7 @@
        ============================== */
     .pb-field-error {
       color: #dc2626;
-      font-size: 13px;
+      font-size: 14px;
       margin-top: 4px;
       line-height: 1.4;
       display: none;
@@ -3090,6 +3096,12 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    /* Helper copy at 14px can orphan a word on its last line (e.g. the Feed
+       toggles' long sentences). `pretty` lets the browser rebalance the break;
+       browsers without it simply ignore the declaration. (2026-10-20) */
+    .pb-note, .pb-logo-hints, .pb-warning, .tips, .toggle-desc, .number-input-hint,
+    .pb-multi-empty, .plugin-item-desc, .import-source-desc, .cp-choice-desc,
+    .feature-card-desc, .endnote-scope-note { text-wrap: pretty; }
   </style>
 </head>
 <body>
