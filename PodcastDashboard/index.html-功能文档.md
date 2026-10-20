@@ -6,6 +6,8 @@
 
 ---
 
+> ⚠️ **请注意**：本功能文档根据当前版本整理，可能存在遗漏或理解偏差。如与线上实际表现不一致，请再次确认。
+
 ## 1. 项目概述
 
 `index.html` 是播客创作者后台仪表板。侧边栏共四个页面，其中三个是同一套数据面板的不同状态：
@@ -83,53 +85,48 @@
 | 页面 | 卡片内容 |
 |---|---|
 | Dashboard | 评论列表：头像、作者、评论正文（最多 2 行）、关联单集与时间；右上角 "View more →" 进入评论详情 |
-| Dashboard (v2) | 空状态：灰色对话框图标 + "No comments" + "Commenting is turned off for your account."，没有按钮或链接 |
+| Dashboard (v2) | 用户关闭评论功能时的空状态：灰色对话框图标 + "No comments" + "Commenting is turned off for your account."，没有按钮或链接 |
 | Dashboard (v3) | 空状态：灰色对话框图标 + "No comments yet" + "Your latest comments will show up here." |
 
 两个空状态在卡片内垂直居中。
 
 ### 2.6 播客资源（Podcast Resources）
 
-Dashboard 与 Dashboard (v2) 页面底部各有一组资源卡片，为创作者提供教程入口，两列布局：
+Dashboard 与 Dashboard (v2) 页面底部各有一组资源卡片，为创作者提供教程入口，两列布局。
 
-| 分类 | 标题 |
-|---|---|
-| Guide | How to Start a Podcast in 2026: The Complete Guide |
-| Strategy | Podcast SEO: How to Get Your Show Discovered |
+该内容块为新增内容块，卡片中的文章目前为占位内容，需要 BO 提供相应功能后进行配置和替换。
 
-每张卡片为上图下文结构：顶部 16:9 配图，下方标题；整张卡片可点击（当前为占位链接）。
+每张卡片均为上图下文结构，整张卡片可点击（当前为占位链接）。
 
 ### 2.7 引导流程（Onboarding）
 
-面向新用户的"开播三步"引导：
+面向新用户的引导页，页面标题为 **"Get your podcast ready"**，副标题为 "Complete the key steps to publish, distribute, and grow your show."。
 
-| 步骤 | 标题 | 操作 |
-|---|---|---|
-| 1 | Create your podcast（创建播客） | "Get Started" 按钮，进入 Dashboard；卡片内附"导入已有播客到 Podbean"链接 |
-| 2 | Publish your first episode（发布首个单集） | "Create Episode" 按钮 |
-| 3 | Submit to podcast platforms（提交分发平台） | "Start Distribution" 按钮 |
+**步骤视图**
 
-**进度与状态**
+| 步骤 | 标题与说明 | 按钮 | 点击后进入 |
+|---|---|---|---|
+| 1 | **Set up your podcast** — Set up your podcast profile and basic information. | Setup | Settings > Podcast Info 页面 |
+| 2 | **Publish your first episode** — Upload your first episode and make your show live. | Publish | Episodes 页面 |
+| 3 | **Submit to podcast platforms** — Reach listeners on Spotify, Apple Podcasts, and more. | Submit | Distribution > Podcast Apps 页面 |
 
-- 页面不显示进度条，完成情况只通过三步各自的圆圈体现。
-- 圆圈是状态指示器，本身不可点击；用户需通过该步骤的按钮完成操作，完成后圆圈变为绿色对勾。
-- 已完成的步骤：标题划线变灰、圆圈变绿、操作按钮变为禁用状态。
+- 第 1 步卡片内附 "Already have a show? Import existing podcast to Podbean" 链接，点击进入 Import to Podbean 页面。
+- 点击各步骤的按钮会完成该步骤，并进入上表对应的页面。
+- 页面不显示进度条，完成情况由三步各自的圆圈状态表示（未完成 / 已完成），圆圈本身不可点击。
+- 用户通过该步骤的按钮完成操作，完成后圆圈状态随之更新。
+- 未完成与已完成步骤的标题、圆圈和按钮样式见设计稿。
 - 底部 "Skip the Guide →" 可跳过引导，直接进入 Dashboard。
 - 提示文案 "You will see your podcast statistics here after you get a few downloads." 与 "Getting started resources" 资源区都位于步骤视图内，切换到数据视图时一并隐藏。
+- "Getting started resources" 资源区需要 BO 新增相应功能来配置内容。
 
 **数据视图**
 
-已产生下载数据后，引导页切换为数据视图，包含与 Dashboard 相同的统计卡片、下载趋势图和单集表现表。
+已产生下载数据后，引导页切换为数据视图。
+
+具体达到多少下载数据才会切换为数据视图，需要由开发确认。
 
 ---
 
 ## 3. 响应式设计
 
-页面在 4 个断点下自适应：
-
-| 断点 | 调整内容 |
-|---|---|
-| ≤1200px | 成就与最近评论由左右并排改为上下堆叠 |
-| ≤1024px | 统计卡片由 4 列改为 2 列；内容与顶栏边距缩小 |
-| ≤768px | 统计卡片保持 2 列；资源网格改为 1 列；引导条目改为纵向排列；侧边栏收起为抽屉，由顶栏汉堡按钮唤出，并带半透明遮罩 |
-| ≤480px | 统计卡片改为 1 列 |
+页面需适配不同屏幕尺寸，在各类设备上保持布局完整、内容清晰可读。
