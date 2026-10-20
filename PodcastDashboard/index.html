@@ -236,10 +236,10 @@
   .panel-empty-title { font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px; }
   .panel-empty-text { font-size:13px;color:var(--text-secondary);line-height:1.55;max-width:340px; }
 
-  /* 4 achievement slots: one row per badge family (earned on top, target below) */
+  /* 2 achievement slots: one per badge family (earned = lit, missing = grey target) */
   .badge-tiles { display:flex;gap:10px;margin-bottom:6px; }
   .badge-tile {
-    flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;
+    flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
     padding:12px 8px;background:#f8fafc;border-radius:10px;text-align:center;
   }
   .badge-tile-icon {
@@ -247,7 +247,6 @@
     display:flex;align-items:center;justify-content:center;
   }
   .badge-tile-name { font-size:12px;font-weight:600;color:var(--text);line-height:1.25; }
-  .badge-tile-meta { font-size:11px;color:var(--text-tertiary); }
   .badge-tile.selectable { cursor:pointer; }
   .badge-tile.selectable:hover { background:#eef2f7; }
   .badge-tile.selected { background:#fff; box-shadow:inset 0 0 0 2px var(--primary); }
@@ -256,7 +255,6 @@
      and both families' badges are the same width */
   .ach-hero .ach-art { width:414px; height:130px; flex-shrink:0; display:block; }
   .ach-hero img.ach-art { object-fit:contain; object-position:left center; }
-  .badge-tile.locked .badge-tile-meta { color:#cbd5e1; }
 
   .dash-chart-wrap { position:relative;height:260px; }
   .dash-chart-wrap canvas { width:100% !important;height:100% !important; }
@@ -1404,25 +1402,15 @@
      Episodes" PNG, so any other badge is drawn from the inline SVG template below, which
      mimics it. Swap in real files there and the template stops being used.           */
   var BADGE_DATA = {
-    publishing: {
-      label: 'Episodes',
-      thresholds: [1, 5, 10, 25, 50],
-      current: 10,                                      // episodes published
-      unlocked: { 1: 'Dec 2025', 5: 'Jan 2026', 10: 'Mar 2026' }
-    },
-    downloads: {
-      label: 'Downloads',
-      thresholds: [100, 1000, 10000, 100000],
-      current: 3240,                                    // cumulative downloads
-      unlocked: { 100: 'Jan 2026', 1000: 'Feb 2026' }
-    }
+    publishing: { label: 'Episodes',  thresholds: [1, 5, 10, 25, 50], current: 10 },   // episodes published
+    downloads:  { label: 'Downloads', thresholds: [1000, 10000, 100000], current: 3240 }  // cumulative; smallest badge is 1K
   };
 
   /* Same shape, nothing unlocked — the state a brand-new podcast is in. Dashboard (v3)
      renders from this so the empty state can be reviewed without changing the others. */
   var BADGE_DATA_EMPTY = {
-    publishing: { label: 'Episodes',  thresholds: [1, 5, 10, 25, 50], current: 0, unlocked: {} },
-    downloads:  { label: 'Downloads', thresholds: [100, 1000, 10000, 100000], current: 0, unlocked: {} }
+    publishing: { label: 'Episodes',  thresholds: [1, 5, 10, 25, 50], current: 0 },
+    downloads:  { label: 'Downloads', thresholds: [1000, 10000, 100000], current: 0 }
   };
 
   /* which page renders which data */
@@ -1561,13 +1549,13 @@
     var c = lit ? BADGE_TILE_COLORS[family] : BADGE_TILE_COLORS.locked;
     var classes = 'badge-tile' + (lit ? ' selectable' : ' locked') + (selected ? ' selected' : '');
     var click = lit ? ' onclick="selectBadge(\'' + heroId + '\', \'' + family + '\', ' + n + ')"' : '';
-    var meta = lit ? (data[family].unlocked[n] || '') : data[family].current.toLocaleString('en-US') + ' / ' + n.toLocaleString('en-US');
+    /* slots show the badge name only — no unlock date, and no current / target
+       progress on the grey ones (removed 2026-10-20; the tiers are on the full page) */
     return '<div class="' + classes + '"' + click + '>' +
              '<div class="badge-tile-icon" style="background:' + c.background + ';color:' + c.color + ';">' +
                BADGE_ICONS[family] +
              '</div>' +
              '<span class="badge-tile-name">' + badgeName(family, n) + '</span>' +
-             '<span class="badge-tile-meta">' + meta + '</span>' +
            '</div>';
   }
 
@@ -1602,7 +1590,7 @@
                '</div>' +
                '<div>' +
                  '<div class="ach-empty-title">No badges yet</div>' +
-                 '<div class="ach-empty-desc">Publish your first episode to unlock your first badge.</div>' +
+                 '<div class="ach-empty-desc">Your latest badge will show up here.</div>' +
                '</div>' +
              '</div>';
     }
