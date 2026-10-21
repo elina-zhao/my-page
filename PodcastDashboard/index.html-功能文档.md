@@ -20,7 +20,7 @@
 | Dashboard            | 数据总览基准页：统计卡片、下载趋势图、单集表现表、成就、最近评论、播客资源                      |
 | Dashboard (v2)       | 与 Dashboard 布局一致；评论卡片为空状态（账号已关闭评论功能）                       |
 | Dashboard (v3)       | 与 Dashboard 布局一致，整页演示全新播客：数据全为 0、徽章为空、没有评论                 |
-| Dashboard (free)     | 与 Dashboard 布局一致；免费版状态，单集表现表被遮罩锁定，显示 "Upgrade to unlock" 按钮   |
+| Dashboard (free)     | 与 Dashboard 布局一致；免费版状态，单集表现表与成就卡片均被遮罩锁定，显示 "Upgrade to unlock" 按钮 |
 
 三个引导页结构相同，都使用同一套步骤清单卡片，差异只在步骤内容；四个 Dashboard 页面结构相同，差异只在数据状态、单集表现表是否锁定，以及评论卡片的内容。
 
@@ -51,7 +51,7 @@
 
 全新播客状态（Dashboard (v3)）下没有单集，表格位置显示空状态（图标 + "No data found."），并隐藏 "View more →"。
 
-免费版状态（Dashboard (free)）下，该表为付费功能，整块被遮罩锁定：表格保留原有结构但模糊、淡化且不可交互，遮罩中央显示锁图标、一行升级说明（深色文字）与 **Upgrade to unlock** 按钮。遮罩下的行是占位数据，并非创作者的真实单集；该状态下不显示 "View more →"。
+免费版状态（Dashboard (free)）下，该表为付费功能，整块被遮罩锁定：表格保留原有结构但模糊、淡化且不可交互，遮罩中央显示锁图标、一行深色升级说明 —— "Upgrade your plan to see how every episode performs in its first week and first month." —— 以及 **Upgrade to unlock** 按钮。遮罩下的行是占位数据，并非创作者的真实单集；该状态下不显示 "View more →"。
 
 ### 2.4 成就系统（Achievements）
 
@@ -59,7 +59,7 @@
 
 **两个徽章家族**
 
-徽章分为发布类和下载类两个家族，按照实际 Badge 阶梯进行展示：发布类为 1 / 5 / 10 / 25 / 50 集，下载类从 **1K** 起（1K / 10K / 100K 下载），没有更低的下载门槛。
+徽章分为发布类和下载类两个家族，按照实际 Badge 阶梯进行展示。
 
 **格子的显示规则**
 
@@ -90,9 +90,13 @@
 - 某家族全部解锁时，显示最高阈值那一枚，不再显示"下一枚"。
 - 同一家族一次解锁多枚时只占一格，取阈值最高的那枚。
 
+**免费版锁定状态**
+
+免费版（Dashboard (free)）不提供成就功能，卡片改为锁定状态：不展示徽章格子，只在顶部保留一枚模糊的徽章大图作为预览，并整体覆盖遮罩。遮罩中央为锁图标、一行深色说明 —— "Upgrade your plan to collect achievements and share your milestones with listeners." —— 以及 **Upgrade to unlock** 按钮；该状态不显示 "View more →"。
+
 ### 2.5 最近评论（Recent Comments）
 
-三个 Dashboard 页面的右下角都有该卡片，标题统一为 "Recent Comments"，内容按页面状态区分：
+四个 Dashboard 页面的右下角都有该卡片，标题统一为 "Recent Comments"，内容按页面状态区分：
 
 | 页面             | 卡片内容                                                                                         |
 | -------------- | -------------------------------------------------------------------------------------------- |
@@ -104,11 +108,13 @@
 
 ### 2.6 播客资源（Podcast Resources）
 
-Dashboard 与 Dashboard (v2) 页面底部各有一组资源卡片，为创作者提供教程入口，两列布局。
+Dashboard、Dashboard (v2)、Dashboard (v3) 与 Dashboard (free) 页面底部各有一组资源卡片，为创作者提供教程入口，两列布局。
 
 该内容块为新增内容块，卡片中的文章目前为占位内容，需要 BO 提供相应功能后进行配置和替换。
 
 每张卡片均为上图下文结构，整张卡片可点击（当前为占位链接）。
+
+区块标题右侧的 "Read more →" 在新标签页打开 Podcast Academy（https://www.podbean.com/podcast-academy）。
 
 ### 2.7 引导流程（Onboarding）
 
