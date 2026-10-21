@@ -458,10 +458,10 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 ┌──────────────────────────────────────────────┐
 │  Plugin                   [Get more plugins] │
 │                                              │
-│  [logo] Episode Endnote  [Expired]   ✎  ✕    │
+│  [logo] Episode Endnote              ✎  ✕    │
 │         描述文字…                            │
 │  ──────────────────────────────────────────── │
-│  [logo] Episode Tags    [Expired]      ✕     │
+│  [logo] Episode Tags                       ✕  │
 │         描述文字…                            │
 └──────────────────────────────────────────────┘
 ```
@@ -472,7 +472,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 ### 5.1 插件列表
 
-Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名称 + `Expired` 徽标 + 描述 + 右侧操作按钮。行与行之间只有一条上边框，外框不带卡片样式。
+Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称、描述与操作按钮。
 
 | 插件 | 描述 | 可编辑 | 可删除 |
 |---|---|---|---|
@@ -481,7 +481,8 @@ Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名�
 | **Import Files from Dropbox** | Import files directly from your Dropbox account to your Podbean Media Manager. | 是 | 是 |
 | **SEO Meta Tags** | This plugin makes it very easy for you to manage SEO titles, keywords and descriptions for your podcast site. | 是 | 是 |
 
-- 插件过期时，行内显示 **Expired** 徽标，编辑与删除操作仍可用。
+**说明**：上表仅列举部分插件示例，`apps.podbean.com` 中还有更多插件，具体插件数量与范围<span style="color:#a16207;font-weight:700;">待开发确认</span>。
+
 - **空状态**：页面默认为空；删除全部插件后同样回到空状态，列表隐藏、显示居中的 "Take your podcast to the next level by adding popular plugins and services."。
 
 ### 5.2 插件操作
@@ -490,7 +491,7 @@ Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名�
 |---|---|---|
 | **Edit（铅笔）** | Episode Endnote / Import Files from Dropbox / SEO Meta Tags | 打开对应编辑弹窗（见 5.3） |
 | **Delete（×）** | 全部四行 | 打开 **Delete Plugin** 确认弹窗 |
-| **Get more plugins** | 页面右上角 | 打开 `https://apps.podbean.com`（当前标签页） |
+| **Get more plugins** | Plugin 页面 | 打开 `https://apps.podbean.com`（当前标签页） |
 
 **删除确认弹窗：**
 
@@ -498,26 +499,26 @@ Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名�
 |---|---|
 | 标题 | **Delete Plugin** |
 | 正文 | `Are you sure you want to delete “{插件名}”? Its settings will be removed from your podcast. This action cannot be undone.` |
-| 按钮 | 左 **Cancel**、右 **Delete**（红色 pill 按钮） |
+| 按钮 | 左 **Cancel**、右 **Delete** |
 | 关闭方式 | Cancel、点击遮罩、Esc 都只关闭、不删除；打开时焦点落在 **Delete** |
 | 确认后 | 移除该行 → toast **`{插件名} deleted`** → 若列表已空，显示空状态 |
 
 ### 5.3 插件编辑弹窗
 
-三个插件共用一套弹窗外壳：标题 + 关闭 ×、高度随内容、底部右侧操作区（深色 pill 按钮）。**Dropbox 是例外**：它的 Refresh 按钮留在表格内，弹窗没有底部操作区。
+三个插件共用同一套编辑弹窗，弹窗底部为操作区。**Dropbox 是例外**：Refresh 按钮位于表格内，弹窗没有底部操作区。
 
 | 插件 | 弹窗标题 | 内容 | 底部操作 |
 |---|---|---|---|
 | **Episode Endnote** | Episode Endnote | 富文本编辑器（与 Brief Description 同一套工具栏：Undo/Redo、Bold/Italic/Underline、Link）；下方一条信息提示 **Saving will apply this endnote to all episodes.** | **Cancel** / **Save**；Save 关闭弹窗并 toast `Endnote saved to all episodes` |
-| **Import Files from Dropbox** | Import Files from Dropbox | 说明面板：`Click on the button below to import files from your Dropbox to your Podbean Media Manager.` + **Select Files from Dropbox** 按钮（带 Dropbox 图标）+ `Max allowed file size is 3GB.`；下方表格 Filename / Size / Status，空态 `No importing dropbox files.`，表格右下角 **Refresh** | **无底部操作区** |
-| **SEO Meta Tags** | **Custom Meta Tags** | 单行标签 **Meta Tags :** 在上、全宽多行文本框在下（可纵向拉伸）；文本框内以文本形式展示一段 `<meta name="keywords" …>` 示例 | 只有 **Save changes**（无 Cancel），保存后关闭并 toast `Meta tags saved` |
+| **Import Files from Dropbox** | Import Files from Dropbox | 说明面板：`Click on the button below to import files from your Dropbox to your Podbean Media Manager.` + **Select Files from Dropbox** 按钮 + `Max allowed file size is 3GB.`；下方表格 Filename / Size / Status，空态 `No importing dropbox files.`，表格内 **Refresh** | **无底部操作区** |
+| **SEO Meta Tags** | **Custom Meta Tags** | **Meta Tags** 字段为多行文本框，文本框内以文本形式展示一段 `<meta name="keywords" …>` 示例 | 只有 **Save changes**（无 Cancel），保存后关闭并 toast `Meta tags saved` |
 
 - 三个弹窗都能用 ×、点击遮罩、Esc 关闭。
 - Meta Tags 的弹窗标题与行名不同（行叫 **SEO Meta Tags**，弹窗叫 **Custom Meta Tags**）。
 
 ### 5.4 Get More Plugins
 
-页面右上角的 **Get more plugins** 是外部链接，指向 `https://apps.podbean.com`，在当前标签页打开。
+**Get more plugins** 是外部链接，指向 `https://apps.podbean.com`，在当前标签页打开。
 
 ---
 

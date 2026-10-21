@@ -1358,17 +1358,17 @@
 <pre><code>┌──────────────────────────────────────────────┐
 │  Plugin                   [Get more plugins] │
 │                                              │
-│  [logo] Episode Endnote  [Expired]   ✎  ✕    │
+│  [logo] Episode Endnote              ✎  ✕    │
 │         描述文字…                            │
 │  ──────────────────────────────────────────── │
-│  [logo] Episode Tags    [Expired]      ✕     │
+│  [logo] Episode Tags                       ✕  │
 │         描述文字…                            │
 └──────────────────────────────────────────────┘
 </code></pre>
 <p>页面没有 Save bar：插件操作即时生效（编辑走弹窗，删除走确认弹窗）。</p>
 <p><strong>空状态（默认）</strong>：页面默认为空，不展示任何插件行，居中显示 &quot;Take your podcast to the next level by adding popular plugins and services.&quot;。</p>
 <h3 id="sec-5-1">5.1 插件列表<a class="h-anchor" href="#sec-5-1" aria-label="本节链接">#</a></h3>
-<p>Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名称 + <code>Expired</code> 徽标 + 描述 + 右侧操作按钮。行与行之间只有一条上边框，外框不带卡片样式。</p>
+<p>Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称、描述与操作按钮。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -1405,8 +1405,8 @@
 </tr>
 </tbody>
 </table></div>
+<p><strong>说明</strong>：上表仅列举部分插件示例，<code>apps.podbean.com</code> 中还有更多插件，具体插件数量与范围<span class="need-confirm">待开发确认</span>。</p>
 <ul>
-<li>插件过期时，行内显示 <strong>Expired</strong> 徽标，编辑与删除操作仍可用。</li>
 <li><strong>空状态</strong>：页面默认为空；删除全部插件后同样回到空状态，列表隐藏、显示居中的 &quot;Take your podcast to the next level by adding popular plugins and services.&quot;。</li>
 </ul>
 <h3 id="sec-5-2">5.2 插件操作<a class="h-anchor" href="#sec-5-2" aria-label="本节链接">#</a></h3>
@@ -1455,7 +1455,7 @@
 </tr>
 <tr>
 <td>按钮</td>
-<td>左 <strong>Cancel</strong>、右 <strong>Delete</strong>（红色 pill 按钮）</td>
+<td>左 <strong>Cancel</strong>、右 <strong>Delete</strong></td>
 </tr>
 <tr>
 <td>关闭方式</td>
@@ -1468,7 +1468,7 @@
 </tbody>
 </table></div>
 <h3 id="sec-5-3">5.3 插件编辑弹窗<a class="h-anchor" href="#sec-5-3" aria-label="本节链接">#</a></h3>
-<p>三个插件共用一套弹窗外壳：标题 + 关闭 ×、高度随内容、底部右侧操作区（深色 pill 按钮）。<strong>Dropbox 是例外</strong>：它的 Refresh 按钮留在表格内，弹窗没有底部操作区。</p>
+<p>三个插件共用同一套编辑弹窗，弹窗底部为操作区。<strong>Dropbox 是例外</strong>：Refresh 按钮位于表格内，弹窗没有底部操作区。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -1488,13 +1488,13 @@
 <tr>
 <td><strong>Import Files from Dropbox</strong></td>
 <td>Import Files from Dropbox</td>
-<td>说明面板：<code>Click on the button below to import files from your Dropbox to your Podbean Media Manager.</code> + <strong>Select Files from Dropbox</strong> 按钮（带 Dropbox 图标）+ <code>Max allowed file size is 3GB.</code>；下方表格 Filename / Size / Status，空态 <code>No importing dropbox files.</code>，表格右下角 <strong>Refresh</strong></td>
+<td>说明面板：<code>Click on the button below to import files from your Dropbox to your Podbean Media Manager.</code> + <strong>Select Files from Dropbox</strong> 按钮 + <code>Max allowed file size is 3GB.</code>；下方表格 Filename / Size / Status，空态 <code>No importing dropbox files.</code>，表格内 <strong>Refresh</strong></td>
 <td><strong>无底部操作区</strong></td>
 </tr>
 <tr>
 <td><strong>SEO Meta Tags</strong></td>
 <td><strong>Custom Meta Tags</strong></td>
-<td>单行标签 <strong>Meta Tags :</strong> 在上、全宽多行文本框在下（可纵向拉伸）；文本框内以文本形式展示一段 <code>&lt;meta name=&quot;keywords&quot; …&gt;</code> 示例</td>
+<td><strong>Meta Tags</strong> 字段为多行文本框，文本框内以文本形式展示一段 <code>&lt;meta name=&quot;keywords&quot; …&gt;</code> 示例</td>
 <td>只有 <strong>Save changes</strong>（无 Cancel），保存后关闭并 toast <code>Meta tags saved</code></td>
 </tr>
 </tbody>
@@ -1504,7 +1504,7 @@
 <li>Meta Tags 的弹窗标题与行名不同（行叫 <strong>SEO Meta Tags</strong>，弹窗叫 <strong>Custom Meta Tags</strong>）。</li>
 </ul>
 <h3 id="sec-5-4">5.4 Get More Plugins<a class="h-anchor" href="#sec-5-4" aria-label="本节链接">#</a></h3>
-<p>页面右上角的 <strong>Get more plugins</strong> 是外部链接，指向 <code>https://apps.podbean.com</code>，在当前标签页打开。</p>
+<p><strong>Get more plugins</strong> 是外部链接，指向 <code>https://apps.podbean.com</code>，在当前标签页打开。</p>
 <hr />
 <h2 id="sec-6">6. 页面四：Import to Podbean（导入）<a class="h-anchor" href="#sec-6" aria-label="本节链接">#</a></h2>
 <p>把一个已有的播客（或视频系列）连同剧集导入 Podbean。页面只负责选择来源，随后的三步在居中弹窗内逐屏完成；点 <strong>Import</strong> 后弹窗关闭，页面接管导入状态、重定向校验与完成态。</p>
