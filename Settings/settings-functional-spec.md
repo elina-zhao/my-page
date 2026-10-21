@@ -214,7 +214,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **必填** | 是（标有红色 *）；第 1 行必须选择分类 |
 | **占位文字** | "Select a category"（未选择时） |
 | **提示文字** | "Apple Podcasts only recognizes the first category and subcategory." |
-| **选项** | 产品分类列表共 110 项，二级分类以「Parent:Child」形式与一级分类同列；下拉最高 280px，超出滚动 |
+| **选项** | 产品分类列表共 110 项，二级分类以「Parent:Child」形式与一级分类同列；下拉最高 280px，超出滚动；选项内容以线上产品为准，<span style="color:#a16207;font-weight:700;">待开发确认</span> |
 | **去重** | 已被其他行选中的分类，在该行下拉中置灰不可选 |
 | **分类数量** | 默认显示 1 行；点击「+」增加一行，**最多 3 行**，达到上限后「+」隐藏 |
 | **删除分类** | 第 2、3 行各有一个删除按钮，可单独移除；第 1 行不可删除；删除中间行时，下方分类依次上移 |
@@ -233,9 +233,9 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **编辑弹窗** | 三步：**Upload image**（预览 + 尺寸 / 文件大小；Upload 直接使用原图，Customize 进入裁剪）→ **Crop image**（正方形裁剪框，可拖动、可四角缩放，Continue）→ **Customize text**（Text / Horizontal / Vertical / Color / Font Size / Font Family，Upload 合成后上传）；可返回上一步，关闭则放弃 |
 | **文件信息** | 预览下方显示 `{宽}x{高}px, {大小}`，大小以 KB / MB 显示并保留两位小数 |
 | **3MB 上限** | 原图超过 3MB：弹窗内报错、Upload 禁用，Customize 仍可点击；裁剪后的文件按同一规则校验 |
-| **图片要求** | `Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork.` 后面跟一个 **Details** 链接 |
+| **图片要求** | `Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork.` 后面跟一个 **Details** 链接，在新标签页打开 `https://podcasters.apple.com/artwork-guide` |
 | **校验规则** | 选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；Save 时封面不能为空（见 8.1） |
-| **错误提示** | 格式错误："Please upload a JPG or PNG image"；超限："This image is larger than 3 MB. Customize it to reduce the file size before uploading."；为空："Please upload a podcast logo"（文案待确认） |
+| **错误提示** | 格式错误："Please upload a JPG or PNG image"；超限："This image is larger than 3 MB. Customize it to reduce the file size before uploading."；为空："Please upload a podcast logo"（<span style="color:#a16207;font-weight:700;">文案待确认</span>） |
 
 ---
 
@@ -247,9 +247,11 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 |---|---|
 | **类型** | 单行文本输入 |
 | **必填** | 否 |
-| **占位提示** | "Enter author or owner name" |
+| **占位提示** | "Author name" |
 | **产品默认值** | `{subdomain}` — 频道创建时自动填入用户的子域名 |
 | **校验规则** | 最多 225 字符；超过时 Save 拦截并提示 "Please enter no more than 225 characters" |
+| **对单集的影响** | 发布新单集时自动填入 Episode Settings 的 Author；修改后只影响之后新建的单集，已创建的单集（published / draft / future / AI 生成中等）保持 episode 创建时的 Author |
+| **展示位置** | 该名称会出现在播客的 RSS feed 中 |
 
 #### 3.2.2 Copyright（版权信息）
 
@@ -260,6 +262,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **占位提示** | "Copyright 2026 All rights reserved." |
 | **产品默认值** | "Copyright {currentYear} All rights reserved." — 年份取频道创建时的当前年份 |
 | **校验规则** | 最多 200 字符；超过时 Save 拦截并提示 "Please enter no more than 200 characters" |
+| **展示位置** | 用户前台站点的 footer |
 
 #### 3.2.3 Language（语言）
 
@@ -267,9 +270,9 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 |---|---|
 | **类型** | 下拉选择器 |
 | **必填** | 是，但产品中始终有预设值，不会出现未选中的空状态 |
-| **默认值** | 按账号 / 浏览器语言预选（如 `English [en]`） |
-| **选项** | 播客平台支持的语言列表（完整 ISO 语言代码待补齐） |
-| **行为** | 点击展开选项列表，选中后更新触发器文字，并触发 Save bar 显示 |
+| **默认值** | `English [en]`；是否按账号 / 浏览器语言预选，<span style="color:#a16207;font-weight:700;">待开发确认</span> |
+| **选项** | 产品的语言列表，共 242 条：首条为 **Select Language**，其后 241 种语言，顺序与产品一致；格式 `Name [code]`（如 `English [en]`、`Chinese (Simplified) [zh-cn]`），代码取自产品数据；选项内容以线上产品为准，<span style="color:#a16207;font-weight:700;">待开发确认</span> |
+| **行为** | 点击展开选项列表，选中后更新触发器文字，并触发 Save bar 显示；列表可滚动，展开时定位到当前选中项 |
 
 #### 3.2.4 Country of Origin（原产国/分发区域）
 
@@ -280,7 +283,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **选项** | **Global**、**Specific countries** |
 | **默认值** | Global |
 | **交互** | 选择 **Global** 时不显示额外控件；选择 **Specific countries** 时出现国家多选框，支持输入 **Search countries** 过滤、以标签（chip）形式多选、可逐个移除 |
-| **选项数据** | 覆盖常见国家/地区，按字母序排列 |
+| **选项数据** | Specific countries 的国家列表与线上产品一致，按字母序排列；具体内容<span style="color:#a16207;font-weight:700;">待开发确认</span> |
 | **必填规则** | 选择 Specific countries 时，**至少选择一个国家**；Global 不受此约束 |
 | **错误提示** | "Please select at least one country"（出现在多选框下方） |
 
@@ -290,9 +293,11 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 |---|---|
 | **类型** | 下拉选择器 |
 | **必填** | 是，但产品中始终有预设值，不会出现未选中的空状态 |
-| **默认值** | 取账号所在时区（如 `(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi`）；是否按用户 IP 自动判断，待产品确认 |
+| **选项** | 线上产品时区列表共 82 项，格式 `(GMT±HH:MM) 城市…`，按偏移量从西到东排列；部分项在列表内附 **Daylight Time** 副标题（仅列表显示，触发器只显示主文字）；下拉最高 340px，超出滚动；选项内容以线上产品为准，<span style="color:#a16207;font-weight:700;">待开发确认</span> |
+| **默认值** | <span style="color:#a16207;font-weight:700;">待开发确认</span>：默认值与是否按 IP 自动判断均未定；mockup 暂按账号所在时区显示 `(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi` |
 | **辅助提示** | `Current time: Jun 16, 2026, 10:21 AM` |
 | **行为** | 当前时间按所选时区显示并实时更新；切换时区后立即按新时区刷新 |
+| **与定时单集的关系** | 已排期（scheduled）的单集按当前时区计算发布时间；修改时区后，这些单集的发布日期也随之改变 |
 
 ---
 
@@ -307,7 +312,11 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **默认值** | Episodic |
 | **辅助说明** | "Choose how episodes are ordered on your podcast website and in your RSS feed." |
 
-**Episodic** 按发布时间倒序，**Serial** 按发布顺序排列。
+**Podcast Type** 决定内容如何组织，以及单集在 Podbean 网站和播客 RSS feed 中的展示顺序。Podbean 提供两种选项：
+
+**Episodic**（默认）：单集从最新到最早展示（last to first）。
+
+**Serial**：单集从最早到最新展示（first to last）。
 
 #### 3.3.2 Content Explicit（内容分级）
 
@@ -317,6 +326,8 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **选项** | Clean / False、Explicit / True |
 | **默认值** | Clean / False |
 | **辅助说明** | "Specify whether your podcast contains explicit content." |
+
+**Explicit Tag in RSS Feed**：默认值为 "Clean/False"。对应 RSS feed 中的 `<itunes:explicit>` 标签，用于声明播客的家长指导（parental advisory）信息。
 
 ---
 
@@ -352,7 +363,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | 属性 | 说明 |
 |---|---|
 | **类型** | 数字输入 |
-| **必填** | 否 |
+| **必填** | 否。<span style="color:#a16207;font-weight:700;">留空行为待开发确认</span>：留空 Episode Number Limit 后保存不会报错，但保存完成后输入框会自动回填为 `20`。该回填逻辑（是否应回填、回填值取 `20` 还是默认值 `100`）<span style="color:#a16207;font-weight:700;">待开发确认</span>。 |
 | **默认值** | 100 |
 | **辅助说明** | "Limit the number of episodes included in your RSS feed." |
 | **校验规则** | 非空值必须是整数，且落在 `1` 到当前套餐上限之间；空值不报错 |
@@ -365,6 +376,8 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | Unlimited Audio Plan | 999 |
 | Unlimited Plus Plan | 1999 |
 | Business Plan | 2999 |
+
+<span style="color:#a16207;font-weight:700;">留空行为待开发确认</span>：留空 Episode Number Limit 后保存不会报错，但保存完成后输入框会自动回填为 `20`。该回填逻辑（是否应回填、回填值取 `20` 还是默认值 `100`）<span style="color:#a16207;font-weight:700;">待开发确认</span>。
 
 ### 4.3 Ownership Verification Email（所有者验证邮箱）
 
@@ -391,6 +404,8 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **错误提示** | 为空："Please enter your website URL"；格式错误："Please enter a valid URL" |
 | **辅助说明** | "Set your custom podcast website URL in the RSS feed."（放在 Toggle 行的说明位） |
 
+**说明**：该字段原名为 **Podcast Website**。用户不填写时，feed 中使用的是用户在 Podbean 的 website URL；开启 Toggle 后用户需填写一个 URL，保存后 feed 中使用这个保存的 URL。
+
 ### 4.5 Generate audio-only feed（生成纯音频 feed）
 
 | 属性 | 说明 |
@@ -400,6 +415,8 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **说明文字** | "Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don't accept video. Your video feed stays as it is." |
 | **展开内容** | 一行 "Your audio-only feed is:"，下面是系统生成的音频 feed 地址与 **Copy** 按钮；复制后给出与 4.1 一致的 **Copied!** 反馈 |
 | **行为** | 该开关只控制这一段的展示，不影响 Feed 页面其他字段 |
+
+**功能说明**：Generate audio-only feed 会自动创建视频播客 feed 的纯音频版本。开启后，Podbean 会生成一个纯音频 feed，并在该设置下方展示其 URL。通过纯音频 feed 分发的单集，其播放量（plays）会计入对应的原始视频单集。
 
 ### 4.6 Redirect to a New Feed（Feed 重定向）
 
@@ -420,6 +437,8 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 │  [___________________________]  ← URL 输入框  │
 └──────────────────────────────────────────────┘
 ```
+
+**功能说明**：在该设置中填入新的 feed URL 后，你的 Podbean feed 会重定向到该新 feed URL。
 
 **安全机制：**
 
@@ -449,6 +468,8 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 页面没有 Save bar：插件操作即时生效（编辑走弹窗，删除走确认弹窗）。
 
+**空状态（默认）**：页面默认为空，不展示任何插件行，居中显示 "Take your podcast to the next level by adding popular plugins and services."。
+
 ### 5.1 插件列表
 
 Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名称 + `Expired` 徽标 + 描述 + 右侧操作按钮。行与行之间只有一条上边框，外框不带卡片样式。
@@ -461,7 +482,7 @@ Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名�
 | **SEO Meta Tags** | This plugin makes it very easy for you to manage SEO titles, keywords and descriptions for your podcast site. | 是 | 是 |
 
 - 插件过期时，行内显示 **Expired** 徽标，编辑与删除操作仍可用。
-- **空状态**：删除全部插件后，列表隐藏、显示居中的 "Take your podcast to the next level by adding popular plugins and services."。
+- **空状态**：页面默认为空；删除全部插件后同样回到空状态，列表隐藏、显示居中的 "Take your podcast to the next level by adding popular plugins and services."。
 
 ### 5.2 插件操作
 
@@ -841,7 +862,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | Podcast Info | Podcast Title | 去空格后不能为空 | Please enter a podcast title |
 | Podcast Info | Brief Description | 去空格后不能为空，也不能是默认值 "New podcast weblog" | Please enter a brief description |
 | Podcast Info | Podcast Category | 第 1 行必须选择分类，不能为空或占位文字 "Select a category"；其余行可选 | Please select a podcast category |
-| Podcast Info | Podcast Logo | 封面不能为空 | Please upload a podcast logo（文案待确认） |
+| Podcast Info | Podcast Logo | 封面不能为空 | Please upload a podcast logo（<span style="color:#a16207;font-weight:700;">文案待确认</span>） |
 | Podcast Info | Country of Origin | 仅当选择 **Specific countries** 时：至少选一个国家 | Please select at least one country |
 | Feed | Ownership Verification Email | 仅开关开启时：不能为空（仅空格也算空） | Please enter your verification email |
 | Feed | Alternative Website URL | 仅开关开启时：不能为空 | Please enter your website URL |
@@ -937,7 +958,7 @@ Podcast Info 与 Feed 各自独立执行校验，互不影响。
 | **Ownership Verification Email** | 有（**Toggle + 条件输入**） | 有 | 有 |
 | **Apple Podcasts Verification** | **移出**（转移到 Apple Podcasts 提交页面） | 有 | 有 |
 | **Remove from Apple Directory** | **已移除**（从普通设置中移除；为已开启的用户提供"关闭并移除标签"的过渡机制，已启用 `<itunes:block>` 的用户保留一个临时关闭入口） | 有 | 有 |
-| **Set Podcast New Feed URL** | **已移除**（改为迁移流程自动写入 `<itunes:new-feed-url>`，可长期保留。⚠ 更改 subdomain 是否也自动写入，需技术确认） | 有 | 有 |
+| **Set Podcast New Feed URL** | **已移除**（改为迁移流程自动写入 `<itunes:new-feed-url>`，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span style="color:#a16207;font-weight:700;">需技术确认</span>） | 有 | 有 |
 | **Redirect to a New Feed** | 有（Toggle + 条件 URL 输入 + 危险警告） | 有 | 有 |
 
-**新版 Feed 页面字段总数从 13 个精简为 6 个**（5 个原有字段 + 新增的 Generate audio-only feed）。标注「待确认」的条目需产品团队进一步确认。
+**新版 Feed 页面字段总数从 13 个精简为 6 个**（5 个原有字段 + 新增的 Generate audio-only feed）。标注**黄色加粗**的「待确认」条目需产品团队进一步确认。

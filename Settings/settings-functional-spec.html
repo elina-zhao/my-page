@@ -34,6 +34,14 @@
 
   ::selection { background: #dbeafe; }
 
+  /* Every "needs confirmation" marker is yellow + bold so it cannot be read as
+     settled copy. #a16207 is yellow-700, keeping AA contrast (~5:1) on white;
+     a brighter yellow would read better as "warning" and worse as text. */
+  .need-confirm {
+    color: #a16207;
+    font-weight: 600;
+  }
+
   a { color: inherit; }
 
   :focus-visible { outline: 2px solid #94a3b8; outline-offset: 2px; border-radius: 4px; }
@@ -743,7 +751,7 @@
 </tr>
 <tr>
 <td><strong>选项</strong></td>
-<td>产品分类列表共 110 项，二级分类以「Parent:Child」形式与一级分类同列；下拉最高 280px，超出滚动</td>
+<td>产品分类列表共 110 项，二级分类以「Parent:Child」形式与一级分类同列；下拉最高 280px，超出滚动；选项内容以线上产品为准，<span class="need-confirm">待开发确认</span></td>
 </tr>
 <tr>
 <td><strong>去重</strong></td>
@@ -810,7 +818,7 @@
 </tr>
 <tr>
 <td><strong>图片要求</strong></td>
-<td><code>Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork.</code> 后面跟一个 <strong>Details</strong> 链接</td>
+<td><code>Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork.</code> 后面跟一个 <strong>Details</strong> 链接，在新标签页打开 <code>https://podcasters.apple.com/artwork-guide</code></td>
 </tr>
 <tr>
 <td><strong>校验规则</strong></td>
@@ -818,7 +826,7 @@
 </tr>
 <tr>
 <td><strong>错误提示</strong></td>
-<td>格式错误：&quot;Please upload a JPG or PNG image&quot;；超限：&quot;This image is larger than 3 MB. Customize it to reduce the file size before uploading.&quot;；为空：&quot;Please upload a podcast logo&quot;（文案待确认）</td>
+<td>格式错误：&quot;Please upload a JPG or PNG image&quot;；超限：&quot;This image is larger than 3 MB. Customize it to reduce the file size before uploading.&quot;；为空：&quot;Please upload a podcast logo&quot;（<span class="need-confirm">文案待确认</span>）</td>
 </tr>
 </tbody>
 </table></div>
@@ -843,7 +851,7 @@
 </tr>
 <tr>
 <td><strong>占位提示</strong></td>
-<td>&quot;Enter author or owner name&quot;</td>
+<td>&quot;Author name&quot;</td>
 </tr>
 <tr>
 <td><strong>产品默认值</strong></td>
@@ -852,6 +860,14 @@
 <tr>
 <td><strong>校验规则</strong></td>
 <td>最多 225 字符；超过时 Save 拦截并提示 &quot;Please enter no more than 225 characters&quot;</td>
+</tr>
+<tr>
+<td><strong>对单集的影响</strong></td>
+<td>发布新单集时自动填入 Episode Settings 的 Author；修改后只影响之后新建的单集，已创建的单集（published / draft / future / AI 生成中等）保持 episode 创建时的 Author</td>
+</tr>
+<tr>
+<td><strong>展示位置</strong></td>
+<td>该名称会出现在播客的 RSS feed 中</td>
 </tr>
 </tbody>
 </table></div>
@@ -884,6 +900,10 @@
 <td><strong>校验规则</strong></td>
 <td>最多 200 字符；超过时 Save 拦截并提示 &quot;Please enter no more than 200 characters&quot;</td>
 </tr>
+<tr>
+<td><strong>展示位置</strong></td>
+<td>用户前台站点的 footer</td>
+</tr>
 </tbody>
 </table></div>
 <h4 id="sec-3-2-3">3.2.3 Language（语言）<a class="h-anchor" href="#sec-3-2-3" aria-label="本节链接">#</a></h4>
@@ -905,15 +925,15 @@
 </tr>
 <tr>
 <td><strong>默认值</strong></td>
-<td>按账号 / 浏览器语言预选（如 <code>English [en]</code>）</td>
+<td><code>English [en]</code>；是否按账号 / 浏览器语言预选，<span class="need-confirm">待开发确认</span></td>
 </tr>
 <tr>
 <td><strong>选项</strong></td>
-<td>播客平台支持的语言列表（完整 ISO 语言代码待补齐）</td>
+<td>产品的语言列表，共 242 条：首条为 <strong>Select Language</strong>，其后 241 种语言，顺序与产品一致；格式 <code>Name [code]</code>（如 <code>English [en]</code>、<code>Chinese (Simplified) [zh-cn]</code>），代码取自产品数据；选项内容以线上产品为准，<span class="need-confirm">待开发确认</span></td>
 </tr>
 <tr>
 <td><strong>行为</strong></td>
-<td>点击展开选项列表，选中后更新触发器文字，并触发 Save bar 显示</td>
+<td>点击展开选项列表，选中后更新触发器文字，并触发 Save bar 显示；列表可滚动，展开时定位到当前选中项</td>
 </tr>
 </tbody>
 </table></div>
@@ -948,7 +968,7 @@
 </tr>
 <tr>
 <td><strong>选项数据</strong></td>
-<td>覆盖常见国家/地区，按字母序排列</td>
+<td>Specific countries 的国家列表与线上产品一致，按字母序排列；具体内容<span class="need-confirm">待开发确认</span></td>
 </tr>
 <tr>
 <td><strong>必填规则</strong></td>
@@ -978,8 +998,12 @@
 <td>是，但产品中始终有预设值，不会出现未选中的空状态</td>
 </tr>
 <tr>
+<td><strong>选项</strong></td>
+<td>线上产品时区列表共 82 项，格式 <code>(GMT±HH:MM) 城市…</code>，按偏移量从西到东排列；部分项在列表内附 <strong>Daylight Time</strong> 副标题（仅列表显示，触发器只显示主文字）；下拉最高 340px，超出滚动；选项内容以线上产品为准，<span class="need-confirm">待开发确认</span></td>
+</tr>
+<tr>
 <td><strong>默认值</strong></td>
-<td>取账号所在时区（如 <code>(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</code>）；是否按用户 IP 自动判断，待产品确认</td>
+<td><span class="need-confirm">待开发确认</span>：默认值与是否按 IP 自动判断均未定；mockup 暂按账号所在时区显示 <code>(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</code></td>
 </tr>
 <tr>
 <td><strong>辅助提示</strong></td>
@@ -988,6 +1012,10 @@
 <tr>
 <td><strong>行为</strong></td>
 <td>当前时间按所选时区显示并实时更新；切换时区后立即按新时区刷新</td>
+</tr>
+<tr>
+<td><strong>与定时单集的关系</strong></td>
+<td>已排期（scheduled）的单集按当前时区计算发布时间；修改时区后，这些单集的发布日期也随之改变</td>
 </tr>
 </tbody>
 </table></div>
@@ -1020,7 +1048,9 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>Episodic</strong> 按发布时间倒序，<strong>Serial</strong> 按发布顺序排列。</p>
+<p><strong>Podcast Type</strong> 决定内容如何组织，以及单集在 Podbean 网站和播客 RSS feed 中的展示顺序。Podbean 提供两种选项：</p>
+<p><strong>Episodic</strong>（默认）：单集从最新到最早展示（last to first）。</p>
+<p><strong>Serial</strong>：单集从最早到最新展示（first to last）。</p>
 <h4 id="sec-3-3-2">3.3.2 Content Explicit（内容分级）<a class="h-anchor" href="#sec-3-3-2" aria-label="本节链接">#</a></h4>
 <div class="table-wrap"><table>
 <thead>
@@ -1048,6 +1078,7 @@
 </tr>
 </tbody>
 </table></div>
+<p><strong>Explicit Tag in RSS Feed</strong>：默认值为 &quot;Clean/False&quot;。对应 RSS feed 中的 <code>&lt;itunes:explicit&gt;</code> 标签，用于声明播客的家长指导（parental advisory）信息。</p>
 <hr />
 <h2 id="sec-4">4. 页面二：Feed（RSS 源管理）<a class="h-anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
 <h3 id="sec-4-0">4.0 页面结构<a class="h-anchor" href="#sec-4-0" aria-label="本节链接">#</a></h3>
@@ -1103,7 +1134,7 @@
 </tr>
 <tr>
 <td><strong>必填</strong></td>
-<td>否</td>
+<td>否。<span class="need-confirm">留空行为待开发确认</span>：留空 Episode Number Limit 后保存不会报错，但保存完成后输入框会自动回填为 <code>20</code>。该回填逻辑（是否应回填、回填值取 <code>20</code> 还是默认值 <code>100</code>）<span class="need-confirm">待开发确认</span>。</td>
 </tr>
 <tr>
 <td><strong>默认值</strong></td>
@@ -1146,6 +1177,7 @@
 </tr>
 </tbody>
 </table></div>
+<p><span class="need-confirm">留空行为待开发确认</span>：留空 Episode Number Limit 后保存不会报错，但保存完成后输入框会自动回填为 <code>20</code>。该回填逻辑（是否应回填、回填值取 <code>20</code> 还是默认值 <code>100</code>）<span class="need-confirm">待开发确认</span>。</p>
 <h3 id="sec-4-3">4.3 Ownership Verification Email（所有者验证邮箱）<a class="h-anchor" href="#sec-4-3" aria-label="本节链接">#</a></h3>
 <div class="table-wrap"><table>
 <thead>
@@ -1228,6 +1260,7 @@
 </tr>
 </tbody>
 </table></div>
+<p><strong>说明</strong>：该字段原名为 <strong>Podcast Website</strong>。用户不填写时，feed 中使用的是用户在 Podbean 的 website URL；开启 Toggle 后用户需填写一个 URL，保存后 feed 中使用这个保存的 URL。</p>
 <h3 id="sec-4-5">4.5 Generate audio-only feed（生成纯音频 feed）<a class="h-anchor" href="#sec-4-5" aria-label="本节链接">#</a></h3>
 <div class="table-wrap"><table>
 <thead>
@@ -1259,6 +1292,7 @@
 </tr>
 </tbody>
 </table></div>
+<p><strong>功能说明</strong>：Generate audio-only feed 会自动创建视频播客 feed 的纯音频版本。开启后，Podbean 会生成一个纯音频 feed，并在该设置下方展示其 URL。通过纯音频 feed 分发的单集，其播放量（plays）会计入对应的原始视频单集。</p>
 <h3 id="sec-4-6">4.6 Redirect to a New Feed（Feed 重定向）<a class="h-anchor" href="#sec-4-6" aria-label="本节链接">#</a></h3>
 <div class="table-wrap"><table>
 <thead>
@@ -1294,6 +1328,7 @@
 │  [___________________________]  ← URL 输入框  │
 └──────────────────────────────────────────────┘
 </code></pre>
+<p><strong>功能说明</strong>：在该设置中填入新的 feed URL 后，你的 Podbean feed 会重定向到该新 feed URL。</p>
 <p><strong>安全机制：</strong></p>
 <div class="table-wrap"><table>
 <thead>
@@ -1331,6 +1366,7 @@
 └──────────────────────────────────────────────┘
 </code></pre>
 <p>页面没有 Save bar：插件操作即时生效（编辑走弹窗，删除走确认弹窗）。</p>
+<p><strong>空状态（默认）</strong>：页面默认为空，不展示任何插件行，居中显示 &quot;Take your podcast to the next level by adding popular plugins and services.&quot;。</p>
 <h3 id="sec-5-1">5.1 插件列表<a class="h-anchor" href="#sec-5-1" aria-label="本节链接">#</a></h3>
 <p>Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名称 + <code>Expired</code> 徽标 + 描述 + 右侧操作按钮。行与行之间只有一条上边框，外框不带卡片样式。</p>
 <div class="table-wrap"><table>
@@ -1371,7 +1407,7 @@
 </table></div>
 <ul>
 <li>插件过期时，行内显示 <strong>Expired</strong> 徽标，编辑与删除操作仍可用。</li>
-<li><strong>空状态</strong>：删除全部插件后，列表隐藏、显示居中的 &quot;Take your podcast to the next level by adding popular plugins and services.&quot;。</li>
+<li><strong>空状态</strong>：页面默认为空；删除全部插件后同样回到空状态，列表隐藏、显示居中的 &quot;Take your podcast to the next level by adding popular plugins and services.&quot;。</li>
 </ul>
 <h3 id="sec-5-2">5.2 插件操作<a class="h-anchor" href="#sec-5-2" aria-label="本节链接">#</a></h3>
 <div class="table-wrap"><table>
@@ -2205,7 +2241,7 @@
 <td>Podcast Info</td>
 <td>Podcast Logo</td>
 <td>封面不能为空</td>
-<td>Please upload a podcast logo（文案待确认）</td>
+<td>Please upload a podcast logo（<span class="need-confirm">文案待确认</span>）</td>
 </tr>
 <tr>
 <td>Podcast Info</td>
@@ -2513,7 +2549,7 @@
 </tr>
 <tr>
 <td><strong>Set Podcast New Feed URL</strong></td>
-<td><strong>已移除</strong>（改为迁移流程自动写入 <code>&lt;itunes:new-feed-url&gt;</code>，可长期保留。⚠ 更改 subdomain 是否也自动写入，需技术确认）</td>
+<td><strong>已移除</strong>（改为迁移流程自动写入 <code>&lt;itunes:new-feed-url&gt;</code>，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span class="need-confirm">需技术确认</span>）</td>
 <td>有</td>
 <td>有</td>
 </tr>
@@ -2525,7 +2561,7 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>新版 Feed 页面字段总数从 13 个精简为 6 个</strong>（5 个原有字段 + 新增的 Generate audio-only feed）。标注「待确认」的条目需产品团队进一步确认。</p>
+<p><strong>新版 Feed 页面字段总数从 13 个精简为 6 个</strong>（5 个原有字段 + 新增的 Generate audio-only feed）。标注<span class="need-confirm">黄色加粗</span>的「待确认」条目需产品团队进一步确认。</p>
 </article>
 </main>
 

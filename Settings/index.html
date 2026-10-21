@@ -2601,6 +2601,23 @@
     .pb-select-option + .pb-select-option {
       border-top: 1px solid #f1f5f9;
     }
+    /* Language and Timezone carry the product's full lists (242 and 82 rows),
+       so their menus scroll instead of running past the page. */
+    #dropdown-language,
+    #dropdown-timezone {
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    /* Zones that observe DST show the product's second line. Drawn by CSS so the
+       option's textContent stays the label alone — the trigger copies it. */
+    #dropdown-timezone .pb-select-option[data-daylight="1"]::after {
+      content: "Daylight Time";
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
 
     /* Unsaved Changes Modal */
     .modal-confirm {
@@ -3546,7 +3563,7 @@
                       <input type="file" id="logoFileInput" accept=".jpg,.jpeg,.png,image/jpeg,image/png" hidden />
                       <div class="pb-field-error"></div>
                     </div>
-                    <div class="pb-logo-hints">Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork. <a href="#">Details</a></div>
+                    <div class="pb-logo-hints">Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork. <a href="https://podcasters.apple.com/artwork-guide" target="_blank" rel="noopener noreferrer">Details</a></div>
                   </div>
                 </div>
               </div>
@@ -3561,7 +3578,7 @@
 
               <div class="info-content-item">
                 <span class="cc-item-label">Author</span>
-                <input type="text" class="pb-input" id="pbAuthorInput" placeholder="Enter author or owner name" value="John Doe" />
+                <input type="text" class="pb-input" id="pbAuthorInput" placeholder="Author name" value="John Doe" />
                 <div class="pb-field-error"></div>
               </div>
 
@@ -3573,7 +3590,10 @@
 
               <div class="info-content-item">
                 <span class="cc-item-label">Language</span>
-                <div class="pb-vs"><span>English [en]</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                <div class="pb-custom-select">
+                  <div class="pb-vs" data-select="language"><span>English [en]</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                  <div class="pb-select-dropdown" id="dropdown-language"></div>
+                </div>
               </div>
 
               <div class="info-content-item">
@@ -3608,7 +3628,10 @@
 
               <div class="info-content-item">
                 <span class="cc-item-label">Timezone</span>
-                <div class="pb-vs"><span>(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                <div class="pb-custom-select">
+                  <div class="pb-vs" data-select="timezone"><span>(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                  <div class="pb-select-dropdown" id="dropdown-timezone"></div>
+                </div>
                 <span class="tips">Current time: Jun 16, 2026, 10:21 AM</span>
               </div>
             </div>
@@ -5244,6 +5267,373 @@
       sync();
     })();
 
+    // The Language list is the product's own option list, in product order
+    // (242 rows: a "Select Language" placeholder plus 241 languages). The
+    // bracketed token is the language code and doubles as the option value.
+    // Injected before the shared option wiring binds, so the generic
+    // click handler covers these rows like any other menu.
+    var LANGUAGES = [
+      'Select Language',
+      'Afar [aa]',
+      'Abkhazian [ab]',
+      'Afrikaans [af]',
+      'Akan [ak]',
+      'Albanian [sq]',
+      'Amharic [am]',
+      'Arabic [ar]',
+      'Aragonese [an]',
+      'Armenian [hy]',
+      'Assamese [as]',
+      'Avaric [av]',
+      'Avestan [ae]',
+      'Aymara [ay]',
+      'Azerbaijani [az]',
+      'Bashkir [ba]',
+      'Bambara [bm]',
+      'Basque [eu]',
+      'Belarusian [be]',
+      'Bengali [bn]',
+      'Bihari languages [bh]',
+      'Bislama [bi]',
+      'Bosnian [bs]',
+      'Breton [br]',
+      'Bulgarian [bg]',
+      'Burmese [my]',
+      'Catalan [ca]',
+      'Chinese (Simplified) [zh-cn]',
+      'Chinese (Traditional) [zh-tw]',
+      'Croatian [hr]',
+      'Chamorro [ch]',
+      'Chechen [ce]',
+      'Church Slavic [cu]',
+      'Chuvash [cv]',
+      'Cornish [kw]',
+      'Corsican [co]',
+      'Cree [cr]',
+      'Czech [cs]',
+      'Danish [da]',
+      'Divehi [dv]',
+      'Dutch [nl]',
+      'Dutch (Belgium) [nl-be]',
+      'Dutch (Netherlands) [nl-nl]',
+      'Dzongkha [dz]',
+      'English [en]',
+      'English (Australia) [en-au]',
+      'English (Belize) [en-bz]',
+      'English (Canada) [en-ca]',
+      'English (Ireland) [en-ie]',
+      'English (Jamaica) [en-jm]',
+      'English (New Zealand) [en-nz]',
+      'English (Phillipines) [en-ph]',
+      'English (South Africa) [en-za]',
+      'English (Trinidad) [en-tt]',
+      'English (United Kingdom) [en-gb]',
+      'English (United States) [en-us]',
+      'English (Zimbabwe) [en-zw]',
+      'Esperanto [eo]',
+      'Estonian [et]',
+      'Ewe [ee]',
+      'Faeroese [fo]',
+      'Fijian [fj]',
+      'Finnish [fi]',
+      'French [fr]',
+      'French (Belgium) [fr-be]',
+      'French (Canada) [fr-ca]',
+      'French (France) [fr-fr]',
+      'French (Luxembourg) [fr-lu]',
+      'French (Monaco) [fr-mc]',
+      'French (Switzerland) [fr-ch]',
+      'Western Frisian [fy]',
+      'Fulah [ff]',
+      'Georgian [ka]',
+      'Galician [gl]',
+      'Gaelic [gd]',
+      'Manx [gv]',
+      'Guarani [gn]',
+      'Gujarati [gu]',
+      'German [de]',
+      'German (Austria) [de-at]',
+      'German (Germany) [de-de]',
+      'German (Liechtenstein) [de-li]',
+      'German (Luxembourg) [de-lu]',
+      'German (Switzerland) [de-ch]',
+      'Greek [el]',
+      'Hausa [ha]',
+      'Hebrew [he]',
+      'Haitian [ht]',
+      'Hawaiian [haw]',
+      'Hindi [hi]',
+      'Hiri Motu [ho]',
+      'Hungarian [hu]',
+      'Herero [hz]',
+      'Icelandic [is]',
+      'Igbo [ig]',
+      'Ido [io]',
+      'Sichuan Yi [ii]',
+      'Inuktitut [iu]',
+      'Interlingue [ie]',
+      'Interlingua [ia]',
+      'Indonesian [id]',
+      'Inupiaq [ik]',
+      'Indonesian [in]',
+      'Irish [ga]',
+      'Italian [it]',
+      'Italian (Italy) [it-it]',
+      'Italian (Switzerland) [it-ch]',
+      'Javanese [jv]',
+      'Japanese [ja]',
+      'Kalaallisut [kl]',
+      'Kannada [kn]',
+      'Kashmiri [ks]',
+      'Kanuri [kr]',
+      'Kazakh [kk]',
+      'Central Khmer [km]',
+      'Kikuyu [ki]',
+      'Kinyarwanda [rw]',
+      'Kirghiz [ky]',
+      'Komi [kv]',
+      'Kongo [kg]',
+      'Korean [ko]',
+      'Kuanyama [kj]',
+      'Kurdish [ku]',
+      'Lao [lo]',
+      'Latin [la]',
+      'Lithuanian [lt]',
+      'Latvian [lv]',
+      'Limburgan [li]',
+      'Lingala [ln]',
+      'Luxembourgish [lb]',
+      'Luba-Katanga [lu]',
+      'Ganda [lg]',
+      'Macedonian [mk]',
+      'Marshallese [mh]',
+      'Malayalam [ml]',
+      'Maori [mi]',
+      'Marathi [mr]',
+      'Malay [ms]',
+      'Malagasy [mg]',
+      'Maltese [mt]',
+      'Mongolian [mn]',
+      'Nauru [na]',
+      'Navajo [nv]',
+      'South Ndebele [nr]',
+      'North Ndebele [nd]',
+      'Ndonga [ng]',
+      'Nepali [ne]',
+      'Norwegian Nynorsk [nn]',
+      'Bokmål, Norwegian [nb]',
+      'Norwegian [no]',
+      'Chichewa [ny]',
+      'Occitan [oc]',
+      'Ojibwa [oj]',
+      'Oriya [or]',
+      'Oromo [om]',
+      'Ossetian [os]',
+      'Panjabi [pa]',
+      'Persian [fa]',
+      'Pali [pi]',
+      'Polish [pl]',
+      'Portuguese [pt]',
+      'Portuguese (Brazil) [pt-br]',
+      'Portuguese (Portugal) [pt-pt]',
+      'Pushto [ps]',
+      'Quechua [qu]',
+      'Romansh [rm]',
+      'Romanian [ro]',
+      'Romanian (Moldova) [ro-mo]',
+      'Romanian (Romania) [ro-ro]',
+      'Rundi [rn]',
+      'Russian [ru]',
+      'Russian (Moldova) [ru-mo]',
+      'Russian (Russia) [ru-ru]',
+      'Sango [sg]',
+      'Sanskrit [sa]',
+      'Sinhala [si]',
+      'Serbian [sr]',
+      'Slovak [sk]',
+      'Slovenian [sl]',
+      'Northern Sami [se]',
+      'Samoan [sm]',
+      'Shona [sn]',
+      'Sindhi [sd]',
+      'Somali [so]',
+      'Sotho, Southern [st]',
+      'Spanish [es]',
+      'Spanish (Argentina) [es-ar]',
+      'Spanish (Bolivia) [es-bo]',
+      'Spanish (Chile) [es-cl]',
+      'Spanish (Colombia) [es-co]',
+      'Spanish (Costa Rica) [es-cr]',
+      'Spanish (Dominican Republic) [es-do]',
+      'Spanish (Ecuador) [es-ec]',
+      'Spanish (El Salvador) [es-sv]',
+      'Spanish (Guatemala) [es-gt]',
+      'Spanish (Honduras) [es-hn]',
+      'Spanish (Mexico) [es-mx]',
+      'Spanish (Nicaragua) [es-ni]',
+      'Spanish (Panama) [es-pa]',
+      'Spanish (Paraguay) [es-py]',
+      'Spanish (Peru) [es-pe]',
+      'Spanish (Puerto Rico) [es-pr]',
+      'Spanish (Spain) [es-es]',
+      'Spanish (Uruguay) [es-uy]',
+      'Spanish (Venezuela) [es-ve]',
+      'Sardinian [sc]',
+      'Swati [ss]',
+      'Sundanese [su]',
+      'Swahili [sw]',
+      'Swedish [sv]',
+      'Swedish (Finland) [sv-fi]',
+      'Swedish (Sweden) [sv-se]',
+      'Tahitian [ty]',
+      'Tamil [ta]',
+      'Tatar [tt]',
+      'Telugu [te]',
+      'Tajik [tg]',
+      'Tagalog [tl]',
+      'Thai [th]',
+      'Tibetan [bo]',
+      'Tigrinya [ti]',
+      'Tonga (Tonga Islands) [to]',
+      'Tswana [tn]',
+      'Tsonga [ts]',
+      'Turkmen [tk]',
+      'Turkish [tr]',
+      'Twi [tw]',
+      'Uighur [ug]',
+      'Ukranian [uk]',
+      'Urdu [ur]',
+      'Uzbek [uz]',
+      'Venda [ve]',
+      'Vietnamese [vi]',
+      'Volapük [vo]',
+      'Welsh [cy]',
+      'Walloon [wa]',
+      'Wolof [wo]',
+      'Xhosa [xh]',
+      'Yiddish [yi]',
+      'Yoruba [yo]',
+      'Zhuang [za]',
+      'Zulu [zu]',
+    ];
+
+    // Timezone list: the product's own 82 entries, verbatim. Some rows carry a
+    // "Daylight Time" second line in the menu only; CSS draws it from
+    // data-daylight so the option's textContent stays the plain label that the
+    // shared handler writes into the trigger.
+    var TIMEZONES = [
+      ["(GMT-12:00) International Date Line West", 0],
+      ["(GMT-11:00) Midway Island, Samoa", 0],
+      ["(GMT-10:00) Hawaii", 0],
+      ["(GMT-09:00) Alaska", 1],
+      ["(GMT-08:00) Pacific Time (US & Canada)", 1],
+      ["(GMT-08:00) Tijuana, Baja California", 1],
+      ["(GMT-07:00) Arizona", 0],
+      ["(GMT-07:00) Chihuahua, La Paz, Mazatlan", 1],
+      ["(GMT-07:00) Mountain Time (US & Canada)", 1],
+      ["(GMT-06:00) Central America", 0],
+      ["(GMT-06:00) Central Time (US & Canada)", 1],
+      ["(GMT-06:00) Guadalajara, Mexico City, Monterrey", 1],
+      ["(GMT-06:00) Saskatchewan", 0],
+      ["(GMT-05:00) Bogota, Lima, Quito, Rio Branco", 0],
+      ["(GMT-05:00) Eastern Time (US & Canada)", 1],
+      ["(GMT-05:00) Indiana (East)", 1],
+      ["(GMT-04:00) Atlantic Time (Canada)", 1],
+      ["(GMT-04:00) Caracas, La Paz", 0],
+      ["(GMT-04:00) Manaus", 0],
+      ["(GMT-04:00) Santiago", 1],
+      ["(GMT-03:30) Newfoundland", 1],
+      ["(GMT-03:00) Brasilia", 1],
+      ["(GMT-03:00) Buenos Aires, Georgetown", 0],
+      ["(GMT-03:00) Greenland", 1],
+      ["(GMT-03:00) Montevideo", 1],
+      ["(GMT-02:00) Mid-Atlantic", 1],
+      ["(GMT-01:00) Cape Verde Is.", 0],
+      ["(GMT-01:00) Azores", 1],
+      ["(GMT+00:00) Casablanca, Monrovia, Reykjavik", 0],
+      ["(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London", 1],
+      ["(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna", 1],
+      ["(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague", 1],
+      ["(GMT+01:00) Brussels, Copenhagen, Madrid, Paris", 1],
+      ["(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb", 1],
+      ["(GMT+01:00) West Central Africa", 1],
+      ["(GMT+02:00) Amman", 1],
+      ["(GMT+02:00) Athens, Bucharest, Istanbul", 1],
+      ["(GMT+02:00) Beirut", 1],
+      ["(GMT+02:00) Cairo", 1],
+      ["(GMT+02:00) Harare, Pretoria", 0],
+      ["(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius", 1],
+      ["(GMT+02:00) Jerusalem", 1],
+      ["(GMT+02:00) Minsk", 1],
+      ["(GMT+02:00) Windhoek", 1],
+      ["(GMT+03:00) Kuwait, Riyadh, Baghdad", 0],
+      ["(GMT+03:00) Moscow, St. Petersburg, Volgograd", 1],
+      ["(GMT+03:00) Nairobi", 0],
+      ["(GMT+03:00) Tbilisi", 0],
+      ["(GMT+03:30) Tehran", 1],
+      ["(GMT+04:00) Abu Dhabi, Muscat", 0],
+      ["(GMT+04:00) Baku", 1],
+      ["(GMT+04:00) Yerevan", 1],
+      ["(GMT+04:30) Kabul", 0],
+      ["(GMT+05:00) Yekaterinburg", 1],
+      ["(GMT+05:00) Islamabad, Karachi, Tashkent", 0],
+      ["(GMT+05:30) Sri Jayawardenapura", 0],
+      ["(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi", 0],
+      ["(GMT+05:45) Kathmandu", 0],
+      ["(GMT+06:00) Almaty, Novosibirsk", 1],
+      ["(GMT+06:00) Astana, Dhaka", 0],
+      ["(GMT+06:30) Yangon (Rangoon)", 0],
+      ["(GMT+07:00) Bangkok, Hanoi, Jakarta", 0],
+      ["(GMT+07:00) Krasnoyarsk", 1],
+      ["(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi", 0],
+      ["(GMT+08:00) Kuala Lumpur, Singapore", 0],
+      ["(GMT+08:00) Irkutsk, Ulaan Bataar", 0],
+      ["(GMT+08:00) Perth", 0],
+      ["(GMT+08:00) Taipei", 0],
+      ["(GMT+09:00) Osaka, Sapporo, Tokyo", 0],
+      ["(GMT+09:00) Seoul", 0],
+      ["(GMT+09:00) Yakutsk", 1],
+      ["(GMT+09:30) Adelaide", 0],
+      ["(GMT+09:30) Darwin", 0],
+      ["(GMT+10:00) Brisbane", 0],
+      ["(GMT+10:00) Canberra, Melbourne, Sydney", 1],
+      ["(GMT+10:00) Hobart", 1],
+      ["(GMT+10:00) Guam, Port Moresby", 0],
+      ["(GMT+10:00) Vladivostok", 1],
+      ["(GMT+11:00) Magadan, Solomon Is., New Caledonia", 1],
+      ["(GMT+12:00) Auckland, Wellington", 1],
+      ["(GMT+12:00) Fiji, Kamchatka, Marshall Is.", 0],
+      ["(GMT+13:00) Nuku'alofa", 0]
+    ];
+
+    (function initTimezoneSelect() {
+      var dd = document.getElementById('dropdown-timezone');
+      if (!dd) return;
+      TIMEZONES.forEach(function(row, i) {
+        var o = document.createElement('div');
+        o.className = 'pb-select-option';
+        o.textContent = row[0];
+        o.setAttribute('data-value', String(i));
+        if (row[1]) o.setAttribute('data-daylight', '1');
+        if (row[0] === '(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi') o.classList.add('selected');
+        dd.appendChild(o);
+      });
+    })();
+
+    (function initLanguageSelect() {
+      var dd = document.getElementById('dropdown-language');
+      if (!dd) return;
+      LANGUAGES.forEach(function(label) {
+        var m = /\[([^\]]+)\]$/.exec(label);
+        var o = document.createElement('div');
+        o.className = 'pb-select-option';
+        o.textContent = label;
+        o.setAttribute('data-value', m ? m[1] : '');
+        if (m && m[1] === 'en') o.classList.add('selected');
+        dd.appendChild(o);
+      });
+    })();
+
     function captureState() {
       savedState = {
         inputs: [],
@@ -6588,6 +6978,12 @@
           if (d.id !== dropdownId) d.classList.remove('open');
         });
         dropdown.classList.toggle('open');
+        // A long menu (Language, Categories) opens on the current value rather
+        // than at the top. Only scrolls the menu itself, never the page.
+        if (dropdown.classList.contains('open') && dropdown.scrollHeight > dropdown.clientHeight) {
+          var sel = dropdown.querySelector('.pb-select-option.selected');
+          if (sel) dropdown.scrollTop = Math.max(0, sel.offsetTop - dropdown.clientHeight / 2 + sel.offsetHeight / 2);
+        }
       });
     });
 
