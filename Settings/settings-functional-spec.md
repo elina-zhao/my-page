@@ -1,7 +1,7 @@
 # Podcast Dashboard — Settings 模块功能说明文档
 
 > 版本：v1.2  
-> 最后更新：2026-10-20  
+> 最后更新：2026-10-21  
 > 状态：产品需求说明
 
 > ⚠️ **请注意：** 本功能文档根据当前版本整理，可能存在遗漏或理解偏差。如与线上实际表现不一致，请再次确认。
@@ -211,12 +211,14 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | 属性 | 说明 |
 |---|---|
 | **类型** | 分类下拉选择器 + 「+」按钮 |
-| **必填** | 是（标有红色 *）；至少选择一个分类 |
+| **必填** | 是（标有红色 *）；第 1 行必须选择分类 |
 | **占位文字** | "Select a category"（未选择时） |
 | **提示文字** | "Apple Podcasts only recognizes the first category and subcategory." |
+| **选项** | 产品分类列表共 110 项，二级分类以「Parent:Child」形式与一级分类同列；下拉最高 280px，超出滚动 |
+| **去重** | 已被其他行选中的分类，在该行下拉中置灰不可选 |
 | **分类数量** | 默认显示 1 行；点击「+」增加一行，**最多 3 行**，达到上限后「+」隐藏 |
-| **删除分类** | 第 2、3 行各有一个删除按钮，可单独移除；第 1 行不可删除 |
-| **校验规则** | Save 时至少选择一个分类；空值或仍为占位文字 "Select a category" 均视为未选择 |
+| **删除分类** | 第 2、3 行各有一个删除按钮，可单独移除；第 1 行不可删除；删除中间行时，下方分类依次上移 |
+| **校验规则** | Save 时第 1 行必须选择分类；其余行可选，未选择的行不参与保存 |
 | **错误提示** | "Please select a podcast category" |
 
 #### 3.1.4 Podcast Logo（播客封面）
@@ -227,10 +229,13 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **必填** | 是（标有红色 *） |
 | **预览** | 正方形图片展示当前封面 |
 | **模板选择** | 下拉展示内置模板；选择模板后预览随之更新 |
-| **上传按钮** | "Upload image"；点击打开文件选择器，只接受 JPG / PNG；选中合法图片后进入 **Image Editor**，用户编辑并确认后预览更新为新图片 |
+| **上传按钮** | "Upload image"；点击打开文件选择器，只接受 JPG / PNG；选中合法图片后打开编辑弹窗，确认上传后预览更新为新图片 |
+| **编辑弹窗** | 三步：**Upload image**（预览 + 尺寸 / 文件大小；Upload 直接使用原图，Customize 进入裁剪）→ **Crop image**（正方形裁剪框，可拖动、可四角缩放，Continue）→ **Customize text**（Text / Horizontal / Vertical / Color / Font Size / Font Family，Upload 合成后上传）；可返回上一步，关闭则放弃 |
+| **文件信息** | 预览下方显示 `{宽}x{高}px, {大小}`，大小以 KB / MB 显示并保留两位小数 |
+| **3MB 上限** | 原图超过 3MB：弹窗内报错、Upload 禁用，Customize 仍可点击；裁剪后的文件按同一规则校验 |
 | **图片要求** | `Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork.` 后面跟一个 **Details** 链接 |
 | **校验规则** | 选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；Save 时封面不能为空（见 8.1） |
-| **错误提示** | 格式错误："Please upload a JPG or PNG image"；为空："Please upload a podcast logo"（文案待确认） |
+| **错误提示** | 格式错误："Please upload a JPG or PNG image"；超限："This image is larger than 3 MB. Customize it to reduce the file size before uploading."；为空："Please upload a podcast logo"（文案待确认） |
 
 ---
 
@@ -520,7 +525,7 @@ Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名�
 │                                                    │
 │  RSS Feed URL                                      │
 │  ────────────────────────────────────────          │
-│  Example: https://feeds.podbean.org/…              │
+│  Example: https://feeds.example.com/…              │
 │                                                    │
 │                        [ Back ]   [ Next ]         │
 └────────────────────────────────────────────────────┘
@@ -561,7 +566,7 @@ Plugin 页面展示账号已安装的插件。每行结构为：64px logo + 名�
 |---|---|
 | 字段标签 | RSS Feed URL |
 | 占位符 | `https://feeds.example.com/myshow.xml` |
-| 提示 | `Example: https://feeds.podbean.org/elinazplus/feed.xml`（灰色） |
+| 提示 | `Example: https://feeds.example.com/your-podcast/feed.xml`（灰色） |
 | 必填 | 是 |
 | 错误提示 | **"Please enter your RSS feed URL"**（字段下方，聚焦输入框） |
 
@@ -835,7 +840,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 |---|---|---|---|
 | Podcast Info | Podcast Title | 去空格后不能为空 | Please enter a podcast title |
 | Podcast Info | Brief Description | 去空格后不能为空，也不能是默认值 "New podcast weblog" | Please enter a brief description |
-| Podcast Info | Podcast Category | 至少选择一个分类，不能为空或占位文字 "Select a category" | Please select a podcast category |
+| Podcast Info | Podcast Category | 第 1 行必须选择分类，不能为空或占位文字 "Select a category"；其余行可选 | Please select a podcast category |
 | Podcast Info | Podcast Logo | 封面不能为空 | Please upload a podcast logo（文案待确认） |
 | Podcast Info | Country of Origin | 仅当选择 **Specific countries** 时：至少选一个国家 | Please select at least one country |
 | Feed | Ownership Verification Email | 仅开关开启时：不能为空（仅空格也算空） | Please enter your verification email |

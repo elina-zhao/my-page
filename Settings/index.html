@@ -507,15 +507,22 @@
     .pb-vs.placeholder span { color: #999; }
     .pb-vs svg { flex-shrink: 0; color: #999; }
 
-    /* Category */
+    /* Category — up to three rows, each its own dropdown */
+    .pb-cat-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
     .pb-cat-row {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       align-items: center;
-      flex-wrap: wrap;
     }
-    .pb-cat-select { flex: 1; min-width: 130px; }
-    .pb-cat-add {
+    .pb-cat-select { flex: 1; min-width: 0; }
+    /* The + is black while it can be clicked (the user asked for this on
+       2026-10-21); it is removed from the DOM flow entirely at the 3-row cap. */
+    .pb-cat-add,
+    .pb-cat-remove {
       height: 32px;
       border: none;
       border-bottom: 1px solid var(--border);
@@ -524,11 +531,29 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      color: #999;
+      color: var(--text);
       flex-shrink: 0;
       padding: 0 8px;
     }
-    .pb-cat-add:hover { border-bottom-color: var(--text); color: var(--text); }
+    .pb-cat-add:hover,
+    .pb-cat-remove:hover { border-bottom-color: var(--text); }
+    .pb-cat-remove:hover { color: #dc2626; border-bottom-color: #dc2626; }
+    /* display:flex beats the UA [hidden] rule — guard the three toggled elements */
+    .pb-cat-row[hidden],
+    .pb-cat-add[hidden],
+    .pb-cat-remove[hidden] { display: none; }
+    /* The list is the product's full category + subcategory set (110 entries),
+       so it scrolls rather than running past the card. */
+    .pb-cat-select .pb-select-dropdown {
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    /* A category already used by another row stays visible but cannot be picked twice */
+    .pb-cat-select .pb-select-option.is-disabled {
+      color: #cbd5e1;
+      cursor: default;
+      pointer-events: none;
+    }
 
     .pb-note {
       font-size: 14px;
@@ -2384,6 +2409,158 @@
     .modal-footer .save-btn:hover,
     .db-refresh-btn:hover { background: #334155; }
 
+    /* ---- Podcast logo editor: Upload image → Crop image → Customize text ---- */
+    #logoModal .modal-dialog { width: 900px; }
+    .logo-head-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .logo-back {
+      background: none; border: none; padding: 2px; margin-left: -6px;
+      display: flex; color: var(--text); cursor: pointer; border-radius: 6px;
+    }
+    .logo-back:hover { background: #f1f5f9; }
+    .logo-back[hidden] { display: none; }
+
+    .logo-body { padding: 16px 24px 0; }
+    .logo-pane { display: flex; flex-direction: column; align-items: center; }
+    .logo-pane[hidden] { display: none; }
+
+    .logo-figure {
+      width: 100%;
+      max-height: 46vh;
+      display: flex; align-items: center; justify-content: center;
+      background: #f8fafc;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .logo-figure img { max-width: 100%; max-height: 46vh; display: block; }
+
+    .logo-meta { margin-top: 12px; font-size: 14px; color: var(--text); }
+    .logo-pane > .pb-field-error { align-self: center; text-align: center; }
+
+    /* Crop step — checkerboard stage, square box with third-lines and corner handles */
+    .logo-crop-stage {
+      position: relative;
+      width: 100%;
+      height: min(46vh, 460px);
+      min-height: 240px;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: none;
+      user-select: none;
+      background-color: #f1f5f9;
+      background-image:
+        linear-gradient(45deg, #e2e8f0 25%, transparent 25%, transparent 75%, #e2e8f0 75%),
+        linear-gradient(45deg, #e2e8f0 25%, transparent 25%, transparent 75%, #e2e8f0 75%);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+    .logo-crop-stage img { max-width: 100%; max-height: 100%; display: block; pointer-events: none; }
+    .logo-crop-box {
+      position: absolute;
+      left: 0; top: 0;
+      border: 2px solid #3b82f6;
+      box-sizing: border-box;
+      cursor: move;
+      touch-action: none;
+    }
+    .logo-crop-line {
+      position: absolute; top: 0; bottom: 0; width: 1px;
+      background: rgba(255,255,255,0.75);
+      pointer-events: none;
+    }
+    .logo-crop-line.is-h { left: 0; right: 0; bottom: auto; width: auto; height: 1px; }
+    .logo-crop-handle {
+      position: absolute; width: 10px; height: 10px;
+      background: #fff; border: 2px solid #3b82f6; border-radius: 2px;
+      touch-action: none;
+    }
+    .logo-crop-handle[data-corner="nw"] { left: -6px; top: -6px; cursor: nwse-resize; }
+    .logo-crop-handle[data-corner="ne"] { right: -6px; top: -6px; cursor: nesw-resize; }
+    .logo-crop-handle[data-corner="sw"] { left: -6px; bottom: -6px; cursor: nesw-resize; }
+    .logo-crop-handle[data-corner="se"] { right: -6px; bottom: -6px; cursor: nwse-resize; }
+
+    /* Customize text step */
+    .logo-pane-text { flex-direction: row; align-items: flex-start; gap: 32px; }
+    .logo-text-preview-wrap { flex: 0 0 44%; min-width: 0; display: flex; flex-direction: column; }
+    .logo-text-preview {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #0f172a center / cover no-repeat;
+    }
+    .logo-text-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      padding: 14px;
+      font-weight: 600;
+      line-height: 1.15;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .logo-text-controls { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; padding-top: 4px; }
+    .logo-field-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; gap: 16px; }
+    .logo-field-label { font-size: 14px; font-weight: 500; color: var(--text); text-align: right; }
+    .logo-align-group { display: flex; align-items: center; gap: 26px; }
+    .logo-align-btn {
+      display: flex; padding: 6px; border: none; border-radius: 6px;
+      background: none; color: #cbd5e1; cursor: pointer;
+    }
+    .logo-align-btn:hover { background: #f1f5f9; }
+    .logo-align-btn.is-active { color: var(--text); }
+    .logo-number { appearance: textfield; -moz-appearance: textfield; }
+    .logo-number::-webkit-outer-spin-button,
+    .logo-number::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .logo-color-input {
+      appearance: none; -webkit-appearance: none;
+      width: 34px; height: 34px; padding: 0;
+      border: 1px solid var(--border); border-radius: 50%;
+      background: none; cursor: pointer;
+    }
+    .logo-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+    .logo-color-input::-webkit-color-swatch { border: none; border-radius: 50%; }
+    .logo-select {
+      appearance: none; -webkit-appearance: none;
+      width: 100%; padding: 8px 22px 8px 0;
+      border: none; border-bottom: 1px solid var(--border);
+      background: transparent no-repeat right center;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2364748b' stroke-width='1.5'/%3E%3C/svg%3E");
+      font-family: inherit; font-size: 14px; color: var(--text); cursor: pointer;
+    }
+    .logo-select:focus { outline: none; border-bottom-color: var(--text); }
+
+    /* Actions sit centred, with the recommendation line beneath them (as in the product) */
+    .logo-actions {
+      display: flex; align-items: center; justify-content: center; gap: 28px;
+      padding: 18px 24px 6px; flex-shrink: 0;
+    }
+    .logo-actions .save-btn {
+      padding: 12px 36px;
+      background: #1e293b; color: #fff;
+      border: none; border-radius: 50px;
+      font-family: inherit; font-size: 16px; font-weight: 500;
+      cursor: pointer;
+    }
+    .logo-actions .save-btn:hover { background: #334155; }
+    .logo-actions .save-btn[disabled] { background: #cbd5e1; cursor: not-allowed; }
+    .logo-customize-btn {
+      padding: 12px 14px; border: none; border-radius: 50px;
+      background: none; color: var(--text);
+      font-family: inherit; font-size: 16px; font-weight: 500; cursor: pointer;
+    }
+    .logo-customize-btn:hover { background: #f1f5f9; }
+    .logo-customize-btn[hidden] { display: none; }
+    .logo-recommend {
+      text-align: center; font-size: 14px; color: var(--text-secondary);
+      padding: 0 24px 18px; flex-shrink: 0;
+    }
+    /* Narrow windows: the text step stacks instead of squeezing two columns */
+    @media (max-width: 720px) {
+      .logo-pane-text { flex-direction: column; align-items: stretch; }
+      .logo-text-preview-wrap { flex: none; width: 58%; align-self: center; }
+    }
+
     /* Custom Select Dropdown */
     .pb-custom-select {
       position: relative;
@@ -3299,15 +3476,55 @@
                 <div class="pb-field-error"></div>
               </div>
 
-              <div class="info-content-item">
+              <div class="info-content-item" id="pbCategoryItem">
                 <span class="cc-item-label">Podcast Category <span class="required">*</span></span>
-                <div class="pb-cat-row">
-                  <div class="pb-cat-select">
-                    <div class="pb-vs"><span>Arts</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                <!-- Three row slots live in the DOM (the shared custom-select wiring
+                     binds at load, so rows cannot be built on demand); JS reveals them
+                     in order and never renders a 4th. Options are injected by
+                     initCategoryRows() from the product's own 110-entry list. -->
+                <div class="pb-cat-rows" id="catRows">
+                  <div class="pb-cat-row">
+                    <div class="pb-cat-select">
+                      <div class="pb-custom-select">
+                        <div class="pb-vs" data-select="cat-1"><span>Arts</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                        <div class="pb-select-dropdown" id="dropdown-cat-1"></div>
+                      </div>
+                    </div>
+                    <button class="pb-cat-remove" type="button" aria-label="Remove this category" hidden>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                    <button class="pb-cat-add" type="button" aria-label="Add another category">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
                   </div>
-                  <button class="pb-cat-add">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  </button>
+                  <div class="pb-cat-row" hidden>
+                    <div class="pb-cat-select">
+                      <div class="pb-custom-select">
+                        <div class="pb-vs placeholder" data-select="cat-2"><span>Select a category</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                        <div class="pb-select-dropdown" id="dropdown-cat-2"></div>
+                      </div>
+                    </div>
+                    <button class="pb-cat-remove" type="button" aria-label="Remove this category">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                    <button class="pb-cat-add" type="button" aria-label="Add another category" hidden>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                  </div>
+                  <div class="pb-cat-row" hidden>
+                    <div class="pb-cat-select">
+                      <div class="pb-custom-select">
+                        <div class="pb-vs placeholder" data-select="cat-3"><span>Select a category</span><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                        <div class="pb-select-dropdown" id="dropdown-cat-3"></div>
+                      </div>
+                    </div>
+                    <button class="pb-cat-remove" type="button" aria-label="Remove this category">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                    <button class="pb-cat-add" type="button" aria-label="Add another category" hidden>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                  </div>
                 </div>
                 <div class="pb-note">Apple Podcasts only recognizes the first category and subcategory.</div>
                 <div class="pb-field-error"></div>
@@ -4740,6 +4957,110 @@
         </div>
       </div>
 
+      <!-- Podcast logo editor: review → crop → customize text.
+           The three panes live here permanently; the step only toggles [hidden]. -->
+      <div class="modal-overlay" id="logoModal">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <div class="logo-head-left">
+              <button class="logo-back" id="logoBackBtn" type="button" aria-label="Back" hidden>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <div class="modal-title" id="logoModalTitle">Upload image</div>
+            </div>
+            <button class="modal-close" id="logoCloseBtn" type="button" aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <div class="modal-body logo-body">
+            <div class="logo-pane" data-logo-pane="review">
+              <div class="logo-figure"><img id="logoReviewImg" alt="Selected image" /></div>
+              <div class="logo-meta" id="logoReviewMeta"></div>
+              <div class="pb-field-error" id="logoSizeError"></div>
+            </div>
+
+            <div class="logo-pane" data-logo-pane="crop" hidden>
+              <div class="logo-crop-stage" id="logoCropStage">
+                <img id="logoCropImg" alt="Crop the image" />
+                <div class="logo-crop-box" id="logoCropBox">
+                  <i class="logo-crop-line" style="left:33.333%"></i>
+                  <i class="logo-crop-line" style="left:66.666%"></i>
+                  <i class="logo-crop-line is-h" style="top:33.333%"></i>
+                  <i class="logo-crop-line is-h" style="top:66.666%"></i>
+                  <span class="logo-crop-handle" data-corner="nw"></span>
+                  <span class="logo-crop-handle" data-corner="ne"></span>
+                  <span class="logo-crop-handle" data-corner="sw"></span>
+                  <span class="logo-crop-handle" data-corner="se"></span>
+                </div>
+              </div>
+              <div class="logo-meta" id="logoCropMeta"></div>
+            </div>
+
+            <div class="logo-pane logo-pane-text" data-logo-pane="text" hidden>
+              <div class="logo-text-preview-wrap">
+                <div class="logo-text-preview" id="logoTextPreview">
+                  <div class="logo-text-overlay" id="logoTextOverlay"></div>
+                </div>
+                <div class="logo-meta" id="logoTextMeta"></div>
+              </div>
+              <div class="logo-text-controls">
+                <div class="logo-field-row">
+                  <label class="logo-field-label" for="logoTextInput">Text</label>
+                  <input class="pb-input" id="logoTextInput" type="text" maxlength="60" placeholder="Add text to your cover" />
+                </div>
+                <div class="logo-field-row">
+                  <span class="logo-field-label">Horizontal</span>
+                  <div class="logo-align-group" role="group" aria-label="Text alignment">
+                    <button type="button" class="logo-align-btn is-active" data-align="left" aria-label="Align left">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><rect x="1" y="3" width="18" height="2"/><rect x="1" y="7.5" width="11" height="2"/><rect x="1" y="12" width="18" height="2"/><rect x="1" y="16.5" width="8" height="2"/></svg>
+                    </button>
+                    <button type="button" class="logo-align-btn" data-align="center" aria-label="Align centre">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><rect x="1" y="3" width="18" height="2"/><rect x="4" y="7.5" width="12" height="2"/><rect x="1" y="12" width="18" height="2"/><rect x="5.5" y="16.5" width="9" height="2"/></svg>
+                    </button>
+                    <button type="button" class="logo-align-btn" data-align="right" aria-label="Align right">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><rect x="1" y="3" width="18" height="2"/><rect x="8" y="7.5" width="11" height="2"/><rect x="1" y="12" width="18" height="2"/><rect x="11" y="16.5" width="8" height="2"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="logo-field-row">
+                  <label class="logo-field-label" for="logoTextVertical">Vertical</label>
+                  <select class="logo-select" id="logoTextVertical">
+                    <option value="top">Top</option>
+                    <option value="middle">Middle</option>
+                    <option value="bottom">Bottom</option>
+                  </select>
+                </div>
+                <div class="logo-field-row">
+                  <label class="logo-field-label" for="logoTextColor">Color</label>
+                  <input class="logo-color-input" id="logoTextColor" type="color" value="#000000" />
+                </div>
+                <div class="logo-field-row">
+                  <label class="logo-field-label" for="logoTextSize">Font Size</label>
+                  <input class="pb-input logo-number" id="logoTextSize" type="number" min="8" max="400" step="1" value="100" />
+                </div>
+                <div class="logo-field-row">
+                  <label class="logo-field-label" for="logoTextFamily">Font Family</label>
+                  <select class="logo-select" id="logoTextFamily">
+                    <option value="Arial">Arial</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="'Times New Roman'">Times New Roman</option>
+                  </select>
+                </div>
+              </div>
+              <div class="pb-field-error" id="logoTextError"></div>
+            </div>
+          </div>
+
+          <div class="logo-actions">
+            <button type="button" class="save-btn" id="logoPrimaryBtn">Upload</button>
+            <button type="button" class="logo-customize-btn" id="logoCustomizeBtn">Customize</button>
+          </div>
+          <div class="logo-recommend">Recommended: Between 1400 and 2048 pixels square (jpg or png).</div>
+        </div>
+      </div>
+
       <!-- Toast notification -->
       <div class="pb-toast" id="saveToast">Saved successfully</div>
     </div>
@@ -4749,6 +5070,179 @@
     var unsavedChanges = false;
     var pendingNav = null;
     var savedState = null;
+
+    // ==============================================
+    // Podcast Info — category rows (1–3)
+    // ==============================================
+    // The product's own option list (supplied 2026-10-21). Subcategories are
+    // single entries written "Parent:Child" — that is exactly how the real
+    // dropdown renders them, so they are not a second control.
+    var PODCAST_CATEGORIES = [
+      'Arts', 'Arts:Books', 'Arts:Design', 'Arts:Fashion & Beauty', 'Arts:Food',
+      'Arts:Performing Arts', 'Arts:Visual Arts',
+      'Business', 'Business:Careers', 'Business:Entrepreneurship', 'Business:Investing',
+      'Business:Management', 'Business:Marketing', 'Business:Non-Profit',
+      'Comedy', 'Comedy:Comedy Interviews', 'Comedy:Improv', 'Comedy:Stand-Up',
+      'Education', 'Education:Courses', 'Education:How To', 'Education:Language Learning',
+      'Education:Self-Improvement',
+      'Fiction', 'Fiction:Comedy Fiction', 'Fiction:Drama', 'Fiction:Science Fiction',
+      'Government', 'History',
+      'Health & Fitness', 'Health & Fitness:Alternative Health', 'Health & Fitness:Fitness',
+      'Health & Fitness:Medicine', 'Health & Fitness:Mental Health',
+      'Health & Fitness:Nutrition', 'Health & Fitness:Sexuality',
+      'Kids & Family', 'Kids & Family:Education for Kids', 'Kids & Family:Parenting',
+      'Kids & Family:Pets & Animals', 'Kids & Family:Stories for Kids',
+      'Leisure', 'Leisure:Animation & Manga', 'Leisure:Automotive', 'Leisure:Aviation',
+      'Leisure:Crafts', 'Leisure:Games', 'Leisure:Hobbies', 'Leisure:Home & Garden',
+      'Leisure:Video Games',
+      'Music', 'Music:Music Commentary', 'Music:Music History', 'Music:Music Interviews',
+      'News', 'News:Business News', 'News:Daily News', 'News:Entertainment News',
+      'News:News Commentary', 'News:Politics', 'News:Sports News', 'News:Tech News',
+      'Religion & Spirituality', 'Religion & Spirituality:Buddhism',
+      'Religion & Spirituality:Christianity', 'Religion & Spirituality:Hinduism',
+      'Religion & Spirituality:Islam', 'Religion & Spirituality:Judaism',
+      'Religion & Spirituality:Religion', 'Religion & Spirituality:Spirituality',
+      'Science', 'Science:Astronomy', 'Science:Chemistry', 'Science:Earth Sciences',
+      'Science:Life Sciences', 'Science:Mathematics', 'Science:Natural Sciences',
+      'Science:Nature', 'Science:Physics', 'Science:Social Sciences',
+      'Society & Culture', 'Society & Culture:Documentary', 'Society & Culture:Personal Journals',
+      'Society & Culture:Philosophy', 'Society & Culture:Places & Travel',
+      'Society & Culture:Relationships',
+      'Sports', 'Sports:Baseball', 'Sports:Basketball', 'Sports:Cricket', 'Sports:Fantasy Sports',
+      'Sports:Football', 'Sports:Golf', 'Sports:Hockey', 'Sports:Rugby', 'Sports:Running',
+      'Sports:Soccer', 'Sports:Swimming', 'Sports:Tennis', 'Sports:Volleyball',
+      'Sports:Wilderness', 'Sports:Wrestling',
+      'Technology', 'True Crime',
+      'TV & Film', 'TV & Film:After Shows', 'TV & Film:Film History',
+      'TV & Film:Film Interviews', 'TV & Film:Film Reviews', 'TV & Film:TV Reviews'
+    ];
+
+    // The three row slots are permanent; this only reveals/hides them, so the
+    // shared custom-select wiring (bound once at load) keeps working.
+    (function initCategoryRows() {
+      var MAX_ROWS = 3;
+      var rowsEl = document.getElementById('catRows');
+      if (!rowsEl) return;
+      var rows = Array.prototype.slice.call(rowsEl.querySelectorAll('.pb-cat-row'));
+
+      function triggerOf(row) { return row.querySelector('.pb-vs[data-select]'); }
+      function dropdownOf(row) {
+        var t = triggerOf(row);
+        return t ? document.getElementById('dropdown-' + t.getAttribute('data-select')) : null;
+      }
+      function valueOf(row) {
+        var o = dropdownOf(row).querySelector('.pb-select-option.selected');
+        return o ? o.getAttribute('data-value') : '';
+      }
+      function visibleRows() {
+        return rows.filter(function(r) { return !r.hidden; });
+      }
+
+      // One option list, cloned into every row's menu.
+      rows.forEach(function(row) {
+        var dd = dropdownOf(row);
+        if (!dd || dd.children.length) return;
+        PODCAST_CATEGORIES.forEach(function(label) {
+          var o = document.createElement('div');
+          o.className = 'pb-select-option';
+          o.setAttribute('data-value', label);
+          o.textContent = label;
+          dd.appendChild(o);
+        });
+      });
+
+      function setValue(row, value) {
+        var t = triggerOf(row);
+        var dd = dropdownOf(row);
+        var chosen = null;
+        dd.querySelectorAll('.pb-select-option').forEach(function(o) {
+          var hit = !!value && o.getAttribute('data-value') === value;
+          o.classList.toggle('selected', hit);
+          if (hit) chosen = o;
+        });
+        t.classList.toggle('placeholder', !chosen);
+        var label = t.querySelector('span');
+        if (label) label.textContent = chosen ? chosen.textContent : 'Select a category';
+      }
+
+      // One owner for: which rows show, where the + sits, which × shows, and
+      // which options are already taken by another row.
+      function sync() {
+        var vis = visibleRows();
+        rows.forEach(function(row) {
+          var pos = vis.indexOf(row);
+          var rm = row.querySelector('.pb-cat-remove');
+          if (rm) rm.hidden = pos <= 0;            // the primary row is permanent
+          var add = row.querySelector('.pb-cat-add');
+          if (add) add.hidden = pos !== vis.length - 1 || vis.length >= MAX_ROWS;
+          // The shared option handler writes the label but not this class, so
+          // the placeholder state is re-derived here after every change.
+          triggerOf(row).classList.toggle('placeholder', !valueOf(row));
+        });
+        var taken = {};
+        vis.forEach(function(row) { var v = valueOf(row); if (v) taken[v] = true; });
+        vis.forEach(function(row) {
+          var mine = valueOf(row);
+          dropdownOf(row).querySelectorAll('.pb-select-option').forEach(function(o) {
+            var v = o.getAttribute('data-value');
+            var used = !!taken[v] && v !== mine;
+            o.classList.toggle('is-disabled', used);
+            o.setAttribute('aria-disabled', used ? 'true' : 'false');
+          });
+        });
+      }
+
+      rowsEl.addEventListener('click', function(e) {
+        var addBtn = e.target.closest('.pb-cat-add');
+        if (addBtn) {
+          var row = addBtn.closest('.pb-cat-row');
+          var next = rows[rows.indexOf(row) + 1];
+          if (!next) return;
+          // Opening the new menu happens inside this click; without stopping the
+          // event here the document-level "click outside" handler closes it again
+          // as this same click finishes bubbling.
+          e.stopPropagation();
+          next.hidden = false;
+          sync();
+          triggerOf(next).click();   // open the new row's menu straight away
+          return;
+        }
+
+        var rmBtn = e.target.closest('.pb-cat-remove');
+        if (rmBtn) {
+          var vis = visibleRows();
+          var at = vis.indexOf(rmBtn.closest('.pb-cat-row'));
+          if (at <= 0) return;       // the primary row has no remove button
+          // Collapse upwards so the visible rows stay contiguous.
+          for (var i = at; i < vis.length - 1; i++) setValue(vis[i], valueOf(vis[i + 1]));
+          setValue(vis[vis.length - 1], '');
+          vis[vis.length - 1].hidden = true;
+          sync();
+          return;
+        }
+
+        // The shared option handler has already written the label by the time
+        // this delegated listener runs (it fires on the option itself first).
+        if (e.target.closest('.pb-select-option')) sync();
+      });
+
+      // Shared handle so save-state capture/restore can reach the rows.
+      window.__catRows = {
+        get: function() { return visibleRows().map(valueOf); },
+        set: function(values) {
+          values = values && values.length ? values : [''];
+          rows.forEach(function(r, i) {
+            var show = i < values.length;
+            r.hidden = !show;
+            setValue(r, show ? (values[i] || '') : '');
+          });
+          sync();
+        }
+      };
+
+      setValue(rows[0], 'Arts');
+      sync();
+    })();
 
     function captureState() {
       savedState = {
@@ -4785,6 +5279,7 @@
         savedState.radios.push({ el: el, checked: el.checked });
       });
       savedState.countries = window.__countryMulti ? window.__countryMulti.get() : [];
+      savedState.categories = window.__catRows ? window.__catRows.get() : null;
     }
 
     function restoreState() {
@@ -4822,6 +5317,9 @@
       });
       if (savedState.countries && window.__countryMulti) {
         window.__countryMulti.set(savedState.countries);
+      }
+      if (savedState.categories && window.__catRows) {
+        window.__catRows.set(savedState.categories);
       }
       // Re-sync the Country of Origin picker visibility with the restored mode,
       // otherwise the label reverts to "Global" while the picker stays open.
@@ -5515,29 +6013,485 @@
       });
     }
 
-    // Podcast Logo: the upload button opens a real file picker. Only JPG/PNG pass —
-    // the picker filters by accept, and this change handler is the guard the
-    // picker cannot provide (a user can always switch it to "All files").
-    (function initLogoUpload() {
-      var btn = document.getElementById('logoUploadBtn');
-      var file = document.getElementById('logoFileInput');
+    // Podcast Logo: pick a file, review it, optionally crop it and add text, then
+    // upload. Only JPG/PNG pass — `accept` is a hint, so the change handler is the
+    // real guard (a user can always switch the picker to "All files").
+    (function initLogoEditor() {
+      var uploadBtn = document.getElementById('logoUploadBtn');
+      var fileInput = document.getElementById('logoFileInput');
       var wrap = document.getElementById('logoUploadWrap');
-      if (!btn || !file || !wrap) return;
-      btn.addEventListener('click', function() { file.click(); });
-      file.addEventListener('change', function() {
-        var picked = file.files && file.files[0];
+      if (!uploadBtn || !fileInput || !wrap) return;
+
+      var modal = document.getElementById('logoModal');
+      var backBtn = document.getElementById('logoBackBtn');
+      var closeBtn = document.getElementById('logoCloseBtn');
+      var titleEl = document.getElementById('logoModalTitle');
+      var primaryBtn = document.getElementById('logoPrimaryBtn');
+      var customizeBtn = document.getElementById('logoCustomizeBtn');
+
+      var reviewPane = modal.querySelector('[data-logo-pane="review"]');
+      var cropPane = modal.querySelector('[data-logo-pane="crop"]');
+      var textPane = modal.querySelector('[data-logo-pane="text"]');
+      var reviewImg = document.getElementById('logoReviewImg');
+      var reviewMeta = document.getElementById('logoReviewMeta');
+      var sizeError = document.getElementById('logoSizeError');
+      var cropMeta = document.getElementById('logoCropMeta');
+      var textMeta = document.getElementById('logoTextMeta');
+      var textError = document.getElementById('logoTextError');
+      var stage = document.getElementById('logoCropStage');
+      var cropImg = document.getElementById('logoCropImg');
+      var cropBox = document.getElementById('logoCropBox');
+      var textPreview = document.getElementById('logoTextPreview');
+      var textOverlay = document.getElementById('logoTextOverlay');
+      var textInput = document.getElementById('logoTextInput');
+      var textVertical = document.getElementById('logoTextVertical');
+      var textColor = document.getElementById('logoTextColor');
+      var textSize = document.getElementById('logoTextSize');
+      var textFamily = document.getElementById('logoTextFamily');
+      var alignBtns = Array.prototype.slice.call(modal.querySelectorAll('.logo-align-btn'));
+      var pagePreview = document.querySelector('#page-podcast-basic .pb-logo-preview img');
+
+      var MAX_BYTES = 3 * 1024 * 1024;   // the product's upload limit
+      var MIN_CROP = 48;                 // display px
+      var PAD_RATIO = 0.045;             // text inset, as a share of the image side
+      var cropToken = 0;                 // last requested crop encode
+
+      var state = {
+        step: 'review',
+        url: '', w: 0, h: 0, size: 0,
+        imgRect: null, crop: null,       // display px inside the crop stage
+        cropped: null,                   // { url, w, h, size }
+        align: 'left'
+      };
+
+      function formatSize(bytes) {
+        return bytes >= 1024 * 1024
+          ? (bytes / 1024 / 1024).toFixed(2) + 'MB'
+          : (bytes / 1024).toFixed(2) + 'KB';
+      }
+      function metaLine(w, h, size) {
+        return w + 'x' + h + 'px, ' + formatSize(size);
+      }
+      function showError(el, message) {
+        el.textContent = message;
+        el.classList.add('is-visible');
+      }
+      function hideError(el) {
+        el.textContent = '';
+        el.classList.remove('is-visible');
+      }
+      function overLimit(size) { return size > MAX_BYTES; }
+      function limitCopy() {
+        return 'This image is larger than 3 MB. Customize it to reduce the file size before uploading.';
+      }
+
+      // ---- steps -------------------------------------------------------
+      function setStep(step) {
+        state.step = step;
+        reviewPane.hidden = step !== 'review';
+        cropPane.hidden = step !== 'crop';
+        textPane.hidden = step !== 'text';
+        titleEl.textContent = step === 'review' ? 'Upload image'
+                            : step === 'crop' ? 'Crop image' : 'Customize text';
+        backBtn.hidden = step === 'review';
+        customizeBtn.hidden = step !== 'review';
+        primaryBtn.textContent = step === 'crop' ? 'Continue' : 'Upload';
+        if (step === 'review') refreshReviewLimit();
+        else if (step === 'text') refreshTextLimit();
+        else primaryBtn.disabled = false;
+        modal.querySelector('.modal-body').scrollTop = 0;
+      }
+
+      function refreshReviewLimit() {
+        if (overLimit(state.size)) {
+          showError(sizeError, limitCopy());
+          primaryBtn.disabled = true;
+        } else {
+          hideError(sizeError);
+          primaryBtn.disabled = false;
+        }
+      }
+
+      function refreshTextLimit() {
+        if (state.cropped && overLimit(state.cropped.size)) {
+          showError(textError, limitCopy());
+          primaryBtn.disabled = true;
+        } else {
+          hideError(textError);
+          primaryBtn.disabled = false;
+        }
+      }
+
+      function openModal(step) {
+        modal.classList.add('open');
+        setStep(step);
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+        state.step = 'review';
+        primaryBtn.disabled = false;
+      }
+
+      // ---- file picker -------------------------------------------------
+      uploadBtn.addEventListener('click', function () { fileInput.click(); });
+
+      fileInput.addEventListener('change', function () {
+        var picked = fileInput.files && fileInput.files[0];
         if (!picked) return;
         var allowed = /^image\/(jpeg|png)$/.test(picked.type) || /\.(jpe?g|png)$/i.test(picked.name);
         if (!allowed) {
           showFieldError(wrap, 'Please upload a JPG or PNG image');
-          file.value = '';
+          fileInput.value = '';
           return;
         }
         var errEl = wrap.querySelector('.pb-field-error');
         if (errEl) { errEl.textContent = ''; errEl.classList.remove('is-visible'); }
-        var preview = document.querySelector('#page-podcast-basic .pb-logo-preview img');
-        if (preview) preview.src = URL.createObjectURL(picked);
-        file.value = '';
+        loadFile(picked);
+        fileInput.value = '';
+      });
+
+      function loadFile(file) {
+        state.url = URL.createObjectURL(file);
+        state.size = file.size;
+        state.cropped = null;
+        state.crop = null;
+        state.imgRect = null;
+        state.pendingContinue = false;
+        state.align = 'left';
+        resetTextControls();
+        hideError(sizeError);
+        hideError(textError);
+        textPreview.style.backgroundImage = '';
+
+        var im = new Image();
+        im.onload = function () {
+          state.w = im.naturalWidth;
+          state.h = im.naturalHeight;
+          reviewImg.src = state.url;
+          reviewMeta.textContent = metaLine(state.w, state.h, state.size);
+          openModal('review');
+        };
+        im.onerror = function () {
+          showFieldError(wrap, 'That image could not be read. Please try another file.');
+          URL.revokeObjectURL(state.url);
+        };
+        im.src = state.url;
+      }
+
+      // ---- crop --------------------------------------------------------
+      function measureImageRect() {
+        var s = stage.getBoundingClientRect();
+        var i = cropImg.getBoundingClientRect();
+        state.imgRect = { x: i.left - s.left, y: i.top - s.top, w: i.width, h: i.height };
+      }
+
+      function initCropBox() {
+        var r = state.imgRect;
+        var side = Math.min(r.w, r.h) * 0.6;
+        state.crop = {
+          x: r.x + (r.w - side) / 2,
+          y: r.y + (r.h - side) / 2,
+          s: side
+        };
+        layoutCrop();
+      }
+
+      function layoutCrop() {
+        var c = state.crop;
+        cropBox.style.left = c.x + 'px';
+        cropBox.style.top = c.y + 'px';
+        cropBox.style.width = c.s + 'px';
+        cropBox.style.height = c.s + 'px';
+        updateCropMeta();
+      }
+
+      // Identifies the current crop rectangle; a cached encode is only reused
+      // while the box stays exactly where it was.
+      function cropKey() {
+        if (!state.crop) return '';
+        return Math.round(state.crop.x) + ':' + Math.round(state.crop.y) + ':' + Math.round(state.crop.s);
+      }
+
+      function updateCropMeta() {
+        if (!state.crop || !state.imgRect) { cropMeta.textContent = ''; return; }
+        var scale = state.w / state.imgRect.w;
+        var side = Math.min(Math.round(state.crop.s * scale), state.w, state.h);
+        var line = side + 'x' + side + 'px';
+        if (state.cropped && state.cropped.key === cropKey()) line += ', ' + formatSize(state.cropped.size);
+        cropMeta.textContent = line;
+      }
+
+      // Encodes the crop at the source resolution (once per box position). The
+      // crop step shows the resulting file size, so this also runs on pointer-up.
+      function renderCrop(cb) {
+        var c = state.crop, img = state.imgRect;
+        if (!c || !img || !img.w) return false;
+        var key = cropKey();
+        if (state.cropped && state.cropped.key === key) {
+          if (cb) cb(true);
+          return true;
+        }
+        var token = ++cropToken;
+        var scale = state.w / img.w;
+        var side = Math.min(Math.round(c.s * scale), state.w, state.h);
+        var sx = Math.max(0, (c.x - img.x) * scale);
+        var sy = Math.max(0, (c.y - img.y) * scale);
+        var canvas = document.createElement('canvas');
+        canvas.width = side;
+        canvas.height = side;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, side, side);
+
+        var src = new Image();
+        src.onload = function () {
+          ctx.drawImage(src, sx, sy, side, side, 0, 0, side, side);
+          canvas.toBlob(function (blob) {
+            if (!blob || token !== cropToken) return;   // a newer crop replaced this one
+            state.cropped = { url: URL.createObjectURL(blob), w: side, h: side, size: blob.size, key: key };
+            if (state.step === 'crop') updateCropMeta();
+            if (cb) cb(true);
+          }, 'image/jpeg', 0.92);
+        };
+        src.onerror = function () { if (cb) cb(false); };
+        src.src = state.url;
+        return true;
+      }
+
+      function enterCrop(reuse) {
+        setStep('crop');
+        // Drop the previous image's box and reading until this one is laid out,
+        // so nothing stale is shown (or measured) while the image decodes.
+        cropBox.style.width = '';
+        cropBox.style.height = '';
+        cropMeta.textContent = '';
+        cropImg.src = state.url;
+        var place = function () {
+          measureImageRect();
+          if (!reuse || !state.crop) initCropBox();
+          else layoutCrop();
+          renderCrop(null);
+          if (state.pendingContinue) {
+            state.pendingContinue = false;
+            cropAndContinue();
+          }
+        };
+        if (cropImg.complete && cropImg.naturalWidth) {
+          requestAnimationFrame(place);
+        } else {
+          cropImg.onload = function () { requestAnimationFrame(place); };
+        }
+      }
+
+      stage.addEventListener('pointerdown', function (e) {
+        var handle = e.target.closest('.logo-crop-handle');
+        var inBox = e.target.closest('.logo-crop-box');
+        if ((!handle && !inBox) || !state.crop) return;
+        e.preventDefault();
+
+        var mode = handle ? handle.getAttribute('data-corner') : 'move';
+        var stageRect = stage.getBoundingClientRect();
+        var start = { x: state.crop.x, y: state.crop.y, s: state.crop.s, px: e.clientX, py: e.clientY };
+        var anchor = {
+          nw: { x: start.x + start.s, y: start.y + start.s },
+          ne: { x: start.x, y: start.y + start.s },
+          sw: { x: start.x + start.s, y: start.y },
+          se: { x: start.x, y: start.y }
+        }[mode];
+
+        function onMove(ev) {
+          var img = state.imgRect;
+          if (!img) return;
+          if (mode === 'move') {
+            var nx = start.x + (ev.clientX - start.px);
+            var ny = start.y + (ev.clientY - start.py);
+            nx = Math.max(img.x, Math.min(img.x + img.w - start.s, nx));
+            ny = Math.max(img.y, Math.min(img.y + img.h - start.s, ny));
+            state.crop = { x: nx, y: ny, s: start.s };
+          } else {
+            var p = { x: ev.clientX - stageRect.left, y: ev.clientY - stageRect.top };
+            var wanted = mode === 'nw' ? Math.max(anchor.x - p.x, anchor.y - p.y)
+                       : mode === 'ne' ? Math.max(p.x - anchor.x, anchor.y - p.y)
+                       : mode === 'sw' ? Math.max(anchor.x - p.x, p.y - anchor.y)
+                       :                 Math.max(p.x - anchor.x, p.y - anchor.y);
+            var maxS = mode === 'nw' ? Math.min(anchor.x - img.x, anchor.y - img.y)
+                     : mode === 'ne' ? Math.min(img.x + img.w - anchor.x, anchor.y - img.y)
+                     : mode === 'sw' ? Math.min(anchor.x - img.x, img.y + img.h - anchor.y)
+                     :                 Math.min(img.x + img.w - anchor.x, img.y + img.h - anchor.y);
+            var s = Math.max(Math.min(MIN_CROP, maxS), Math.min(wanted, maxS));
+            state.crop = {
+              x: mode === 'ne' || mode === 'se' ? anchor.x : anchor.x - s,
+              y: mode === 'sw' || mode === 'se' ? anchor.y : anchor.y - s,
+              s: s
+            };
+          }
+          layoutCrop();
+        }
+        function onUp() {
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+          renderCrop(null);   // refresh the reported file size for this box
+        }
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+      });
+
+      function cropAndContinue() {
+        // The box is placed a frame after the pane is shown; if Continue is hit
+        // before that frame, place it now rather than doing nothing.
+        if (!state.imgRect || !state.imgRect.w) measureImageRect();
+        if (!state.imgRect || !state.imgRect.w) {
+          // The image is still decoding — continue as soon as it is laid out.
+          state.pendingContinue = true;
+          return;
+        }
+        if (!state.crop) initCropBox();
+        renderCrop(function (ok) { if (ok) enterText(); });
+      }
+
+      // ---- customize text ---------------------------------------------
+      function resetTextControls() {
+        textInput.value = '';
+        textVertical.value = 'top';
+        textColor.value = '#000000';
+        textSize.value = '100';
+        textFamily.value = 'Arial';
+        alignBtns.forEach(function (b) {
+          b.classList.toggle('is-active', b.getAttribute('data-align') === 'left');
+        });
+        textOverlay.textContent = '';
+      }
+
+      function enterText() {
+        setStep('text');
+        textPreview.style.backgroundImage = 'url("' + state.cropped.url + '")';
+        textMeta.textContent = metaLine(state.cropped.w, state.cropped.h, state.cropped.size);
+        renderText();
+      }
+
+      function renderText() {
+        if (!state.cropped) return;
+        var scale = textPreview.clientWidth / state.cropped.w || 1;
+        var size = Math.max(8, Math.min(400, Number(textSize.value) || 100));
+        textOverlay.textContent = textInput.value;
+        textOverlay.style.color = textColor.value;
+        textOverlay.style.fontFamily = textFamily.value;
+        textOverlay.style.fontSize = Math.max(6, Math.round(size * scale)) + 'px';
+        textOverlay.style.padding = Math.round(textPreview.clientWidth * PAD_RATIO) + 'px';
+        textOverlay.style.textAlign = state.align;
+        textOverlay.style.alignItems = state.align === 'center' ? 'center'
+                                     : state.align === 'right' ? 'flex-end' : 'flex-start';
+        textOverlay.style.justifyContent = textVertical.value === 'middle' ? 'center'
+                                         : textVertical.value === 'bottom' ? 'flex-end' : 'flex-start';
+      }
+
+      textInput.addEventListener('input', renderText);
+      textVertical.addEventListener('change', renderText);
+      textColor.addEventListener('input', renderText);
+      textFamily.addEventListener('change', renderText);
+      textSize.addEventListener('input', function () {
+        var n = Number(textSize.value);
+        if (textSize.value !== '' && n > 400) textSize.value = '400';
+        renderText();
+      });
+      alignBtns.forEach(function (b) {
+        b.addEventListener('click', function () {
+          state.align = b.getAttribute('data-align');
+          alignBtns.forEach(function (o) { o.classList.toggle('is-active', o === b); });
+          renderText();
+        });
+      });
+
+      // Wrap the text the same way on the canvas as in the preview: words, then
+      // explicit breaks. No ellipsis — an over-long line is a typo the user can see.
+      function wrapLines(ctx, text, maxWidth) {
+        var lines = [];
+        text.split('\n').forEach(function (paragraph) {
+          var words = paragraph.split(/\s+/).filter(Boolean);
+          if (!words.length) { lines.push(''); return; }
+          var line = words[0];
+          for (var i = 1; i < words.length; i++) {
+            var test = line + ' ' + words[i];
+            if (ctx.measureText(test).width > maxWidth && line) {
+              lines.push(line);
+              line = words[i];
+            } else {
+              line = test;
+            }
+          }
+          lines.push(line);
+        });
+        return lines;
+      }
+
+      function uploadCustomized() {
+        var c = state.cropped;
+        if (!c) return;
+        var img = new Image();
+        img.onload = function () {
+          var canvas = document.createElement('canvas');
+          canvas.width = c.w;
+          canvas.height = c.h;
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, c.w, c.h);
+          ctx.drawImage(img, 0, 0);
+
+          var text = textInput.value.replace(/\s+$/, '');
+          var size = Math.max(8, Math.min(400, Number(textSize.value) || 100));
+          if (text.trim() !== '') {
+            var pad = Math.round(c.w * PAD_RATIO);
+            ctx.fillStyle = textColor.value;
+            ctx.font = '600 ' + size + 'px ' + textFamily.value;
+            ctx.textBaseline = 'top';
+            ctx.textAlign = state.align === 'center' ? 'center' : state.align === 'right' ? 'right' : 'left';
+            var x = state.align === 'center' ? c.w / 2 : state.align === 'right' ? c.w - pad : pad;
+            var lines = wrapLines(ctx, text, c.w - pad * 2);
+            var lineHeight = Math.round(size * 1.15);
+            var blockHeight = lines.length * lineHeight;
+            var y = textVertical.value === 'middle' ? (c.h - blockHeight) / 2
+                  : textVertical.value === 'bottom' ? c.h - pad - blockHeight
+                  : pad;
+            lines.forEach(function (line, i) {
+              ctx.fillText(line, x, y + i * lineHeight);
+            });
+          }
+
+          canvas.toBlob(function (blob) {
+            if (!blob) return;
+            finish(URL.createObjectURL(blob));
+          }, 'image/jpeg', 0.92);
+        };
+        img.src = c.url;
+      }
+
+      function finish(url) {
+        if (pagePreview) pagePreview.src = url;
+        closeModal();
+        showActiveSaveBar();
+      }
+
+      // ---- actions -----------------------------------------------------
+      primaryBtn.addEventListener('click', function () {
+        if (primaryBtn.disabled) return;
+        if (state.step === 'review') finish(state.url);
+        else if (state.step === 'crop') cropAndContinue();
+        else uploadCustomized();
+      });
+
+      customizeBtn.addEventListener('click', function () { enterCrop(false); });
+      backBtn.addEventListener('click', function () {
+        if (state.step === 'text') enterCrop(true);
+        else if (state.step === 'crop') setStep('review');
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
       });
     })();
 
@@ -5750,15 +6704,15 @@
         }
       }
       if (basicItems.length >= 3) {
-        // Podcast Category
-        var catRow = basicItems[2].querySelector('.pb-cat-row');
-        if (catRow) {
-          var catSpan = catRow.querySelector('.pb-vs span');
-          var cv = catSpan ? catSpan.textContent.trim() : '';
-          if (cv === '' || cv === 'Select a category') {
-            showFieldError(basicItems[2], 'Please select a podcast category');
-            errors.push({ tabId: 'basic', el: catRow });
-          }
+        // Podcast Category — the primary (first) row is the required one.
+        // Extra rows are optional; an empty one is just not saved.
+        var catItem = document.getElementById('pbCategoryItem');
+        var catRow = document.querySelector('#catRows .pb-cat-row');
+        var catSpan = catRow ? catRow.querySelector('.pb-vs span') : null;
+        var cv = catSpan ? catSpan.textContent.trim() : '';
+        if (cv === '' || cv === 'Select a category') {
+          if (catItem) showFieldError(catItem, 'Please select a podcast category');
+          errors.push({ tabId: 'basic', el: catRow });
         }
       }
 
@@ -6033,7 +6987,7 @@
           fieldLabel: 'RSS Feed URL',
           requiredMsg: 'Please enter your RSS feed URL',
           placeholder: 'https://feeds.example.com/myshow.xml',
-          hint: 'Example: https://feeds.podbean.org/elinazplus/feed.xml',
+          hint: 'Example: https://feeds.example.com/your-podcast/feed.xml',
           // the button is "Import", so the quoted word in the terms follows it
           terms: 'By clicking “Import,” you confirm that you own the rights to this podcast and that you agree to Podbean’s' + TERMS_LINK,
           redirect: true

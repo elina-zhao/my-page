@@ -474,7 +474,7 @@
 <h1 id="doc-top">Podcast Dashboard — Settings 模块功能说明文档<a class="h-anchor" href="#doc-top" aria-label="本节链接">#</a></h1>
 <blockquote class="doc-meta">
 <p>版本：v1.2<br />
-最后更新：2026-10-20<br />
+最后更新：2026-10-21<br />
 状态：产品需求说明</p>
 </blockquote>
 <div class="doc-notice" role="note">
@@ -731,7 +731,7 @@
 </tr>
 <tr>
 <td><strong>必填</strong></td>
-<td>是（标有红色 *）；至少选择一个分类</td>
+<td>是（标有红色 *）；第 1 行必须选择分类</td>
 </tr>
 <tr>
 <td><strong>占位文字</strong></td>
@@ -742,16 +742,24 @@
 <td>&quot;Apple Podcasts only recognizes the first category and subcategory.&quot;</td>
 </tr>
 <tr>
+<td><strong>选项</strong></td>
+<td>产品分类列表共 110 项，二级分类以「Parent:Child」形式与一级分类同列；下拉最高 280px，超出滚动</td>
+</tr>
+<tr>
+<td><strong>去重</strong></td>
+<td>已被其他行选中的分类，在该行下拉中置灰不可选</td>
+</tr>
+<tr>
 <td><strong>分类数量</strong></td>
 <td>默认显示 1 行；点击「+」增加一行，<strong>最多 3 行</strong>，达到上限后「+」隐藏</td>
 </tr>
 <tr>
 <td><strong>删除分类</strong></td>
-<td>第 2、3 行各有一个删除按钮，可单独移除；第 1 行不可删除</td>
+<td>第 2、3 行各有一个删除按钮，可单独移除；第 1 行不可删除；删除中间行时，下方分类依次上移</td>
 </tr>
 <tr>
 <td><strong>校验规则</strong></td>
-<td>Save 时至少选择一个分类；空值或仍为占位文字 &quot;Select a category&quot; 均视为未选择</td>
+<td>Save 时第 1 行必须选择分类；其余行可选，未选择的行不参与保存</td>
 </tr>
 <tr>
 <td><strong>错误提示</strong></td>
@@ -786,7 +794,19 @@
 </tr>
 <tr>
 <td><strong>上传按钮</strong></td>
-<td>&quot;Upload image&quot;；点击打开文件选择器，只接受 JPG / PNG；选中合法图片后进入 <strong>Image Editor</strong>，用户编辑并确认后预览更新为新图片</td>
+<td>&quot;Upload image&quot;；点击打开文件选择器，只接受 JPG / PNG；选中合法图片后打开编辑弹窗，确认上传后预览更新为新图片</td>
+</tr>
+<tr>
+<td><strong>编辑弹窗</strong></td>
+<td>三步：<strong>Upload image</strong>（预览 + 尺寸 / 文件大小；Upload 直接使用原图，Customize 进入裁剪）→ <strong>Crop image</strong>（正方形裁剪框，可拖动、可四角缩放，Continue）→ <strong>Customize text</strong>（Text / Horizontal / Vertical / Color / Font Size / Font Family，Upload 合成后上传）；可返回上一步，关闭则放弃</td>
+</tr>
+<tr>
+<td><strong>文件信息</strong></td>
+<td>预览下方显示 <code>{宽}x{高}px, {大小}</code>，大小以 KB / MB 显示并保留两位小数</td>
+</tr>
+<tr>
+<td><strong>3MB 上限</strong></td>
+<td>原图超过 3MB：弹窗内报错、Upload 禁用，Customize 仍可点击；裁剪后的文件按同一规则校验</td>
 </tr>
 <tr>
 <td><strong>图片要求</strong></td>
@@ -798,7 +818,7 @@
 </tr>
 <tr>
 <td><strong>错误提示</strong></td>
-<td>格式错误：&quot;Please upload a JPG or PNG image&quot;；为空：&quot;Please upload a podcast logo&quot;（文案待确认）</td>
+<td>格式错误：&quot;Please upload a JPG or PNG image&quot;；超限：&quot;This image is larger than 3 MB. Customize it to reduce the file size before uploading.&quot;；为空：&quot;Please upload a podcast logo&quot;（文案待确认）</td>
 </tr>
 </tbody>
 </table></div>
@@ -1471,7 +1491,7 @@
 │                                                    │
 │  RSS Feed URL                                      │
 │  ────────────────────────────────────────          │
-│  Example: https://feeds.podbean.org/…              │
+│  Example: https://feeds.example.com/…              │
 │                                                    │
 │                        [ Back ]   [ Next ]         │
 └────────────────────────────────────────────────────┘
@@ -1565,7 +1585,7 @@
 </tr>
 <tr>
 <td>提示</td>
-<td><code>Example: https://feeds.podbean.org/elinazplus/feed.xml</code>（灰色）</td>
+<td><code>Example: https://feeds.example.com/your-podcast/feed.xml</code>（灰色）</td>
 </tr>
 <tr>
 <td>必填</td>
@@ -2178,7 +2198,7 @@
 <tr>
 <td>Podcast Info</td>
 <td>Podcast Category</td>
-<td>至少选择一个分类，不能为空或占位文字 &quot;Select a category&quot;</td>
+<td>第 1 行必须选择分类，不能为空或占位文字 &quot;Select a category&quot;；其余行可选</td>
 <td>Please select a podcast category</td>
 </tr>
 <tr>
