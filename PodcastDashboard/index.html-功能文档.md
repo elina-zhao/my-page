@@ -1,8 +1,8 @@
 # Podcast Dashboard — 功能文档
 
-> 文档对象：`index.html`（Podcast Dashboard 仪表板页面）
-> 编写日期：2026-08-31
-> 最后更新：2026-10-20 16:00
+> 文档对象：`index.html`（Podcast Dashboard 仪表板页面）  
+> 编写日期：2026-08-31  
+> 最后更新：2026-10-21 11:45
 
 ---
 
@@ -10,18 +10,19 @@
 
 ## 1. 项目概述
 
-`index.html` 是播客创作者后台仪表板。侧边栏共六个页面，其中三个是同一套引导步骤清单的不同场景，另外三个是同一套数据面板的不同状态：
+`index.html` 是播客创作者后台仪表板。侧边栏共七个页面，其中三个是同一套引导步骤清单的不同场景，另外四个是同一套数据面板的不同状态：
 
-| 页面（侧边栏入口） | 内容 |
-|---|---|
-| Onboarding | 新用户开播引导；已产生下载数据时，改为展示数据视图（与 Dashboard 相同的统计卡片、下载趋势图和单集表现表） |
-| Onboarding (import) | 已有播客的导入引导：导入现有播客、发布新单集、提交到播客平台 |
-| Onboarding (private) | 私有播客引导：基础设置、发布私有单集、分配私有成员 |
-| Dashboard | 数据总览基准页：统计卡片、下载趋势图、单集表现表、成就、最近评论、播客资源 |
-| Dashboard (v2) | 与 Dashboard 布局一致；评论卡片为空状态（账号已关闭评论功能） |
-| Dashboard (v3) | 与 Dashboard 布局一致，整页演示全新播客：数据全为 0、徽章为空、没有评论 |
+| 页面（侧边栏入口）            | 内容                                                         |
+| -------------------- | ---------------------------------------------------------- |
+| Onboarding           | 新用户开播引导；已产生下载数据时，改为展示数据视图（与 Dashboard 相同的统计卡片、下载趋势图和单集表现表） |
+| Onboarding (import)  | 已有播客的导入引导：导入现有播客、发布新单集、提交到播客平台                             |
+| Onboarding (private) | 私有播客引导：基础设置、发布私有单集、分配私有成员                                  |
+| Dashboard            | 数据总览基准页：统计卡片、下载趋势图、单集表现表、成就、最近评论、播客资源                      |
+| Dashboard (v2)       | 与 Dashboard 布局一致；评论卡片为空状态（账号已关闭评论功能）                       |
+| Dashboard (v3)       | 与 Dashboard 布局一致，整页演示全新播客：数据全为 0、徽章为空、没有评论                 |
+| Dashboard (free)     | 与 Dashboard 布局一致；免费版状态，单集表现表被遮罩锁定，显示 "Upgrade to unlock" 按钮   |
 
-三个引导页结构相同，都使用同一套步骤清单卡片，差异只在步骤内容；三个 Dashboard 页面结构相同，差异只在数据状态和评论卡片的内容。
+三个引导页结构相同，都使用同一套步骤清单卡片，差异只在步骤内容；四个 Dashboard 页面结构相同，差异只在数据状态、单集表现表是否锁定，以及评论卡片的内容。
 
 ---
 
@@ -49,6 +50,8 @@
 - 点击卡片右上角 "View more →" 进入 Stats Episodes Performance 页面
 
 全新播客状态（Dashboard (v3)）下没有单集，表格位置显示空状态（图标 + "No data found."），并隐藏 "View more →"。
+
+免费版状态（Dashboard (free)）下，该表为付费功能，整块被遮罩锁定：表格保留原有结构但模糊、淡化且不可交互，遮罩中央显示锁图标、一行升级说明（深色文字）与 **Upgrade to unlock** 按钮。遮罩下的行是占位数据，并非创作者的真实单集；该状态下不显示 "View more →"。
 
 ### 2.4 成就系统（Achievements）
 
@@ -91,11 +94,11 @@
 
 三个 Dashboard 页面的右下角都有该卡片，标题统一为 "Recent Comments"，内容按页面状态区分：
 
-| 页面 | 卡片内容 |
-|---|---|
-| Dashboard | 评论列表：头像、作者、评论正文（最多 2 行）、关联单集与时间；右上角 "View more →" 进入评论详情 |
+| 页面             | 卡片内容                                                                                         |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| Dashboard      | 评论列表：头像、作者、评论正文（最多 2 行）、关联单集与时间；右上角 "View more →" 进入评论详情                                     |
 | Dashboard (v2) | 用户关闭评论功能时的空状态：灰色对话框图标 + "No comments" + "Commenting is turned off for your account."，没有按钮或链接 |
-| Dashboard (v3) | 空状态：灰色对话框图标 + "No comments yet" + "Your latest comments will show up here." |
+| Dashboard (v3) | 空状态：灰色对话框图标 + "No comments yet" + "Your latest comments will show up here."                  |
 
 两个空状态在卡片内垂直居中。
 
@@ -113,11 +116,11 @@ Dashboard 与 Dashboard (v2) 页面底部各有一组资源卡片，为创作者
 
 **步骤视图**
 
-| 步骤 | 标题与说明 | 按钮 | 点击后进入 |
-|---|---|---|---|
-| 1 | **Set up your podcast** — Set up your podcast’s basic details and briefly describe what it’s about. | Setup | Settings > Podcast Info 页面 |
-| 2 | **Publish your first episode** — Upload your first episode and make your show live. | Publish | Episodes 页面 |
-| 3 | **Submit to podcast platforms** — Reach listeners on Spotify, Apple Podcasts, and more. | Submit | Distribution > Podcast Apps 页面 |
+| 步骤 | 标题与说明                                                                                               | 按钮      | 点击后进入                          |
+| -- | --------------------------------------------------------------------------------------------------- | ------- | ------------------------------ |
+| 1  | **Set up your podcast** — Set up your podcast’s basic details and briefly describe what it’s about. | Setup   | Settings > Podcast Info 页面     |
+| 2  | **Publish your first episode** — Upload your first episode and make your show live.                 | Publish | Episodes 页面                    |
+| 3  | **Submit to podcast platforms** — Reach listeners on Spotify, Apple Podcasts, and more.             | Submit  | Distribution > Podcast Apps 页面 |
 
 - 第 1 步卡片内附 "Already have a show? Import existing podcast to Podbean" 链接，点击进入 Import to Podbean 页面。
 - 点击各步骤的按钮会完成该步骤，并进入上表对应的页面。
@@ -138,21 +141,21 @@ Dashboard 与 Dashboard (v2) 页面底部各有一组资源卡片，为创作者
 
 面向已有播客创作者的导入引导页，复用 Onboarding 的步骤清单卡片与页面结构，页面标题同为 **"Get your podcast ready"**，副标题同为 "Here are some useful tips to help you get started on your podcasting journey."。
 
-| 步骤 | 标题与说明 | 按钮 | 点击后进入 |
-|---|---|---|---|
-| 1 | **Import existing podcast to Podbean** — Bring your existing podcast or video series over in just 3 simple steps. | Import | Import to Podbean 页面 |
-| 2 | **Publish new episodes** — Go to publish or schedule new episodes on Podbean. Your imported episodes will also be listed there. | Publish | Episodes 页面 |
-| 3 | **Submit to podcast platforms** — Reach listeners on Spotify, Apple Podcasts, and more. | Submit | Distribution > Podcast Apps 页面 |
+| 步骤 | 标题与说明                                                                                                                           | 按钮      | 点击后进入                          |
+| -- | ------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------ |
+| 1  | **Import existing podcast to Podbean** — Bring your existing podcast or video series over in just 3 simple steps.               | Import  | Import to Podbean 页面           |
+| 2  | **Publish new episodes** — Go to publish or schedule new episodes on Podbean. Your imported episodes will also be listed there. | Publish | Episodes 页面                    |
+| 3  | **Submit to podcast platforms** — Reach listeners on Spotify, Apple Podcasts, and more.                                         | Submit  | Distribution > Podcast Apps 页面 |
 
 ### 2.9 私有播客引导（Onboarding (private)）
 
 面向私有播客创作者的引导页，页面标题与副标题、步骤清单卡片、底部提示与资源区均与 Onboarding 一致。
 
-| 步骤 | 标题与说明 | 按钮 | 点击后进入 |
-|---|---|---|---|
-| 1 | **Set up your podcast** — Set up your podcast’s basic details and briefly describe what it’s about. | Setup | Settings > Podcast Info 页面 |
-| 2 | **Publish private episodes** — Upload and publish your first private episode. Only your members can access your private podcast by logging in. | Publish | Episodes 页面（发布私有单集） |
-| 3 | **Assign private members** — Add or manage the members who have access to your private podcast. | Manage | 私有成员管理页面（企业管理后台 private members 页面） |
+| 步骤 | 标题与说明                                                                                                                                          | 按钮      | 点击后进入                               |
+| -- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ----------------------------------- |
+| 1  | **Set up your podcast** — Set up your podcast’s basic details and briefly describe what it’s about.                                            | Setup   | Settings > Podcast Info 页面          |
+| 2  | **Publish private episodes** — Upload and publish your first private episode. Only your members can access your private podcast by logging in. | Publish | Episodes 页面（发布私有单集）                 |
+| 3  | **Assign private members** — Add or manage the members who have access to your private podcast.                                                | Manage  | 私有成员管理页面（企业管理后台 private members 页面） |
 
 ---
 
