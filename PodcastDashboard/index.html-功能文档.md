@@ -2,7 +2,7 @@
 
 > 文档对象：`index.html`（Podcast Dashboard 仪表板页面）  
 > 编写日期：2026-08-31  
-> 最后更新：2026-10-21 11:45
+> 最后更新：2026-10-22 16:20
 
 ---
 
@@ -10,19 +10,18 @@
 
 ## 1. 项目概述
 
-`index.html` 是播客创作者后台仪表板。侧边栏共七个页面，其中三个是同一套引导步骤清单的不同场景，另外四个是同一套数据面板的不同状态：
+`index.html` 是播客创作者后台仪表板。侧边栏共六个页面，其中三个是同一套引导步骤清单的不同场景，另外三个是同一套数据面板的不同状态：
 
 | 页面（侧边栏入口）            | 内容                                                         |
 | -------------------- | ---------------------------------------------------------- |
 | Onboarding           | 新用户开播引导；已产生下载数据时，改为展示数据视图（与 Dashboard 相同的统计卡片、下载趋势图和单集表现表） |
 | Onboarding (import)  | 已有播客的导入引导：导入现有播客、发布新单集、提交到播客平台                             |
 | Onboarding (private) | 私有播客引导：基础设置、发布私有单集、分配私有成员                                  |
-| Dashboard            | 数据总览基准页：统计卡片、下载趋势图、单集表现表、成就、最近评论、播客资源                      |
-| Dashboard (v2)       | 与 Dashboard 布局一致；评论卡片为空状态（账号已关闭评论功能）                       |
-| Dashboard (v3)       | 与 Dashboard 布局一致，整页演示全新播客：数据全为 0、徽章为空、没有评论                 |
-| Dashboard (free)     | 与 Dashboard 布局一致；免费版状态，单集表现表与成就卡片均被遮罩锁定，显示 "Upgrade to unlock" 按钮 |
+| Dashboard            | 数据总览基准页：统计卡片、下载趋势图、单集表现表、播客资源                              |
+| Dashboard (v3)       | 与 Dashboard 布局一致，整页演示全新播客：数据全为 0，单集表现表为空状态                  |
+| Dashboard (free)     | 与 Dashboard 布局一致；免费版状态，单集表现表被遮罩锁定，显示 "Upgrade to unlock" 按钮      |
 
-三个引导页结构相同，都使用同一套步骤清单卡片，差异只在步骤内容；四个 Dashboard 页面结构相同，差异只在数据状态、单集表现表是否锁定，以及评论卡片的内容。
+三个引导页结构相同，都使用同一套步骤清单卡片，差异只在步骤内容；三个 Dashboard 页面结构相同，差异只在数据状态与单集表现表是否锁定。
 
 ---
 
@@ -53,68 +52,51 @@
 
 免费版状态（Dashboard (free)）下，该表为付费功能，整块被遮罩锁定：表格保留原有结构但模糊、淡化且不可交互，遮罩中央显示锁图标、一行深色升级说明 —— "Upgrade your plan to see how every episode performs in its first week and first month." —— 以及 **Upgrade to unlock** 按钮。遮罩下的行是占位数据，并非创作者的真实单集；该状态下不显示 "View more →"。
 
-### 2.4 成就系统（Achievements）
+### 2.4 成就（Achievements）
 
-卡片顶部展示当前选中徽章的大图，旁边是 **Share（分享）** 按钮；下方是两个徽章格子，分别对应两个徽章家族。
+成就以「获得成就后的祝贺弹窗」呈现。Dashboard 页面不再展示成就卡片；用户获得新成就后，第一次进入 Dashboard 时会收到祝贺。
 
-**两个徽章家族**
+**触发时机**
 
-徽章分为发布类和下载类两个家族，按照实际 Badge 阶梯进行展示。
+- 用户获得新成就后，第一次进入 Dashboard 页面时弹出
+- 同一会话内只弹一次：关闭后再次进入 Dashboard 不再出现
+- 没有获得任何成就时不弹出
 
-**格子的显示规则**
+**弹窗内容**
 
-- 发布类固定在前，下载类在后。
-- 某家族已解锁徽章：显示该家族**最新**的一枚（亮），格子内只显示徽章名称，不标注解锁月份或日期。
-- 某家族还没有徽章：显示该家族的第一枚（灰），只显示徽章名称，不显示 "0 / 1"、"0 / 100" 这类进度数字。
+| 区域 | 内容 |
+| -- | -- |
+| 海报图 | 成就对应的祝贺海报，当前示例为 "Congratulations on publishing 1 episode! Here's to the next 1!" |
+| 标签 | **ACHIEVEMENT UNLOCKED** |
+| 说明文案 | "You just published your first episode. Share the milestone with your listeners." |
+| 分享 | Post（X）、Facebook、LinkedIn 三个分享按钮 |
 
-**切换与分享**
+**庆祝效果**
 
-- 两个格子可点选：点击已点亮的格子，顶部大图切换为那一枚徽章。
-- 选中状态每个页面各自独立，默认展示第一个点亮的格子。
-- 点击 Share 打开分享菜单，菜单中显示 Facebook 与 X 图标。
-- 点击图标即可分享，分享内容会自动带上当前徽章的图片和文字；分享对象始终跟随顶部大图展示的徽章。
+- 弹窗打开时播放彩纸动画
 
-**零徽章状态**
+**关闭方式**
 
-两个家族都没有徽章时（新播客）：顶部改为空状态，并隐藏 Share；两个格子都变灰、都不可点，分别显示两个家族的第一枚徽章。
+- 点击右上角关闭按钮、点击遮罩、按 Esc 均可关闭
 
-空状态文案（发布类与下载类共用同一句）：
+### 2.5 评论（Comments）
 
-- 标题："No badges yet"
-- 说明："Your latest badge will show up here."
+Dashboard 页面不再展示 "Recent Comments" 卡片，评论入口统一收在设置层，共两处：
 
-说明文字只描述这块区域将来会展示什么，不写具体解锁条件（不出现"发布第一集""达到 1K 下载"这类门槛），因此发布类和下载类共用同一句：无论用户是还没发布单集，还是已经发布但尚未拿到任何徽章，这句话都成立。只要任一家族获得徽章，顶部就恢复为该徽章的大图与 Share，空状态不再出现。
+| 入口 | 位置 | 说明 |
+| -- | -- | -- |
+| Profile | 左侧边栏头像 / 个人资料 | 进入个人资料页面后管理评论 |
+| 播客列表的更多操作 | 播客列表中该播客右侧的「⋮」更多操作 | 选择 **Manage Comments** 进入评论管理页 |
 
-**其他规则**
-
-- 某家族全部解锁时，显示最高阈值那一枚，不再显示"下一枚"。
-- 同一家族一次解锁多枚时只占一格，取阈值最高的那枚。
-
-**免费版锁定状态**
-
-免费版（Dashboard (free)）不提供成就功能，卡片改为锁定状态：不展示徽章格子，只在顶部保留一枚模糊的徽章大图作为预览，并整体覆盖遮罩。遮罩中央为锁图标、一行深色说明 —— "Upgrade your plan to collect achievements and share your milestones with listeners." —— 以及 **Upgrade to unlock** 按钮；该状态不显示 "View more →"。
-
-### 2.5 最近评论（Recent Comments）
-
-四个 Dashboard 页面的右下角都有该卡片，标题统一为 "Recent Comments"，内容按页面状态区分：
-
-| 页面             | 卡片内容                                                                                         |
-| -------------- | -------------------------------------------------------------------------------------------- |
-| Dashboard      | 评论列表：头像、作者、评论正文（最多 2 行）、关联单集与时间；右上角 "View more →" 进入评论详情                                     |
-| Dashboard (v2) | 用户关闭评论功能时的空状态：灰色对话框图标 + "No comments" + "Commenting is turned off for your account."，没有按钮或链接 |
-| Dashboard (v3) | 空状态：灰色对话框图标 + "No comments yet" + "Your latest comments will show up here."                  |
-
-两个空状态在卡片内垂直居中。
+两处入口进入的都是同一个评论管理页面。评论功能关闭时，评论管理页内展示关闭状态说明。
 
 ### 2.6 播客资源（Podcast Resources）
 
-Dashboard、Dashboard (v2)、Dashboard (v3) 与 Dashboard (free) 页面底部各有一组资源卡片，为创作者提供教程入口，两列布局。
+Dashboard、Dashboard (v3) 与 Dashboard (free) 页面底部各有一组资源卡片，为创作者提供教程入口。
 
-该内容块为新增内容块，卡片中的文章目前为占位内容，需要 BO 提供相应功能后进行配置和替换。
+卡片以横向轮播展示：一屏显示 3 张半（第 4 张只露出半张，提示右侧还有内容），共 10 篇示例文章。区块标题右侧的左右箭头每次翻 3 张，翻到两端时对应箭头置灰；也支持触控板或触屏横向滑动。
 
-每张卡片均为上图下文结构，整张卡片可点击（当前为占位链接）。
-
-区块标题右侧的 "Read more →" 在新标签页打开 Podcast Academy（https://www.podbean.com/podcast-academy）。
+每张卡片均为上图下文结构，整张卡片可点击（当前为占位链接）。卡片中的文章目前为占位内容，需要 BO 提供相应功能后进行配置和替换。
 
 ### 2.7 引导流程（Onboarding）
 
@@ -135,7 +117,7 @@ Dashboard、Dashboard (v2)、Dashboard (v3) 与 Dashboard (free) 页面底部各
 - 未完成与已完成步骤的标题、圆圈和按钮样式见设计稿。
 - 底部 "Skip the Guide →" 可跳过引导，直接进入 Dashboard。
 - 提示文案 "You will see your podcast statistics here after you get a few downloads." 与 "Getting started resources" 资源区都位于步骤视图内，切换到数据视图时一并隐藏。
-- "Getting started resources" 资源区需要 BO 新增相应功能来配置内容。
+- "Getting started resources" 资源区与 Dashboard 的 Podcast Resources 采用同一种横向轮播（一屏 3 张半、共 10 篇示例文章、左右箭头翻页），同样需要 BO 新增相应功能来配置内容。
 
 **数据视图**
 
