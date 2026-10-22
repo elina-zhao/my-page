@@ -520,7 +520,7 @@
 <div class="toc-row lvl4" data-id="sec-3-4-6" data-parent="sec-3-4"><a class="toc-link" href="#sec-3-4-6">3.4.6 Redirect to a New Feed（Feed 重定向）</a></div>
 </div>
 </div>
-<div class="toc-row lvl2" data-id="sec-4"><a class="toc-link" href="#sec-4">页面二：Plugin（插件管理）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-4" aria-label="展开 页面二：Plugin（插件管理） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div>
+<div class="toc-row lvl2" data-id="sec-4"><a class="toc-link" href="#sec-4">页面二：Plugins（插件管理）</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-4" aria-label="展开 页面二：Plugins（插件管理） 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div>
 <div class="toc-children" id="grp-sec-4" data-parent="sec-4">
 <div class="toc-row lvl3" data-id="sec-4-0" data-parent="sec-4"><a class="toc-link" href="#sec-4-0">4.0 页面结构</a></div>
 <div class="toc-row lvl3" data-id="sec-4-1" data-parent="sec-4"><a class="toc-link" href="#sec-4-1">4.1 插件列表</a></div>
@@ -575,13 +575,13 @@
 </div>
 <hr />
 <h2 id="sec-1">1. 产品概述<a class="h-anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
-<p><strong>Settings</strong> 是播客仪表盘的核心配置模块，包含三个子页面：General（节目基本信息、元数据与 Feed 配置）、Plugin（插件集成管理）、Import（从其他平台导入节目）。</p>
+<p><strong>Settings</strong> 是播客仪表盘的核心配置模块，包含三个子页面：General（节目基本信息、元数据与 Feed 配置）、Plugins（插件集成管理）、Import（从其他平台导入节目）。</p>
 <hr />
 <h2 id="sec-2">2. 导航与页面结构<a class="h-anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
 <h3 id="sec-2-1">2.1 侧边栏层级<a class="h-anchor" href="#sec-2-1" aria-label="本节链接">#</a></h3>
 <pre><code>Settings                              ← 一级导航（带箭头展开/收起）
 ├── General（通用设置）               ← 默认页，active 状态
-├── Plugin（插件管理）
+├── Plugins（插件管理）
 └── Import（导入）
 </code></pre>
 <ul>
@@ -591,7 +591,7 @@
 </ul>
 <h3 id="sec-2-2">2.2 交互逻辑<a class="h-anchor" href="#sec-2-2" aria-label="本节链接">#</a></h3>
 <h4 id="sec-2-2-1">2.2.1 未保存修改时切换页面<a class="h-anchor" href="#sec-2-2-1" aria-label="本节链接">#</a></h4>
-<p>General 有一个 Save bar，四个 Tab 共用（Plugin、Import 没有 Save bar）。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：</p>
+<p>General 有一个 Save bar，四个 Tab 共用（Plugins、Import 没有 Save bar）。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：</p>
 <pre><code>┌─────────────────────────────────────┐
 │                                     │
 │         Unsaved Changes             │
@@ -1427,10 +1427,10 @@
 </tbody>
 </table></div>
 <hr />
-<h2 id="sec-4">4. 页面二：Plugin（插件管理）<a class="h-anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
+<h2 id="sec-4">4. 页面二：Plugins（插件管理）<a class="h-anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
 <h3 id="sec-4-0">4.0 页面结构<a class="h-anchor" href="#sec-4-0" aria-label="本节链接">#</a></h3>
 <pre><code>┌──────────────────────────────────────────────┐
-│  Plugin                   [Get more plugins] │
+│  Plugins                  [Get more plugins] │
 │                                              │
 │  [logo] Episode Endnote              ✎  ✕    │
 │         描述文字…                            │
@@ -1442,7 +1442,7 @@
 <p>页面没有 Save bar：插件操作即时生效（编辑走弹窗，删除走确认弹窗）。</p>
 <p><strong>空状态（默认）</strong>：页面默认为空，不展示任何插件行，居中显示 "Take your podcast to the next level by adding popular plugins and services."。</p>
 <h3 id="sec-4-1">4.1 插件列表<a class="h-anchor" href="#sec-4-1" aria-label="本节链接">#</a></h3>
-<p>Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称、描述与操作按钮。</p>
+<p>Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称、描述与操作按钮。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -1523,7 +1523,7 @@
 </tr>
 <tr>
 <td><strong>Get more plugins</strong></td>
-<td>Plugin 页面</td>
+<td>Plugins 页面</td>
 <td>打开 <code>https://apps.podbean.com</code>（当前标签页）</td>
 </tr>
 </tbody>
@@ -2162,7 +2162,7 @@
 <hr />
 <h2 id="sec-6">6. 全局交互规则<a class="h-anchor" href="#sec-6" aria-label="本节链接">#</a></h2>
 <h3 id="sec-6-1">6.1 Save Bar（底部保存栏）<a class="h-anchor" href="#sec-6-1" aria-label="本节链接">#</a></h3>
-<p>General 页面包含一个 Save bar，四个 Tab 共用。Plugin 与 Import 页面不包含 Save bar。</p>
+<p>General 页面包含一个 Save bar，四个 Tab 共用。Plugins 与 Import 页面不包含 Save bar。</p>
 <pre><code>┌──────────────────────────────────────────────┐
 │  …页面内容…                                   │
 │                                               │
@@ -2220,7 +2220,7 @@
 <ul>
 <li><strong>General</strong>：校验四个 Tab 的必填与长度规则（见 7.2）；有错时切到第一个出错 Tab，字段与 Tab 标签标红</li>
 <li><strong>General · Feed 标签页</strong>：校验三个开关开启后的必填项与格式，以及 Episode Number Limit 的整数与上限（见 7.2）</li>
-<li><strong>Plugin / Import</strong>：无 Save bar，插件操作即时生效，导入状态由结果区承担</li>
+<li><strong>Plugins / Import</strong>：无 Save bar，插件操作即时生效，导入状态由结果区承担</li>
 </ul>
 <h3 id="sec-6-2">6.2 修改检测<a class="h-anchor" href="#sec-6-2" aria-label="本节链接">#</a></h3>
 <p>以下操作均会触发 Save bar 显示：</p>

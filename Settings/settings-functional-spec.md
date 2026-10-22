@@ -41,7 +41,7 @@
      - [3.4.4 Alternative Website URL](#344-alternative-website-url)
      - [3.4.5 Generate audio-only feed（生成纯音频 feed）](#345-generate-audio-only-feed生成纯音频-feed)
      - [3.4.6 Redirect to a New Feed（Feed 重定向）](#346-redirect-to-a-new-feedfeed-重定向)
-4. [页面二：Plugin（插件管理）](#4-页面二plugin插件管理)
+4. [页面二：Plugins（插件管理）](#4-页面二plugins插件管理)
    - [4.0 页面结构](#40-页面结构)
    - [4.1 插件列表](#41-插件列表)
    - [4.2 插件操作](#42-插件操作)
@@ -74,7 +74,7 @@
 
 ## 1. 产品概述
 
-**Settings** 是播客仪表盘的核心配置模块，包含三个子页面：General（节目基本信息、元数据与 Feed 配置）、Plugin（插件集成管理）、Import（从其他平台导入节目）。
+**Settings** 是播客仪表盘的核心配置模块，包含三个子页面：General（节目基本信息、元数据与 Feed 配置）、Plugins（插件集成管理）、Import（从其他平台导入节目）。
 
 ---
 
@@ -85,7 +85,7 @@
 ```
 Settings                              ← 一级导航（带箭头展开/收起）
 ├── General（通用设置）               ← 默认页，active 状态
-├── Plugin（插件管理）
+├── Plugins（插件管理）
 └── Import（导入）
 ```
 
@@ -97,7 +97,7 @@ Settings                              ← 一级导航（带箭头展开/收起�
 
 #### 2.2.1 未保存修改时切换页面
 
-General 有一个 Save bar，四个 Tab 共用（Plugin、Import 没有 Save bar）。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：
+General 有一个 Save bar，四个 Tab 共用（Plugins、Import 没有 Save bar）。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：
 
 ```
 ┌─────────────────────────────────────┐
@@ -437,13 +437,13 @@ General 有一个 Save bar，四个 Tab 共用（Plugin、Import 没有 Save bar
 
 ---
 
-## 4. 页面二：Plugin（插件管理）
+## 4. 页面二：Plugins（插件管理）
 
 ### 4.0 页面结构
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Plugin                   [Get more plugins] │
+│  Plugins                  [Get more plugins] │
 │                                              │
 │  [logo] Episode Endnote              ✎  ✕    │
 │         描述文字…                            │
@@ -459,7 +459,7 @@ General 有一个 Save bar，四个 Tab 共用（Plugin、Import 没有 Save bar
 
 ### 4.1 插件列表
 
-Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称、描述与操作按钮。
+Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称、描述与操作按钮。
 
 | 插件 | 描述 | 可编辑 | 可删除 |
 |---|---|---|---|
@@ -481,7 +481,7 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 |---|---|---|
 | **Edit（铅笔）** | Episode Endnote / Import Files from Dropbox / FTP Upload / SEO Meta Tags / Google Analytics | 打开对应编辑弹窗（见 4.3） |
 | **Delete（×）** | 全部七行 | 打开 **Delete Plugin** 确认弹窗 |
-| **Get more plugins** | Plugin 页面 | 打开 `https://apps.podbean.com`（当前标签页） |
+| **Get more plugins** | Plugins 页面 | 打开 `https://apps.podbean.com`（当前标签页） |
 
 **删除确认弹窗：**
 
@@ -772,7 +772,7 @@ Import 之后直接进入「正在导入」：
 
 ### 6.1 Save Bar（底部保存栏）
 
-General 页面包含一个 Save bar，四个 Tab 共用。Plugin 与 Import 页面不包含 Save bar。
+General 页面包含一个 Save bar，四个 Tab 共用。Plugins 与 Import 页面不包含 Save bar。
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -802,7 +802,7 @@ General 页面包含一个 Save bar，四个 Tab 共用。Plugin 与 Import 页�
 
 - **General**：校验四个 Tab 的必填与长度规则（见 7.2）；有错时切到第一个出错 Tab，字段与 Tab 标签标红
 - **General · Feed 标签页**：校验三个开关开启后的必填项与格式，以及 Episode Number Limit 的整数与上限（见 7.2）
-- **Plugin / Import**：无 Save bar，插件操作即时生效，导入状态由结果区承担
+- **Plugins / Import**：无 Save bar，插件操作即时生效，导入状态由结果区承担
 
 ### 6.2 修改检测
 
