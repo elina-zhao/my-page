@@ -1,7 +1,7 @@
 # Podcast Dashboard — Settings 模块功能说明文档
 
-> 版本：v1.2  
-> 最后更新：2026-10-21  
+> 版本：v1.3  
+> 最后更新：2026-10-22  
 > 状态：产品需求说明
 
 > ⚠️ **请注意：** 本功能文档根据当前版本整理，可能存在遗漏或理解偏差。如与线上实际表现不一致，请再次确认。
@@ -15,66 +15,66 @@
    - [2.1 侧边栏层级](#21-侧边栏层级)
    - [2.2 交互逻辑](#22-交互逻辑)
      - [2.2.1 未保存修改时切换页面](#221-未保存修改时切换页面)
-3. [页面一：Podcast Info（播客信息）](#3-页面一podcast-info播客信息)
+3. [页面一：General（通用设置）](#3-页面一general通用设置)
    - [3.0 页面结构](#30-页面结构)
      - [Tab 切换规则](#tab-切换规则)
      - [Tab 切换与未保存状态](#tab-切换与未保存状态)
-   - [3.1 Basic 标签页](#31-basic-标签页基础信息)
-     - [3.1.1 Podcast Title](#311-podcast-title播客标题)
-     - [3.1.2 Brief Description](#312-brief-description简介)
-     - [3.1.3 Podcast Category](#313-podcast-category播客分类)
-     - [3.1.4 Podcast Logo](#314-podcast-logo播客封面)
-   - [3.2 Author & Region 标签页](#32-author--region-标签页作者与区域)
-     - [3.2.1 Author](#321-author作者)
-     - [3.2.2 Copyright](#322-copyright版权信息)
-     - [3.2.3 Language](#323-language语言)
-     - [3.2.4 Country of Origin](#324-country-of-origin原产国分发区域)
-     - [3.2.5 Timezone](#325-timezone时区)
-   - [3.3 Content Classification 标签页](#33-content-classification-标签页内容分类)
-     - [3.3.1 Podcast Type](#331-podcast-type播客类型)
-     - [3.3.2 Content Explicit](#332-content-explicit内容分级)
-4. [页面二：Feed（RSS 源管理）](#4-页面二feedrss-源管理)
+     - [Save 校验与错误提示](#save-校验与错误提示)
+   - [3.1 Basic 标签页（基础信息）](#31-basic-标签页基础信息)
+     - [3.1.1 Podcast Title（播客标题）](#311-podcast-title播客标题)
+     - [3.1.2 Brief Description（简介）](#312-brief-description简介)
+     - [3.1.3 Podcast Category（播客分类）](#313-podcast-category播客分类)
+     - [3.1.4 Podcast Logo（播客封面）](#314-podcast-logo播客封面)
+     - [3.1.5 Author（作者）](#315-author作者)
+   - [3.2 Region 标签页（区域）](#32-region-标签页区域)
+     - [3.2.1 Language（语言）](#321-language语言)
+     - [3.2.2 Country of Origin（原产国/分发区域）](#322-country-of-origin原产国分发区域)
+     - [3.2.3 Timezone（时区）](#323-timezone时区)
+   - [3.3 Content 标签页（内容）](#33-content-标签页内容)
+     - [3.3.1 Podcast Type（播客类型）](#331-podcast-type播客类型)
+     - [3.3.2 Content Explicit（内容分级）](#332-content-explicit内容分级)
+     - [3.3.3 Copyright（版权信息）](#333-copyright版权信息)
+   - [3.4 Feed 标签页（RSS 源管理）](#34-feed-标签页rss-源管理)
+     - [3.4.1 Podcast Feed URL（RSS 源地址）](#341-podcast-feed-urlrss-源地址)
+     - [3.4.2 Episode Number Limit（剧集数量限制）](#342-episode-number-limit剧集数量限制)
+     - [3.4.3 Ownership Verification Email（所有者验证邮箱）](#343-ownership-verification-email所有者验证邮箱)
+     - [3.4.4 Alternative Website URL](#344-alternative-website-url)
+     - [3.4.5 Generate audio-only feed（生成纯音频 feed）](#345-generate-audio-only-feed生成纯音频-feed)
+     - [3.4.6 Redirect to a New Feed（Feed 重定向）](#346-redirect-to-a-new-feedfeed-重定向)
+4. [页面二：Plugin（插件管理）](#4-页面二plugin插件管理)
    - [4.0 页面结构](#40-页面结构)
-   - [4.1 Podcast Feed URL](#41-podcast-feed-urlrss-源地址)
-   - [4.2 Episode Number Limit](#42-episode-number-limit剧集数量限制)
-   - [4.3 Ownership Verification Email](#43-ownership-verification-email所有者验证邮箱)
-   - [4.4 Alternative Website URL](#44-alternative-website-url)
-   - [4.5 Generate audio-only feed](#45-generate-audio-only-feed生成纯音频-feed)
-   - [4.6 Redirect to a New Feed](#46-redirect-to-a-new-feedfeed-重定向)
-5. [页面三：Plugin（插件管理）](#5-页面三plugin插件管理)
+   - [4.1 插件列表](#41-插件列表)
+   - [4.2 插件操作](#42-插件操作)
+   - [4.3 插件编辑弹窗](#43-插件编辑弹窗)
+   - [4.4 Get More Plugins](#44-get-more-plugins)
+5. [页面三：Import（导入）](#5-页面三import导入)
    - [5.0 页面结构](#50-页面结构)
-   - [5.1 插件列表](#51-插件列表)
-   - [5.2 插件操作](#52-插件操作)
-   - [5.3 插件编辑弹窗](#53-插件编辑弹窗)
-   - [5.4 Get More Plugins](#54-get-more-plugins)
-6. [页面四：Import to Podbean（导入）](#6-页面四import-to-podbean导入)
-   - [6.0 页面结构](#60-页面结构)
-   - [6.1 入口：选择来源](#61-入口选择来源)
-   - [6.2 步骤一：填写地址](#62-步骤一填写地址)
-   - [6.3 步骤二：范围与输出类型](#63-步骤二范围与输出类型)
-   - [6.4 步骤三：格式与可选设置](#64-步骤三格式与可选设置)
-   - [6.5 导入状态（Import 之后）](#65-导入状态import-之后)
-   - [6.6 301 Redirect 校验与完成态](#66-301-redirect-校验与完成态)
-   - [6.7 免费账号（Free plan）：不能开始导入](#67-免费账号free-plan不能开始导入)
-   - [6.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus](#68-unlimited-audio-账号audio-plan视频播客需要-plus)
-7. [全局交互规则](#7-全局交互规则)
-   - [7.1 Save Bar（底部保存栏）](#71-save-bar底部保存栏)
-   - [7.2 修改检测](#72-修改检测)
-   - [7.3 自定义下拉选择器](#73-自定义下拉选择器)
-   - [7.5 页面切换](#75-页面切换)
-8. [数据校验规则](#8-数据校验规则)
-   - [8.1 必填字段](#81-必填字段)
-   - [8.2 格式与长度校验](#82-格式与长度校验)
-   - [8.3 保存前校验流程](#83-保存前校验流程)
-9. [附录：新老页面对比](#附录新老页面对比)
-   - [Podcast Info 页面变化说明](#podcast-info-页面变化说明)
-   - [Feed 页面变化说明](#feed-页面变化说明)
+   - [5.1 入口：选择来源](#51-入口选择来源)
+   - [5.2 步骤一：填写地址](#52-步骤一填写地址)
+   - [5.3 步骤二：范围与输出类型](#53-步骤二范围与输出类型)
+   - [5.4 步骤三：格式与可选设置](#54-步骤三格式与可选设置)
+   - [5.5 导入状态（Import 之后）](#55-导入状态import-之后)
+   - [5.6 301 Redirect 校验与完成态](#56-301-redirect-校验与完成态)
+   - [5.7 免费账号（Free plan）：不能开始导入](#57-免费账号free-plan不能开始导入)
+   - [5.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus](#58-unlimited-audio-账号audio-plan视频播客需要-plus)
+6. [全局交互规则](#6-全局交互规则)
+   - [6.1 Save Bar（底部保存栏）](#61-save-bar底部保存栏)
+   - [6.2 修改检测](#62-修改检测)
+   - [6.3 自定义下拉选择器](#63-自定义下拉选择器)
+   - [6.4 页面切换](#64-页面切换)
+7. [数据校验规则](#7-数据校验规则)
+   - [7.1 必填字段](#71-必填字段)
+   - [7.2 格式与长度校验](#72-格式与长度校验)
+   - [7.3 保存前校验流程](#73-保存前校验流程)
+8. [附录：新老页面对比](#附录新老页面对比)
+   - [General 页面变化说明](#general-页面变化说明)
+   - [Feed 标签页变化说明](#feed-标签页变化说明)
 
 ---
 
 ## 1. 产品概述
 
-**Settings** 是播客仪表盘的核心配置模块，包含四个子页面：Podcast Info（节目基本信息与元数据）、Feed（RSS 源与分发配置）、Plugin（插件集成管理）、Import to Podbean（从其他平台导入节目）。
+**Settings** 是播客仪表盘的核心配置模块，包含三个子页面：General（节目基本信息、元数据与 Feed 配置）、Plugin（插件集成管理）、Import（从其他平台导入节目）。
 
 ---
 
@@ -84,21 +84,20 @@
 
 ```
 Settings                              ← 一级导航（带箭头展开/收起）
-├── Podcast Info（播客信息）           ← 默认页，active 状态
-├── Feed（RSS 源管理）
+├── General（通用设置）               ← 默认页，active 状态
 ├── Plugin（插件管理）
-└── Import to Podbean（导入）
+└── Import（导入）
 ```
 
 - Settings 是一级导航条目，点击后展开 / 收起其子菜单。
-- 四个子页面在同一内容区内切换，不发生整页跳转。
-- 进入 Settings 时默认展示 **Podcast Info**。
+- 三个子页面在同一内容区内切换，不发生整页跳转。
+- 进入 Settings 时默认展示 **General**。
 
 ### 2.2 交互逻辑
 
 #### 2.2.1 未保存修改时切换页面
 
-Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbean 没有 Save bar）。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：
+General 有一个 Save bar，四个 Tab 共用（Plugin、Import 没有 Save bar）。当用户在当前页面有未保存的修改（Save bar 可见）时，直接点击其他页面菜单，弹出居中确认对话框：
 
 ```
 ┌─────────────────────────────────────┐
@@ -128,16 +127,16 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 ---
 
-## 3. 页面一：Podcast Info（播客信息）
+## 3. 页面一：General（通用设置）
 
 ### 3.0 页面结构
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Podcast Info                                 │
+│  General                                      │
 │                                               │
 │  ┌──────────────────────────────────────────┐ │
-│  │  Basic  │ Author & Region │ Content Classification │  ← 横向 Tab
+│  │  Basic │ Region │ Content │ Feed          │  ← 横向 Tab
 │  └──────────────────────────────────────────┘ │
 │                                               │
 │  ┌──────────────────────────────────────────┐ │
@@ -149,13 +148,13 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 #### Tab 切换规则
 
-- 三个 Tab 横向排列，底部有下划线指示当前激活项
+- 四个 Tab 横向排列，底部有下划线指示当前激活项
 - 点击 Tab 只切换面板内容，不触发页面跳转
 - 切换页面后自动回到第一个 Tab（Basic）
 
 #### Tab 切换与未保存状态
 
-三个 Tab 同属 Podcast Info 页面，共享同一个 Save bar。Tab 切换时处理策略如下：
+四个 Tab 同属 General 页面，共享同一个 Save bar。Tab 切换时处理策略如下：
 
 | 场景 | 处理方式 |
 |---|---|
@@ -167,11 +166,11 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 #### Save 校验与错误提示
 
-点击 Save 时，系统校验 Podcast Info 页面下的所有三个 Tab 的必填字段：
+点击 Save 时，系统校验 General 页面下的所有四个 Tab 的必填字段：
 
 | 步骤 | 行为 |
 |---|---|
-| 1. 校验 | 遍历三个 Tab 的所有可见字段，执行校验规则 |
+| 1. 校验 | 遍历四个 Tab 的所有可见字段，执行校验规则 |
 | 2. 有错误 | 自动切换到**第一个包含错误**的 Tab；该 Tab 内第一个错误字段下方显示错误提示，并滚动到可视区域；所有包含错误的 Tab 标签变为红色 |
 | 3. 全部通过 | 一次性提交所有 Tab 的字段值，Toast 提示 **"Saved successfully"**，Save bar 隐藏 |
 
@@ -190,7 +189,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **产品默认值** | `The {subdomain}'s Podcast` — 创建播客频道时自动生成，其中 `{subdomain}` 为用户注册时分配的子域名 |
 | **占位提示** | "Make a clear, concise name for your title" |
 | **输入样式** | 下划线输入框，聚焦时高亮 |
-| **校验规则** | 不能为空，且最多 200 字符（见 8.2） |
+| **校验规则** | 不能为空，且最多 200 字符（见 7.2） |
 | **错误提示** | 为空："Please enter a podcast title"；超长："Please enter no more than 200 characters" |
 
 示例：子域名为 `elinazplus`，默认标题为 `The elinazplus's Podcast`。
@@ -203,7 +202,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **必填** | 是（标有红色 *） |
 | **产品默认值** | "New podcast weblog" — 频道创建时自动填入 |
 | **工具栏** | Undo / Redo；Bold / Italic / Underline；Link — 共 7 个按钮 |
-| **校验规则** | 不能为空，不能保留默认值 "New podcast weblog"，且最多 50,000 字符（见 8.2） |
+| **校验规则** | 不能为空，不能保留默认值 "New podcast weblog"，且最多 50,000 字符（见 7.2） |
 | **错误提示** | 为空或仍是默认值："Please enter a brief description"；超长："Please enter no more than 50,000 characters" |
 
 #### 3.1.3 Podcast Category（播客分类）
@@ -234,14 +233,10 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **文件信息** | 预览下方显示 `{宽}x{高}px, {大小}`，大小以 KB / MB 显示并保留两位小数 |
 | **3MB 上限** | 原图超过 3MB：弹窗内报错、Upload 禁用，Customize 仍可点击；裁剪后的文件按同一规则校验 |
 | **图片要求** | `Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork.` 后面跟一个 **Details** 链接，在新标签页打开 `https://podcasters.apple.com/artwork-guide` |
-| **校验规则** | 选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；Save 时封面不能为空（见 8.1） |
+| **校验规则** | 选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；Save 时封面不能为空（见 7.1） |
 | **错误提示** | 格式错误："Please upload a JPG or PNG image"；超限："This image is larger than 3 MB. Customize it to reduce the file size before uploading."；为空："Please upload a podcast logo"（<span style="color:#a16207;font-weight:700;">文案待确认</span>） |
 
----
-
-### 3.2 Author & Region 标签页（作者与区域）
-
-#### 3.2.1 Author（作者）
+#### 3.1.5 Author（作者）
 
 | 属性 | 说明 |
 |---|---|
@@ -253,18 +248,11 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **对单集的影响** | 发布新单集时自动填入 Episode Settings 的 Author；修改后只影响之后新建的单集，已创建的单集（published / draft / future / AI 生成中等）保持 episode 创建时的 Author |
 | **展示位置** | 该名称会出现在播客的 RSS feed 中 |
 
-#### 3.2.2 Copyright（版权信息）
+---
 
-| 属性 | 说明 |
-|---|---|
-| **类型** | 单行文本输入 |
-| **必填** | 否 |
-| **占位提示** | "Copyright 2026 All rights reserved." |
-| **产品默认值** | "Copyright {currentYear} All rights reserved." — 年份取频道创建时的当前年份 |
-| **校验规则** | 最多 200 字符；超过时 Save 拦截并提示 "Please enter no more than 200 characters" |
-| **展示位置** | 用户前台站点的 footer |
+### 3.2 Region 标签页（区域）
 
-#### 3.2.3 Language（语言）
+#### 3.2.1 Language（语言）
 
 | 属性 | 说明 |
 |---|---|
@@ -274,7 +262,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **选项** | 产品的语言列表，共 242 条：首条为 **Select Language**，其后 241 种语言，顺序与产品一致；格式 `Name [code]`（如 `English [en]`、`Chinese (Simplified) [zh-cn]`），代码取自产品数据；选项内容以线上产品为准，<span style="color:#a16207;font-weight:700;">待开发确认</span> |
 | **行为** | 点击展开选项列表，选中后更新触发器文字，并触发 Save bar 显示；列表可滚动，展开时定位到当前选中项 |
 
-#### 3.2.4 Country of Origin（原产国/分发区域）
+#### 3.2.2 Country of Origin（原产国/分发区域）
 
 | 属性 | 说明 |
 |---|---|
@@ -287,7 +275,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **必填规则** | 选择 Specific countries 时，**至少选择一个国家**；Global 不受此约束 |
 | **错误提示** | "Please select at least one country"（出现在多选框下方） |
 
-#### 3.2.5 Timezone（时区）
+#### 3.2.3 Timezone（时区）
 
 | 属性 | 说明 |
 |---|---|
@@ -301,7 +289,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 ---
 
-### 3.3 Content Classification 标签页（内容分类）
+### 3.3 Content 标签页（内容）
 
 #### 3.3.1 Podcast Type（播客类型）
 
@@ -329,27 +317,26 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 **Explicit Tag in RSS Feed**：默认值为 "Clean/False"。对应 RSS feed 中的 `<itunes:explicit>` 标签，用于声明播客的家长指导（parental advisory）信息。
 
+#### 3.3.3 Copyright（版权信息）
+
+| 属性 | 说明 |
+|---|---|
+| **类型** | 单行文本输入 |
+| **必填** | 否 |
+| **占位提示** | "Copyright 2026 All rights reserved." |
+| **产品默认值** | "Copyright {currentYear} All rights reserved." — 年份取频道创建时的当前年份 |
+| **校验规则** | 最多 200 字符；超过时 Save 拦截并提示 "Please enter no more than 200 characters" |
+| **展示位置** | 用户前台站点的 footer |
+
 ---
 
-## 4. 页面二：Feed（RSS 源管理）
+### 3.4 Feed 标签页（RSS 源管理）
 
-### 4.0 页面结构
-
-```
-┌──────────────────────────────────────────────┐
-│  Feed                                         │
-│                                               │
-│  ┌──────────────────────────────────────────┐ │
-│  │  表单内容区域（无 Tab，单面板）           │ │
-│  └──────────────────────────────────────────┘ │
-└──────────────────────────────────────────────┘
-```
-
-**保存规则：** Feed 有独立 Save bar，仅校验和提交本页字段（见 7.1）。
+**保存规则：** Feed 标签页与其余三个 Tab 共用 General 的同一个 Save bar（见 6.1）。
 
 字段顺序：Podcast Feed URL → Episode Number Limit → Ownership Verification Email → Alternative Website URL → Generate audio-only feed → Redirect to a New Feed。
 
-### 4.1 Podcast Feed URL（RSS 源地址）
+#### 3.4.1 Podcast Feed URL（RSS 源地址）
 
 | 属性 | 说明 |
 |---|---|
@@ -358,7 +345,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **交互** | 点击 **Copy** 把 URL 写入剪贴板，按钮短暂显示 **Copied!** 作为反馈 |
 | **说明** | 当用户更改 subdomain 或设置自己的域名后，Feed URL 会立即同步更新 |
 
-### 4.2 Episode Number Limit（剧集数量限制）
+#### 3.4.2 Episode Number Limit（剧集数量限制）
 
 | 属性 | 说明 |
 |---|---|
@@ -379,7 +366,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 <span style="color:#a16207;font-weight:700;">留空行为待开发确认</span>：留空 Episode Number Limit 后保存不会报错，但保存完成后输入框会自动回填为 `20`。该回填逻辑（是否应回填、回填值取 `20` 还是默认值 `100`）<span style="color:#a16207;font-weight:700;">待开发确认</span>。
 
-### 4.3 Ownership Verification Email（所有者验证邮箱）
+#### 3.4.3 Ownership Verification Email（所有者验证邮箱）
 
 | 属性 | 说明 |
 |---|---|
@@ -392,7 +379,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **自动过期** | 48 小时后，email 自动从 RSS feed 中移除，输入框内容清空 |
 | **手动移除** | 用户关闭 Toggle 并保存，email 立即从 feed 中移除 |
 
-### 4.4 Alternative Website URL
+#### 3.4.4 Alternative Website URL
 
 | 属性 | 说明 |
 |---|---|
@@ -406,7 +393,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 **说明**：该字段原名为 **Podcast Website**。用户不填写时，feed 中使用的是用户在 Podbean 的 website URL；开启 Toggle 后用户需填写一个 URL，保存后 feed 中使用这个保存的 URL。
 
-### 4.5 Generate audio-only feed（生成纯音频 feed）
+#### 3.4.5 Generate audio-only feed（生成纯音频 feed）
 
 | 属性 | 说明 |
 |---|---|
@@ -414,11 +401,11 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 | **默认状态** | 关闭；关闭时不展示地址 |
 | **说明文字** | "Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don't accept video. Your video feed stays as it is." |
 | **展开内容** | 一行 "Your audio-only feed is:"，下面是系统生成的音频 feed 地址与 **Copy** 按钮；复制后给出与 4.1 一致的 **Copied!** 反馈 |
-| **行为** | 该开关只控制这一段的展示，不影响 Feed 页面其他字段 |
+| **行为** | 该开关只控制这一段的展示，不影响 Feed 标签页其他字段 |
 
 **功能说明**：Generate audio-only feed 会自动创建视频播客 feed 的纯音频版本。开启后，Podbean 会生成一个纯音频 feed，并在该设置下方展示其 URL。通过纯音频 feed 分发的单集，其播放量（plays）会计入对应的原始视频单集。
 
-### 4.6 Redirect to a New Feed（Feed 重定向）
+#### 3.4.6 Redirect to a New Feed（Feed 重定向）
 
 | 属性 | 说明 |
 |---|---|
@@ -450,9 +437,9 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 ---
 
-## 5. 页面三：Plugin（插件管理）
+## 4. 页面二：Plugin（插件管理）
 
-### 5.0 页面结构
+### 4.0 页面结构
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -470,7 +457,7 @@ Podcast Info 与 Feed 各自拥有独立的 Save bar（Plugin、Import to Podbea
 
 **空状态（默认）**：页面默认为空，不展示任何插件行，居中显示 "Take your podcast to the next level by adding popular plugins and services."。
 
-### 5.1 插件列表
+### 4.1 插件列表
 
 Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称、描述与操作按钮。
 
@@ -488,11 +475,11 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 
 - **空状态**：页面默认为空；删除全部插件后同样回到空状态，列表隐藏、显示居中的 "Take your podcast to the next level by adding popular plugins and services."。
 
-### 5.2 插件操作
+### 4.2 插件操作
 
 | 按钮 | 出现在 | 行为 |
 |---|---|---|
-| **Edit（铅笔）** | Episode Endnote / Import Files from Dropbox / FTP Upload / SEO Meta Tags / Google Analytics | 打开对应编辑弹窗（见 5.3） |
+| **Edit（铅笔）** | Episode Endnote / Import Files from Dropbox / FTP Upload / SEO Meta Tags / Google Analytics | 打开对应编辑弹窗（见 4.3） |
 | **Delete（×）** | 全部七行 | 打开 **Delete Plugin** 确认弹窗 |
 | **Get more plugins** | Plugin 页面 | 打开 `https://apps.podbean.com`（当前标签页） |
 
@@ -506,7 +493,7 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 | 关闭方式 | Cancel、点击遮罩、Esc 都只关闭、不删除；打开时焦点落在 **Delete** |
 | 确认后 | 移除该行 → toast **`{插件名} deleted`** → 若列表已空，显示空状态 |
 
-### 5.3 插件编辑弹窗 <span style="color:#a16207;font-weight:700;">（每个插件的编辑功能可能不同，待开发确认）</span>
+### 4.3 插件编辑弹窗 <span style="color:#a16207;font-weight:700;">（每个插件的编辑功能可能不同，待开发确认）</span>
 
 各插件共用同一套弹窗外壳（尺寸、标题栏、底部操作区），编辑内容各不相同。**Dropbox 与 FTP Upload 是例外**：Refresh 按钮位于表格内，弹窗没有底部操作区。
 
@@ -521,22 +508,22 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 - 各编辑弹窗都能用 ×、点击遮罩、Esc 关闭。
 - Meta Tags 的弹窗标题与行名不同（行叫 **SEO Meta Tags**，弹窗叫 **Custom Meta Tags**）。
 
-### 5.4 Get More Plugins
+### 4.4 Get More Plugins
 
 **Get more plugins** 是外部链接，指向 `https://apps.podbean.com`，在当前标签页打开。
 
 ---
 
-## 6. 页面四：Import to Podbean（导入）
+## 5. 页面三：Import（导入）
 
 把一个已有的播客（或视频系列）连同剧集导入 Podbean。页面只负责选择来源，随后的三步在居中弹窗内逐屏完成；点 **Import** 后弹窗关闭，页面接管导入状态、重定向校验与完成态。
 
-### 6.0 页面结构
+### 5.0 页面结构
 
 ```
 【页面】
 ┌────────────────────────────────────────────────────┐
-│  Import to Podbean                                 │
+│  Import                                            │
 │  Import an existing podcast or video series…       │
 │                                                    │
 │  [ RSS Feed URL → ]      [ Video to Podcast → ]    │
@@ -563,13 +550,13 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 | **承载方式** | **三步在弹窗内逐屏切换**，一次只显示一步 |
 | **弹窗尺寸** | 约 930 × 730，最大不超过视口的 94% / 92%；内容列 560px 居中，步骤标题 24px / 600 |
 | **步骤标记** | 头部左侧 `1 / 3`，随步骤更新 |
-| **步骤标题** | 随步骤与来源变化（见 6.2–6.4）；它只是标题，**不是可点击的步骤导航** |
+| **步骤标题** | 随步骤与来源变化（见 5.2–5.4）；它只是标题，**不是可点击的步骤导航** |
 | **返回** | 页脚左下 **Back**，步骤一不显示；× / 点击遮罩 / Esc 关闭整个向导并回到来源选择 |
-| **前进** | 页脚右下 **Next**，步骤三变为 **Import**；**YouTube 路径在 Search 之前整个页脚隐藏**（见 6.2） |
+| **前进** | 页脚右下 **Next**，步骤三变为 **Import**；**YouTube 路径在 Search 之前整个页脚隐藏**（见 5.2） |
 | **关闭后的焦点** | 回到打开弹窗的那张来源卡片 |
-| **导入开始后** | 弹窗关闭，页面进入导入结果区（见 6.5），来源卡片同时隐藏 |
+| **导入开始后** | 弹窗关闭，页面进入导入结果区（见 5.5），来源卡片同时隐藏 |
 
-### 6.1 入口：选择来源
+### 5.1 入口：选择来源
 
 来源是**两张并排的按钮卡片**，不是单选组：点哪一张，就以哪个来源直接打开向导的步骤一。
 
@@ -579,11 +566,11 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 | **Video to Podcast** | You have video content that you want to publish as a podcast. |
 
 - 页面上**没有 Next**：选择来源 = 打开弹窗，向导里不再有「选择来源」这一步。
-- 付费 / Unlimited Audio 账号：点击进入步骤一（见 6.2）。
-- **免费账号**：点击不打开弹窗，先弹升级提示（见 6.7）。
+- 付费 / Unlimited Audio 账号：点击进入步骤一（见 5.2）。
+- **免费账号**：点击不打开弹窗，先弹升级提示（见 5.7）。
 - 关掉弹窗后来源卡片仍在原处，可以换一个来源重来；已填过的地址在本次会话内保留。
 
-### 6.2 步骤一：填写地址
+### 5.2 步骤一：填写地址
 
 步骤标题：RSS → **Enter your feed URL**；Video → **Choose your video source**。
 
@@ -614,7 +601,7 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 - **排版**：弹窗内所有带标签的行都是**标签在上、控件在下**，标签 14px / 500 字重、次要灰色，控件占满 560px 宽；行距保持一致。
 - **输入即清错**：字段一旦有内容，行内错误立刻消失。
 
-### 6.3 步骤二：范围与输出类型
+### 5.3 步骤二：范围与输出类型
 
 步骤二问什么，取决于来源：
 
@@ -641,9 +628,9 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 - **选项框整行宽、单列排列**，说明文字直接显示在标题下方，不放 ⓘ。
 - **组内没有可见 legend**：步骤标题就是问题本身；单选组以同一句问句作为可访问名称。
 - 「What should we bring over?」这一组由 **RSS 与 video + RSS 共用**，选择在两条路径间共享。
-- **Unlimited Audio 限制**：YouTube 路径选 **Convert to Video Podcasts** 时，两个选项下方出现提示 **Converting to a video podcast needs Unlimited Plus.** + 链接 **See upgrade plans**，右下角 Next 保留原位但 **禁用**（见 6.8）。
+- **Unlimited Audio 限制**：YouTube 路径选 **Convert to Video Podcasts** 时，两个选项下方出现提示 **Converting to a video podcast needs Unlimited Plus.** + 链接 **See upgrade plans**，右下角 Next 保留原位但 **禁用**（见 5.8）。
 
-### 6.4 步骤三：格式与可选设置
+### 5.4 步骤三：格式与可选设置
 
 步骤三的内容随来源变化，三条路径共用同一个条款勾选框。
 
@@ -681,7 +668,7 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 
 选择在步骤间往返时保留（格式、两个勾选项都不重置）。
 
-### 6.5 导入状态（Import 之后）
+### 5.5 导入状态（Import 之后）
 
 点 **Import** 后：弹窗关闭、页面 toast `Import started`、来源卡片隐藏，页面下方出现导入结果区。
 
@@ -721,7 +708,7 @@ Import 之后直接进入「正在导入」：
 - 开关和步骤三的勾选项是**同一个设置**：渲染时对齐，切换开关即写回步骤三的选项。
 - 视频导入完成后通过邮件通知用户；页面内不再提供额外出口。
 
-### 6.6 301 Redirect 校验与完成态
+### 5.6 301 Redirect 校验与完成态
 
 **重定向是触发真实音频文件导入的标志**——不设置重定向，音频文件不会被导入。
 
@@ -748,9 +735,9 @@ Import 之后直接进入「正在导入」：
 | 状态条（琥珀） | `Import complete — 16 successful, 0 failed.` |
 | 建议说明 | 与上一状态同一句 |
 | **What you can do next** | 两条建议 + 一条可折叠项：<br>1. You can review the **podcast information** and adjust the show settings.<br>2. You can review the **episode list** and edit any episodes.<br>3. **Optionally, import downloads.**（默认收起；展开后含 CSV 导入说明、`Import CSV File` 按钮与两段合规声明） |
-| 重新导入 | Click **here** if you want to re-import content. —— 点击回到 Import to Podbean 页面 |
+| 重新导入 | Click **here** if you want to re-import content. —— 点击回到 Import 页面 |
 
-### 6.7 免费账号（Free plan）：不能开始导入
+### 5.7 免费账号（Free plan）：不能开始导入
 
 免费账号在**来源卡片处即被拦截**：点击任一来源卡片不打开向导，先弹出升级提示。
 
@@ -763,7 +750,7 @@ Import 之后直接进入「正在导入」：
 - **弹框内容**：标题 **Upgrade to import to Podbean**；正文按来源切换（RSS：`RSS imports are available on the Unlimited Audio plan, which brings your episodes and show details into Podbean.`；video：`Video imports are available on Unlimited Audio, or Unlimited Plus for publishing as a video podcast.`）；正文下方一枚 **Enjoy a 14-day free trial** 胶囊（薄荷绿，太阳图标，50px 圆角，不使用黄色）；按钮左 **Not now**、右 **See upgrade plans**（深色 pill），弹框宽度保证按钮不换行。
 - **动作**：`Not now`、遮罩、Esc 都只关闭；`See upgrade plans` 关闭后 toast `Opening upgrade plans…`（本页不承载计费流程）。关闭后焦点回到触发的那张来源卡片。
 
-### 6.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus
+### 5.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus
 
 **能力边界**：Unlimited Audio 可以导入 RSS 与视频，但只能发布为**音频**播客。
 
@@ -781,11 +768,11 @@ Import 之后直接进入「正在导入」：
 
 ---
 
-## 7. 全局交互规则
+## 6. 全局交互规则
 
-### 7.1 Save Bar（底部保存栏）
+### 6.1 Save Bar（底部保存栏）
 
-Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plugin 与 Import to Podbean 页面不包含 Save bar。
+General 页面包含一个 Save bar，四个 Tab 共用。Plugin 与 Import 页面不包含 Save bar。
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -804,20 +791,20 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | **显示条件** | 当前页面的表单任意字段发生更改时变为可见 |
 | **子项** | Cancel 按钮、Save 按钮（右对齐） |
 
-**按钮行为（各页面独立）：**
+**按钮行为：**
 
 | 按钮 | 动作 |
 |---|---|
 | Cancel | 隐藏当前页面的 Save bar，当前页面所有字段恢复到上次保存时的值 |
-| Save | 校验当前页面的必填、格式与长度规则（见 8.1 / 8.2）；有错误则定位到错误字段；全部通过则提交成功，Toast 提示 **"Saved successfully"**，Save bar 隐藏 |
+| Save | 校验当前页面的必填、格式与长度规则（见 7.1 / 7.2）；有错误则定位到错误字段；全部通过则提交成功，Toast 提示 **"Saved successfully"**，Save bar 隐藏 |
 
 **各页面范围：**
 
-- **Podcast Info**：校验三个 Tab 的必填与长度规则（见 8.2）；有错时切到第一个出错 Tab，字段与 Tab 标签标红
-- **Feed**：校验三个开关开启后的必填项与格式，以及 Episode Number Limit 的整数与上限（见 8.2）
-- **Plugin / Import to Podbean**：无 Save bar，插件操作即时生效，导入状态由结果区承担
+- **General**：校验四个 Tab 的必填与长度规则（见 7.2）；有错时切到第一个出错 Tab，字段与 Tab 标签标红
+- **General · Feed 标签页**：校验三个开关开启后的必填项与格式，以及 Episode Number Limit 的整数与上限（见 7.2）
+- **Plugin / Import**：无 Save bar，插件操作即时生效，导入状态由结果区承担
 
-### 7.2 修改检测
+### 6.2 修改检测
 
 以下操作均会触发 Save bar 显示：
 
@@ -829,7 +816,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | 单选按钮 | change |
 | Toggle 开关 | change |
 
-### 7.3 自定义下拉选择器
+### 6.3 自定义下拉选择器
 
 ```
 ┌─────────────────────┐
@@ -850,7 +837,7 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | **保存联动** | 选中后触发当前页面的 Save bar 显示 |
 | **键盘操作** | 触发器与选项均可通过键盘聚焦与选择，Esc 关闭当前下拉 |
 
-### 7.5 页面切换
+### 6.4 页面切换
 
 | 操作 | 行为 |
 |---|---|
@@ -859,22 +846,22 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 
 ---
 
-## 8. 数据校验规则
+## 7. 数据校验规则
 
-### 8.1 必填字段
+### 7.1 必填字段
 
 | 页面 | 字段 | 校验规则 | 错误提示 |
 |---|---|---|---|
-| Podcast Info | Podcast Title | 去空格后不能为空 | Please enter a podcast title |
-| Podcast Info | Brief Description | 去空格后不能为空，也不能是默认值 "New podcast weblog" | Please enter a brief description |
-| Podcast Info | Podcast Category | 第 1 行必须选择分类，不能为空或占位文字 "Select a category"；其余行可选 | Please select a podcast category |
-| Podcast Info | Podcast Logo | 封面不能为空 | Please upload a podcast logo（<span style="color:#a16207;font-weight:700;">文案待确认</span>） |
-| Podcast Info | Country of Origin | 仅当选择 **Specific countries** 时：至少选一个国家 | Please select at least one country |
-| Feed | Ownership Verification Email | 仅开关开启时：不能为空（仅空格也算空） | Please enter your verification email |
-| Feed | Alternative Website URL | 仅开关开启时：不能为空 | Please enter your website URL |
-| Feed | Redirect to a New Feed | 仅开关开启时：不能为空 | Please enter your new feed URL |
+| General · Basic | Podcast Title | 去空格后不能为空 | Please enter a podcast title |
+| General · Basic | Brief Description | 去空格后不能为空，也不能是默认值 "New podcast weblog" | Please enter a brief description |
+| General · Basic | Podcast Category | 第 1 行必须选择分类，不能为空或占位文字 "Select a category"；其余行可选 | Please select a podcast category |
+| General · Basic | Podcast Logo | 封面不能为空 | Please upload a podcast logo（<span style="color:#a16207;font-weight:700;">文案待确认</span>） |
+| General · Region | Country of Origin | 仅当选择 **Specific countries** 时：至少选一个国家 | Please select at least one country |
+| General · Feed | Ownership Verification Email | 仅开关开启时：不能为空（仅空格也算空） | Please enter your verification email |
+| General · Feed | Alternative Website URL | 仅开关开启时：不能为空 | Please enter your website URL |
+| General · Feed | Redirect to a New Feed | 仅开关开启时：不能为空 | Please enter your new feed URL |
 
-### 8.2 格式与长度校验
+### 7.2 格式与长度校验
 
 | 字段 | 校验要求 | 错误提示 |
 |---|---|---|
@@ -888,21 +875,21 @@ Podcast Info 和 Feed 页面各自拥有独立的 Save bar，互不影响。Plug
 | Episode Number Limit | 整数，且在套餐上限内（999 / 1999 / 2999） | Please enter a whole number between 1 and {plan limit} |
 | Podcast Logo 上传 | 仅接受 JPG / PNG 文件 | Please upload a JPG or PNG image |
 
-> 「错误提示」统一为 `Please enter …` / `Please upload …` 句式，句末不加句号，长度类只替换数字；`{plan limit}` 随套餐替换为 999 / 1999 / 2999。校验失败时字段标红并聚焦第一个错误字段，Podcast Info 还会把出错 Tab 标红。
+> 「错误提示」统一为 `Please enter …` / `Please upload …` 句式，句末不加句号，长度类只替换数字；`{plan limit}` 随套餐替换为 999 / 1999 / 2999。校验失败时字段标红并聚焦第一个错误字段，General 还会把出错 Tab 标红。
 
-### 8.3 保存前校验流程
+### 7.3 保存前校验流程
 
-Podcast Info 与 Feed 各自独立执行校验，互不影响。
+General 的四个 Tab 在同一次保存中一起校验。
 
-**Podcast Info（三个 Tab 一起校验）：**
+**General（四个 Tab 一起校验）：**
 
 ```
-用户点击 Save（Podcast Info 页面）
+用户点击 Save（General 页面）
        │
        ▼
 ┌──────────────────────────────┐
 │ 遍历所有 Tab 的必填字段       │
-│ 执行 8.1 / 8.2 中的规则       │
+│ 执行 7.1 / 7.2 中的规则       │
 └─────────────┬────────────────┘
               │
          ┌────┴────┐
@@ -920,41 +907,41 @@ Podcast Info 与 Feed 各自独立执行校验，互不影响。
 - **错误标识**：有错误的 Tab 标签变红，不加角标；Tab 内错误字段变红、下方显示行内提示并聚焦。
 - **修完后**：下一次 Save 前重新判定；点击 Cancel 一并清除。
 
-**Feed（无 Tab）：** 校验失败时直接在错误字段下方显示提示并聚焦第一个错误字段；通过则 toast **"Saved successfully"**、Save bar 隐藏、当前值成为新的「已保存状态」。
+**Feed 标签页无独立校验：** 其字段（三个开关的条件必填、Episode Number Limit 的整数与上限）随同一次 Save 一起校验；失败时切换到 Feed 标签页并显示行内提示。
 
 ---
 
 ## 附录：新老页面对比
 
-### Podcast Info 页面变化说明
+### General 页面变化说明
 
 | 字段 | 新版页面 | 非 Business Plan 用户老页面 | Business Plan 用户老页面 |
 |---|---|---|---|
-| **布局** | 分为 3 个 Tab：**Basic**、**Author & Region**、**Content Classification** | 单页纵向排列，所有字段一次性展示 | 单页纵向排列，所有字段一次性展示 |
+| **布局** | 分为 4 个 Tab：**Basic**、**Region**、**Content**、**Feed** | 单页纵向排列，所有字段一次性展示 | 单页纵向排列，所有字段一次性展示 |
 | **Podcast Title** | Basic Tab | 有 | 有 |
 | **Brief Description** | Basic Tab | 有 | 有 |
 | **Podcast Category** | Basic Tab（最多 3 个分类） | 有 | 有 |
 | **Podcast Logo** | Basic Tab | 有 | 有 |
-| **Author / Owner** | Author & Region Tab，重命名为 **Author** | 有 | 有 |
-| **Language** | Author & Region Tab | 有 | 有 |
-| **Copyright** | Author & Region Tab | 有 | 有 |
-| **Country Of Origin** | Author & Region Tab（Global / Specific countries 下拉） | 有 | 有 |
-| **Timezone** | Author & Region Tab（仅 "Current time: ..."）| 有 | 有 |
-| **Podcast Type** | Content Classification Tab | 有 | 有 |
-| **Content Explicit** | Content Classification Tab（从 Feed 页面移入） | 有（Feed 页面） | 有（Feed 页面） |
+| **Author / Owner** | Basic Tab（Podcast Logo 下方），重命名为 **Author** | 有 | 有 |
+| **Language** | Region Tab | 有 | 有 |
+| **Copyright** | Content Tab | 有 | 有 |
+| **Country Of Origin** | Region Tab（Global / Specific countries 下拉） | 有 | 有 |
+| **Timezone** | Region Tab（仅 "Current time: ..."）| 有 | 有 |
+| **Podcast Type** | Content Tab | 有 | 有 |
+| **Content Explicit** | Content Tab（从老 Feed 页面移入） | 有（Feed 页面） | 有（Feed 页面） |
 | **Episode Download Link** | **已移除**（Business 在 Advanced Options 中控制） | Show | Show |
 | **Share on Podcast Site** | **已移除**（Business 在 Advanced Options 中控制） | Show（不可控） | Hidden |
 | **Comments** | **已移除**（Business 在 Advanced Options 中控制） | Enable（不可控） | Enable |
 | **Removing Podbean Brand** | **已移除**（Business 在 Advanced Options 中控制） | No（有控制按钮，点击升级） | No（有控制按钮） |
 
-### Feed 页面变化说明
+### Feed 标签页变化说明
 
-> **注：** Business Plan 用户的 Private Channel 默认不显示 Feed 页面及其菜单项。
+> **注：** Business Plan 用户的 Private Channel 默认不显示 Feed 标签页。
 
 | 字段 | 新版页面 | 非 Business Plan 老页面 | Business Plan 老页面 |
 |---|---|---|---|
 | **Podcast Feed URL** | 有（只读 + 复制） | 有 | 有 |
-| **Content Explicit** | **移入 Podcast Info → Content Classification Tab** | 有 | 有 |
+| **Content Explicit** | **移入 General → Content 标签页** | 有 | 有 |
 | **Apple Podcasts Summary** | **已移除**（历史内容用户仍可见，字段只读并标注已停用；提供 "Use Podcast Description"，确认后独立 Summary 删除，`<itunes:summary>` 跟随 Podcast Description） | 有 | 有 |
 | **Podcast Website** | 改名为 **Alternative Website URL**（原默认填入 Podbean website URL；现改为 **Toggle + 条件输入**：关闭则使用 Podbean website URL，开启后显示输入框，填写的值生效） | 有 | 有 |
 | **Episode Link** | **已移除**（转移到 Episode 发布页面，名称为 "Custom Episode Link"） | 有 | 有 |
@@ -967,4 +954,4 @@ Podcast Info 与 Feed 各自独立执行校验，互不影响。
 | **Set Podcast New Feed URL** | **已移除**（改为迁移流程自动写入 `<itunes:new-feed-url>`，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span style="color:#a16207;font-weight:700;">需技术确认</span>） | 有 | 有 |
 | **Redirect to a New Feed** | 有（Toggle + 条件 URL 输入 + 危险警告） | 有 | 有 |
 
-**新版 Feed 页面字段总数从 13 个精简为 6 个**（5 个原有字段 + 新增的 Generate audio-only feed）。标注**黄色加粗**的「待确认」条目需产品团队进一步确认。
+**新版 Feed 标签页字段总数从 13 个精简为 6 个**（5 个原有字段 + 新增的 Generate audio-only feed）。标注**黄色加粗**的「待确认」条目需产品团队进一步确认。
