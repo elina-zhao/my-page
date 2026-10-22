@@ -470,7 +470,7 @@
 <aside class="doc-rail" id="docRail">
   <div class="rail-head">
     <span class="rail-label">目录</span>
-    <span class="toc-count">8 章 · 30 节 · 21 条细则</span>
+    <span class="toc-count">8 章 · 31 节 · 21 条细则</span>
   </div>
   <nav class="toc" aria-label="文档目录">
 <div class="toc-row lvl2" data-id="sec-1"><a class="toc-link" href="#sec-1">产品概述</a></div>
@@ -539,6 +539,7 @@
 <div class="toc-row lvl3" data-id="sec-5-6" data-parent="sec-5"><a class="toc-link" href="#sec-5-6">5.6 301 Redirect 校验与完成态</a></div>
 <div class="toc-row lvl3" data-id="sec-5-7" data-parent="sec-5"><a class="toc-link" href="#sec-5-7">5.7 免费账号（Free plan）：不能开始导入</a></div>
 <div class="toc-row lvl3" data-id="sec-5-8" data-parent="sec-5"><a class="toc-link" href="#sec-5-8">5.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus</a></div>
+<div class="toc-row lvl3" data-id="sec-5-9" data-parent="sec-5"><a class="toc-link" href="#sec-5-9">5.9 导入下载数据（Import data）</a></div>
 </div>
 <div class="toc-row lvl2" data-id="sec-6"><a class="toc-link" href="#sec-6">全局交互规则</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-sec-6" aria-label="展开 全局交互规则 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div>
 <div class="toc-children" id="grp-sec-6" data-parent="sec-6">
@@ -873,7 +874,7 @@
 </tr>
 <tr>
 <td><strong>必填</strong></td>
-<td>是（标有红色 *）</td>
+<td>是（标有红色 *）；默认已带封面，只能更换、不能删除，不存在为空的情况</td>
 </tr>
 <tr>
 <td><strong>预览</strong></td>
@@ -905,11 +906,11 @@
 </tr>
 <tr>
 <td><strong>校验规则</strong></td>
-<td>选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；Save 时封面不能为空（见 7.1）</td>
+<td>选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；封面不参与「为空」校验（见 7.1）</td>
 </tr>
 <tr>
 <td><strong>错误提示</strong></td>
-<td>格式错误："Please upload a JPG or PNG image"；超限："This image is larger than 3 MB. Customize it to reduce the file size before uploading."；为空："Please upload a podcast logo"（<span class="need-confirm">文案待确认</span>）</td>
+<td>格式错误："Please upload a JPG or PNG image"；超限："This image is larger than 3 MB. Customize it to reduce the file size before uploading."</td>
 </tr>
 </tbody>
 </table></div>
@@ -1623,7 +1624,7 @@
 │  （Import 之后：来源卡片隐藏，改为导入结果区）     │
 └────────────────────────────────────────────────────┘
 
-【弹窗 · 约 930 × 730，内容列 560】
+【弹窗】
 ┌────────────────────────────────────────────────────┐
 │  1 / 3                                           × │
 │                                                    │
@@ -1647,10 +1648,6 @@
 <tr>
 <td><strong>承载方式</strong></td>
 <td><strong>三步在弹窗内逐屏切换</strong>，一次只显示一步</td>
-</tr>
-<tr>
-<td><strong>弹窗尺寸</strong></td>
-<td>约 930 × 730，最大不超过视口的 94% / 92%；内容列 560px 居中，步骤标题 24px / 600</td>
 </tr>
 <tr>
 <td><strong>步骤标记</strong></td>
@@ -1725,7 +1722,7 @@
 </tr>
 <tr>
 <td>提示</td>
-<td><code>Example: https://feeds.example.com/your-podcast/feed.xml</code>（灰色）</td>
+<td><code>Example: https://feeds.example.com/your-podcast/feed.xml</code></td>
 </tr>
 <tr>
 <td>必填</td>
@@ -1750,18 +1747,18 @@
 <tbody>
 <tr>
 <td><strong>YouTube Playlist</strong>（默认）</td>
-<td><strong>YouTube channel handle</strong>：下划线输入框，占位符 <code>e.g. @podbean</code>，右侧 <strong>Search</strong> 按钮</td>
+<td><strong>YouTube channel handle</strong> 输入框，占位符 <code>e.g. @podbean</code>，右侧 <strong>Search</strong> 按钮</td>
 <td>提示：<code>Search for your YouTube channel and choose the playlist you want to convert.</code></td>
 </tr>
 <tr>
 <td></td>
 <td><strong>YouTube Playlist</strong> 下拉框 —— <strong>只有点过 Search 之后才出现</strong></td>
-<td>提示：We will retrieve <strong>the latest 10 videos</strong> and sync future content as you prefer.（正文色，不是灰色）</td>
+<td>提示：We will retrieve <strong>the latest 10 videos</strong> and sync future content as you prefer.</td>
 </tr>
 <tr>
 <td><strong>RSS Feed URL</strong></td>
 <td><strong>RSS Feed</strong> 输入框，占位符 <code>Enter your RSS feed URL</code></td>
-<td>提示：We will retrieve <strong>the latest 10 videos</strong>, convert them into MP3 and sync future content as you prefer.（正文色）</td>
+<td>提示：We will retrieve <strong>the latest 10 videos</strong>, convert them into MP3 and sync future content as you prefer.</td>
 </tr>
 </tbody>
 </table></div>
@@ -1770,7 +1767,7 @@
 <li><strong>检索之前整个页脚隐藏</strong>（步骤一没有 Back）。</li>
 <li>Search 会把播放列表重置为第一个结果；handle、播放列表在步骤间往返与切换 Content Source 时保留。</li>
 <li>video + RSS Feed 路径：空值报 <strong>"Please enter your video RSS feed URL"</strong>。</li>
-<li><strong>排版</strong>：弹窗内所有带标签的行都是<strong>标签在上、控件在下</strong>，标签 14px / 500 字重、次要灰色，控件占满 560px 宽；行距保持一致。</li>
+<li><strong>行结构</strong>：弹窗内带标签的行统一为标签在上、控件在下，控件占满内容列宽。</li>
 <li><strong>输入即清错</strong>：字段一旦有内容，行内错误立刻消失。</li>
 </ul>
 <h3 id="sec-5-3">5.3 步骤二：范围与输出类型<a class="h-anchor" href="#sec-5-3" aria-label="本节链接">#</a></h3>
@@ -1840,7 +1837,7 @@
 </tbody>
 </table></div>
 <ul>
-<li><strong>选项框整行宽、单列排列</strong>，说明文字直接显示在标题下方，不放 ⓘ。</li>
+<li><strong>单列排列</strong>，说明文字直接显示在选项标题下方，不放 ⓘ。</li>
 <li><strong>组内没有可见 legend</strong>：步骤标题就是问题本身；单选组以同一句问句作为可访问名称。</li>
 <li>「What should we bring over?」这一组由 <strong>RSS 与 video + RSS 共用</strong>，选择在两条路径间共享。</li>
 <li><strong>Unlimited Audio 限制</strong>：YouTube 路径选 <strong>Convert to Video Podcasts</strong> 时，两个选项下方出现提示 <strong>Converting to a video podcast needs Unlimited Plus.</strong> + 链接 <strong>See upgrade plans</strong>，右下角 Next 保留原位但 <strong>禁用</strong>（见 5.8）。</li>
@@ -1933,11 +1930,7 @@
 </tr>
 <tr>
 <td>必勾</td>
-<td>是。未勾选就点 <strong>Import</strong>，条款行标红并滚动到可见区域，不开始导入</td>
-</tr>
-<tr>
-<td>文字样式</td>
-<td>正文色、500 字重，不作灰色脚注</td>
+<td>是。未勾选就点 <strong>Import</strong>，条款行显示错误并滚动到可见区域，不开始导入</td>
 </tr>
 <tr>
 <td>按钮</td>
@@ -1949,7 +1942,7 @@
 <h3 id="sec-5-5">5.5 导入状态（Import 之后）<a class="h-anchor" href="#sec-5-5" aria-label="本节链接">#</a></h3>
 <p>点 <strong>Import</strong> 后：弹窗关闭、页面 toast <code>Import started</code>、来源卡片隐藏，页面下方出现导入结果区。</p>
 <p><strong>RSS 路径：状态卡片 + 重定向三步</strong></p>
-<p>状态卡片（琥珀色提示卡）只承载状态与刷新：</p>
+<p>状态卡片只承载状态与刷新：</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -1960,7 +1953,7 @@
 <tbody>
 <tr>
 <td>复制中</td>
-<td>一段话：<code>Importing your episode info. Depending on how many episodes your feed has, it can take a few minutes. You can leave this page while it works.</code> + 下方居左的 <strong>Refresh status</strong> 按钮</td>
+<td>一段话：<code>Importing your episode info. Depending on how many episodes your feed has, it can take a few minutes. You can leave this page while it works.</code> + 下方的 <strong>Refresh status</strong> 按钮</td>
 </tr>
 <tr>
 <td>剧集信息已复制</td>
@@ -2010,7 +2003,7 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>琥珀状态条</strong>（最上方）</td>
+<td><strong>状态条</strong>（最上方）</td>
 <td><code>Importing your media files — we'll email you once they're done.</code></td>
 </tr>
 <tr>
@@ -2058,12 +2051,12 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>状态条</strong>（琥珀，最上方）</td>
+<td><strong>状态条</strong>（最上方）</td>
 <td><code>Importing your media files — we'll email you once they're done.</code></td>
 </tr>
 <tr>
 <td><strong>建议说明</strong></td>
-<td>We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across.（正文色）</td>
+<td>We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across.</td>
 </tr>
 </tbody>
 </table></div>
@@ -2080,7 +2073,7 @@
 </thead>
 <tbody>
 <tr>
-<td>状态条（琥珀）</td>
+<td>状态条</td>
 <td><code>Import complete — 16 successful, 0 failed.</code></td>
 </tr>
 <tr>
@@ -2089,7 +2082,7 @@
 </tr>
 <tr>
 <td><strong>What you can do next</strong></td>
-<td>两条建议 + 一条可折叠项：<br>1. You can review the <strong>podcast information</strong> and adjust the show settings.<br>2. You can review the <strong>episode list</strong> and edit any episodes.<br>3. <strong>Optionally, import downloads.</strong>（默认收起；展开后含 CSV 导入说明、<code>Import CSV File</code> 按钮与两段合规声明）</td>
+<td>两条建议 + 一条可折叠项：<br>1. You can review the <strong>podcast information</strong> and adjust the show settings.<br>2. You can review the <strong>episode list</strong> and edit any episodes.<br>3. <strong>Optionally, import downloads.</strong>（默认收起；展开后含 CSV 导入说明、<code>Import CSV File</code> 按钮与两段合规声明；规则见 5.9）</td>
 </tr>
 <tr>
 <td>重新导入</td>
@@ -2122,7 +2115,7 @@
 </tbody>
 </table></div>
 <ul>
-<li><strong>弹框内容</strong>：标题 <strong>Upgrade to import to Podbean</strong>；正文按来源切换（RSS：<code>RSS imports are available on the Unlimited Audio plan, which brings your episodes and show details into Podbean.</code>；video：<code>Video imports are available on Unlimited Audio, or Unlimited Plus for publishing as a video podcast.</code>）；正文下方一枚 <strong>Enjoy a 14-day free trial</strong> 胶囊（薄荷绿，太阳图标，50px 圆角，不使用黄色）；按钮左 <strong>Not now</strong>、右 <strong>See upgrade plans</strong>（深色 pill），弹框宽度保证按钮不换行。</li>
+<li><strong>弹框内容</strong>：标题 <strong>Upgrade to import to Podbean</strong>；正文按来源切换（RSS：<code>RSS imports are available on the Unlimited Audio plan, which brings your episodes and show details into Podbean.</code>；video：<code>Video imports are available on Unlimited Audio, or Unlimited Plus for publishing as a video podcast.</code>）；正文下方一枚 <strong>Enjoy a 14-day free trial</strong> 标签；按钮左 <strong>Not now</strong>、右 <strong>See upgrade plans</strong>，弹框宽度保证按钮不换行。</li>
 <li><strong>动作</strong>：<code>Not now</code>、遮罩、Esc 都只关闭；<code>See upgrade plans</code> 关闭后 toast <code>Opening upgrade plans…</code>（本页不承载计费流程）。关闭后焦点回到触发的那张来源卡片。</li>
 </ul>
 <h3 id="sec-5-8">5.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus<a class="h-anchor" href="#sec-5-8" aria-label="本节链接">#</a></h3>
@@ -2155,10 +2148,20 @@
 </table></div>
 <ul>
 <li><strong>步骤二的提示</strong>：紧跟在两张输出卡片下面，文案 <code>Converting to a video podcast needs Unlimited Plus.</code> + 文字链接 <code>See upgrade plans</code>。</li>
-<li><strong>禁用而不是隐藏</strong>：<strong>Next</strong> 保留原位，<code>disabled</code> 并降低不透明度。</li>
+<li><strong>禁用而不是隐藏</strong>：<strong>Next</strong> 保留原位并置为 <code>disabled</code>，不隐藏。</li>
 <li><strong>状态联动</strong>：该限制由「套餐为 Unlimited Audio + 步骤二 + 视频来源 + 已选 Convert to Video Podcasts」共同决定；退回步骤一、换来源或改选音频都会立即解除。</li>
 <li><strong>链接打开同一个升级弹框</strong>，正文换成：<code>Converting to a video podcast needs Unlimited Plus. Unlimited Audio publishes imported videos as audio.</code>；关闭后焦点回到这条链接。</li>
 </ul>
+<h3 id="sec-5-9">5.9 导入下载数据（Import data）<a class="h-anchor" href="#sec-5-9" aria-label="本节链接">#</a></h3>
+<p>入口：Import complete 状态 → <strong>What you can do next</strong> → <strong>Optionally, import downloads.</strong>（见 5.6）。展开后导入每集的下载总量。</p>
+<p><strong>Please note：</strong></p>
+<ul>
+<li>The function is only used when users switch their podcasts to Podbean.</li>
+<li>The detailed stats such as download source, geo, and dates etc. CANNOT be imported and the imported stats are not IAB verified.</li>
+<li>Importing the download number for the same episode repeatedly will not increase its total number of downloads. Duplicate imports will be ignored and failed.</li>
+<li>Stats can only be imported within a 30-day period from feed import.</li>
+</ul>
+<p><span class="need-confirm">待开发确认</span>：30 天窗口的起算时刻（feed 导入开始还是完成）；重复导入失败时对用户的提示方式。</p>
 <hr />
 <h2 id="sec-6">6. 全局交互规则<a class="h-anchor" href="#sec-6" aria-label="本节链接">#</a></h2>
 <h3 id="sec-6-1">6.1 Save Bar（底部保存栏）<a class="h-anchor" href="#sec-6-1" aria-label="本节链接">#</a></h3>
@@ -2342,12 +2345,6 @@
 <td>Please select a podcast category</td>
 </tr>
 <tr>
-<td>General · Basic</td>
-<td>Podcast Logo</td>
-<td>封面不能为空</td>
-<td>Please upload a podcast logo（<span class="need-confirm">文案待确认</span>）</td>
-</tr>
-<tr>
 <td>General · Region</td>
 <td>Country of Origin</td>
 <td>仅当选择 <strong>Specific countries</strong> 时：至少选一个国家</td>
@@ -2373,6 +2370,7 @@
 </tr>
 </tbody>
 </table></div>
+<p>Podcast Logo 默认已带封面，只能更换、不能删除，不存在为空的状态，因此不参与必填校验。</p>
 <h3 id="sec-7-2">7.2 格式与长度校验<a class="h-anchor" href="#sec-7-2" aria-label="本节链接">#</a></h3>
 <div class="table-wrap"><table>
 <thead>
@@ -2451,123 +2449,119 @@
     ┌─────────┴──────────┐          ┌─────────────────────────────────────────────────┐
     │ 是 → 提交所有 Tab     │          │ 否 → 自动切换到第一个有错的 Tab                │
     │ Toast:              │          │ 定位到第一个错误字段并聚焦                     │
-    │ &quot;Saved successfully&quot;│          │ 有错 Tab 标签变红                              │
-    │ Save bar 隐藏        │          │ 用户修完后再次点击 Save                        │
-    └──────────────────────┘          └─────────────────────────────────────────────────┘
+    │ &quot;Saved successfully&quot;│          │ 用户修完后再次点击 Save                        │
+    │ Save bar 隐藏        │          └─────────────────────────────────────────────────┘
+    └──────────────────────┘
 </code></pre>
 <ul>
-<li><strong>错误标识</strong>：有错误的 Tab 标签变红，不加角标；Tab 内错误字段变红、下方显示行内提示并聚焦。</li>
+<li><strong>错误标识</strong>：Tab 内错误字段变红、下方显示行内提示并聚焦。</li>
 <li><strong>修完后</strong>：下一次 Save 前重新判定；点击 Cancel 一并清除。</li>
 </ul>
 <p><strong>Feed 标签页无独立校验：</strong> 其字段（三个开关的条件必填、Episode Number Limit 的整数与上限）随同一次 Save 一起校验；失败时切换到 Feed 标签页并显示行内提示。</p>
 <hr />
 <h2 id="附录新老页面对比">附录：新老页面对比<a class="h-anchor" href="#附录新老页面对比" aria-label="本节链接">#</a></h2>
 <h3 id="general-页面变化说明">General 页面变化说明<a class="h-anchor" href="#general-页面变化说明" aria-label="本节链接">#</a></h3>
+<p>老版是单个 <strong>Podcast Settings</strong> 页，字段纵向排列；新版按功能拆成 4 个 Tab（Basic / Region / Content / Feed）。</p>
+<p>改动只有三类：字段换位置（位置调整）、字段改名（Author / Owner → Author）、四个 Business 字段（Episode Download Link、Share on Podcast Site、Comments、Removing Podbean Brand）从 General 移除。其余字段功能不变。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>字段</th>
-<th>新版页面</th>
-<th>非 Business Plan 用户老页面</th>
-<th>Business Plan 用户老页面</th>
+<th>变化</th>
+<th>老版位置</th>
+<th>新版位置</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>布局</strong></td>
-<td>分为 4 个 Tab：<strong>Basic</strong>、<strong>Region</strong>、<strong>Content</strong>、<strong>Feed</strong></td>
-<td>单页纵向排列，所有字段一次性展示</td>
-<td>单页纵向排列，所有字段一次性展示</td>
-</tr>
-<tr>
 <td><strong>Podcast Title</strong></td>
+<td>位置调整</td>
+<td>Podcast Settings 单页</td>
 <td>Basic Tab</td>
-<td>有</td>
-<td>有</td>
 </tr>
 <tr>
 <td><strong>Brief Description</strong></td>
+<td>位置调整</td>
+<td>Podcast Settings 单页</td>
 <td>Basic Tab</td>
-<td>有</td>
-<td>有</td>
 </tr>
 <tr>
 <td><strong>Podcast Category</strong></td>
-<td>Basic Tab（最多 3 个分类）</td>
-<td>有</td>
-<td>有</td>
+<td>位置调整</td>
+<td>Podcast Settings 单页</td>
+<td>Basic Tab</td>
 </tr>
 <tr>
 <td><strong>Podcast Logo</strong></td>
+<td>位置调整</td>
+<td>Podcast Settings 单页</td>
 <td>Basic Tab</td>
-<td>有</td>
-<td>有</td>
 </tr>
 <tr>
 <td><strong>Author / Owner</strong></td>
-<td>Basic Tab（Podcast Logo 下方），重命名为 <strong>Author</strong></td>
-<td>有</td>
-<td>有</td>
+<td>改名 + 位置调整</td>
+<td>Podcast Settings 单页，字段名为 <strong>Author / Owner</strong></td>
+<td>Basic Tab，Podcast Logo 下方；字段名改为 <strong>Author</strong></td>
 </tr>
 <tr>
 <td><strong>Language</strong></td>
+<td>位置调整</td>
+<td>Podcast Settings 单页</td>
 <td>Region Tab</td>
-<td>有</td>
-<td>有</td>
 </tr>
 <tr>
-<td><strong>Copyright</strong></td>
-<td>Content Tab</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>Country Of Origin</strong></td>
-<td>Region Tab（Global / Specific countries 下拉）</td>
-<td>有</td>
-<td>有</td>
+<td><strong>Country of Origin</strong></td>
+<td>位置调整</td>
+<td>Podcast Settings 单页</td>
+<td>Region Tab</td>
 </tr>
 <tr>
 <td><strong>Timezone</strong></td>
-<td>Region Tab（仅 "Current time: ..."）</td>
-<td>有</td>
-<td>有</td>
+<td>位置调整</td>
+<td>Podcast Settings 单页，只显示 <code>Current time: …</code></td>
+<td>Region Tab</td>
 </tr>
 <tr>
 <td><strong>Podcast Type</strong></td>
+<td>位置调整</td>
+<td>Podcast Settings 单页</td>
 <td>Content Tab</td>
-<td>有</td>
-<td>有</td>
+</tr>
+<tr>
+<td><strong>Copyright</strong></td>
+<td>位置调整</td>
+<td>Podcast Settings 单页</td>
+<td>Content Tab</td>
 </tr>
 <tr>
 <td><strong>Content Explicit</strong></td>
-<td>Content Tab（从老 Feed 页面移入）</td>
-<td>有（Feed 页面）</td>
-<td>有（Feed 页面）</td>
+<td>位置调整</td>
+<td><strong>Feed 页面</strong>，不在 Podcast Settings 页</td>
+<td>Content Tab</td>
 </tr>
 <tr>
 <td><strong>Episode Download Link</strong></td>
-<td><strong>已移除</strong>（Business 在 Advanced Options 中控制）</td>
-<td>Show</td>
-<td>Show</td>
+<td>移除</td>
+<td>非 Business：页面显示 Show，不可改；Business：页面显示 Show，Advanced Options 中可改</td>
+<td>无</td>
 </tr>
 <tr>
 <td><strong>Share on Podcast Site</strong></td>
-<td><strong>已移除</strong>（Business 在 Advanced Options 中控制）</td>
-<td>Show（不可控）</td>
-<td>Hidden</td>
+<td>移除</td>
+<td>非 Business：页面显示 Show，不可改；Business：页面显示 Hidden，Advanced Options 中可改</td>
+<td>无</td>
 </tr>
 <tr>
 <td><strong>Comments</strong></td>
-<td><strong>已移除</strong>（Business 在 Advanced Options 中控制）</td>
-<td>Enable（不可控）</td>
-<td>Enable</td>
+<td>移除</td>
+<td>非 Business：页面显示 Enable，不可改；Business：页面显示 Enable，Advanced Options 中可改</td>
+<td>无</td>
 </tr>
 <tr>
 <td><strong>Removing Podbean Brand</strong></td>
-<td><strong>已移除</strong>（Business 在 Advanced Options 中控制）</td>
-<td>No（有控制按钮，点击升级）</td>
-<td>No（有控制按钮）</td>
+<td>移除</td>
+<td>非 Business：页面显示 No，带升级按钮；Business：页面显示 No，Advanced Options 中可改</td>
+<td>无</td>
 </tr>
 </tbody>
 </table></div>
@@ -2611,7 +2605,7 @@
 </tr>
 <tr>
 <td><strong>Episode Link</strong></td>
-<td><strong>已移除</strong>（转移到 Episode 发布页面，名称为 "Custom Episode Link"）</td>
+<td><strong>已移除</strong>（转移到 Episode 发布页面，名称为 "Alternative Episode Link"）</td>
 <td>有</td>
 <td>有</td>
 </tr>

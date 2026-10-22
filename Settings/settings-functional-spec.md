@@ -57,6 +57,7 @@
    - [5.6 301 Redirect 校验与完成态](#56-301-redirect-校验与完成态)
    - [5.7 免费账号（Free plan）：不能开始导入](#57-免费账号free-plan不能开始导入)
    - [5.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus](#58-unlimited-audio-账号audio-plan视频播客需要-plus)
+   - [5.9 导入下载数据（Import data）](#59-导入下载数据import-data)
 6. [全局交互规则](#6-全局交互规则)
    - [6.1 Save Bar（底部保存栏）](#61-save-bar底部保存栏)
    - [6.2 修改检测](#62-修改检测)
@@ -225,7 +226,7 @@ General 有一个 Save bar，四个 Tab 共用（Plugins、Import 没有 Save ba
 | 属性 | 说明 |
 |---|---|
 | **类型** | 图片预览 + 模板下拉 + 上传按钮 |
-| **必填** | 是（标有红色 *） |
+| **必填** | 是（标有红色 *）；默认已带封面，只能更换、不能删除，不存在为空的情况 |
 | **预览** | 正方形图片展示当前封面 |
 | **模板选择** | 下拉展示内置模板；选择模板后预览随之更新 |
 | **上传按钮** | "Upload image"；点击打开文件选择器，只接受 JPG / PNG；选中合法图片后打开编辑弹窗，确认上传后预览更新为新图片 |
@@ -233,8 +234,8 @@ General 有一个 Save bar，四个 Tab 共用（Plugins、Import 没有 Save ba
 | **文件信息** | 预览下方显示 `{宽}x{高}px, {大小}`，大小以 KB / MB 显示并保留两位小数 |
 | **3MB 上限** | 原图超过 3MB：弹窗内报错、Upload 禁用，Customize 仍可点击；裁剪后的文件按同一规则校验 |
 | **图片要求** | `Recommended: 1400–2048 px square (jpg or png). Apple requires original artwork.` 后面跟一个 **Details** 链接，在新标签页打开 `https://podcasters.apple.com/artwork-guide` |
-| **校验规则** | 选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；Save 时封面不能为空（见 7.1） |
-| **错误提示** | 格式错误："Please upload a JPG or PNG image"；超限："This image is larger than 3 MB. Customize it to reduce the file size before uploading."；为空："Please upload a podcast logo"（<span style="color:#a16207;font-weight:700;">文案待确认</span>） |
+| **校验规则** | 选择文件时过滤格式：非 JPG / PNG 提示错误且预览不变；封面不参与「为空」校验（见 7.1） |
+| **错误提示** | 格式错误："Please upload a JPG or PNG image"；超限："This image is larger than 3 MB. Customize it to reduce the file size before uploading." |
 
 #### 3.1.5 Author（作者）
 
@@ -531,7 +532,7 @@ Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称�
 │  （Import 之后：来源卡片隐藏，改为导入结果区）     │
 └────────────────────────────────────────────────────┘
 
-【弹窗 · 约 930 × 730，内容列 560】
+【弹窗】
 ┌────────────────────────────────────────────────────┐
 │  1 / 3                                           × │
 │                                                    │
@@ -548,7 +549,6 @@ Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称�
 | 属性 | 说明 |
 |---|---|
 | **承载方式** | **三步在弹窗内逐屏切换**，一次只显示一步 |
-| **弹窗尺寸** | 约 930 × 730，最大不超过视口的 94% / 92%；内容列 560px 居中，步骤标题 24px / 600 |
 | **步骤标记** | 头部左侧 `1 / 3`，随步骤更新 |
 | **步骤标题** | 随步骤与来源变化（见 5.2–5.4）；它只是标题，**不是可点击的步骤导航** |
 | **返回** | 页脚左下 **Back**，步骤一不显示；× / 点击遮罩 / Esc 关闭整个向导并回到来源选择 |
@@ -580,7 +580,7 @@ Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称�
 |---|---|
 | 字段标签 | RSS Feed URL |
 | 占位符 | `https://feeds.example.com/myshow.xml` |
-| 提示 | `Example: https://feeds.example.com/your-podcast/feed.xml`（灰色） |
+| 提示 | `Example: https://feeds.example.com/your-podcast/feed.xml` |
 | 必填 | 是 |
 | 错误提示 | **"Please enter your RSS feed URL"**（字段下方，聚焦输入框） |
 
@@ -590,15 +590,15 @@ Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称�
 
 | Content Source | 字段 | 说明 |
 |---|---|---|
-| **YouTube Playlist**（默认） | **YouTube channel handle**：下划线输入框，占位符 `e.g. @podbean`，右侧 **Search** 按钮 | 提示：`Search for your YouTube channel and choose the playlist you want to convert.` |
-| | **YouTube Playlist** 下拉框 —— **只有点过 Search 之后才出现** | 提示：We will retrieve **the latest 10 videos** and sync future content as you prefer.（正文色，不是灰色） |
-| **RSS Feed URL** | **RSS Feed** 输入框，占位符 `Enter your RSS feed URL` | 提示：We will retrieve **the latest 10 videos**, convert them into MP3 and sync future content as you prefer.（正文色） |
+| **YouTube Playlist**（默认） | **YouTube channel handle** 输入框，占位符 `e.g. @podbean`，右侧 **Search** 按钮 | 提示：`Search for your YouTube channel and choose the playlist you want to convert.` |
+| | **YouTube Playlist** 下拉框 —— **只有点过 Search 之后才出现** | 提示：We will retrieve **the latest 10 videos** and sync future content as you prefer. |
+| **RSS Feed URL** | **RSS Feed** 输入框，占位符 `Enter your RSS feed URL` | 提示：We will retrieve **the latest 10 videos**, convert them into MP3 and sync future content as you prefer. |
 
 - **Search 是必经步骤，检索前 Next 不出现**：handle 为空时点 Search → **"Please enter your YouTube channel handle"**；handle 有值 → 播放列表下拉与页脚同时出现，并 toast `Playlists loaded`。
 - **检索之前整个页脚隐藏**（步骤一没有 Back）。
 - Search 会把播放列表重置为第一个结果；handle、播放列表在步骤间往返与切换 Content Source 时保留。
 - video + RSS Feed 路径：空值报 **"Please enter your video RSS feed URL"**。
-- **排版**：弹窗内所有带标签的行都是**标签在上、控件在下**，标签 14px / 500 字重、次要灰色，控件占满 560px 宽；行距保持一致。
+- **行结构**：弹窗内带标签的行统一为标签在上、控件在下，控件占满内容列宽。
 - **输入即清错**：字段一旦有内容，行内错误立刻消失。
 
 ### 5.3 步骤二：范围与输出类型
@@ -625,7 +625,7 @@ Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称�
 | **Convert to Audio Podcasts**（默认） | 转成音频播客 |
 | **Convert to Video Podcasts** | 转成视频播客 |
 
-- **选项框整行宽、单列排列**，说明文字直接显示在标题下方，不放 ⓘ。
+- **单列排列**，说明文字直接显示在选项标题下方，不放 ⓘ。
 - **组内没有可见 legend**：步骤标题就是问题本身；单选组以同一句问句作为可访问名称。
 - 「What should we bring over?」这一组由 **RSS 与 video + RSS 共用**，选择在两条路径间共享。
 - **Unlimited Audio 限制**：YouTube 路径选 **Convert to Video Podcasts** 时，两个选项下方出现提示 **Converting to a video podcast needs Unlimited Plus.** + 链接 **See upgrade plans**，右下角 Next 保留原位但 **禁用**（见 5.8）。
@@ -662,8 +662,7 @@ Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称�
 | 项目 | 说明 |
 |---|---|
 | 条款文案 | 三选一：RSS → "…rights to **this podcast**…"；video + YouTube → "…rights to **this YouTube Content**…"；video + RSS → "…rights to **this content**…" |
-| 必勾 | 是。未勾选就点 **Import**，条款行标红并滚动到可见区域，不开始导入 |
-| 文字样式 | 正文色、500 字重，不作灰色脚注 |
+| 必勾 | 是。未勾选就点 **Import**，条款行显示错误并滚动到可见区域，不开始导入 |
 | 按钮 | 页脚左 **Back**、右 **Import** |
 
 选择在步骤间往返时保留（格式、两个勾选项都不重置）。
@@ -674,11 +673,11 @@ Plugins 页面展示账号已安装的插件，每条插件包含 logo、名称�
 
 **RSS 路径：状态卡片 + 重定向三步**
 
-状态卡片（琥珀色提示卡）只承载状态与刷新：
+状态卡片只承载状态与刷新：
 
 | 状态 | 卡片里显示 |
 |---|---|
-| 复制中 | 一段话：`Importing your episode info. Depending on how many episodes your feed has, it can take a few minutes. You can leave this page while it works.` + 下方居左的 **Refresh status** 按钮 |
+| 复制中 | 一段话：`Importing your episode info. Depending on how many episodes your feed has, it can take a few minutes. You can leave this page while it works.` + 下方的 **Refresh status** 按钮 |
 | 剧集信息已复制 | **整段换成一句** `Set redirect to complete the import.`，Refresh 退场，**Check redirect 解锁** |
 
 - 页面在导入期间自动轮询导入状态；用户也可以点击 **Refresh status** 手动刷新。
@@ -701,7 +700,7 @@ Import 之后直接进入「正在导入」：
 
 | 元素 | 内容 |
 |---|---|
-| **琥珀状态条**（最上方） | `Importing your media files — we'll email you once they're done.` |
+| **状态条**（最上方） | `Importing your media files — we'll email you once they're done.` |
 | **已连接的内容源** | `Connected Content Source: <链接>`——YouTube 路径显示所选**播放列表名**，video + RSS 显示填的 **feed 地址** |
 | **设置开关** | `Sync future content`（YouTube 与 RSS 都有）与 `Import YouTube Thumbnail as podcast and episode logos`（仅 YouTube）；默认状态与步骤三一致，开关与勾选项双向同步 |
 
@@ -723,8 +722,8 @@ Import 之后直接进入「正在导入」：
 
 | 元素 | 内容 |
 |---|---|
-| **状态条**（琥珀，最上方） | `Importing your media files — we'll email you once they're done.` |
-| **建议说明** | We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across.（正文色） |
+| **状态条**（最上方） | `Importing your media files — we'll email you once they're done.` |
+| **建议说明** | We recommend keeping your old feed/site in place for a few weeks to ensure all content/subscribers have moved across. |
 
 - 这一状态**没有出口**：没有 Next，也没有重新导入入口；状态卡片隐藏。
 
@@ -732,9 +731,9 @@ Import 之后直接进入「正在导入」：
 
 | 元素 | 内容 |
 |---|---|
-| 状态条（琥珀） | `Import complete — 16 successful, 0 failed.` |
+| 状态条 | `Import complete — 16 successful, 0 failed.` |
 | 建议说明 | 与上一状态同一句 |
-| **What you can do next** | 两条建议 + 一条可折叠项：<br>1. You can review the **podcast information** and adjust the show settings.<br>2. You can review the **episode list** and edit any episodes.<br>3. **Optionally, import downloads.**（默认收起；展开后含 CSV 导入说明、`Import CSV File` 按钮与两段合规声明） |
+| **What you can do next** | 两条建议 + 一条可折叠项：<br>1. You can review the **podcast information** and adjust the show settings.<br>2. You can review the **episode list** and edit any episodes.<br>3. **Optionally, import downloads.**（默认收起；展开后含 CSV 导入说明、`Import CSV File` 按钮与两段合规声明；规则见 5.9） |
 | 重新导入 | Click **here** if you want to re-import content. —— 点击回到 Import 页面 |
 
 ### 5.7 免费账号（Free plan）：不能开始导入
@@ -747,7 +746,7 @@ Import 之后直接进入「正在导入」：
 | `Video to Podcast` | 弹升级弹框，正文点名 **Unlimited Audio** 与 **Unlimited Plus** |
 | 任意卡片（paid / audio 账号） | 直接进入弹窗步骤一 |
 
-- **弹框内容**：标题 **Upgrade to import to Podbean**；正文按来源切换（RSS：`RSS imports are available on the Unlimited Audio plan, which brings your episodes and show details into Podbean.`；video：`Video imports are available on Unlimited Audio, or Unlimited Plus for publishing as a video podcast.`）；正文下方一枚 **Enjoy a 14-day free trial** 胶囊（薄荷绿，太阳图标，50px 圆角，不使用黄色）；按钮左 **Not now**、右 **See upgrade plans**（深色 pill），弹框宽度保证按钮不换行。
+- **弹框内容**：标题 **Upgrade to import to Podbean**；正文按来源切换（RSS：`RSS imports are available on the Unlimited Audio plan, which brings your episodes and show details into Podbean.`；video：`Video imports are available on Unlimited Audio, or Unlimited Plus for publishing as a video podcast.`）；正文下方一枚 **Enjoy a 14-day free trial** 标签；按钮左 **Not now**、右 **See upgrade plans**，弹框宽度保证按钮不换行。
 - **动作**：`Not now`、遮罩、Esc 都只关闭；`See upgrade plans` 关闭后 toast `Opening upgrade plans…`（本页不承载计费流程）。关闭后焦点回到触发的那张来源卡片。
 
 ### 5.8 Unlimited Audio 账号（audio plan）：视频播客需要 Plus
@@ -762,9 +761,22 @@ Import 之后直接进入「正在导入」：
 | `Video to Podcast` → RSS Feed URL | 不受影响（视频 RSS 一律转 MP3，输出本来就是音频） |
 
 - **步骤二的提示**：紧跟在两张输出卡片下面，文案 `Converting to a video podcast needs Unlimited Plus.` + 文字链接 `See upgrade plans`。
-- **禁用而不是隐藏**：**Next** 保留原位，`disabled` 并降低不透明度。
+- **禁用而不是隐藏**：**Next** 保留原位并置为 `disabled`，不隐藏。
 - **状态联动**：该限制由「套餐为 Unlimited Audio + 步骤二 + 视频来源 + 已选 Convert to Video Podcasts」共同决定；退回步骤一、换来源或改选音频都会立即解除。
 - **链接打开同一个升级弹框**，正文换成：`Converting to a video podcast needs Unlimited Plus. Unlimited Audio publishes imported videos as audio.`；关闭后焦点回到这条链接。
+
+### 5.9 导入下载数据（Import data）
+
+入口：Import complete 状态 → **What you can do next** → **Optionally, import downloads.**（见 5.6）。展开后导入每集的下载总量。
+
+**Please note：**
+
+- The function is only used when users switch their podcasts to Podbean.
+- The detailed stats such as download source, geo, and dates etc. CANNOT be imported and the imported stats are not IAB verified.
+- Importing the download number for the same episode repeatedly will not increase its total number of downloads. Duplicate imports will be ignored and failed.
+- Stats can only be imported within a 30-day period from feed import.
+
+<span style="color:#a16207;font-weight:700;">待开发确认</span>：30 天窗口的起算时刻（feed 导入开始还是完成）；重复导入失败时对用户的提示方式。
 
 ---
 
@@ -855,11 +867,12 @@ General 页面包含一个 Save bar，四个 Tab 共用。Plugins 与 Import 页
 | General · Basic | Podcast Title | 去空格后不能为空 | Please enter a podcast title |
 | General · Basic | Brief Description | 去空格后不能为空，也不能是默认值 "New podcast weblog" | Please enter a brief description |
 | General · Basic | Podcast Category | 第 1 行必须选择分类，不能为空或占位文字 "Select a category"；其余行可选 | Please select a podcast category |
-| General · Basic | Podcast Logo | 封面不能为空 | Please upload a podcast logo（<span style="color:#a16207;font-weight:700;">文案待确认</span>） |
 | General · Region | Country of Origin | 仅当选择 **Specific countries** 时：至少选一个国家 | Please select at least one country |
 | General · Feed | Ownership Verification Email | 仅开关开启时：不能为空（仅空格也算空） | Please enter your verification email |
 | General · Feed | Alternative Website URL | 仅开关开启时：不能为空 | Please enter your website URL |
 | General · Feed | Redirect to a New Feed | 仅开关开启时：不能为空 | Please enter your new feed URL |
+
+Podcast Logo 默认已带封面，只能更换、不能删除，不存在为空的状态，因此不参与必填校验。
 
 ### 7.2 格式与长度校验
 
@@ -899,12 +912,12 @@ General 的四个 Tab 在同一次保存中一起校验。
     ┌─────────┴──────────┐          ┌─────────────────────────────────────────────────┐
     │ 是 → 提交所有 Tab     │          │ 否 → 自动切换到第一个有错的 Tab                │
     │ Toast:              │          │ 定位到第一个错误字段并聚焦                     │
-    │ "Saved successfully"│          │ 有错 Tab 标签变红                              │
-    │ Save bar 隐藏        │          │ 用户修完后再次点击 Save                        │
-    └──────────────────────┘          └─────────────────────────────────────────────────┘
+    │ "Saved successfully"│          │ 用户修完后再次点击 Save                        │
+    │ Save bar 隐藏        │          └─────────────────────────────────────────────────┘
+    └──────────────────────┘
 ```
 
-- **错误标识**：有错误的 Tab 标签变红，不加角标；Tab 内错误字段变红、下方显示行内提示并聚焦。
+- **错误标识**：Tab 内错误字段变红、下方显示行内提示并聚焦。
 - **修完后**：下一次 Save 前重新判定；点击 Cancel 一并清除。
 
 **Feed 标签页无独立校验：** 其字段（三个开关的条件必填、Episode Number Limit 的整数与上限）随同一次 Save 一起校验；失败时切换到 Feed 标签页并显示行内提示。
@@ -915,24 +928,27 @@ General 的四个 Tab 在同一次保存中一起校验。
 
 ### General 页面变化说明
 
-| 字段 | 新版页面 | 非 Business Plan 用户老页面 | Business Plan 用户老页面 |
+老版是单个 **Podcast Settings** 页，字段纵向排列；新版按功能拆成 4 个 Tab（Basic / Region / Content / Feed）。
+
+改动只有三类：字段换位置（位置调整）、字段改名（Author / Owner → Author）、四个 Business 字段（Episode Download Link、Share on Podcast Site、Comments、Removing Podbean Brand）从 General 移除。其余字段功能不变。
+
+| 字段 | 变化 | 老版位置 | 新版位置 |
 |---|---|---|---|
-| **布局** | 分为 4 个 Tab：**Basic**、**Region**、**Content**、**Feed** | 单页纵向排列，所有字段一次性展示 | 单页纵向排列，所有字段一次性展示 |
-| **Podcast Title** | Basic Tab | 有 | 有 |
-| **Brief Description** | Basic Tab | 有 | 有 |
-| **Podcast Category** | Basic Tab（最多 3 个分类） | 有 | 有 |
-| **Podcast Logo** | Basic Tab | 有 | 有 |
-| **Author / Owner** | Basic Tab（Podcast Logo 下方），重命名为 **Author** | 有 | 有 |
-| **Language** | Region Tab | 有 | 有 |
-| **Copyright** | Content Tab | 有 | 有 |
-| **Country Of Origin** | Region Tab（Global / Specific countries 下拉） | 有 | 有 |
-| **Timezone** | Region Tab（仅 "Current time: ..."）| 有 | 有 |
-| **Podcast Type** | Content Tab | 有 | 有 |
-| **Content Explicit** | Content Tab（从老 Feed 页面移入） | 有（Feed 页面） | 有（Feed 页面） |
-| **Episode Download Link** | **已移除**（Business 在 Advanced Options 中控制） | Show | Show |
-| **Share on Podcast Site** | **已移除**（Business 在 Advanced Options 中控制） | Show（不可控） | Hidden |
-| **Comments** | **已移除**（Business 在 Advanced Options 中控制） | Enable（不可控） | Enable |
-| **Removing Podbean Brand** | **已移除**（Business 在 Advanced Options 中控制） | No（有控制按钮，点击升级） | No（有控制按钮） |
+| **Podcast Title** | 位置调整 | Podcast Settings 单页 | Basic Tab |
+| **Brief Description** | 位置调整 | Podcast Settings 单页 | Basic Tab |
+| **Podcast Category** | 位置调整 | Podcast Settings 单页 | Basic Tab |
+| **Podcast Logo** | 位置调整 | Podcast Settings 单页 | Basic Tab |
+| **Author / Owner** | 改名 + 位置调整 | Podcast Settings 单页，字段名为 **Author / Owner** | Basic Tab，Podcast Logo 下方；字段名改为 **Author** |
+| **Language** | 位置调整 | Podcast Settings 单页 | Region Tab |
+| **Country of Origin** | 位置调整 | Podcast Settings 单页 | Region Tab |
+| **Timezone** | 位置调整 | Podcast Settings 单页，只显示 `Current time: …` | Region Tab |
+| **Podcast Type** | 位置调整 | Podcast Settings 单页 | Content Tab |
+| **Copyright** | 位置调整 | Podcast Settings 单页 | Content Tab |
+| **Content Explicit** | 位置调整 | **Feed 页面**，不在 Podcast Settings 页 | Content Tab |
+| **Episode Download Link** | 移除 | 非 Business：页面显示 Show，不可改；Business：页面显示 Show，Advanced Options 中可改 | 无 |
+| **Share on Podcast Site** | 移除 | 非 Business：页面显示 Show，不可改；Business：页面显示 Hidden，Advanced Options 中可改 | 无 |
+| **Comments** | 移除 | 非 Business：页面显示 Enable，不可改；Business：页面显示 Enable，Advanced Options 中可改 | 无 |
+| **Removing Podbean Brand** | 移除 | 非 Business：页面显示 No，带升级按钮；Business：页面显示 No，Advanced Options 中可改 | 无 |
 
 ### Feed 标签页变化说明
 
@@ -944,7 +960,7 @@ General 的四个 Tab 在同一次保存中一起校验。
 | **Content Explicit** | **移入 General → Content 标签页** | 有 | 有 |
 | **Apple Podcasts Summary** | **已移除**（历史内容用户仍可见，字段只读并标注已停用；提供 "Use Podcast Description"，确认后独立 Summary 删除，`<itunes:summary>` 跟随 Podcast Description） | 有 | 有 |
 | **Podcast Website** | 改名为 **Alternative Website URL**（原默认填入 Podbean website URL；现改为 **Toggle + 条件输入**：关闭则使用 Podbean website URL，开启后显示输入框，填写的值生效） | 有 | 有 |
-| **Episode Link** | **已移除**（转移到 Episode 发布页面，名称为 "Custom Episode Link"） | 有 | 有 |
+| **Episode Link** | **已移除**（转移到 Episode 发布页面，名称为 "Alternative Episode Link"） | 有 | 有 |
 | **Episode Number Limit** | 有 | 有 | 有 |
 | **Generate audio-only feed** | **新增**（Toggle + 条件展示只读 feed 地址与 Copy） | 无 | 无 |
 | **Episode Artwork Tag** | **已移除**（统一用 `<itunes:image>` 输出单集封面，用户无需再选 RSS 标签类型） | 有 | 有 |
