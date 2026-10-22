@@ -1398,9 +1398,27 @@
 <td>是</td>
 </tr>
 <tr>
+<td><strong>FTP Upload</strong></td>
+<td>Upload audio and video files to your Podbean account directly from any FTP client.</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
 <td><strong>SEO Meta Tags</strong></td>
 <td>This plugin makes it very easy for you to manage SEO titles, keywords and descriptions for your podcast site.</td>
 <td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td><strong>Google Analytics</strong></td>
+<td>Google Analytics is the enterprise-class web analytics solution gives you rich insights into your podcast site traffic and marketing effectiveness.</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td><strong>Mailchimp</strong></td>
+<td>Automatically send emails to your Mailchimp subscribers when you publish new episodes.</td>
+<td><span class="need-confirm">待开发确认</span></td>
 <td>是</td>
 </tr>
 </tbody>
@@ -1421,12 +1439,12 @@
 <tbody>
 <tr>
 <td><strong>Edit（铅笔）</strong></td>
-<td>Episode Endnote / Import Files from Dropbox / SEO Meta Tags</td>
+<td>Episode Endnote / Import Files from Dropbox / FTP Upload / SEO Meta Tags / Google Analytics</td>
 <td>打开对应编辑弹窗（见 5.3）</td>
 </tr>
 <tr>
 <td><strong>Delete（×）</strong></td>
-<td>全部四行</td>
+<td>全部七行</td>
 <td>打开 <strong>Delete Plugin</strong> 确认弹窗</td>
 </tr>
 <tr>
@@ -1467,8 +1485,8 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="sec-5-3">5.3 插件编辑弹窗<a class="h-anchor" href="#sec-5-3" aria-label="本节链接">#</a></h3>
-<p>三个插件共用同一套编辑弹窗，弹窗底部为操作区。<strong>Dropbox 是例外</strong>：Refresh 按钮位于表格内，弹窗没有底部操作区。</p>
+<h3 id="sec-5-3">5.3 插件编辑弹窗 <span class="need-confirm">（每个插件的编辑功能可能不同，待开发确认）</span><a class="h-anchor" href="#sec-5-3" aria-label="本节链接">#</a></h3>
+<p>各插件共用同一套弹窗外壳（尺寸、标题栏、底部操作区），编辑内容各不相同。<strong>Dropbox 与 FTP Upload 是例外</strong>：Refresh 按钮位于表格内，弹窗没有底部操作区。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -1492,15 +1510,27 @@
 <td><strong>无底部操作区</strong></td>
 </tr>
 <tr>
+<td><strong>FTP Upload</strong></td>
+<td>FTP Upload</td>
+<td>弹窗始终为同一布局：顶部 <strong>FTP Account Information</strong> 面板 + 下方 <strong>FTP files</strong> 区，仅面板内容随状态变化。面板<strong>默认展开</strong>，标题行右侧按钮可收起 / 展开（每次打开重置为展开）。未激活：面板显示说明文字（<span class="need-confirm">文案待确认</span>）、<strong>Inactive</strong> 状态与 <strong>Activate FTP</strong> 按钮；点击后状态变为 <strong>Processing</strong>，显示 <code>Your FTP account is being processed and will be available in 10 minutes.</code>；账号就绪后状态变为 <strong>Active</strong>，显示 <strong>FTP Server Name</strong> / <strong>Username</strong> / <strong>Password</strong> / <strong>Max size</strong> 四项 label–value，以及一行 <code>Notice: Explicit TLS is required for FTP uploads. Please choose Explicit TLS when connecting.</code>。<strong>FTP files</strong> 区始终显示：标题 + 副标题 <code>Your FTP uploaded files will be listed below. Please select them and import to your Podbean account.</code>；<strong>文件表每页 6 条</strong>，超出时表格底部显示 <code>{起}–{止} of {总数}</code> 与上一页 / 下一页按钮（首页禁用「上一页」、末页禁用「下一页」）；表头与选择条的全选作用于全部文件（跨页）；文件夹为空时显示 <code>Your FTP Folder is empty</code>；<strong>Refresh 固定在弹窗底部</strong>，不随内容滚动，账号未激活时禁用（置灰），激活后读取 FTP 目录中的文件；勾选文件后表格上方出现选择条 <strong><code>{n} selected</code></strong> / <strong>Import</strong>，点击 Import 将选中文件导入账号（mockup 中导入后从列表移除；线上是否保留，以及 Status 列的内容，<span class="need-confirm">待开发确认</span>）；表格列为复选框 / Filename / Size / Status</td>
+<td>底部固定 <strong>Refresh</strong> 底栏；通过标题栏 <strong>×</strong>（或点击遮罩 / Esc）关闭</td>
+</tr>
+<tr>
 <td><strong>SEO Meta Tags</strong></td>
 <td><strong>Custom Meta Tags</strong></td>
 <td><strong>Meta Tags</strong> 字段为多行文本框，文本框内以文本形式展示一段 <code>&lt;meta name=&quot;keywords&quot; …&gt;</code> 示例</td>
-<td>只有 <strong>Save changes</strong>（无 Cancel），保存后关闭并 toast <code>Meta tags saved</code></td>
+<td>只有 <strong>Save</strong>（无 Cancel），保存后关闭并 toast <code>Meta tags saved</code></td>
+</tr>
+<tr>
+<td><strong>Google Analytics</strong></td>
+<td>Google Analytics</td>
+<td><strong>Google Analytics Tracking ID</strong> 字段：label + 单行输入框，输入框下方一句解释 <code>You can find your tracking ID in your Google Analytics account.</code></td>
+<td>只有 <strong>Save</strong>（无 Cancel），保存后关闭并 toast <code>Google Analytics tracking ID saved</code>；Tracking ID 的格式与校验规则<span class="need-confirm">待开发确认</span></td>
 </tr>
 </tbody>
 </table></div>
 <ul>
-<li>三个弹窗都能用 ×、点击遮罩、Esc 关闭。</li>
+<li>各编辑弹窗都能用 ×、点击遮罩、Esc 关闭。</li>
 <li>Meta Tags 的弹窗标题与行名不同（行叫 <strong>SEO Meta Tags</strong>，弹窗叫 <strong>Custom Meta Tags</strong>）。</li>
 </ul>
 <h3 id="sec-5-4">5.4 Get More Plugins<a class="h-anchor" href="#sec-5-4" aria-label="本节链接">#</a></h3>

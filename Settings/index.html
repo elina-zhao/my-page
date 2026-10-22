@@ -17,7 +17,7 @@
       --surface: #ffffff;
       --text: #1e293b;
       --text-secondary: #64748b;
-      --text-tertiary: #94a3b8;
+      --text-tertiary: #747474;
       --border: #e2e8f0;
       --radius-sm: 8px;
     }
@@ -315,7 +315,7 @@
       line-height: 1.5;
     }
 
-    /* ---- Tabs (Podcast Info) ---- */
+    /* ---- Tabs (General) ---- */
     /* The subtitle used to supply the space above the tabs on this page (4px
        heading margin + a 21px line + 24px of its own). With it gone the tabs
        would sit 4px under the heading, so this page's tab bar carries the gap —
@@ -477,7 +477,7 @@
       align-items: center; justify-content: center;
       border: none; background: transparent;
       border-radius: 4px; cursor: pointer;
-      color: #94a3b8; font-size: 13px;
+      color: #747474; font-size: 13px;
     }
     .pb-editor-toolbar .tb-btn:hover { background: #e2e8f0; color: #475569; }
     .pb-editor-body {
@@ -771,7 +771,7 @@
       border-radius: 50%;
       font-size: 14px;
       line-height: 1;
-      color: #94a3b8;
+      color: #747474;
       cursor: pointer;
     }
     .pb-chip .pb-chip-remove:hover { background: #e2e8f0; color: var(--text); }
@@ -1115,15 +1115,16 @@
     }
 
     /* Plugin Page */
-    /* Same story as #page-podcast-basic: the subtitle that used to sit above this
-       toolbar carried the gap, and the toolbar has no top margin of its own. Scoped
-       by id so nothing else moves. */
-    #page-plugin .plugin-toolbar-wrap { margin-top: 24px; }
-    .plugin-toolbar-wrap {
+    /* The page title and the page's single action share one row, so the button
+       sits on the heading's line instead of on a row of its own. */
+    .plugin-page-head {
       display: flex;
-      justify-content: flex-end;
-      margin-bottom: 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
     }
+    .plugin-page-head .page-heading-title { margin-bottom: 0; }
     .plugin-card {
       background: #fff;
       padding: 0;
@@ -1220,30 +1221,31 @@
     .plugin-badge.is-visible { display: inline-block; }
     .plugin-item-actions {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-shrink: 0;
     }
+    /* Round actions, matching the product: Edit is a filled dark disc with a
+       white pen, Remove is a hairline disc with a grey cross. */
     .plugin-action-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 34px;
       height: 34px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #fff;
-      color: var(--text-secondary);
+      border: 1px solid transparent;
+      border-radius: 50%;
+      background: var(--text);
+      color: #fff;
       cursor: pointer;
       transition: all 0.15s;
     }
     .plugin-action-btn:hover {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
-      color: var(--text);
+      background: #334155;
     }
     .plugin-action-btn.delete {
-      color: #fca5a5;
-      border-color: #fecaca;
+      background: #fff;
+      border-color: #c4c4c4;
+      color: #4b4b4b;
     }
     .plugin-action-btn.delete:hover {
       color: #ef4444;
@@ -1303,7 +1305,7 @@
     .import-radio:checked { border-color: var(--text); }
     .import-radio:checked::after { transform: scale(1); }
     .import-source:hover .import-radio { border-color: var(--text); }
-    .import-radio:focus-visible { outline: 2px solid #94a3b8; outline-offset: 2px; }
+    .import-radio:focus-visible { outline: 2px solid #747474; outline-offset: 2px; }
 
     .import-source-icon {
       width: 40px;
@@ -1393,7 +1395,7 @@
     .wiz-search-row { display: flex; align-items: flex-end; gap: 18px; }
     .wiz-search-row .import-input { flex: 1; }
     .wiz-search-row .import-btn { flex-shrink: 0; }
-    /* Same underline field language as .pb-input on Podcast Info / Feed */
+    /* Same underline field language as .pb-input on General / Feed */
     .import-input {
       width: 100%;
       padding: 8px 0;
@@ -1525,7 +1527,7 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.6 8.6 6.6 11.6 12.4 4.8' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
     .pb-check-line input[type="checkbox"]:focus-visible {
-      outline: 2px solid #94a3b8;
+      outline: 2px solid #747474;
       outline-offset: 2px;
     }
     .pb-check-line.is-error { color: #dc2626; }
@@ -1633,7 +1635,7 @@
       transition: color 0.15s;
     }
     .wiz-info:hover { color: var(--text); }
-    .wiz-info:focus-visible { outline: 2px solid #94a3b8; outline-offset: 2px; border-radius: 50%; }
+    .wiz-info:focus-visible { outline: 2px solid #747474; outline-offset: 2px; border-radius: 50%; }
     .wiz-info-tip {
       position: absolute;
       /* Hangs off the bottom edge of its own option row. Anchoring to the row
@@ -1847,7 +1849,7 @@
       text-underline-offset: 2px;
       cursor: pointer;
     }
-    .wiz-plan-link:focus-visible { outline: 2px solid #94a3b8; outline-offset: 2px; border-radius: 3px; }
+    .wiz-plan-link:focus-visible { outline: 2px solid #747474; outline-offset: 2px; border-radius: 3px; }
 
     /* The video path's two independent options follow the same box language. */
     .import-flow-options { display: flex; flex-direction: column; gap: 12px; }
@@ -1914,7 +1916,7 @@
       color: var(--text);
     }
     button.import-source + button.import-source { border-top: 1px solid var(--border); }
-    button.import-source:focus-visible { outline: 2px solid #94a3b8; outline-offset: -2px; }
+    button.import-source:focus-visible { outline: 2px solid #747474; outline-offset: -2px; }
     .import-source-arrow {
       flex-shrink: 0;
       color: var(--text-secondary);
@@ -2055,7 +2057,7 @@
       margin-top: 3px;
     }
     .wiz-done-item.is-open .wiz-done-chevron { transform: rotate(180deg); }
-    .wiz-done-item.is-toggle:focus-visible { outline: 2px solid #94a3b8; outline-offset: 3px; border-radius: 4px; }
+    .wiz-done-item.is-toggle:focus-visible { outline: 2px solid #747474; outline-offset: 3px; border-radius: 4px; }
     .wiz-done-panel {
       margin: 16px 0 0 38px;   /* clears the 26px icon + 12px gap */
       font-size: 14px;
@@ -2328,6 +2330,298 @@
       resize: vertical;
     }
     .meta-textarea:focus { outline: none; border-color: #9a9a9a; }
+
+    /* ---- Google Analytics dialog ---- */
+    /* Same stacked label + field recipe as Custom Meta Tags; the field is a
+       single-line input rather than a textarea. */
+    .ga-field {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .ga-label {
+      font-size: 14px;
+      color: var(--text);
+    }
+    /* The hint is visible copy rather than a hover tooltip: one sentence under
+       the field says where the ID lives. */
+    .ga-hint {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    .ga-input {
+      width: 420px;
+      max-width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #cfcfcf;
+      border-radius: 2px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .ga-input:focus { outline: none; border-color: #9a9a9a; }
+    /* Match the Custom Meta Tags dialog's rendered size (930 × 483 at full
+       height) — one input alone made this dialog read as a small prompt next
+       to the other plugin editors. min() keeps it inside short viewports. */
+    #gaModal .modal-dialog { min-height: min(483px, 90vh); }
+
+    /* ---- FTP Upload dialog: activate → processing → account info ----
+       Visual language follows the Endnote / Dropbox dialogs rather than the
+       product's own FTP page: one 930px shell, hairline panels (1px #dcdcdc,
+       2px radius), 14px body type, neutral greys, dark pills for actions, and
+       Refresh living in the table foot. The product's green button and blue
+       selection strip are gone; green survives only as the "Active" chip,
+       where it means status rather than "go". */
+    /* The three states are siblings toggled by [hidden]; a guard is needed
+       because JS owns the attribute and the shell is a flex column. */
+    .ftp-state[hidden] { display: none; }
+    /* The account panel is the one fixed surface; its body swaps per state. */
+    .ftp-account-card .ftp-state { margin-top: 16px; }
+
+    .ftp-intro {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.55;
+      margin: 0;
+    }
+    .ftp-intro-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin: 10px 0 0;
+    }
+    .ftp-processing {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .ftp-spinner {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #dcdcdc;
+      border-top-color: #1e293b;
+      border-radius: 50%;
+      animation: ftp-spin 0.9s linear infinite;
+    }
+    @keyframes ftp-spin { to { transform: rotate(360deg); } }
+
+    /* Account details read as data: the same panel, a label/value grid, a
+       quiet green "Active" chip and one info line for TLS. */
+    .ftp-account-card {
+      border: 1px solid #dcdcdc;
+      border-radius: 2px;
+      padding: 26px 32px 22px;
+    }
+    .ftp-account-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ftp-account-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    /* Fold control for the account panel: a quiet ghost button on the head row.
+       The chevron flips to point down when the panel is folded away. */
+    .ftp-info-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      margin: -6px -8px -6px auto;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .ftp-info-toggle:hover { background: #f1f5f9; color: var(--text); }
+    .ftp-info-toggle svg { transition: transform 0.2s; }
+    .ftp-info-toggle[aria-expanded="false"] svg { transform: rotate(180deg); }
+    .ftp-account-card.is-collapsed .ftp-state { display: none; }
+    /* One chip slot, three labels: neutral until the account is live, mint for
+       Active. Green here means status, not "go" — the palette's encouragement
+       role, kept off the actions. */
+    .ftp-status {
+      padding: 1px 8px;
+      border-radius: 50px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+    .ftp-status.is-active {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .ftp-creds {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 40px;
+      margin-top: 18px;
+    }
+    .ftp-cred-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 3px;
+    }
+    .ftp-cred-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      overflow-wrap: anywhere;
+    }
+    /* Important instruction, not helper copy: full text colour, no icon — the
+       sentence carries the weight on its own and aligns with the values above. */
+    .ftp-notice {
+      margin: 18px 0 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    /* ---- FTP files section (inside the active state) ---- */
+    .ftp-files { margin-top: 26px; }
+    .ftp-files-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .ftp-files-note {
+      margin: 6px 0 14px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    /* Selection strip — neutral tint, with Import as the dark pill */
+    .ftp-selection-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 8px 8px 16px;
+      margin-bottom: 12px;
+      background: #f8fafc;
+      border: 1px solid #dcdcdc;
+      border-radius: 2px;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .ftp-selection-bar[hidden] { display: none; }
+    .ftp-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ftp-import-link {
+      margin-left: auto;
+      padding: 6px 16px;
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .ftp-import-link:hover { background: #334155; }
+    /* Table box — same construction as .db-table: hairline box, head row,
+       rows with bottom rules, action in the foot. */
+    .ftp-table {
+      border: 1px solid #dcdcdc;
+      border-radius: 2px;
+    }
+    .ftp-file-table[hidden] { display: none; }
+    .ftp-file-head,
+    .ftp-file-row {
+      display: grid;
+      grid-template-columns: 44px 1.8fr 0.7fr 0.9fr;
+      align-items: center;
+      gap: 12px;
+      padding: 0 22px;
+    }
+    .ftp-file-head {
+      min-height: 54px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 1px solid #dcdcdc;
+    }
+    .ftp-file-row {
+      min-height: 54px;
+      font-size: 14px;
+      color: var(--text);
+      border-bottom: 1px solid #dcdcdc;
+    }
+    .ftp-check-cell { display: flex; align-items: center; }
+    .ftp-check input,
+    .ftp-check-cell input {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      accent-color: #1e293b;
+      cursor: pointer;
+    }
+    /* Pager — six rows a page, count on the left, two round arrows on the right */
+    .ftp-pager {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 22px;
+    }
+    .ftp-pager[hidden] { display: none; }
+    .ftp-pager-info {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .ftp-pager-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .ftp-pager-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 1px solid #dcdcdc;
+      border-radius: 50%;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ftp-pager-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #c4c4c4; }
+    .ftp-pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .ftp-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 0 34px;
+      border-bottom: 1px solid #dcdcdc;
+      color: var(--text-secondary);
+    }
+    .ftp-empty[hidden] { display: none; }
+    .ftp-empty p {
+      margin: 14px 0 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
     .modal-title {
       font-size: 18px;
       font-weight: 600;
@@ -2395,7 +2689,9 @@
     }
     .modal-footer .cancel-btn:hover { background: #f1f5f9; }
     .modal-footer .save-btn,
-    .db-refresh-btn {
+    .db-refresh-btn,
+    .ftp-refresh-btn,
+    .ftp-activate-btn {
       padding: 8px 20px;
       background: #1e293b;
       color: #fff;
@@ -2407,7 +2703,19 @@
       cursor: pointer;
     }
     .modal-footer .save-btn:hover,
-    .db-refresh-btn:hover { background: #334155; }
+    .db-refresh-btn:hover,
+    .ftp-refresh-btn:hover,
+    .ftp-activate-btn:hover { background: #334155; }
+    /* Activate lives inside the account panel; the dialog footer carries
+       Refresh only, pinned so a long file list cannot push it away. */
+    .ftp-activate-btn { margin-top: 18px; }
+    /* Files can only be read once the account is active — the pill stays the
+       same shape but reads as off, like the import page's disabled Continue. */
+    .ftp-refresh-btn:disabled,
+    .ftp-refresh-btn:disabled:hover {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
 
     /* ---- Podcast logo editor: Upload image → Crop image → Customize text ---- */
     #logoModal .modal-dialog { width: 900px; }
@@ -2982,7 +3290,7 @@
     /* the house focus ring (see .import-radio:focus-visible) — this input had
        `outline: none` and nothing to replace it, so keyboard focus was invisible */
     .channel-search-input:focus-visible {
-      outline: 2px solid #94a3b8;
+      outline: 2px solid #747474;
       outline-offset: 2px;
       border-radius: 4px;
     }
@@ -3425,18 +3733,17 @@
         <span class="menu-arrow"><svg width="12" height="12" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
       </a>
       <div class="sub-menu">
-        <a href="#" class="active" data-page="podcast-basic">Podcast Info</a>
-        <a href="#" data-page="feed">Feed</a>
+        <a href="#" class="active" data-page="podcast-basic">General</a>
         <a href="#" data-page="plugin">Plugin</a>
-        <a href="#" data-page="import-to-podbean">Import to Podbean</a>
+        <a href="#" data-page="import-to-podbean">Import</a>
         <!-- Mockup-only entries: the same wizard on a different plan. Each
              resolves to the import page-section (see PAGE_SECTION_ALIAS in
              switchPage) and only flips the plan mode, so there is no second
              copy of the wizard. "audio" = Unlimited Audio (no video podcast
              output); "free" = imports are gated at the source picker. -->
-        <a href="#" data-page="import-audio">Import to Podbean (audio)</a>
-        <a href="#" data-page="import-free">Import to Podbean (free)</a>
-        <a href="#" data-page="import-complete">Import to Podbean (complete)</a>
+        <a href="#" data-page="import-audio">Import (audio)</a>
+        <a href="#" data-page="import-free">Import (free)</a>
+        <a href="#" data-page="import-complete">Import (complete)</a>
         <a href="#" data-page="rss-import-states">导入状态说明</a>
       </div>
     </nav>
@@ -3445,15 +3752,16 @@
   <!-- ===== MAIN CONTENT ===== -->
   <div class="main-panel">
     <div class="content">
-      <!-- ===== Page: Podcast Info ===== -->
+      <!-- ===== Page: General ===== -->
       <div class="page-section active" id="page-podcast-basic">
-        <div class="page-heading-title">Podcast Info</div>
+        <div class="page-heading-title">General</div>
 
         <!-- Tabs -->
         <div class="pb-tabs">
           <button class="pb-tab active" data-pb-tab="basic">Basic</button>
-          <button class="pb-tab" data-pb-tab="metadata">Author &amp; Region</button>
-          <button class="pb-tab" data-pb-tab="publication">Content Classification</button>
+          <button class="pb-tab" data-pb-tab="metadata">Region</button>
+          <button class="pb-tab" data-pb-tab="publication">Content</button>
+          <button class="pb-tab" data-pb-tab="feed">Feed</button>
         </div>
 
         <!-- Tab: Basic Information -->
@@ -3567,6 +3875,12 @@
                   </div>
                 </div>
               </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Author</span>
+                <input type="text" class="pb-input" id="pbAuthorInput" placeholder="Author name" value="John Doe" />
+                <div class="pb-field-error"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -3575,18 +3889,6 @@
         <div class="pb-panel" id="pb-metadata">
           <div class="pb-card">
             <div class="info-row">
-
-              <div class="info-content-item">
-                <span class="cc-item-label">Author</span>
-                <input type="text" class="pb-input" id="pbAuthorInput" placeholder="Author name" value="John Doe" />
-                <div class="pb-field-error"></div>
-              </div>
-
-              <div class="info-content-item">
-                <span class="cc-item-label">Copyright</span>
-                <input type="text" class="pb-input" id="pbCopyrightInput" placeholder="Copyright 2026 All rights reserved." value="Copyright 2026 My Awesome Podcast. All rights reserved." />
-                <div class="pb-field-error"></div>
-              </div>
 
               <div class="info-content-item">
                 <span class="cc-item-label">Language</span>
@@ -3672,10 +3974,112 @@
                 </div>
                 <span class="tips">Specify whether your podcast contains explicit content.</span>
               </div>
+
+              <div class="info-content-item">
+                <span class="cc-item-label">Copyright</span>
+                <input type="text" class="pb-input" id="pbCopyrightInput" placeholder="Copyright 2026 All rights reserved." value="Copyright 2026 My Awesome Podcast. All rights reserved." />
+                <div class="pb-field-error"></div>
+              </div>
             </div>
 
           </div>
         </div>
+        <!-- Tab: Feed -->
+        <div class="pb-panel" id="pb-feed">
+          <div class="pb-card">
+              <div class="info-row">
+                <div class="info-content-item">
+                  <span class="cc-item-label">Podcast Feed URL</span>
+                  <div class="feed-url-box">
+                    <span class="feed-url-text">https://feed.podbean.org/elinazplus/feed.xml</span>
+                    <button class="feed-copy-btn" onclick="navigator.clipboard.writeText('https://feed.podbean.org/elinazplus/feed.xml')">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      Copy
+                    </button>
+                  </div>
+                </div>
+
+                <div class="info-content-item">
+                  <span class="cc-item-label">Episode Number Limit</span>
+                  <input type="number" class="pb-input" id="feedEpisodeLimit" min="1" max="1999" value="100" />
+                  <div class="pb-field-error"></div>
+                  <span class="tips">Limit the number of episodes included in your RSS feed.</span>
+                </div>
+
+                <div class="info-content-item">
+                  <div class="toggle-row-compact">
+                    <span class="cc-item-label">Ownership Verification Email</span>
+                    <span class="pb-switch">
+                      <input type="checkbox" data-toggle="ownership-email-input" />
+                      <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
+                    </span>
+                  </div>
+                  <p class="toggle-desc">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</p>
+                  <div id="ownership-email-input" style="display:none;margin-top:12px;">
+                    <input type="email" class="pb-input" id="feedEmailInput" placeholder="Enter verification email" />
+                    <div class="pb-field-error"></div>
+                  </div>
+                </div>
+
+                <div class="info-content-item">
+                  <div class="toggle-row-compact">
+                    <span class="cc-item-label">Alternative Website URL</span>
+                    <span class="pb-switch">
+                      <input type="checkbox" data-toggle="custom-website-url-input" />
+                      <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
+                    </span>
+                  </div>
+                  <p class="toggle-desc">Set your custom podcast website URL in the RSS feed.</p>
+                  <div id="custom-website-url-input" style="display:none;margin-top:12px;">
+                    <input type="text" class="pb-input" id="feedWebsiteInput" placeholder="https://your-website.com" value="" />
+                    <div class="pb-field-error"></div>
+                  </div>
+                </div>
+
+
+                <div class="info-content-item">
+                  <div class="toggle-row-compact">
+                    <span class="cc-item-label">Generate audio-only feed</span>
+                    <span class="pb-switch">
+                      <input type="checkbox" data-toggle="audio-only-feed-url" />
+                      <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
+                    </span>
+                  </div>
+                  <p class="toggle-desc">Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don't accept video. Your video feed stays as it is.</p>
+                  <div id="audio-only-feed-url" style="display:none;margin-top:16px;">
+                    <p class="toggle-desc" style="margin-bottom:8px;">Your audio-only feed is:</p>
+                    <div class="feed-url-box">
+                      <span class="feed-url-text">https://feed.podbean.com/channel519b/audio/feed.xml</span>
+                      <button class="feed-copy-btn" type="button" onclick="navigator.clipboard.writeText('https://feed.podbean.com/channel519b/audio/feed.xml')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Copy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="info-content-item">
+                  <div class="toggle-row-compact">
+                    <span class="cc-item-label">Redirect to a New Feed</span>
+                    <span class="pb-switch">
+                      <input type="checkbox" data-toggle="redirect-feed-input" />
+                      <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
+                    </span>
+                  </div>
+                  <p class="toggle-desc">Only enter your new podcast feed URL when you're ready to move away from Podbean.</p>
+                  <div id="redirect-feed-input" style="display:none;margin-top:12px;">
+                    <input type="text" class="pb-input" id="feedRedirectInput" placeholder="https://" />
+                    <div class="pb-field-error"></div>
+                    <span class="pb-warning">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                      Warning! Your Podbean feed will be redirected to the new feed URL immediately. Only enter your new podcast feed URL when you're ready to move away from Podbean.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
       <div class="pb-save-bar">
         <div class="pb-save-bar-inner">
           <button type="button" class="cancel-btn"> Cancel </button>
@@ -3684,121 +4088,36 @@
       </div>
       </div>
 
-      <!-- ===== Page: Feed ===== -->
-      <div class="page-section" id="page-feed">
-        <div class="page-heading-title">Feed</div>
 
-        <div class="pb-card" style="margin-top:24px;">
-            <div class="info-row">
-              <div class="info-content-item">
-                <span class="cc-item-label">Podcast Feed URL</span>
-                <div class="feed-url-box">
-                  <span class="feed-url-text">https://feed.podbean.org/elinazplus/feed.xml</span>
-                  <button class="feed-copy-btn" onclick="navigator.clipboard.writeText('https://feed.podbean.org/elinazplus/feed.xml')">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    Copy
-                  </button>
-                </div>
-              </div>
-
-              <div class="info-content-item">
-                <span class="cc-item-label">Episode Number Limit</span>
-                <input type="number" class="pb-input" id="feedEpisodeLimit" min="1" max="1999" value="100" />
-                <div class="pb-field-error"></div>
-                <span class="tips">Limit the number of episodes included in your RSS feed.</span>
-              </div>
-
-              <div class="info-content-item">
-                <div class="toggle-row-compact">
-                  <span class="cc-item-label">Ownership Verification Email</span>
-                  <span class="pb-switch">
-                    <input type="checkbox" data-toggle="ownership-email-input" />
-                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
-                  </span>
-                </div>
-                <p class="toggle-desc">Temporarily add an email address to your RSS feed for 48 hours so podcast directories can verify your podcast.</p>
-                <div id="ownership-email-input" style="display:none;margin-top:12px;">
-                  <input type="email" class="pb-input" id="feedEmailInput" placeholder="Enter verification email" />
-                  <div class="pb-field-error"></div>
-                </div>
-              </div>
-
-              <div class="info-content-item">
-                <div class="toggle-row-compact">
-                  <span class="cc-item-label">Alternative Website URL</span>
-                  <span class="pb-switch">
-                    <input type="checkbox" data-toggle="custom-website-url-input" />
-                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
-                  </span>
-                </div>
-                <p class="toggle-desc">Set your custom podcast website URL in the RSS feed.</p>
-                <div id="custom-website-url-input" style="display:none;margin-top:12px;">
-                  <input type="text" class="pb-input" id="feedWebsiteInput" placeholder="https://your-website.com" value="" />
-                  <div class="pb-field-error"></div>
-                </div>
-              </div>
-
-
-              <div class="info-content-item">
-                <div class="toggle-row-compact">
-                  <span class="cc-item-label">Generate audio-only feed</span>
-                  <span class="pb-switch">
-                    <input type="checkbox" data-toggle="audio-only-feed-url" />
-                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
-                  </span>
-                </div>
-                <p class="toggle-desc">Create an audio-only version of your video feed for Spotify, Amazon Music, and other apps that don't accept video. Your video feed stays as it is.</p>
-                <div id="audio-only-feed-url" style="display:none;margin-top:16px;">
-                  <p class="toggle-desc" style="margin-bottom:8px;">Your audio-only feed is:</p>
-                  <div class="feed-url-box">
-                    <span class="feed-url-text">https://feed.podbean.com/channel519b/audio/feed.xml</span>
-                    <button class="feed-copy-btn" type="button" onclick="navigator.clipboard.writeText('https://feed.podbean.com/channel519b/audio/feed.xml')">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                      Copy
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="info-content-item">
-                <div class="toggle-row-compact">
-                  <span class="cc-item-label">Redirect to a New Feed</span>
-                  <span class="pb-switch">
-                    <input type="checkbox" data-toggle="redirect-feed-input" />
-                    <span class="pb-switch-track"><span class="pb-switch-thumb"></span></span>
-                  </span>
-                </div>
-                <p class="toggle-desc">Only enter your new podcast feed URL when you're ready to move away from Podbean.</p>
-                <div id="redirect-feed-input" style="display:none;margin-top:12px;">
-                  <input type="text" class="pb-input" id="feedRedirectInput" placeholder="https://" />
-                  <div class="pb-field-error"></div>
-                  <span class="pb-warning">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    Warning! Your Podbean feed will be redirected to the new feed URL immediately. Only enter your new podcast feed URL when you're ready to move away from Podbean.
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-      <div class="pb-save-bar">
-        <div class="pb-save-bar-inner">
-          <button type="button" class="cancel-btn"> Cancel </button>
-          <button type="button" class="save-btn" id="feedSaveBtn"> Save </button>
-        </div>
-      </div>
-      </div>
 
       <!-- ===== Page: Plugin ===== -->
       <div class="page-section" id="page-plugin">
-        <div class="page-heading-title">Plugin</div>
-
-        <div class="plugin-toolbar-wrap">
+        <div class="plugin-page-head">
+          <div class="page-heading-title">Plugin</div>
           <a href="https://apps.podbean.com" class="plugin-get-btn">Get more plugins</a>
         </div>
 
         <div class="plugin-empty" id="pluginEmptyState" style="display:none;text-align:center;padding:60px 20px;color:var(--text-tertiary);font-size:14px;line-height:1.6;">Take your podcast to the next level by adding popular plugins and services.</div>
 
         <div class="plugin-card" id="pluginList">
+          <div class="plugin-item" data-plugin-name="FTP Upload">
+            <div class="plugin-item-icon">
+              <span class="plugin-icon-fallback" style="--c:#0d9488">FTP</span>
+            </div>
+            <div class="plugin-item-info">
+              <div class="plugin-item-name">FTP Upload <span class="plugin-badge">Expired</span></div>
+              <p class="plugin-item-desc">Upload audio and video files to your Podbean account directly from any FTP client.</p>
+            </div>
+            <div class="plugin-item-actions">
+              <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit FTP Upload">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+              </button>
+              <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove FTP Upload">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+
           <div class="plugin-item" data-plugin-name="Episode Endnote">
             <div class="plugin-item-icon">
               <span class="plugin-icon-fallback" style="--c:#7c3aed">EE</span>
@@ -3810,7 +4129,7 @@
             </div>
             <div class="plugin-item-actions">
               <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit Episode Endnote">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
               </button>
               <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove Episode Endnote">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -3845,7 +4164,7 @@
             </div>
             <div class="plugin-item-actions">
               <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit Import Files from Dropbox">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
               </button>
               <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove Import Files from Dropbox">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -3864,9 +4183,47 @@
             </div>
             <div class="plugin-item-actions">
               <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit SEO Meta Tags">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
               </button>
               <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove SEO Meta Tags">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="plugin-item" data-plugin-name="Google Analytics">
+            <div class="plugin-item-icon">
+              <span class="plugin-icon-fallback" style="--c:#e37400">GA</span>
+              <img src="https://s3.amazonaws.com/fs1.podbean.com/podbean_app_logo/Google_analytics_logo_gnipk.jpg" alt="Google Analytics" onerror="this.remove()">
+            </div>
+            <div class="plugin-item-info">
+              <div class="plugin-item-name">Google Analytics <span class="plugin-badge">Expired</span></div>
+              <p class="plugin-item-desc">Google Analytics is the enterprise-class web analytics solution gives you rich insights into your podcast site traffic and marketing effectiveness.</p>
+            </div>
+            <div class="plugin-item-actions">
+              <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit Google Analytics">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+              </button>
+              <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove Google Analytics">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="plugin-item" data-plugin-name="Mailchimp">
+            <div class="plugin-item-icon">
+              <span class="plugin-icon-fallback" style="--c:#ffe01b;color:#241c15">MC</span>
+              <img src="https://d8g345wuhgd7e.cloudfront.net/podbean_app_logo/mailchimp_app_logo_y2mrb.png" alt="Mailchimp" onerror="this.remove()">
+            </div>
+            <div class="plugin-item-info">
+              <div class="plugin-item-name">Mailchimp</div>
+              <p class="plugin-item-desc">Automatically send emails to your Mailchimp subscribers when you publish new episodes.</p>
+            </div>
+            <div class="plugin-item-actions">
+              <button type="button" class="plugin-action-btn" title="Edit" aria-label="Edit Mailchimp">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+              </button>
+              <button type="button" class="plugin-action-btn delete" title="Remove" aria-label="Remove Mailchimp">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
@@ -3877,7 +4234,7 @@
       <!-- ===== Page: Import to Podbean ===== -->
       <div class="page-section" id="page-import-to-podbean">
         <div id="importPageHead">
-          <div class="page-heading-title">Import to Podbean</div>
+          <div class="page-heading-title">Import</div>
           <p class="page-subtitle">Import an existing podcast or video series into Podbean. <a href="#" style="color:inherit;font-weight:500;">Learn more</a></p>
         </div>
 
@@ -3999,7 +4356,7 @@
 
       <!-- ===== Page: Import to Podbean (complete) — mockup-only entry to the finished state ===== -->
       <div class="page-section" id="page-import-complete">
-        <div class="page-heading-title">Import to Podbean</div>
+        <div class="page-heading-title">Import</div>
         <p class="page-subtitle">Import an existing podcast or video series into Podbean. <a href="#" style="color:inherit;font-weight:500;">Learn more</a></p>
 
         <div class="wiz-done">
@@ -4071,7 +4428,7 @@
            way in), and both the copy and the drafted values are MINE, not product copy. -->
       <div class="page-section" id="page-ai-setup">
         <div class="page-heading-title">Set up with Podbean AI</div>
-        <p class="page-subtitle">Tell Podbean AI what your podcast is about. It drafts the title, description and category for <strong id="aiSetupUrl">your new podcast</strong> — everything stays editable in Podcast Info.</p>
+        <p class="page-subtitle">Tell Podbean AI what your podcast is about. It drafts the title, description and category for <strong id="aiSetupUrl">your new podcast</strong> — everything stays editable in General.</p>
 
         <div class="ai-setup-prompt">
           <div class="import-field" id="aiSetupField">
@@ -4108,12 +4465,12 @@
               <div class="ai-setup-key">Artwork</div>
               <div class="ai-setup-val">
                 <div class="ai-setup-art"><span>TW</span><span class="ai-setup-art-tag">Draft</span></div>
-                <div class="import-example" style="margin-top:8px;">You can replace it with your own cover in Podcast Info.</div>
+                <div class="import-example" style="margin-top:8px;">You can replace it with your own cover in General.</div>
               </div>
             </div>
           </div>
           <div class="ai-setup-actions">
-            <button class="import-btn" type="button" id="aiSetupContinue">Continue to Podcast Info</button>
+            <button class="import-btn" type="button" id="aiSetupContinue">Continue to General</button>
           </div>
         </div>
       </div>
@@ -4723,7 +5080,154 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="save-btn" onclick="saveMetaTags()">Save changes</button>
+            <button type="button" class="save-btn" onclick="saveMetaTags()">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Google Analytics (Google Analytics plugin) -->
+      <div class="modal-overlay" id="gaModal">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <div class="modal-title">Google Analytics</div>
+            <button class="modal-close" onclick="closeGaModal()" aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="ga-field">
+              <label class="ga-label" for="gaTrackingInput">Google Analytics Tracking ID</label>
+              <input class="ga-input" id="gaTrackingInput" type="text" placeholder="Enter your tracking ID" spellcheck="false" autocomplete="off">
+              <p class="ga-hint">You can find your tracking ID in your Google Analytics account.</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="save-btn" onclick="saveGa()">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: FTP Upload (FTP Upload plugin) -->
+      <div class="modal-overlay" id="ftpModal">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <div class="modal-title">FTP Upload</div>
+            <button class="modal-close" onclick="closeFtpModal()" aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- ONE layout in every state: the account panel's content swaps,
+                 and the files block stays put with Refresh disabled until the
+                 account is active. No footer — × / Esc / backdrop close. -->
+            <div class="ftp-account-card">
+              <div class="ftp-account-head">
+                <div class="ftp-account-title">FTP Account Information</div>
+                <span class="ftp-status" id="ftpStatusChip">Inactive</span>
+                <!-- Expands by default; this folds the credentials away when the
+                     reader only came for the file list. -->
+                <button type="button" class="ftp-info-toggle" id="ftpInfoToggle" aria-expanded="true" aria-controls="ftpStateIdle ftpStateProcessing ftpStateActive" aria-label="Collapse FTP account information" onclick="toggleFtpInfo()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>
+                </button>
+              </div>
+
+              <!-- Not activated yet -->
+              <div class="ftp-state" id="ftpStateIdle">
+                <p class="ftp-intro">Activate FTP to upload audio and video files straight from any FTP client to your Podbean account.</p>
+                <p class="ftp-intro-sub">Once activated, you will get a server name, username and password to use in your FTP client.</p>
+                <button type="button" class="ftp-activate-btn" id="ftpPrimaryBtn" onclick="ftpPrimaryAction()">Activate FTP</button>
+              </div>
+
+              <!-- Account being provisioned -->
+              <div class="ftp-state" id="ftpStateProcessing" hidden>
+                <p class="ftp-processing">
+                  <span class="ftp-spinner" aria-hidden="true"></span>
+                  <span>Your FTP account is being processed and will be available in 10 minutes.</span>
+                </p>
+              </div>
+
+              <!-- Activated: credentials -->
+              <div class="ftp-state" id="ftpStateActive" hidden>
+                <div class="ftp-creds">
+                  <div class="ftp-cred">
+                    <div class="ftp-cred-label">FTP Server Name</div>
+                    <div class="ftp-cred-value">ftporg1.podbean.org</div>
+                  </div>
+                  <div class="ftp-cred">
+                    <div class="ftp-cred-label">Username</div>
+                    <div class="ftp-cred-value">aicppg</div>
+                  </div>
+                  <div class="ftp-cred">
+                    <div class="ftp-cred-label">Password</div>
+                    <div class="ftp-cred-value">exnwjy</div>
+                  </div>
+                  <div class="ftp-cred">
+                    <div class="ftp-cred-label">Max size</div>
+                    <div class="ftp-cred-value">10GB</div>
+                  </div>
+                </div>
+                <p class="ftp-notice">Notice: Explicit TLS is required for FTP uploads. Please choose Explicit TLS when connecting.</p>
+              </div>
+            </div>
+
+            <!-- FTP files: always shown; Refresh lights up once active -->
+            <div class="ftp-files">
+              <div class="ftp-files-title">FTP files</div>
+              <p class="ftp-files-note">Your FTP uploaded files will be listed below. Please select them and import to your Podbean account.</p>
+
+              <div class="ftp-selection-bar" id="ftpSelectionBar" hidden>
+                <label class="ftp-check">
+                  <input type="checkbox" id="ftpSelectAll" onchange="toggleAllFtpFiles(this.checked)">
+                  <span id="ftpSelectedCount">0 selected</span>
+                </label>
+                <button type="button" class="ftp-import-link" onclick="importFtpFiles()">Import</button>
+              </div>
+
+              <!-- One box holds the table, the empty state and the pager;
+                   Refresh is pinned in the dialog's footer instead, so it is
+                   reachable without scrolling. renderFtpFiles() owns the
+                   inner visibility. -->
+              <div class="ftp-table">
+                <div class="ftp-file-table" id="ftpFileTable" hidden>
+                  <div class="ftp-file-head">
+                    <span class="ftp-check-cell"><input type="checkbox" id="ftpHeadCheck" onchange="toggleAllFtpFiles(this.checked)" aria-label="Select all files"></span>
+                    <span>Filename</span>
+                    <span>Size</span>
+                    <span>Status</span>
+                  </div>
+                  <!-- Rows are rendered from ftpFiles so the list can hold more
+                       than one file; refreshFtpFiles() is what fills it. -->
+                  <div id="ftpFileRows"></div>
+                </div>
+
+                <div class="ftp-empty" id="ftpEmpty">
+                  <svg width="118" height="94" viewBox="0 0 118 94" fill="none" aria-hidden="true">
+                    <rect x="7" y="11" width="82" height="58" rx="3" stroke="#c9c9c9" stroke-width="10"/>
+                    <rect x="71" y="33" width="30" height="50" rx="4" fill="#fff" stroke="#c9c9c9" stroke-width="10"/>
+                    <circle cx="47" cy="55" r="9" stroke="#c9c9c9" stroke-width="10"/>
+                  </svg>
+                  <p>Your FTP Folder is empty</p>
+                </div>
+
+                <!-- Six files a page; the strip lives inside the table box -->
+                <div class="ftp-pager" id="ftpPager" hidden>
+                  <span class="ftp-pager-info" id="ftpPagerInfo"></span>
+                  <div class="ftp-pager-actions">
+                    <button type="button" class="ftp-pager-btn" id="ftpPrevBtn" onclick="ftpPageStep(-1)" aria-label="Previous page">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <button type="button" class="ftp-pager-btn" id="ftpNextBtn" onclick="ftpPageStep(1)" aria-label="Next page">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Refresh sits outside the scrolling body so it stays at the
+               dialog's bottom edge whatever the list is doing. -->
+          <div class="modal-footer">
+            <button type="button" class="ftp-refresh-btn" id="ftpRefreshBtn" onclick="refreshFtpFiles()" disabled>Refresh</button>
           </div>
         </div>
       </div>
@@ -5095,7 +5599,7 @@
     var savedState = null;
 
     // ==============================================
-    // Podcast Info — category rows (1–3)
+    // General — category rows (1–3)
     // ==============================================
     // The product's own option list (supplied 2026-10-21). Subcategories are
     // single entries written "Parent:Child" — that is exactly how the real
@@ -5905,14 +6409,14 @@
         e.preventDefault();
 
         // Special behavior for Settings:
-        // If clicking Settings from another page -> expand & navigate to Podcast Info
+        // If clicking Settings from another page -> expand & navigate to General
         // If already on a Settings page -> just toggle collapse, keep page content
         var isSettings = link.textContent.trim().includes('Settings');
         if (isSettings) {
           var settingsHasActive = sub.querySelector('a.active') !== null;
 
           if (!settingsHasActive) {
-            // Coming from another page: expand Settings, activate Podcast Info
+            // Coming from another page: expand Settings, activate General
             if (unsavedChanges) {
               pendingNav = function() {
                 document.querySelectorAll('.sidebar-nav a, .sidebar-nav .sub-menu a').forEach(function(a) { a.classList.remove('active'); });
@@ -6175,6 +6679,209 @@
       if (e.key === 'Escape' && modal.classList.contains('open')) closeMetaTagsModal();
     });
 
+    // Modal: Google Analytics
+    function openGaModal() {
+      document.getElementById('gaModal').classList.add('open');
+    }
+    function closeGaModal() {
+      document.getElementById('gaModal').classList.remove('open');
+    }
+    function saveGa() {
+      closeGaModal();
+      showToast('Google Analytics tracking ID saved');
+    }
+    document.getElementById('gaModal').addEventListener('click', function(e) {
+      if (e.target === this) closeGaModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      var modal = document.getElementById('gaModal');
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeGaModal();
+    });
+
+    // Modal: FTP Upload — a three-state flow, not a form:
+    // idle → (Activate FTP) → processing → active (credentials + files).
+    // The 3s wait is a mockup device; the product's own copy says 10 minutes.
+    var ftpState = 'idle';
+    var ftpTimer = null;
+    // The FTP folder starts empty on a fresh account; Refresh lists the demo
+    // files. Ten of them, so the multi-select strip and the scrolling table
+    // can both be reviewed.
+    var FTP_DEMO_FILES = [
+      { name: 'my_first_audio.mp3', size: '1.15MB' },
+      { name: 'episode-042-master.mp3', size: '48.6MB' },
+      { name: 'interview-raw-take-2.wav', size: '212.4MB' },
+      { name: 'trailer-vertical-cut.mp4', size: '24.8MB' },
+      { name: 'intro-theme.mp3', size: '2.4MB' },
+      { name: 'outro-sting.mp3', size: '1.8MB' },
+      { name: 'live-session-recording.wav', size: '386.2MB' },
+      { name: 'sponsor-read-final.mp3', size: '12.7MB' },
+      { name: 'listener-voicemail-12.m4a', size: '6.3MB' },
+      { name: 'studio-b-roll.mp4', size: '98.5MB' }
+    ];
+    var ftpFiles = [];
+    // Six rows fit the dialog without turning it into a scrolling page; the
+    // rest live behind the pager. The account panel folds away so the list can
+    // take the whole height when a reader only came for the files.
+    var FTP_PAGE_SIZE = 6;
+    var ftpPage = 0;
+    var ftpInfoCollapsed = false;
+    function ftpSelectedCount() {
+      return ftpFiles.filter(function (f) { return f.selected; }).length;
+    }
+    function ftpPageCount() {
+      return Math.max(1, Math.ceil(ftpFiles.length / FTP_PAGE_SIZE));
+    }
+    function ftpClampPage() {
+      ftpPage = Math.min(Math.max(0, ftpPage), ftpPageCount() - 1);
+    }
+    function ftpPageStep(delta) {
+      var next = Math.min(ftpPageCount() - 1, Math.max(0, ftpPage + delta));
+      if (next === ftpPage) return;
+      ftpPage = next;
+      renderFtpRows();
+      renderFtpFiles();
+    }
+    // One owner of the fold: the panel's visibility, the button's aria state,
+    // and the chevron direction (CSS reads aria-expanded).
+    function setFtpInfoCollapsed(collapsed) {
+      ftpInfoCollapsed = !!collapsed;
+      var card = document.querySelector('#ftpModal .ftp-account-card');
+      var btn = document.getElementById('ftpInfoToggle');
+      if (card) card.classList.toggle('is-collapsed', ftpInfoCollapsed);
+      if (btn) {
+        btn.setAttribute('aria-expanded', ftpInfoCollapsed ? 'false' : 'true');
+        btn.setAttribute('aria-label', ftpInfoCollapsed ? 'Expand FTP account information' : 'Collapse FTP account information');
+      }
+    }
+    function toggleFtpInfo() {
+      setFtpInfoCollapsed(!ftpInfoCollapsed);
+    }
+    function renderFtp() {
+      var idle = document.getElementById('ftpStateIdle');
+      if (!idle) return;
+      idle.hidden = ftpState !== 'idle';
+      document.getElementById('ftpStateProcessing').hidden = ftpState !== 'processing';
+      document.getElementById('ftpStateActive').hidden = ftpState !== 'active';
+      // The chip and the Refresh button are the same two signals in all states:
+      // what the account is doing, and whether the folder can be read yet.
+      var chip = document.getElementById('ftpStatusChip');
+      chip.textContent = ftpState === 'active' ? 'Active'
+        : (ftpState === 'processing' ? 'Processing' : 'Inactive');
+      chip.classList.toggle('is-active', ftpState === 'active');
+      document.getElementById('ftpRefreshBtn').disabled = ftpState !== 'active';
+      renderFtpFiles();
+    }
+    // Rows are rebuilt only when the file set changes, so ticking a checkbox
+    // neither re-creates the list nor throws keyboard focus away.
+    function renderFtpRows() {
+      var rowsBox = document.getElementById('ftpFileRows');
+      if (!rowsBox) return;
+      var start = ftpPage * FTP_PAGE_SIZE;
+      rowsBox.innerHTML = ftpFiles.slice(start, start + FTP_PAGE_SIZE).map(function (f, i) {
+        return '<div class="ftp-file-row">' +
+          '<span class="ftp-check-cell"><input type="checkbox" onchange="toggleFtpFile(' + (start + i) + ', this.checked)" aria-label="Select ' + f.name + '"></span>' +
+          '<span class="ftp-file-name">' + f.name + '</span>' +
+          '<span class="ftp-file-size">' + f.size + '</span>' +
+          '<span class="ftp-file-status"></span>' +
+        '</div>';
+      }).join('');
+    }
+    // One owner of the files block: table vs empty state, the selection bar,
+    // and every checkbox's checked / indeterminate state.
+    function renderFtpFiles() {
+      var table = document.getElementById('ftpFileTable');
+      if (!table) return;
+      var bar = document.getElementById('ftpSelectionBar');
+      var empty = document.getElementById('ftpEmpty');
+      var head = document.getElementById('ftpHeadCheck');
+      var barCheck = document.getElementById('ftpSelectAll');
+      var pager = document.getElementById('ftpPager');
+      var hasFiles = ftpFiles.length > 0;
+      var count = ftpSelectedCount();
+      ftpClampPage();
+      table.hidden = !hasFiles;
+      empty.hidden = hasFiles;
+      bar.hidden = !(hasFiles && count > 0);
+      pager.hidden = !hasFiles;
+      Array.prototype.forEach.call(table.querySelectorAll('.ftp-file-row input'), function (box, i) {
+        var f = ftpFiles[ftpPage * FTP_PAGE_SIZE + i];
+        box.checked = !!(f && f.selected);
+      });
+      // The two select-all controls mean the whole folder, not just this page.
+      head.checked = hasFiles && count === ftpFiles.length;
+      head.indeterminate = count > 0 && count < ftpFiles.length;
+      barCheck.checked = head.checked;
+      barCheck.indeterminate = head.indeterminate;
+      document.getElementById('ftpSelectedCount').textContent = count + ' selected';
+      if (hasFiles) {
+        var from = ftpPage * FTP_PAGE_SIZE + 1;
+        var to = Math.min(ftpFiles.length, (ftpPage + 1) * FTP_PAGE_SIZE);
+        document.getElementById('ftpPagerInfo').textContent = from + '–' + to + ' of ' + ftpFiles.length;
+        document.getElementById('ftpPrevBtn').disabled = ftpPage === 0;
+        document.getElementById('ftpNextBtn').disabled = ftpPage >= ftpPageCount() - 1;
+      }
+    }
+    function toggleFtpFile(index, on) {
+      if (ftpFiles[index]) ftpFiles[index].selected = !!on;
+      renderFtpFiles();
+    }
+    function toggleAllFtpFiles(on) {
+      ftpFiles.forEach(function (f) { f.selected = !!on; });
+      renderFtpFiles();
+    }
+    // Refresh re-reads the FTP folder; the mockup's folder holds ten demo files
+    function refreshFtpFiles() {
+      // The button is disabled until the account is active; guard anyway so a
+      // scripted click cannot read a folder that does not exist yet.
+      if (ftpState !== 'active') return;
+      ftpFiles = FTP_DEMO_FILES.map(function (f) {
+        return { name: f.name, size: f.size, selected: false };
+      });
+      ftpPage = 0;
+      renderFtpRows();
+      renderFtpFiles();
+    }
+    // Import copies the selected files into the account and removes them from
+    // the FTP folder; the folder is empty once nothing is left in it.
+    function importFtpFiles() {
+      var picked = ftpFiles.filter(function (f) { return f.selected; });
+      if (!picked.length) return;
+      ftpFiles = ftpFiles.filter(function (f) { return !f.selected; });
+      ftpClampPage();
+      renderFtpRows();
+      renderFtpFiles();
+      showToast(picked.length === 1 ? picked[0].name + ' imported' : picked.length + ' files imported');
+    }
+    function openFtpModal() {
+      // Every open starts on page one with the credentials showing; the fold
+      // is a per-visit choice, not a setting that quietly persists.
+      ftpPage = 0;
+      setFtpInfoCollapsed(false);
+      renderFtpRows();
+      renderFtp();
+      document.getElementById('ftpModal').classList.add('open');
+    }
+    function closeFtpModal() {
+      document.getElementById('ftpModal').classList.remove('open');
+    }
+    function ftpPrimaryAction() {
+      if (ftpState !== 'idle') return;
+      ftpState = 'processing';
+      renderFtp();
+      clearTimeout(ftpTimer);
+      ftpTimer = setTimeout(function () {
+        ftpState = 'active';
+        renderFtp();
+      }, 3000);
+    }
+    document.getElementById('ftpModal').addEventListener('click', function(e) {
+      if (e.target === this) closeFtpModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      var modal = document.getElementById('ftpModal');
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeFtpModal();
+    });
+
     // Close modal when clicking overlay background
     document.getElementById('endnoteModal').addEventListener('click', function(e) {
       if (e.target === this) closeEndnoteModal();
@@ -6252,7 +6959,7 @@
       }
     }
 
-    // Podcast Info tabs
+    // General tabs
     document.querySelectorAll('.pb-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         var tabId = this.getAttribute('data-pb-tab');
@@ -6279,14 +6986,14 @@
       }
     }
 
-    // Save button: Podcast Info
+    // Save button: General
     if (document.getElementById('podcastInfoSaveBtn')) {
       document.getElementById('podcastInfoSaveBtn').addEventListener('click', function() {
         var activePage = document.querySelector('.page-section.active');
         if (!activePage || activePage.id !== 'page-podcast-basic') return;
 
-        // Validate all Podcast Info tabs
-        var errors = validatePodcastInfo();
+        // Validate all General tabs
+        var errors = validatePodcastInfo().concat(validateFeedTab());
         if (errors.length > 0) {
           // Switch to the first tab that has an error
           var errorTabIds = [];
@@ -6312,13 +7019,10 @@
       });
     }
 
-    // Save button: Feed
-    if (document.getElementById('feedSaveBtn')) {
-      document.getElementById('feedSaveBtn').addEventListener('click', function() {
-        var activePage = document.querySelector('.page-section.active');
-        if (!activePage || activePage.id !== 'page-feed') return;
-
-        clearAllErrors();
+    // Feed tab — validated with the rest of General: the page has one Save bar
+    // now that Feed is a tab rather than a page of its own.
+    function validateFeedTab() {
+        var page = document.getElementById('page-podcast-basic');
         var errors = [];
 
         // Episode Number Limit: a filled value must be a whole number inside the
@@ -6329,13 +7033,13 @@
           if (Math.floor(episodeValue) !== episodeValue || episodeValue < 1 || episodeValue > EPISODE_LIMIT_MAX) {
             var episodeItem = episodeInput.closest('.info-content-item');
             if (episodeItem) showFieldError(episodeItem, 'Please enter a whole number between 1 and ' + EPISODE_LIMIT_MAX);
-            errors.push({ el: episodeInput });
+            errors.push({ el: episodeInput, tabId: 'feed' });
           }
         }
 
         // Ownership Verification Email: an empty address is only an error while
         // the toggle is ON — off means "do not add one", which is a valid choice.
-        var emailToggle = activePage.querySelector('[data-toggle="ownership-email-input"]');
+        var emailToggle = page.querySelector('[data-toggle="ownership-email-input"]');
         var emailBox = document.getElementById('ownership-email-input');
         if (emailToggle && emailToggle.checked && emailBox) {
           var emailInput = emailBox.querySelector('.pb-input');
@@ -6343,10 +7047,10 @@
             var emailValue = emailInput.value.trim();
             if (emailValue === '') {
               showFieldError(emailBox, 'Please enter your verification email');
-              errors.push({ el: emailInput });
+              errors.push({ el: emailInput, tabId: 'feed' });
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
               showFieldError(emailBox, 'Please enter a valid email address');
-              errors.push({ el: emailInput });
+              errors.push({ el: emailInput, tabId: 'feed' });
             }
           }
         }
@@ -6354,7 +7058,7 @@
         // Alternative Website URL: same rule as the email above — an empty URL is only
         // an error while the toggle is ON; off means "use the built-in Podbean
         // website", which is a valid choice and needs no input.
-        var urlToggle = activePage.querySelector('[data-toggle="custom-website-url-input"]');
+        var urlToggle = page.querySelector('[data-toggle="custom-website-url-input"]');
         var urlBox = document.getElementById('custom-website-url-input');
         if (urlToggle && urlToggle.checked && urlBox) {
           var urlInput = urlBox.querySelector('.pb-input');
@@ -6362,17 +7066,17 @@
             var urlValue = urlInput.value.trim();
             if (urlValue === '') {
               showFieldError(urlBox, 'Please enter your website URL');
-              errors.push({ el: urlInput });
+              errors.push({ el: urlInput, tabId: 'feed' });
             } else if (!isValidUrl(urlValue, false)) {
               showFieldError(urlBox, 'Please enter a valid URL');
-              errors.push({ el: urlInput });
+              errors.push({ el: urlInput, tabId: 'feed' });
             }
           }
         }
 
         // Redirect to a New Feed: if the toggle is on, a new feed URL is required,
         // and it must be an explicit https:// address.
-        var redirectToggle = activePage.querySelector('[data-toggle="redirect-feed-input"]');
+        var redirectToggle = page.querySelector('[data-toggle="redirect-feed-input"]');
         var redirectBox = document.getElementById('redirect-feed-input');
         if (redirectToggle && redirectToggle.checked && redirectBox) {
           var redirectInput = redirectBox.querySelector('.pb-input');
@@ -6380,27 +7084,15 @@
             var redirectValue = redirectInput.value.trim();
             if (redirectValue === '') {
               showFieldError(redirectBox, 'Please enter your new feed URL');
-              errors.push({ el: redirectInput });
+              errors.push({ el: redirectInput, tabId: 'feed' });
             } else if (!isValidUrl(redirectValue, true)) {
               showFieldError(redirectBox, 'Please enter a valid HTTPS URL');
-              errors.push({ el: redirectInput });
+              errors.push({ el: redirectInput, tabId: 'feed' });
             }
           }
         }
 
-        if (errors.length > 0) {
-          if (errors[0].el) errors[0].el.focus();
-          return;
-        }
-
-        // All clear: save
-        clearUnsaved();
-        clearAllErrors();
-        var saveBar = getActiveSaveBar();
-        if (saveBar) saveBar.classList.remove('is-visible');
-        captureState();
-        showToast();
-      });
+        return errors;
     }
 
     // Podcast Logo: pick a file, review it, optionally crop it and add text, then
@@ -7112,22 +7804,16 @@
         }
       }
 
-      // --- Metadata Tab ---
       // Author → no more than 225 characters (product limit)
+      // Author lives on the Basic tab (under Podcast Logo) since 2026-10-22.
       var authorInput = document.getElementById('pbAuthorInput');
       if (authorInput && authorInput.value.length > 225) {
         var authorItem = authorInput.closest('.info-content-item');
         if (authorItem) showFieldError(authorItem, 'Please enter no more than 225 characters');
-        errors.push({ tabId: 'metadata', el: authorInput });
+        errors.push({ tabId: 'basic', el: authorInput });
       }
 
-      // Copyright → no more than 200 characters
-      var copyrightInput = document.getElementById('pbCopyrightInput');
-      if (copyrightInput && copyrightInput.value.length > 200) {
-        var copyrightItem = copyrightInput.closest('.info-content-item');
-        if (copyrightItem) showFieldError(copyrightItem, 'Please enter no more than 200 characters');
-        errors.push({ tabId: 'metadata', el: copyrightInput });
-      }
+      // --- Metadata Tab ---
 
       // Country of Origin → "Specific countries" requires at least one country
       var countryModeOpt = document.querySelector('#dropdown-country-mode .pb-select-option.selected');
@@ -7140,7 +7826,15 @@
       }
 
       // --- Publication Tab ---
-      // (No required fields in Content Classification)
+      // (No required fields in Content)
+
+      // Copyright → no more than 200 characters (Copyright lives on the Content tab)
+      var copyrightInput = document.getElementById('pbCopyrightInput');
+      if (copyrightInput && copyrightInput.value.length > 200) {
+        var copyrightItem = copyrightInput.closest('.info-content-item');
+        if (copyrightItem) showFieldError(copyrightItem, 'Please enter no more than 200 characters');
+        errors.push({ tabId: 'publication', el: copyrightInput });
+      }
 
       return errors;
     }
@@ -7224,7 +7918,9 @@
       var editors = {
         'Episode Endnote': openEndnoteModal,
         'Import Files from Dropbox': openDropboxModal,
-        'SEO Meta Tags': openMetaTagsModal
+        'SEO Meta Tags': openMetaTagsModal,
+        'Google Analytics': openGaModal,
+        'FTP Upload': openFtpModal
       };
       Object.keys(editors).forEach(function(name) {
         var row = document.querySelector('#pluginList [data-plugin-name="' + name + '"]');
@@ -7232,6 +7928,15 @@
         var editBtn = row.querySelector('.plugin-action-btn:not(.delete)');
         if (editBtn) editBtn.addEventListener('click', editors[name]);
       });
+
+      // Mailchimp has no settings dialog in this mockup yet, so its Edit button
+      // acknowledges the click instead of doing nothing.
+      var mailchimpBtn = document.querySelector('#pluginList [data-plugin-name="Mailchimp"] .plugin-action-btn:not(.delete)');
+      if (mailchimpBtn) {
+        mailchimpBtn.addEventListener('click', function() {
+          showToast('Opening Mailchimp settings…');
+        });
+      }
     })();
 
     // ==============================================

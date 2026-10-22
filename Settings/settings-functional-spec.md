@@ -479,7 +479,10 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 | **Episode Endnote** | Add a customizable endnote that appears at the end of your episode descriptions, ideal for including social media links, promotional details. | 是 | 是 |
 | **Episode Tags** | Episode Tags can be used to organize the episodes on your podcast site. You can add tags in Podbean when creating or editing an episode. | **否**（只有删除按钮） | 是 |
 | **Import Files from Dropbox** | Import files directly from your Dropbox account to your Podbean Media Manager. | 是 | 是 |
+| **FTP Upload** | Upload audio and video files to your Podbean account directly from any FTP client. | 是 | 是 |
 | **SEO Meta Tags** | This plugin makes it very easy for you to manage SEO titles, keywords and descriptions for your podcast site. | 是 | 是 |
+| **Google Analytics** | Google Analytics is the enterprise-class web analytics solution gives you rich insights into your podcast site traffic and marketing effectiveness. | 是 | 是 |
+| **Mailchimp** | Automatically send emails to your Mailchimp subscribers when you publish new episodes. | <span style="color:#a16207;font-weight:700;">待开发确认</span> | 是 |
 
 **说明**：上表仅列举部分插件示例，`apps.podbean.com` 中还有更多插件，具体插件数量与范围<span style="color:#a16207;font-weight:700;">待开发确认</span>。
 
@@ -489,8 +492,8 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 
 | 按钮 | 出现在 | 行为 |
 |---|---|---|
-| **Edit（铅笔）** | Episode Endnote / Import Files from Dropbox / SEO Meta Tags | 打开对应编辑弹窗（见 5.3） |
-| **Delete（×）** | 全部四行 | 打开 **Delete Plugin** 确认弹窗 |
+| **Edit（铅笔）** | Episode Endnote / Import Files from Dropbox / FTP Upload / SEO Meta Tags / Google Analytics | 打开对应编辑弹窗（见 5.3） |
+| **Delete（×）** | 全部七行 | 打开 **Delete Plugin** 确认弹窗 |
 | **Get more plugins** | Plugin 页面 | 打开 `https://apps.podbean.com`（当前标签页） |
 
 **删除确认弹窗：**
@@ -503,17 +506,19 @@ Plugin 页面展示账号已安装的插件，每条插件包含 logo、名称�
 | 关闭方式 | Cancel、点击遮罩、Esc 都只关闭、不删除；打开时焦点落在 **Delete** |
 | 确认后 | 移除该行 → toast **`{插件名} deleted`** → 若列表已空，显示空状态 |
 
-### 5.3 插件编辑弹窗
+### 5.3 插件编辑弹窗 <span style="color:#a16207;font-weight:700;">（每个插件的编辑功能可能不同，待开发确认）</span>
 
-三个插件共用同一套编辑弹窗，弹窗底部为操作区。**Dropbox 是例外**：Refresh 按钮位于表格内，弹窗没有底部操作区。
+各插件共用同一套弹窗外壳（尺寸、标题栏、底部操作区），编辑内容各不相同。**Dropbox 与 FTP Upload 是例外**：Refresh 按钮位于表格内，弹窗没有底部操作区。
 
 | 插件 | 弹窗标题 | 内容 | 底部操作 |
 |---|---|---|---|
 | **Episode Endnote** | Episode Endnote | 富文本编辑器（与 Brief Description 同一套工具栏：Undo/Redo、Bold/Italic/Underline、Link）；下方一条信息提示 **Saving will apply this endnote to all episodes.** | **Cancel** / **Save**；Save 关闭弹窗并 toast `Endnote saved to all episodes` |
 | **Import Files from Dropbox** | Import Files from Dropbox | 说明面板：`Click on the button below to import files from your Dropbox to your Podbean Media Manager.` + **Select Files from Dropbox** 按钮 + `Max allowed file size is 3GB.`；下方表格 Filename / Size / Status，空态 `No importing dropbox files.`，表格内 **Refresh** | **无底部操作区** |
-| **SEO Meta Tags** | **Custom Meta Tags** | **Meta Tags** 字段为多行文本框，文本框内以文本形式展示一段 `<meta name="keywords" …>` 示例 | 只有 **Save changes**（无 Cancel），保存后关闭并 toast `Meta tags saved` |
+| **FTP Upload** | FTP Upload | 弹窗始终为同一布局：顶部 **FTP Account Information** 面板 + 下方 **FTP files** 区，仅面板内容随状态变化。面板**默认展开**，标题行右侧按钮可收起 / 展开（每次打开重置为展开）。未激活：面板显示说明文字（<span style="color:#a16207;font-weight:700;">文案待确认</span>）、**Inactive** 状态与 **Activate FTP** 按钮；点击后状态变为 **Processing**，显示 `Your FTP account is being processed and will be available in 10 minutes.`；账号就绪后状态变为 **Active**，显示 **FTP Server Name** / **Username** / **Password** / **Max size** 四项 label–value，以及一行 `Notice: Explicit TLS is required for FTP uploads. Please choose Explicit TLS when connecting.`。**FTP files** 区始终显示：标题 + 副标题 `Your FTP uploaded files will be listed below. Please select them and import to your Podbean account.`；**文件表每页 6 条**，超出时表格底部显示 `{起}–{止} of {总数}` 与上一页 / 下一页按钮（首页禁用「上一页」、末页禁用「下一页」）；表头与选择条的全选作用于全部文件（跨页）；文件夹为空时显示 `Your FTP Folder is empty`；勾选文件后表格上方出现选择条 **`{n} selected`** / **Import**，点击 Import 将选中文件导入账号（mockup 中导入后从列表移除；线上是否保留，以及 Status 列的内容，<span style="color:#a16207;font-weight:700;">待开发确认</span>）；表格列为复选框 / Filename / Size / Status。**Refresh 固定在弹窗底部**，不随内容滚动，账号未激活时禁用（置灰），激活后读取 FTP 目录中的文件 | 底部固定 **Refresh** 底栏；通过标题栏 **×**（或点击遮罩 / Esc）关闭 |
+| **SEO Meta Tags** | **Custom Meta Tags** | **Meta Tags** 字段为多行文本框，文本框内以文本形式展示一段 `<meta name="keywords" …>` 示例 | 只有 **Save**（无 Cancel），保存后关闭并 toast `Meta tags saved` |
+| **Google Analytics** | Google Analytics | **Google Analytics Tracking ID** 字段：label + 单行输入框，输入框下方一句解释 `You can find your tracking ID in your Google Analytics account.` | 只有 **Save**（无 Cancel），保存后关闭并 toast `Google Analytics tracking ID saved`；Tracking ID 的格式与校验规则<span style="color:#a16207;font-weight:700;">待开发确认</span> |
 
-- 三个弹窗都能用 ×、点击遮罩、Esc 关闭。
+- 各编辑弹窗都能用 ×、点击遮罩、Esc 关闭。
 - Meta Tags 的弹窗标题与行名不同（行叫 **SEO Meta Tags**，弹窗叫 **Custom Meta Tags**）。
 
 ### 5.4 Get More Plugins
