@@ -396,6 +396,7 @@
   .doc-body tbody tr:hover { background: #fbfcfe; }
   .doc-body td code { font-size: 12px; }
   .doc-body td > :last-child { margin-bottom: 0; }
+  .doc-body td.is-removed strong { color: #b91c1c; }
 
   /* ==============================
      RESPONSIVE
@@ -470,7 +471,7 @@
 <aside class="doc-rail" id="docRail">
   <div class="rail-head">
     <span class="rail-label">目录</span>
-    <span class="toc-count">8 章 · 31 节 · 21 条细则</span>
+    <span class="toc-count">8 章 · 32 节 · 21 条细则</span>
   </div>
   <nav class="toc" aria-label="文档目录">
 <div class="toc-row lvl2" data-id="sec-1"><a class="toc-link" href="#sec-1">产品概述</a></div>
@@ -557,6 +558,7 @@
 <div class="toc-row lvl2" data-id="附录新老页面对比"><a class="toc-link" href="#附录新老页面对比">附录：新老页面对比</a><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="grp-附录新老页面对比" aria-label="展开 附录：新老页面对比 的子节"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></div>
 <div class="toc-children" id="grp-附录新老页面对比" data-parent="附录新老页面对比">
 <div class="toc-row lvl3" data-id="general-页面变化说明" data-parent="附录新老页面对比"><a class="toc-link" href="#general-页面变化说明">General 页面变化说明</a></div>
+<div class="toc-row lvl3" data-id="高级选项advanced-options变化说明" data-parent="附录新老页面对比"><a class="toc-link" href="#高级选项advanced-options变化说明">高级选项（Advanced Options）变化说明</a></div>
 <div class="toc-row lvl3" data-id="feed-标签页变化说明" data-parent="附录新老页面对比"><a class="toc-link" href="#feed-标签页变化说明">Feed 标签页变化说明</a></div>
 </div>
 </nav>
@@ -2462,14 +2464,16 @@
 <h2 id="附录新老页面对比">附录：新老页面对比<a class="h-anchor" href="#附录新老页面对比" aria-label="本节链接">#</a></h2>
 <h3 id="general-页面变化说明">General 页面变化说明<a class="h-anchor" href="#general-页面变化说明" aria-label="本节链接">#</a></h3>
 <p>老版是单个 <strong>Podcast Settings</strong> 页，字段纵向排列；新版按功能拆成 4 个 Tab（Basic / Region / Content / Feed）。</p>
-<p>改动只有三类：字段换位置（位置调整）、字段改名（Author / Owner → Author）、四个 Business 字段（Episode Download Link、Share on Podcast Site、Comments、Removing Podbean Brand）从 General 移除。其余字段功能不变。</p>
+<p>变化分为：位置调整（随 Tab 迁移）、改名、移入（从其他页面移入）、移除。迁移到 Tab 的字段功能与老版一致，没有行为变化；每个字段的顺序按新版所在 Tab 排列。最后 4 个移除字段的新老差异见下节。</p>
 <div class="table-wrap"><table>
+<colgroup><col style="width:15%"><col style="width:8%"><col style="width:22%"><col style="width:16%"><col style="width:39%"></colgroup>
 <thead>
 <tr>
 <th>字段</th>
 <th>变化</th>
 <th>老版位置</th>
 <th>新版位置</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody>
@@ -2478,90 +2482,184 @@
 <td>位置调整</td>
 <td>Podcast Settings 单页</td>
 <td>Basic Tab</td>
+<td>—</td>
 </tr>
 <tr>
 <td><strong>Brief Description</strong></td>
 <td>位置调整</td>
 <td>Podcast Settings 单页</td>
 <td>Basic Tab</td>
+<td>—</td>
 </tr>
 <tr>
 <td><strong>Podcast Category</strong></td>
 <td>位置调整</td>
 <td>Podcast Settings 单页</td>
 <td>Basic Tab</td>
+<td>最多 3 个分类，第 1 个必填；已选分类在其他行置灰</td>
 </tr>
 <tr>
 <td><strong>Podcast Logo</strong></td>
 <td>位置调整</td>
 <td>Podcast Settings 单页</td>
 <td>Basic Tab</td>
+<td>默认已带封面，只能更换、不能删除</td>
 </tr>
 <tr>
 <td><strong>Author / Owner</strong></td>
 <td>改名 + 位置调整</td>
 <td>Podcast Settings 单页，字段名为 <strong>Author / Owner</strong></td>
-<td>Basic Tab，Podcast Logo 下方；字段名改为 <strong>Author</strong></td>
+<td>Basic Tab，Podcast Logo 下方，字段名改为 <strong>Author</strong></td>
+<td>名称出现在 RSS feed；修改只影响之后新建的单集</td>
 </tr>
 <tr>
 <td><strong>Language</strong></td>
 <td>位置调整</td>
 <td>Podcast Settings 单页</td>
 <td>Region Tab</td>
+<td>—</td>
 </tr>
 <tr>
 <td><strong>Country of Origin</strong></td>
 <td>位置调整</td>
 <td>Podcast Settings 单页</td>
 <td>Region Tab</td>
+<td>选 Specific countries 时显示国家多选与搜索</td>
 </tr>
 <tr>
 <td><strong>Timezone</strong></td>
 <td>位置调整</td>
-<td>Podcast Settings 单页，只显示 <code>Current time: …</code></td>
+<td>Podcast Settings 单页，只显示 `Current time: …`</td>
 <td>Region Tab</td>
+<td>已排期单集按当前时区计算发布时间，改时区后发布日期随之改变</td>
 </tr>
 <tr>
 <td><strong>Podcast Type</strong></td>
 <td>位置调整</td>
 <td>Podcast Settings 单页</td>
 <td>Content Tab</td>
+<td>默认 Episodic（最新→最早）；Serial 为最早→最新</td>
 </tr>
 <tr>
 <td><strong>Copyright</strong></td>
 <td>位置调整</td>
 <td>Podcast Settings 单页</td>
 <td>Content Tab</td>
+<td>显示在用户前台站点的 footer</td>
 </tr>
 <tr>
 <td><strong>Content Explicit</strong></td>
-<td>位置调整</td>
+<td>移入</td>
 <td><strong>Feed 页面</strong>，不在 Podcast Settings 页</td>
 <td>Content Tab</td>
+<td>与 Feed 标签页为同一字段，Feed 侧见 Feed 标签页变化说明</td>
 </tr>
 <tr>
-<td><strong>Episode Download Link</strong></td>
+<td class="is-removed"><strong>Episode Download Link</strong></td>
 <td>移除</td>
-<td>非 Business：页面显示 Show，不可改；Business：页面显示 Show，Advanced Options 中可改</td>
+<td>Podcast Settings 单页</td>
 <td>无</td>
+<td>—</td>
 </tr>
 <tr>
-<td><strong>Share on Podcast Site</strong></td>
+<td class="is-removed"><strong>Share on Podcast Site</strong></td>
 <td>移除</td>
-<td>非 Business：页面显示 Show，不可改；Business：页面显示 Hidden，Advanced Options 中可改</td>
+<td>Podcast Settings 单页</td>
 <td>无</td>
+<td>—</td>
 </tr>
+<tr>
+<td class="is-removed"><strong>Comments</strong></td>
+<td>移除</td>
+<td>Podcast Settings 单页</td>
+<td>无</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="is-removed"><strong>Removing Podbean Brand</strong></td>
+<td>移除</td>
+<td>Podcast Settings 单页</td>
+<td>无</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="高级选项advanced-options变化说明">高级选项（Advanced Options）变化说明<a class="h-anchor" href="#高级选项advanced-options变化说明" aria-label="本节链接">#</a></h3>
+<p>这 4 个字段从 General 页面移除后，由公司管理后台（Bizadmin）的 Advanced Options 统一管理，普通账号与 Business 的处理不同。</p>
+<p><strong>普通账号</strong></p>
+<div class="table-wrap"><table>
+<colgroup><col style="width:16%"><col style="width:38%"><col style="width:28%"><col style="width:18%"></colgroup>
+<thead>
+<tr>
+<th>设置项</th>
+<th>原来</th>
+<th>现在</th>
+<th>变化</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><strong>Comments</strong></td>
-<td>移除</td>
-<td>非 Business：页面显示 Enable，不可改；Business：页面显示 Enable，Advanced Options 中可改</td>
+<td>默认开启，没有控制项</td>
+<td>不变</td>
 <td>无</td>
+</tr>
+<tr>
+<td><strong>Share</strong></td>
+<td>始终显示，没有控制开关</td>
+<td>不变</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>Download</strong></td>
+<td>在 General settings 中控制 Episode Download Link（Show / Hide），只影响 web，Podbean App 下载不受影响</td>
+<td>设置移除，固定为开启（web 下载始终可用）</td>
+<td>移除设置，默认开启</td>
 </tr>
 <tr>
 <td><strong>Removing Podbean Brand</strong></td>
-<td>移除</td>
-<td>非 Business：页面显示 No，带升级按钮；Business：页面显示 No，Advanced Options 中可改</td>
-<td>无</td>
+<td>channel 设置里有该选项</td>
+<td>设置移除，普通账号不再显示此项</td>
+<td>移除设置</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Network / Business（企业账号）</strong></p>
+<p>两个 tier 在这四项上的行为完全一致，合并说明。</p>
+<div class="table-wrap"><table>
+<colgroup><col style="width:16%"><col style="width:38%"><col style="width:28%"><col style="width:18%"></colgroup>
+<thead>
+<tr>
+<th>设置项</th>
+<th>原来</th>
+<th>现在</th>
+<th>变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Comments</strong></td>
+<td>Company Admin 的 Settings → Advanced Options 里是 <strong>Enable Comments for All Channels</strong> 总开关；On 时每个 channel 在 Settings → General → More Options → Comments 出现单独开关；Off 时 channel 里没有该选项，所有频道统一关闭</td>
+<td>Advanced Options 的一行 <strong>Podcast Comments</strong>，Enable / Disable + <strong>Select channels</strong>；默认全部频道开启，可在弹框里收窄</td>
+<td>两层变一层；总开关名称不再出现；单频道控制从 channel 设置搬进弹框</td>
+</tr>
+<tr>
+<td><strong>Share</strong></td>
+<td>channel 的 <strong>General</strong> 里控制 <strong>Share on Podcast Site</strong>；Web 端只有 public episode 有分享，private 频道没有</td>
+<td>Advanced Options 的一行 <strong>Share on Public Channels</strong>，Enable / Disable + <strong>Select channels</strong>（只列 public 频道）</td>
+<td>上移 + 改名 + 增加按频道选择</td>
+</tr>
+<tr>
+<td><strong>Download</strong></td>
+<td><strong>Allow Download on</strong>（Web / Player / App）是总开关：Web 管站点下载按钮，Player 管播放器下载按钮（勾上后 Dashboard → Embed Player 出现 download 控制），App 管 Pro App / White Label App；三者全勾时，Web 和 App 的实际控制下放给 channel 的 Settings → General → <strong>Episode Download Link</strong></td>
+<td>仍为一行 <strong>Allow Download on</strong>：☑ Web ☑ Player ☑ App + <strong>Select web channels</strong>；Episode Download Link 不再单独存在</td>
+<td>两项合一；Web 的控制从「下放到 channel」改为「在公司级选频道」；Player 仍由 Embed Player 页面细控</td>
+</tr>
+<tr>
+<td><strong>Removing Podbean Brand</strong></td>
+<td>channel 设置里，选项为 Yes / No</td>
+<td>公司级 Advanced Options，Enable / Disable，无频道选择</td>
+<td>上移 + 变成公司级 + 选项措辞改变</td>
 </tr>
 </tbody>
 </table></div>
@@ -2569,97 +2667,114 @@
 <blockquote>
 <p><strong>注：</strong> Business Plan 用户的 Private Channel 默认不显示 Feed 标签页。</p>
 </blockquote>
+<p>老版是设置里的独立 <strong>Feed</strong> 页面；新版是 <strong>General 的第 4 个 Tab</strong>（General → Feed），只保留 6 个字段。</p>
+<p>变化分为：位置调整（随 Tab 迁移）、改名、行为变化、移出（到其他页面）、移除。老版 Feed 页面的字段在非 Business / Business 下一致，因此不再分两列。</p>
 <div class="table-wrap"><table>
+<colgroup><col style="width:17%"><col style="width:11%"><col style="width:10%"><col style="width:26%"><col style="width:36%"></colgroup>
 <thead>
 <tr>
 <th>字段</th>
-<th>新版页面</th>
-<th>非 Business Plan 老页面</th>
-<th>Business Plan 老页面</th>
+<th>变化</th>
+<th>老版位置</th>
+<th>新版位置</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Podcast Feed URL</strong></td>
-<td>有（只读 + 复制）</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>Content Explicit</strong></td>
-<td><strong>移入 General → Content 标签页</strong></td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>Apple Podcasts Summary</strong></td>
-<td><strong>已移除</strong>（历史内容用户仍可见，字段只读并标注已停用；提供 "Use Podcast Description"，确认后独立 Summary 删除，<code>&lt;itunes:summary&gt;</code> 跟随 Podcast Description）</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>Podcast Website</strong></td>
-<td>改名为 <strong>Alternative Website URL</strong>（原默认填入 Podbean website URL；现改为 <strong>Toggle + 条件输入</strong>：关闭则使用 Podbean website URL，开启后显示输入框，填写的值生效）</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>Episode Link</strong></td>
-<td><strong>已移除</strong>（转移到 Episode 发布页面，名称为 "Alternative Episode Link"）</td>
-<td>有</td>
-<td>有</td>
+<td>位置调整</td>
+<td>Feed 页面</td>
+<td>General → Feed</td>
+<td>只读展示，提供 Copy</td>
 </tr>
 <tr>
 <td><strong>Episode Number Limit</strong></td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>Generate audio-only feed</strong></td>
-<td><strong>新增</strong>（Toggle + 条件展示只读 feed 地址与 Copy）</td>
-<td>无</td>
-<td>无</td>
-</tr>
-<tr>
-<td><strong>Episode Artwork Tag</strong></td>
-<td><strong>已移除</strong>（统一用 <code>&lt;itunes:image&gt;</code> 输出单集封面，用户无需再选 RSS 标签类型）</td>
-<td>有</td>
-<td>有</td>
+<td>位置调整</td>
+<td>Feed 页面</td>
+<td>General → Feed</td>
+<td>RSS feed 中包含的单集数量上限</td>
 </tr>
 <tr>
 <td><strong>Ownership Verification Email</strong></td>
-<td>有（<strong>Toggle + 条件输入</strong>）</td>
-<td>有</td>
-<td>有</td>
+<td>位置调整</td>
+<td>Feed 页面</td>
+<td>General → Feed</td>
+<td>Toggle + 条件输入；开启后 48 小时内向 RSS feed 添加验证邮箱</td>
 </tr>
 <tr>
-<td><strong>Apple Podcasts Verification</strong></td>
-<td><strong>移出</strong>（转移到 Apple Podcasts 提交页面）</td>
-<td>有</td>
-<td>有</td>
+<td><strong>Podcast Website</strong></td>
+<td>改名 + 行为变化</td>
+<td>Feed 页面</td>
+<td>General → Feed，字段名改为 <strong>Alternative Website URL</strong></td>
+<td>原默认填入 Podbean website URL；现为 Toggle + 条件输入：关闭时使用 Podbean website URL，开启后显示输入框，填写的值生效</td>
 </tr>
 <tr>
-<td><strong>Remove from Apple Directory</strong></td>
-<td><strong>已移除</strong>（从普通设置中移除；为已开启的用户提供"关闭并移除标签"的过渡机制，已启用 <code>&lt;itunes:block&gt;</code> 的用户保留一个临时关闭入口）</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>Set Podcast New Feed URL</strong></td>
-<td><strong>已移除</strong>（改为迁移流程自动写入 <code>&lt;itunes:new-feed-url&gt;</code>，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span class="need-confirm">需技术确认</span>）</td>
-<td>有</td>
-<td>有</td>
+<td><strong>Generate audio-only feed</strong></td>
+<td>位置调整</td>
+<td>Feed 页面</td>
+<td>General → Feed</td>
+<td>Toggle + 条件展示只读 feed 地址与 Copy</td>
 </tr>
 <tr>
 <td><strong>Redirect to a New Feed</strong></td>
-<td>有（Toggle + 条件 URL 输入 + 危险警告）</td>
-<td>有</td>
-<td>有</td>
+<td>位置调整</td>
+<td>Feed 页面</td>
+<td>General → Feed</td>
+<td>Toggle + 条件 URL 输入；开启后立即重定向，并显示危险警告</td>
+</tr>
+<tr>
+<td><strong>Content Explicit</strong></td>
+<td>移出</td>
+<td>Feed 页面</td>
+<td>General → Content 标签页</td>
+<td>与 General → Content 中同一字段，见 General 页面变化说明</td>
+</tr>
+<tr>
+<td><strong>Episode Link</strong></td>
+<td>移出</td>
+<td>Feed 页面</td>
+<td>Episode 发布页面，字段名改为 <strong>Alternative Episode Link</strong></td>
+<td>改为单集级设置，不在 Settings 内维护</td>
+</tr>
+<tr>
+<td><strong>Apple Podcasts Verification</strong></td>
+<td>移出</td>
+<td>Feed 页面</td>
+<td>Apple Podcasts 提交页面</td>
+<td>不在 Settings 内维护</td>
+</tr>
+<tr>
+<td class="is-removed"><strong>Apple Podcasts Summary</strong></td>
+<td>移除</td>
+<td>Feed 页面</td>
+<td>无</td>
+<td>历史内容用户仍可见，字段只读并标注已停用；提供 "Use Podcast Description"，确认后独立 Summary 删除，<code>&lt;itunes:summary&gt;</code> 跟随 Podcast Description</td>
+</tr>
+<tr>
+<td class="is-removed"><strong>Episode Artwork Tag</strong></td>
+<td>移除</td>
+<td>Feed 页面</td>
+<td>无</td>
+<td>统一用 <code>&lt;itunes:image&gt;</code> 输出单集封面，用户无需再选 RSS 标签类型</td>
+</tr>
+<tr>
+<td class="is-removed"><strong>Remove from Apple Directory</strong></td>
+<td>移除</td>
+<td>Feed 页面</td>
+<td>无</td>
+<td>从普通设置中移除；为已开启的用户提供"关闭并移除标签"的过渡机制，已启用 <code>&lt;itunes:block&gt;</code> 的用户保留一个临时关闭入口</td>
+</tr>
+<tr>
+<td class="is-removed"><strong>Set Podcast New Feed URL</strong></td>
+<td>移除</td>
+<td>Feed 页面</td>
+<td>无</td>
+<td>改为迁移流程自动写入 <code>&lt;itunes:new-feed-url&gt;</code>，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span class="need-confirm">需技术确认</span></td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>新版 Feed 标签页字段总数从 13 个精简为 6 个</strong>（5 个原有字段 + 新增的 Generate audio-only feed）。标注<span class="need-confirm">黄色加粗</span>的「待确认」条目需产品团队进一步确认。</p>
+<p><strong>新版 Feed 标签页字段总数从 13 个精简为 6 个</strong>，6 个字段老版均有，无新增。标注<span class="need-confirm">黄色加粗</span>的「待确认」条目需产品团队进一步确认。</p>
 </article>
 </main>
 

@@ -69,6 +69,7 @@
    - [7.3 保存前校验流程](#73-保存前校验流程)
 8. [附录：新老页面对比](#附录新老页面对比)
    - [General 页面变化说明](#general-页面变化说明)
+   - [高级选项（Advanced Options）变化说明](#高级选项advanced-options变化说明)
    - [Feed 标签页变化说明](#feed-标签页变化说明)
 
 ---
@@ -930,44 +931,72 @@ General 的四个 Tab 在同一次保存中一起校验。
 
 老版是单个 **Podcast Settings** 页，字段纵向排列；新版按功能拆成 4 个 Tab（Basic / Region / Content / Feed）。
 
-改动只有三类：字段换位置（位置调整）、字段改名（Author / Owner → Author）、四个 Business 字段（Episode Download Link、Share on Podcast Site、Comments、Removing Podbean Brand）从 General 移除。其余字段功能不变。
+变化分为：位置调整（随 Tab 迁移）、改名、移入（从其他页面移入）、移除。迁移到 Tab 的字段功能与老版一致，没有行为变化；每个字段的顺序按新版所在 Tab 排列。最后 4 个移除字段的新老差异见下节。
 
-| 字段 | 变化 | 老版位置 | 新版位置 |
+| 字段 | 变化 | 老版位置 | 新版位置 | 说明 |
+|---|---|---|---|---|
+| **Podcast Title** | 位置调整 | Podcast Settings 单页 | Basic Tab | — |
+| **Brief Description** | 位置调整 | Podcast Settings 单页 | Basic Tab | — |
+| **Podcast Category** | 位置调整 | Podcast Settings 单页 | Basic Tab | 最多 3 个分类，第 1 个必填；已选分类在其他行置灰 |
+| **Podcast Logo** | 位置调整 | Podcast Settings 单页 | Basic Tab | 默认已带封面，只能更换、不能删除 |
+| **Author / Owner** | 改名 + 位置调整 | Podcast Settings 单页，字段名为 **Author / Owner** | Basic Tab，Podcast Logo 下方，字段名改为 **Author** | 名称出现在 RSS feed；修改只影响之后新建的单集 |
+| **Language** | 位置调整 | Podcast Settings 单页 | Region Tab | — |
+| **Country of Origin** | 位置调整 | Podcast Settings 单页 | Region Tab | 选 Specific countries 时显示国家多选与搜索 |
+| **Timezone** | 位置调整 | Podcast Settings 单页，只显示 `Current time: …` | Region Tab | 已排期单集按当前时区计算发布时间，改时区后发布日期随之改变 |
+| **Podcast Type** | 位置调整 | Podcast Settings 单页 | Content Tab | 默认 Episodic（最新→最早）；Serial 为最早→最新 |
+| **Copyright** | 位置调整 | Podcast Settings 单页 | Content Tab | 显示在用户前台站点的 footer |
+| **Content Explicit** | 移入 | **Feed 页面**，不在 Podcast Settings 页 | Content Tab | 与 Feed 标签页为同一字段，Feed 侧见 Feed 标签页变化说明 |
+| <span style="color:#b91c1c;font-weight:700;">**Episode Download Link**</span> | 移除 | Podcast Settings 单页 | 无 | — |
+| <span style="color:#b91c1c;font-weight:700;">**Share on Podcast Site**</span> | 移除 | Podcast Settings 单页 | 无 | — |
+| <span style="color:#b91c1c;font-weight:700;">**Comments**</span> | 移除 | Podcast Settings 单页 | 无 | — |
+| <span style="color:#b91c1c;font-weight:700;">**Removing Podbean Brand**</span> | 移除 | Podcast Settings 单页 | 无 | — |
+
+### 高级选项（Advanced Options）变化说明
+
+这 4 个字段从 General 页面移除后，由公司管理后台（Bizadmin）的 Advanced Options 统一管理，普通账号与 Business 的处理不同。
+
+**普通账号**
+
+| 设置项 | 原来 | 现在 | 变化 |
 |---|---|---|---|
-| **Podcast Title** | 位置调整 | Podcast Settings 单页 | Basic Tab |
-| **Brief Description** | 位置调整 | Podcast Settings 单页 | Basic Tab |
-| **Podcast Category** | 位置调整 | Podcast Settings 单页 | Basic Tab |
-| **Podcast Logo** | 位置调整 | Podcast Settings 单页 | Basic Tab |
-| **Author / Owner** | 改名 + 位置调整 | Podcast Settings 单页，字段名为 **Author / Owner** | Basic Tab，Podcast Logo 下方；字段名改为 **Author** |
-| **Language** | 位置调整 | Podcast Settings 单页 | Region Tab |
-| **Country of Origin** | 位置调整 | Podcast Settings 单页 | Region Tab |
-| **Timezone** | 位置调整 | Podcast Settings 单页，只显示 `Current time: …` | Region Tab |
-| **Podcast Type** | 位置调整 | Podcast Settings 单页 | Content Tab |
-| **Copyright** | 位置调整 | Podcast Settings 单页 | Content Tab |
-| **Content Explicit** | 位置调整 | **Feed 页面**，不在 Podcast Settings 页 | Content Tab |
-| **Episode Download Link** | 移除 | 非 Business：页面显示 Show，不可改；Business：页面显示 Show，Advanced Options 中可改 | 无 |
-| **Share on Podcast Site** | 移除 | 非 Business：页面显示 Show，不可改；Business：页面显示 Hidden，Advanced Options 中可改 | 无 |
-| **Comments** | 移除 | 非 Business：页面显示 Enable，不可改；Business：页面显示 Enable，Advanced Options 中可改 | 无 |
-| **Removing Podbean Brand** | 移除 | 非 Business：页面显示 No，带升级按钮；Business：页面显示 No，Advanced Options 中可改 | 无 |
+| Comments | 默认开启，没有控制项 | 不变 | 无 |
+| Share | 始终显示，没有控制开关 | 不变 | 无 |
+| Download | 在 General settings 中控制 Episode Download Link（Show / Hide），只影响 web，Podbean App 下载不受影响 | 设置移除，固定为开启（web 下载始终可用） | 移除设置，默认开启 |
+| Removing Podbean Brand | channel 设置里有该选项 | 设置移除，普通账号不再显示此项 | 移除设置 |
+
+**Network / Business（企业账号）**
+
+两个 tier 在这四项上的行为完全一致，合并说明。
+
+| 设置项 | 原来 | 现在 | 变化 |
+|---|---|---|---|
+| Comments | Company Admin 的 Settings → Advanced Options 里是 **Enable Comments for All Channels** 总开关；On 时每个 channel 在 Settings → General → More Options → Comments 出现单独开关；Off 时 channel 里没有该选项，所有频道统一关闭 | Advanced Options 的一行 **Podcast Comments**，Enable / Disable + **Select channels**；默认全部频道开启，可在弹框里收窄 | 两层变一层；总开关名称不再出现；单频道控制从 channel 设置搬进弹框 |
+| Share | channel 的 **General** 里控制 **Share on Podcast Site**；Web 端只有 public episode 有分享，private 频道没有 | Advanced Options 的一行 **Share on Public Channels**，Enable / Disable + **Select channels**（只列 public 频道） | 上移 + 改名 + 增加按频道选择 |
+| Download | **Allow Download on**（Web / Player / App）是总开关：Web 管站点下载按钮，Player 管播放器下载按钮（勾上后 Dashboard → Embed Player 出现 download 控制），App 管 Pro App / White Label App；三者全勾时，Web 和 App 的实际控制下放给 channel 的 Settings → General → **Episode Download Link** | 仍为一行 **Allow Download on**：☑ Web ☑ Player ☑ App + **Select web channels**；Episode Download Link 不再单独存在 | 两项合一；Web 的控制从「下放到 channel」改为「在公司级选频道」；Player 仍由 Embed Player 页面细控 |
+| Removing Podbean Brand | channel 设置里，选项为 Yes / No | 公司级 Advanced Options，Enable / Disable，无频道选择 | 上移 + 变成公司级 + 选项措辞改变 |
 
 ### Feed 标签页变化说明
 
 > **注：** Business Plan 用户的 Private Channel 默认不显示 Feed 标签页。
 
-| 字段 | 新版页面 | 非 Business Plan 老页面 | Business Plan 老页面 |
-|---|---|---|---|
-| **Podcast Feed URL** | 有（只读 + 复制） | 有 | 有 |
-| **Content Explicit** | **移入 General → Content 标签页** | 有 | 有 |
-| **Apple Podcasts Summary** | **已移除**（历史内容用户仍可见，字段只读并标注已停用；提供 "Use Podcast Description"，确认后独立 Summary 删除，`<itunes:summary>` 跟随 Podcast Description） | 有 | 有 |
-| **Podcast Website** | 改名为 **Alternative Website URL**（原默认填入 Podbean website URL；现改为 **Toggle + 条件输入**：关闭则使用 Podbean website URL，开启后显示输入框，填写的值生效） | 有 | 有 |
-| **Episode Link** | **已移除**（转移到 Episode 发布页面，名称为 "Alternative Episode Link"） | 有 | 有 |
-| **Episode Number Limit** | 有 | 有 | 有 |
-| **Generate audio-only feed** | **新增**（Toggle + 条件展示只读 feed 地址与 Copy） | 无 | 无 |
-| **Episode Artwork Tag** | **已移除**（统一用 `<itunes:image>` 输出单集封面，用户无需再选 RSS 标签类型） | 有 | 有 |
-| **Ownership Verification Email** | 有（**Toggle + 条件输入**） | 有 | 有 |
-| **Apple Podcasts Verification** | **移出**（转移到 Apple Podcasts 提交页面） | 有 | 有 |
-| **Remove from Apple Directory** | **已移除**（从普通设置中移除；为已开启的用户提供"关闭并移除标签"的过渡机制，已启用 `<itunes:block>` 的用户保留一个临时关闭入口） | 有 | 有 |
-| **Set Podcast New Feed URL** | **已移除**（改为迁移流程自动写入 `<itunes:new-feed-url>`，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span style="color:#a16207;font-weight:700;">需技术确认</span>） | 有 | 有 |
-| **Redirect to a New Feed** | 有（Toggle + 条件 URL 输入 + 危险警告） | 有 | 有 |
+老版是设置里的独立 **Feed** 页面；新版是 **General 的第 4 个 Tab**（General → Feed），只保留 6 个字段。
 
-**新版 Feed 标签页字段总数从 13 个精简为 6 个**（5 个原有字段 + 新增的 Generate audio-only feed）。标注**黄色加粗**的「待确认」条目需产品团队进一步确认。
+变化分为：位置调整（随 Tab 迁移）、改名、行为变化、移出（到其他页面）、移除。老版 Feed 页面的字段在非 Business / Business 下一致，因此不再分两列。
+
+| 字段 | 变化 | 老版位置 | 新版位置 | 说明 |
+|---|---|---|---|---|
+| **Podcast Feed URL** | 位置调整 | Feed 页面 | General → Feed | 只读展示，提供 Copy |
+| **Episode Number Limit** | 位置调整 | Feed 页面 | General → Feed | RSS feed 中包含的单集数量上限 |
+| **Ownership Verification Email** | 位置调整 | Feed 页面 | General → Feed | Toggle + 条件输入；开启后 48 小时内向 RSS feed 添加验证邮箱 |
+| **Podcast Website** | 改名 + 行为变化 | Feed 页面 | General → Feed，字段名改为 **Alternative Website URL** | 原默认填入 Podbean website URL；现为 Toggle + 条件输入：关闭时使用 Podbean website URL，开启后显示输入框，填写的值生效 |
+| **Generate audio-only feed** | 位置调整 | Feed 页面 | General → Feed | Toggle + 条件展示只读 feed 地址与 Copy |
+| **Redirect to a New Feed** | 位置调整 | Feed 页面 | General → Feed | Toggle + 条件 URL 输入；开启后立即重定向，并显示危险警告 |
+| **Content Explicit** | 移出 | Feed 页面 | General → Content 标签页 | 与 General → Content 中同一字段，见 General 页面变化说明 |
+| **Episode Link** | 移出 | Feed 页面 | Episode 发布页面，字段名改为 **Alternative Episode Link** | 改为单集级设置，不在 Settings 内维护 |
+| **Apple Podcasts Verification** | 移出 | Feed 页面 | Apple Podcasts 提交页面 | 不在 Settings 内维护 |
+| <span style="color:#b91c1c;font-weight:700;">**Apple Podcasts Summary**</span> | 移除 | Feed 页面 | 无 | 历史内容用户仍可见，字段只读并标注已停用；提供 "Use Podcast Description"，确认后独立 Summary 删除，`<itunes:summary>` 跟随 Podcast Description |
+| <span style="color:#b91c1c;font-weight:700;">**Episode Artwork Tag**</span> | 移除 | Feed 页面 | 无 | 统一用 `<itunes:image>` 输出单集封面，用户无需再选 RSS 标签类型 |
+| <span style="color:#b91c1c;font-weight:700;">**Remove from Apple Directory**</span> | 移除 | Feed 页面 | 无 | 从普通设置中移除；为已开启的用户提供"关闭并移除标签"的过渡机制，已启用 `<itunes:block>` 的用户保留一个临时关闭入口 |
+| <span style="color:#b91c1c;font-weight:700;">**Set Podcast New Feed URL**</span> | 移除 | Feed 页面 | 无 | 改为迁移流程自动写入 `<itunes:new-feed-url>`，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span style="color:#a16207;font-weight:700;">需技术确认</span> |
+
+**新版 Feed 标签页字段总数从 13 个精简为 6 个**，6 个字段老版均有，无新增。标注**黄色加粗**的「待确认」条目需产品团队进一步确认。
