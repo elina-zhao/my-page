@@ -2585,7 +2585,7 @@
 </tbody>
 </table></div>
 <h3 id="高级选项advanced-options变化说明">高级选项（Advanced Options）变化说明<a class="h-anchor" href="#高级选项advanced-options变化说明" aria-label="本节链接">#</a></h3>
-<p>这 4 个字段从 General 页面移除后，由公司管理后台（Bizadmin）的 Advanced Options 统一管理，普通账号与 Business 的处理不同。</p>
+<p>这 4 个字段从 General 页面移除后，由公司管理后台（Bizadmin）的 <strong>Settings → Advanced Options → Content</strong> 标签页统一管理。普通账号没有公司后台，设置直接移除；Network / Business 在后台统一配置。</p>
 <p><strong>普通账号</strong></p>
 <div class="table-wrap"><table>
 <colgroup><col style="width:16%"><col style="width:38%"><col style="width:28%"><col style="width:18%"></colgroup>
@@ -2625,7 +2625,45 @@
 </tbody>
 </table></div>
 <p><strong>Network / Business（企业账号）</strong></p>
-<p>两个 tier 在这四项上的行为完全一致，合并说明。</p>
+<p>四个字段上移到 Advanced Options → Content 标签页，与 Private Embed Player 同页。Private Embed Player 为页面原有设置，不在此次迁移范围内，仅 Business 显示。</p>
+<div class="table-wrap"><table>
+<colgroup><col style="width:20%"><col style="width:20%"><col style="width:60%"></colgroup>
+<thead>
+<tr>
+<th>设置项</th>
+<th>控件</th>
+<th>规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Private Embed Player</strong></td>
+<td>Enable / Disable</td>
+<td>仅 Business 显示；Enable 时出现访问方式单选：<strong>Request user login to access</strong>（默认）/ <strong>Don't request user login and limit access with Reference URL</strong>（凭 Reference URL 免登录访问 private 内容）</td>
+</tr>
+<tr>
+<td><strong>Podcast Comments</strong></td>
+<td>Enable / Disable</td>
+<td>对公司下所有频道生效</td>
+</tr>
+<tr>
+<td><strong>Share on Public Channels</strong></td>
+<td>Enable / Disable</td>
+<td>只作用于 public 频道；private 频道没有分享按钮</td>
+</tr>
+<tr>
+<td><strong>Enable Download</strong></td>
+<td>多选：Web / Player / App</td>
+<td>分别控制站点下载按钮、播放器下载按钮（勾选后 Dashboard → Embed Player 出现 download 控制）、Pro App / White Label App 下载；Web 直接对公司下所有频道生效，不再到 channel 后台（admin5）的 Settings 单独设置；收起时显示已选标签，全不选显示 <code>None</code></td>
+</tr>
+<tr>
+<td><strong>Removing Podbean Brand</strong></td>
+<td>Enable / Disable</td>
+<td>公司级，无频道选择</td>
+</tr>
+</tbody>
+</table></div>
+<p>本页设置由底部 Save 一次提交，保存后提示 <code>Saved</code>。两个 tier 在这四项上行为一致，四个字段的新老差异见下表。</p>
 <div class="table-wrap"><table>
 <colgroup><col style="width:16%"><col style="width:38%"><col style="width:28%"><col style="width:18%"></colgroup>
 <thead>
@@ -2640,25 +2678,25 @@
 <tr>
 <td><strong>Comments</strong></td>
 <td>Company Admin 的 Settings → Advanced Options 里是 <strong>Enable Comments for All Channels</strong> 总开关；On 时每个 channel 在 Settings → General → More Options → Comments 出现单独开关；Off 时 channel 里没有该选项，所有频道统一关闭</td>
-<td>Advanced Options 的一行 <strong>Podcast Comments</strong>，Enable / Disable + <strong>Select channels</strong>；默认全部频道开启，可在弹框里收窄</td>
-<td>两层变一层；总开关名称不再出现；单频道控制从 channel 设置搬进弹框</td>
+<td>一行 <strong>Podcast Comments</strong>，Enable / Disable，公司级</td>
+<td>两层变一层；channel 内的单频道开关移除</td>
 </tr>
 <tr>
 <td><strong>Share</strong></td>
 <td>channel 的 <strong>General</strong> 里控制 <strong>Share on Podcast Site</strong>；Web 端只有 public episode 有分享，private 频道没有</td>
-<td>Advanced Options 的一行 <strong>Share on Public Channels</strong>，Enable / Disable + <strong>Select channels</strong>（只列 public 频道）</td>
-<td>上移 + 改名 + 增加按频道选择</td>
+<td>一行 <strong>Share on Public Channels</strong>，Enable / Disable，只作用于 public 频道</td>
+<td>上移 + 改名；不再按频道单独控制</td>
 </tr>
 <tr>
 <td><strong>Download</strong></td>
-<td><strong>Allow Download on</strong>（Web / Player / App）是总开关：Web 管站点下载按钮，Player 管播放器下载按钮（勾上后 Dashboard → Embed Player 出现 download 控制），App 管 Pro App / White Label App；三者全勾时，Web 和 App 的实际控制下放给 channel 的 Settings → General → <strong>Episode Download Link</strong></td>
-<td>仍为一行 <strong>Allow Download on</strong>：☑ Web ☑ Player ☑ App + <strong>Select web channels</strong>；Episode Download Link 不再单独存在</td>
-<td>两项合一；Web 的控制从「下放到 channel」改为「在公司级选频道」；Player 仍由 Embed Player 页面细控</td>
+<td><strong>Enable Download</strong>（Web / Player / App）是总开关：Web 管站点下载按钮，Player 管播放器下载按钮（勾上后 Dashboard → Embed Player 出现 download 控制），App 管 Pro App / White Label App；三者全勾时，Web 和 App 的实际控制下放给 channel 的 Settings → General → <strong>Episode Download Link</strong></td>
+<td>一行 <strong>Enable Download</strong>，Web / Player / App 多选，公司级；Web 对所有频道生效；Episode Download Link 不再单独存在</td>
+<td>两项合一；Web 直接控制所有频道，不再到 channel 后台单独设置；Player 仍由 Embed Player 页面细控</td>
 </tr>
 <tr>
 <td><strong>Removing Podbean Brand</strong></td>
 <td>channel 设置里，选项为 Yes / No</td>
-<td>公司级 Advanced Options，Enable / Disable，无频道选择</td>
+<td>一行 <strong>Removing Podbean Brand</strong>，Enable / Disable，公司级</td>
 <td>上移 + 变成公司级 + 选项措辞改变</td>
 </tr>
 </tbody>
@@ -2668,7 +2706,7 @@
 <p><strong>注：</strong> Business Plan 用户的 Private Channel 默认不显示 Feed 标签页。</p>
 </blockquote>
 <p>老版是设置里的独立 <strong>Feed</strong> 页面；新版是 <strong>General 的第 4 个 Tab</strong>（General → Feed），只保留 6 个字段。</p>
-<p>变化分为：位置调整（随 Tab 迁移）、改名、行为变化、移出（到其他页面）、移除。老版 Feed 页面的字段在非 Business / Business 下一致，因此不再分两列。</p>
+<p>变化分为：位置调整（随 Tab 迁移）、改名、行为变化、移出（到其他页面）、隐藏（界面不再显示，设置值继续生效）、移除。老版 Feed 页面的字段在非 Business / Business 下一致，因此不再分两列。</p>
 <div class="table-wrap"><table>
 <colgroup><col style="width:17%"><col style="width:11%"><col style="width:10%"><col style="width:26%"><col style="width:36%"></colgroup>
 <thead>
@@ -2749,7 +2787,7 @@
 <td>移除</td>
 <td>Feed 页面</td>
 <td>无</td>
-<td>历史内容用户仍可见，字段只读并标注已停用；提供 "Use Podcast Description"，确认后独立 Summary 删除，<code>&lt;itunes:summary&gt;</code> 跟随 Podcast Description</td>
+<td>移除独立 Summary 设置；老用户更新 Podcast info 时移除 Summary，改用 Podcast Description（<code>&lt;itunes:summary&gt;</code> 跟随 Podcast Description）；未更新前保持原状</td>
 </tr>
 <tr>
 <td class="is-removed"><strong>Episode Artwork Tag</strong></td>
@@ -2760,17 +2798,17 @@
 </tr>
 <tr>
 <td class="is-removed"><strong>Remove from Apple Directory</strong></td>
-<td>移除</td>
+<td>隐藏</td>
 <td>Feed 页面</td>
-<td>无</td>
-<td>从普通设置中移除；为已开启的用户提供"关闭并移除标签"的过渡机制，已启用 <code>&lt;itunes:block&gt;</code> 的用户保留一个临时关闭入口</td>
+<td>无（界面不再显示）</td>
+<td>界面隐藏该设置，不提供关闭入口；已设置过的用户继续使用其设置值，<code>&lt;itunes:block&gt;</code> 标签按原值输出</td>
 </tr>
 <tr>
 <td class="is-removed"><strong>Set Podcast New Feed URL</strong></td>
 <td>移除</td>
 <td>Feed 页面</td>
 <td>无</td>
-<td>改为迁移流程自动写入 <code>&lt;itunes:new-feed-url&gt;</code>，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span class="need-confirm">需技术确认</span></td>
+<td>由系统自动写入 <code>&lt;itunes:new-feed-url&gt;</code>，不长期保留；<span class="need-confirm">保留时间需技术确认</span>，例如从用户设置 301 跳转起保留 3 个月，到期后移除该标签。⚠ 更改 subdomain 是否同样自动写入，<span class="need-confirm">需技术确认</span></td>
 </tr>
 </tbody>
 </table></div>

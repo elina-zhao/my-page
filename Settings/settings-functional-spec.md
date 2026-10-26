@@ -953,7 +953,7 @@ General 的四个 Tab 在同一次保存中一起校验。
 
 ### 高级选项（Advanced Options）变化说明
 
-这 4 个字段从 General 页面移除后，由公司管理后台（Bizadmin）的 Advanced Options 统一管理，普通账号与 Business 的处理不同。
+这 4 个字段从 General 页面移除后，由公司管理后台（Bizadmin）的 **Settings → Advanced Options → Content** 标签页统一管理。普通账号没有公司后台，设置直接移除；Network / Business 在后台统一配置。
 
 **普通账号**
 
@@ -966,14 +966,24 @@ General 的四个 Tab 在同一次保存中一起校验。
 
 **Network / Business（企业账号）**
 
-两个 tier 在这四项上的行为完全一致，合并说明。
+四个字段上移到 Advanced Options → Content 标签页，与 Private Embed Player 同页。Private Embed Player 为页面原有设置，不在此次迁移范围内，仅 Business 显示。
+
+| 设置项 | 控件 | 规则 |
+|---|---|---|
+| **Private Embed Player** | Enable / Disable | 仅 Business 显示；Enable 时出现访问方式单选：**Request user login to access**（默认）/ **Don't request user login and limit access with Reference URL**（凭 Reference URL 免登录访问 private 内容） |
+| **Podcast Comments** | Enable / Disable | 对公司下所有频道生效 |
+| **Share on Public Channels** | Enable / Disable | 只作用于 public 频道；private 频道没有分享按钮 |
+| **Enable Download** | 多选：Web / Player / App | 分别控制站点下载按钮、播放器下载按钮（勾选后 Dashboard → Embed Player 出现 download 控制）、Pro App / White Label App 下载；Web 直接对公司下所有频道生效，不再到 channel 后台（admin5）的 Settings 单独设置；收起时显示已选标签，全不选显示 `None` |
+| **Removing Podbean Brand** | Enable / Disable | 公司级，无频道选择 |
+
+本页设置由底部 Save 一次提交，保存后提示 `Saved`。两个 tier 在这四项上行为一致，四个字段的新老差异见下表。
 
 | 设置项 | 原来 | 现在 | 变化 |
 |---|---|---|---|
-| Comments | Company Admin 的 Settings → Advanced Options 里是 **Enable Comments for All Channels** 总开关；On 时每个 channel 在 Settings → General → More Options → Comments 出现单独开关；Off 时 channel 里没有该选项，所有频道统一关闭 | Advanced Options 的一行 **Podcast Comments**，Enable / Disable + **Select channels**；默认全部频道开启，可在弹框里收窄 | 两层变一层；总开关名称不再出现；单频道控制从 channel 设置搬进弹框 |
-| Share | channel 的 **General** 里控制 **Share on Podcast Site**；Web 端只有 public episode 有分享，private 频道没有 | Advanced Options 的一行 **Share on Public Channels**，Enable / Disable + **Select channels**（只列 public 频道） | 上移 + 改名 + 增加按频道选择 |
-| Download | **Allow Download on**（Web / Player / App）是总开关：Web 管站点下载按钮，Player 管播放器下载按钮（勾上后 Dashboard → Embed Player 出现 download 控制），App 管 Pro App / White Label App；三者全勾时，Web 和 App 的实际控制下放给 channel 的 Settings → General → **Episode Download Link** | 仍为一行 **Allow Download on**：☑ Web ☑ Player ☑ App + **Select web channels**；Episode Download Link 不再单独存在 | 两项合一；Web 的控制从「下放到 channel」改为「在公司级选频道」；Player 仍由 Embed Player 页面细控 |
-| Removing Podbean Brand | channel 设置里，选项为 Yes / No | 公司级 Advanced Options，Enable / Disable，无频道选择 | 上移 + 变成公司级 + 选项措辞改变 |
+| Comments | Company Admin 的 Settings → Advanced Options 里是 **Enable Comments for All Channels** 总开关；On 时每个 channel 在 Settings → General → More Options → Comments 出现单独开关；Off 时 channel 里没有该选项，所有频道统一关闭 | 一行 **Podcast Comments**，Enable / Disable，公司级 | 两层变一层；channel 内的单频道开关移除 |
+| Share | channel 的 **General** 里控制 **Share on Podcast Site**；Web 端只有 public episode 有分享，private 频道没有 | 一行 **Share on Public Channels**，Enable / Disable，只作用于 public 频道 | 上移 + 改名；不再按频道单独控制 |
+| Download | **Enable Download**（Web / Player / App）是总开关：Web 管站点下载按钮，Player 管播放器下载按钮（勾上后 Dashboard → Embed Player 出现 download 控制），App 管 Pro App / White Label App；三者全勾时，Web 和 App 的实际控制下放给 channel 的 Settings → General → **Episode Download Link** | 一行 **Enable Download**，Web / Player / App 多选，公司级；Web 对所有频道生效；Episode Download Link 不再单独存在 | 两项合一；Web 直接控制所有频道，不再到 channel 后台单独设置；Player 仍由 Embed Player 页面细控 |
+| Removing Podbean Brand | channel 设置里，选项为 Yes / No | 一行 **Removing Podbean Brand**，Enable / Disable，公司级 | 上移 + 变成公司级 + 选项措辞改变 |
 
 ### Feed 标签页变化说明
 
@@ -981,7 +991,7 @@ General 的四个 Tab 在同一次保存中一起校验。
 
 老版是设置里的独立 **Feed** 页面；新版是 **General 的第 4 个 Tab**（General → Feed），只保留 6 个字段。
 
-变化分为：位置调整（随 Tab 迁移）、改名、行为变化、移出（到其他页面）、移除。老版 Feed 页面的字段在非 Business / Business 下一致，因此不再分两列。
+变化分为：位置调整（随 Tab 迁移）、改名、行为变化、移出（到其他页面）、隐藏（界面不再显示，设置值继续生效）、移除。老版 Feed 页面的字段在非 Business / Business 下一致，因此不再分两列。
 
 | 字段 | 变化 | 老版位置 | 新版位置 | 说明 |
 |---|---|---|---|---|
@@ -994,9 +1004,9 @@ General 的四个 Tab 在同一次保存中一起校验。
 | **Content Explicit** | 移出 | Feed 页面 | General → Content 标签页 | 与 General → Content 中同一字段，见 General 页面变化说明 |
 | **Episode Link** | 移出 | Feed 页面 | Episode 发布页面，字段名改为 **Alternative Episode Link** | 改为单集级设置，不在 Settings 内维护 |
 | **Apple Podcasts Verification** | 移出 | Feed 页面 | Apple Podcasts 提交页面 | 不在 Settings 内维护 |
-| <span style="color:#b91c1c;font-weight:700;">**Apple Podcasts Summary**</span> | 移除 | Feed 页面 | 无 | 历史内容用户仍可见，字段只读并标注已停用；提供 "Use Podcast Description"，确认后独立 Summary 删除，`<itunes:summary>` 跟随 Podcast Description |
+| <span style="color:#b91c1c;font-weight:700;">**Apple Podcasts Summary**</span> | 移除 | Feed 页面 | 无 | 移除独立 Summary 设置；老用户更新 Podcast info 时移除 Summary，改用 Podcast Description（`<itunes:summary>` 跟随 Podcast Description）；未更新前保持原状 |
 | <span style="color:#b91c1c;font-weight:700;">**Episode Artwork Tag**</span> | 移除 | Feed 页面 | 无 | 统一用 `<itunes:image>` 输出单集封面，用户无需再选 RSS 标签类型 |
-| <span style="color:#b91c1c;font-weight:700;">**Remove from Apple Directory**</span> | 移除 | Feed 页面 | 无 | 从普通设置中移除；为已开启的用户提供"关闭并移除标签"的过渡机制，已启用 `<itunes:block>` 的用户保留一个临时关闭入口 |
-| <span style="color:#b91c1c;font-weight:700;">**Set Podcast New Feed URL**</span> | 移除 | Feed 页面 | 无 | 改为迁移流程自动写入 `<itunes:new-feed-url>`，可长期保留。⚠ 更改 subdomain 是否也自动写入，<span style="color:#a16207;font-weight:700;">需技术确认</span> |
+| <span style="color:#b91c1c;font-weight:700;">**Remove from Apple Directory**</span> | 隐藏 | Feed 页面 | 无（界面不再显示） | 界面隐藏该设置，不提供关闭入口；已设置过的用户继续使用其设置值，`<itunes:block>` 标签按原值输出 |
+| <span style="color:#b91c1c;font-weight:700;">**Set Podcast New Feed URL**</span> | 移除 | Feed 页面 | 无 | 由系统自动写入 `<itunes:new-feed-url>`，不长期保留；<span style="color:#a16207;font-weight:700;">保留时间需技术确认</span>，例如从用户设置 301 跳转起保留 3 个月，到期后移除该标签。⚠ 更改 subdomain 是否同样自动写入，<span style="color:#a16207;font-weight:700;">需技术确认</span> |
 
 **新版 Feed 标签页字段总数从 13 个精简为 6 个**，6 个字段老版均有，无新增。标注**黄色加粗**的「待确认」条目需产品团队进一步确认。

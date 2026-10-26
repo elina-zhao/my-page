@@ -2609,6 +2609,11 @@
       accent-color: #1e293b;
       cursor: pointer;
     }
+    /* The table locks while an import runs, so the boxes stop inviting clicks. */
+    .ftp-check-cell input:disabled { cursor: default; }
+    /* Status is plain table text like Filename and Size — an importing row says
+       so in the same voice as the rest of the row. */
+    .ftp-file-status { color: var(--text); }
     .ftp-empty {
       display: flex;
       flex-direction: column;
@@ -6720,6 +6725,11 @@
       { name: 'studio-b-roll.mp4', size: '98.5MB' }
     ];
     var ftpFiles = [];
+    // An import is a two-beat action: the picked rows say Importing in the
+    // Status column while the copy runs, then they leave the folder. The flag
+    // locks the table for that second so nothing else changes underneath it.
+    var ftpImporting = false;
+    var ftpImportTimer = null;
     // Every file renders at once — the table box caps at six rows and scrolls,
     // so a long folder has no pager to step through. The account panel folds
     // away so the list can take the whole height when a reader only came for
@@ -6755,7 +6765,8 @@
       chip.textContent = ftpState === 'active' ? 'Active'
         : (ftpState === 'processing' ? 'Processing' : 'Inactive');
       chip.classList.toggle('is-active', ftpState === 'active');
-      document.getElementById('ftpRefreshBtn').disabled = ftpState !== 'active';
+      // renderFtpFiles() owns Refresh's disabled state: it depends on both the
+      // account state and whether an import is currently running.
       renderFtpFiles();
     }
     // Rows are rebuilt only when the file set changes, so ticking a checkbox
@@ -6765,10 +6776,10 @@
       if (!rowsBox) return;
       rowsBox.innerHTML = ftpFiles.map(function (f, i) {
         return '<div class="ftp-file-row">' +
-          '<span class="ftp-check-cell"><input type="checkbox" onchange="toggleFtpFile(' + i + ', this.checked)" aria-label="Select ' + f.name + '"></span>' +
+          '<span class="ftp-check-cell"><input type="checkbox"' + (ftpImporting ? ' disabled' : '') + ' onchange="toggleFtpFile(' + i + ', this.checked)" aria-label="Select ' + f.name + '"></span>' +
           '<span class="ftp-file-name">' + f.name + '</span>' +
           '<span class="ftp-file-size">' + f.size + '</span>' +
-          '<span class="ftp-file-status"></span>' +
+          '<span class="ftp-file-status">' + (f.status === 'importing' ? 'Importing' : '') + '</span>' +
         '</div>';
       }).join('');
       // A rebuilt list always starts at the top, so a refresh or an import
@@ -6790,15 +6801,19 @@
       Array.prototype.forEach.call(table.querySelectorAll('.ftp-file-row input'), function (box, i) {
         var f = ftpFiles[i];
         box.checked = !!(f && f.selected);
+        box.disabled = ftpImporting;
       });
       // The head checkbox is the one select-all, and it means the whole folder,
       // not just the rows currently scrolled into view.
       head.checked = hasFiles && count === ftpFiles.length;
       head.indeterminate = count > 0 && count < ftpFiles.length;
+      head.disabled = ftpImporting;
       document.getElementById('ftpSelectedCount').textContent = count + ' selected';
       // Import always sits in the footer; it only goes live once something is
-      // ticked, like the import page's disabled Continue.
-      document.getElementById('ftpImportBtn').disabled = count === 0;
+      // ticked, like the import page's disabled Continue — and it goes quiet
+      // again while the import it started is still running.
+      document.getElementById('ftpImportBtn').disabled = count === 0 || ftpImporting;
+      document.getElementById('ftpRefreshBtn').disabled = ftpState !== 'active' || ftpImporting;
     }
     function toggleFtpFile(index, on) {
       if (ftpFiles[index]) ftpFiles[index].selected = !!on;
@@ -6814,20 +6829,33 @@
       // scripted click cannot read a folder that does not exist yet.
       if (ftpState !== 'active') return;
       ftpFiles = FTP_DEMO_FILES.map(function (f) {
-        return { name: f.name, size: f.size, selected: false };
+        return { name: f.name, size: f.size, selected: false, status: '' };
       });
       renderFtpRows();
       renderFtpFiles();
     }
-    // Import copies the selected files into the account and removes them from
-    // the FTP folder; the folder is empty once nothing is left in it.
+    // Import copies the selected files into the account and then removes them
+    // from the FTP folder. The rows do not vanish on the click: they stay put
+    // saying Importing in the Status column while the table is locked, and only
+    // leave once the copy has finished — the folder is empty once nothing is
+    // left in it.
     function importFtpFiles() {
+      if (ftpImporting) return;
       var picked = ftpFiles.filter(function (f) { return f.selected; });
       if (!picked.length) return;
-      ftpFiles = ftpFiles.filter(function (f) { return !f.selected; });
+      ftpImporting = true;
+      picked.forEach(function (f) { f.status = 'importing'; });
       renderFtpRows();
       renderFtpFiles();
-      showToast(picked.length === 1 ? picked[0].name + ' imported' : picked.length + ' files imported');
+      // The 1.5s wait is a mockup device; there is no upload behind it.
+      clearTimeout(ftpImportTimer);
+      ftpImportTimer = setTimeout(function () {
+        ftpImporting = false;
+        ftpFiles = ftpFiles.filter(function (f) { return f.status !== 'importing'; });
+        renderFtpRows();
+        renderFtpFiles();
+        showToast(picked.length === 1 ? picked[0].name + ' imported' : picked.length + ' files imported');
+      }, 1500);
     }
     function openFtpModal() {
       // Every open starts with the credentials showing and the file list at the
