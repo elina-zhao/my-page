@@ -1563,7 +1563,7 @@
 </tbody>
 </table></div>
 <h3 id="sec-4-3">4.3 插件编辑弹窗 <span class="need-confirm">（每个插件的编辑功能可能不同，待开发确认）</span><a class="h-anchor" href="#sec-4-3" aria-label="本节链接">#</a></h3>
-<p>各插件共用同一套弹窗外壳（尺寸、标题栏、底部操作区），编辑内容各不相同。<strong>Dropbox 与 FTP Upload 是例外</strong>：Refresh 按钮位于表格内，弹窗没有底部操作区。</p>
+<p>各插件共用同一套弹窗外壳（尺寸、标题栏、底部操作区），编辑内容各不相同。<strong>Dropbox 是例外</strong>：Refresh 按钮位于表格内，弹窗没有底部操作区。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -1589,8 +1589,8 @@
 <tr>
 <td><strong>FTP Upload</strong></td>
 <td>FTP Upload</td>
-<td>弹窗始终为同一布局：顶部 <strong>FTP Account Information</strong> 面板 + 下方 <strong>FTP files</strong> 区，仅面板内容随状态变化。面板<strong>默认展开</strong>，标题行右侧按钮可收起 / 展开（每次打开重置为展开）。未激活：面板显示说明文字（<span class="need-confirm">文案待确认</span>）、<strong>Inactive</strong> 状态与 <strong>Activate FTP</strong> 按钮；点击后状态变为 <strong>Processing</strong>，显示 <code>Your FTP account is being processed and will be available in 10 minutes.</code>；账号就绪后状态变为 <strong>Active</strong>，显示 <strong>FTP Server Name</strong> / <strong>Username</strong> / <strong>Password</strong> / <strong>Max size</strong> 四项 label–value，以及一行 <code>Notice: Explicit TLS is required for FTP uploads. Please choose Explicit TLS when connecting.</code>。<strong>FTP files</strong> 区始终显示：标题 + 副标题 <code>Your FTP uploaded files will be listed below. Please select them and import to your Podbean account.</code>；<strong>文件表每页 6 条</strong>，超出时表格底部显示 <code>{起}–{止} of {总数}</code> 与上一页 / 下一页按钮（首页禁用「上一页」、末页禁用「下一页」）；表头与选择条的全选作用于全部文件（跨页）；文件夹为空时显示 <code>Your FTP Folder is empty</code>；勾选文件后表格上方出现选择条 <strong><code>{n} selected</code></strong> / <strong>Import</strong>，点击 Import 将选中文件导入账号（mockup 中导入后从列表移除；线上是否保留，以及 Status 列的内容，<span class="need-confirm">待开发确认</span>）；表格列为复选框 / Filename / Size / Status。<strong>Refresh 固定在弹窗底部</strong>，不随内容滚动，账号未激活时禁用（置灰），激活后读取 FTP 目录中的文件</td>
-<td>底部固定 <strong>Refresh</strong> 底栏；通过标题栏 <strong>×</strong>（或点击遮罩 / Esc）关闭</td>
+<td>弹窗始终为同一布局：顶部 <strong>FTP Account Information</strong> 面板 + 下方 <strong>FTP files</strong> 区，仅面板内容随状态变化。面板<strong>默认展开</strong>，标题行右侧按钮可收起 / 展开（每次打开重置为展开）。未激活：面板显示说明文字（<span class="need-confirm">文案待确认</span>）、<strong>Inactive</strong> 状态与 <strong>Activate FTP</strong> 按钮；点击后状态变为 <strong>Processing</strong>，显示 <code>Your FTP account is being processed and will be available in 10 minutes.</code>；账号就绪后状态变为 <strong>Active</strong>，显示 <strong>FTP Server Name</strong> / <strong>Username</strong> / <strong>Password</strong> / <strong>Max size</strong> 四项 label–value，以及一行 <code>Notice: Explicit TLS is required for FTP uploads. Please choose Explicit TLS when connecting.</code>。<strong>FTP files</strong> 区始终显示：标题 + 副标题 <code>Your FTP uploaded files will be listed below. Please select them and import to your Podbean account.</code>；<strong>文件表不分页</strong>，超过约 6 行时在表格内滚动，表头（文件名 / 大小 / 状态）固定在表格顶部；表头的全选作用于全部文件（含未滚入视野的行）；文件夹为空时显示 <code>Your FTP Folder is empty</code>；表格列为复选框 / Filename / Size / Status。<strong>Refresh</strong> 位于 <strong>FTP files</strong> 标题行右侧，账号未激活时禁用（置灰），激活后读取 FTP 目录中的文件。</td>
+<td>底部固定 <strong>Import</strong>；未选择文件时禁用（置灰），左侧显示 <code>{n} selected</code>。点击 Import 将选中文件导入账号（导入后文件是否从 FTP 目录移除，以及 Status 列的内容，<span class="need-confirm">待开发确认</span>）；通过标题栏 <strong>×</strong>（或点击遮罩 / Esc）关闭</td>
 </tr>
 <tr>
 <td><strong>SEO Meta Tags</strong></td>

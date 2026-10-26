@@ -2495,6 +2495,13 @@
     }
     /* ---- FTP files section (inside the active state) ---- */
     .ftp-files { margin-top: 26px; }
+    /* Section title and its utility button share one line */
+    .ftp-files-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
     .ftp-files-title {
       font-size: 15px;
       font-weight: 600;
@@ -2506,28 +2513,16 @@
       line-height: 1.5;
       color: var(--text-secondary);
     }
-    /* Selection strip — neutral tint, with Import as the dark pill */
-    .ftp-selection-bar {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 8px 8px 8px 16px;
-      margin-bottom: 12px;
-      background: #f8fafc;
-      border: 1px solid #dcdcdc;
-      border-radius: 2px;
+    /* Footer: selection count left, Import right — always present, so ticking
+       the first file no longer moves the table */
+    .ftp-footer { align-items: center; }
+    .ftp-selected-count {
+      margin-right: auto;
       font-size: 14px;
-      color: var(--text);
+      color: var(--text-secondary);
     }
-    .ftp-selection-bar[hidden] { display: none; }
-    .ftp-check {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .ftp-import-link {
-      margin-left: auto;
-      padding: 6px 16px;
+    .ftp-import-btn {
+      padding: 8px 20px;
       background: #1e293b;
       color: #fff;
       border: none;
@@ -2537,7 +2532,11 @@
       font-weight: 500;
       cursor: pointer;
     }
-    .ftp-import-link:hover { background: #334155; }
+    .ftp-import-btn:hover:not(:disabled) { background: #334155; }
+    .ftp-import-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
     /* Table box — same construction as .db-table: hairline box, head row,
        rows with bottom rules, action in the foot. */
     .ftp-table {
@@ -2545,6 +2544,42 @@
       border-radius: 2px;
     }
     .ftp-file-table[hidden] { display: none; }
+    /* No pager: the box owns the height and a long folder scrolls inside it,
+       with the column titles stuck to the top. Cap = the 54px head + six rows,
+       so the dialog stays the height it had when six files were a page. */
+    .ftp-file-table {
+      max-height: 378px;
+      overflow-y: auto;
+    }
+    .ftp-file-table .ftp-file-head {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #fff;
+    }
+    /* When the dialog hits its 90vh cap it is the LIST that gives up height, not
+       the body: the table shrinks to the room left over and scrolls inside
+       itself, so the folder is never split across two scrollbars. Everything
+       above the table keeps its height. */
+    #ftpModal .ftp-files {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    #ftpModal .ftp-files > :not(.ftp-table) { flex-shrink: 0; }
+    #ftpModal .ftp-table {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    #ftpModal .ftp-file-table {
+      flex: 1;
+      min-height: 0;
+    }
+    /* The box border closes the list, so the last row needs no rule of its own */
+    #ftpFileRows .ftp-file-row:last-child { border-bottom: none; }
     .ftp-file-head,
     .ftp-file-row {
       display: grid;
@@ -2567,7 +2602,6 @@
       border-bottom: 1px solid #dcdcdc;
     }
     .ftp-check-cell { display: flex; align-items: center; }
-    .ftp-check input,
     .ftp-check-cell input {
       width: 15px;
       height: 15px;
@@ -2575,45 +2609,11 @@
       accent-color: #1e293b;
       cursor: pointer;
     }
-    /* Pager — six rows a page, count on the left, two round arrows on the right */
-    .ftp-pager {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 22px;
-    }
-    .ftp-pager[hidden] { display: none; }
-    .ftp-pager-info {
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-    .ftp-pager-actions {
-      display: flex;
-      gap: 6px;
-    }
-    .ftp-pager-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      border: 1px solid #dcdcdc;
-      border-radius: 50%;
-      background: #fff;
-      color: var(--text);
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .ftp-pager-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #c4c4c4; }
-    .ftp-pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     .ftp-empty {
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 30px 0 34px;
-      border-bottom: 1px solid #dcdcdc;
       color: var(--text-secondary);
     }
     .ftp-empty[hidden] { display: none; }
@@ -2690,7 +2690,6 @@
     .modal-footer .cancel-btn:hover { background: #f1f5f9; }
     .modal-footer .save-btn,
     .db-refresh-btn,
-    .ftp-refresh-btn,
     .ftp-activate-btn {
       padding: 8px 20px;
       background: #1e293b;
@@ -2704,13 +2703,30 @@
     }
     .modal-footer .save-btn:hover,
     .db-refresh-btn:hover,
-    .ftp-refresh-btn:hover,
     .ftp-activate-btn:hover { background: #334155; }
-    /* Activate lives inside the account panel; the dialog footer carries
-       Refresh only, pinned so a long file list cannot push it away. */
+    /* Activate lives inside the account panel. */
     .ftp-activate-btn { margin-top: 18px; }
-    /* Files can only be read once the account is active — the pill stays the
-       same shape but reads as off, like the import page's disabled Continue. */
+    /* Refresh is a section utility beside the FTP files title, not the dialog's
+       action, so it is an outlined pill — the filled Import in the footer is
+       the only primary in this dialog. Padding + border keeps the same 32.5px
+       height as the filled pills it sits near. */
+    .ftp-refresh-btn {
+      padding: 7px 18px;
+      background: #fff;
+      color: var(--text);
+      /* #999 is 2.9:1 on white — a hairline you can actually see, while the
+         table's #dcdcdc rules stay recessive behind it */
+      border: 1px solid #999;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ftp-refresh-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #747474; }
+    /* Files can only be read once the account is active — the pill keeps its
+       shape but reads as off, like the import page's disabled Continue. */
     .ftp-refresh-btn:disabled,
     .ftp-refresh-btn:disabled:hover {
       opacity: 0.45;
@@ -5172,21 +5188,17 @@
 
             <!-- FTP files: always shown; Refresh lights up once active -->
             <div class="ftp-files">
-              <div class="ftp-files-title">FTP files</div>
+              <!-- Refresh is a section utility, so it sits level with the
+                   section title rather than in the dialog footer. -->
+              <div class="ftp-files-head">
+                <div class="ftp-files-title">FTP files</div>
+                <button type="button" class="ftp-refresh-btn" id="ftpRefreshBtn" onclick="refreshFtpFiles()" disabled>Refresh</button>
+              </div>
               <p class="ftp-files-note">Your FTP uploaded files will be listed below. Please select them and import to your Podbean account.</p>
 
-              <div class="ftp-selection-bar" id="ftpSelectionBar" hidden>
-                <label class="ftp-check">
-                  <input type="checkbox" id="ftpSelectAll" onchange="toggleAllFtpFiles(this.checked)">
-                  <span id="ftpSelectedCount">0 selected</span>
-                </label>
-                <button type="button" class="ftp-import-link" onclick="importFtpFiles()">Import</button>
-              </div>
-
-              <!-- One box holds the table, the empty state and the pager;
-                   Refresh is pinned in the dialog's footer instead, so it is
-                   reachable without scrolling. renderFtpFiles() owns the
-                   inner visibility. -->
+              <!-- One box holds the table or the empty state; Import lives in
+                   the dialog footer, disabled until something is ticked.
+                   renderFtpFiles() owns the inner visibility. -->
               <div class="ftp-table">
                 <div class="ftp-file-table" id="ftpFileTable" hidden>
                   <div class="ftp-file-head">
@@ -5209,25 +5221,14 @@
                   <p>Your FTP Folder is empty</p>
                 </div>
 
-                <!-- Six files a page; the strip lives inside the table box -->
-                <div class="ftp-pager" id="ftpPager" hidden>
-                  <span class="ftp-pager-info" id="ftpPagerInfo"></span>
-                  <div class="ftp-pager-actions">
-                    <button type="button" class="ftp-pager-btn" id="ftpPrevBtn" onclick="ftpPageStep(-1)" aria-label="Previous page">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                    </button>
-                    <button type="button" class="ftp-pager-btn" id="ftpNextBtn" onclick="ftpPageStep(1)" aria-label="Next page">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
-          <!-- Refresh sits outside the scrolling body so it stays at the
-               dialog's bottom edge whatever the list is doing. -->
-          <div class="modal-footer">
-            <button type="button" class="ftp-refresh-btn" id="ftpRefreshBtn" onclick="refreshFtpFiles()" disabled>Refresh</button>
+          <!-- Import is the dialog's one primary action, so it sits in the
+               footer and stays disabled until at least one file is ticked. -->
+          <div class="modal-footer ftp-footer">
+            <span class="ftp-selected-count" id="ftpSelectedCount">0 selected</span>
+            <button type="button" class="ftp-import-btn" id="ftpImportBtn" onclick="importFtpFiles()" disabled>Import</button>
           </div>
         </div>
       </div>
@@ -6719,27 +6720,13 @@
       { name: 'studio-b-roll.mp4', size: '98.5MB' }
     ];
     var ftpFiles = [];
-    // Six rows fit the dialog without turning it into a scrolling page; the
-    // rest live behind the pager. The account panel folds away so the list can
-    // take the whole height when a reader only came for the files.
-    var FTP_PAGE_SIZE = 6;
-    var ftpPage = 0;
+    // Every file renders at once — the table box caps at six rows and scrolls,
+    // so a long folder has no pager to step through. The account panel folds
+    // away so the list can take the whole height when a reader only came for
+    // the files.
     var ftpInfoCollapsed = false;
     function ftpSelectedCount() {
       return ftpFiles.filter(function (f) { return f.selected; }).length;
-    }
-    function ftpPageCount() {
-      return Math.max(1, Math.ceil(ftpFiles.length / FTP_PAGE_SIZE));
-    }
-    function ftpClampPage() {
-      ftpPage = Math.min(Math.max(0, ftpPage), ftpPageCount() - 1);
-    }
-    function ftpPageStep(delta) {
-      var next = Math.min(ftpPageCount() - 1, Math.max(0, ftpPage + delta));
-      if (next === ftpPage) return;
-      ftpPage = next;
-      renderFtpRows();
-      renderFtpFiles();
     }
     // One owner of the fold: the panel's visibility, the button's aria state,
     // and the chevron direction (CSS reads aria-expanded).
@@ -6776,50 +6763,42 @@
     function renderFtpRows() {
       var rowsBox = document.getElementById('ftpFileRows');
       if (!rowsBox) return;
-      var start = ftpPage * FTP_PAGE_SIZE;
-      rowsBox.innerHTML = ftpFiles.slice(start, start + FTP_PAGE_SIZE).map(function (f, i) {
+      rowsBox.innerHTML = ftpFiles.map(function (f, i) {
         return '<div class="ftp-file-row">' +
-          '<span class="ftp-check-cell"><input type="checkbox" onchange="toggleFtpFile(' + (start + i) + ', this.checked)" aria-label="Select ' + f.name + '"></span>' +
+          '<span class="ftp-check-cell"><input type="checkbox" onchange="toggleFtpFile(' + i + ', this.checked)" aria-label="Select ' + f.name + '"></span>' +
           '<span class="ftp-file-name">' + f.name + '</span>' +
           '<span class="ftp-file-size">' + f.size + '</span>' +
           '<span class="ftp-file-status"></span>' +
         '</div>';
       }).join('');
+      // A rebuilt list always starts at the top, so a refresh or an import
+      // never leaves the reader halfway down a folder they have not seen.
+      var scroller = document.getElementById('ftpFileTable');
+      if (scroller) scroller.scrollTop = 0;
     }
     // One owner of the files block: table vs empty state, the selection bar,
     // and every checkbox's checked / indeterminate state.
     function renderFtpFiles() {
       var table = document.getElementById('ftpFileTable');
       if (!table) return;
-      var bar = document.getElementById('ftpSelectionBar');
       var empty = document.getElementById('ftpEmpty');
       var head = document.getElementById('ftpHeadCheck');
-      var barCheck = document.getElementById('ftpSelectAll');
-      var pager = document.getElementById('ftpPager');
       var hasFiles = ftpFiles.length > 0;
       var count = ftpSelectedCount();
-      ftpClampPage();
       table.hidden = !hasFiles;
       empty.hidden = hasFiles;
-      bar.hidden = !(hasFiles && count > 0);
-      pager.hidden = !hasFiles;
       Array.prototype.forEach.call(table.querySelectorAll('.ftp-file-row input'), function (box, i) {
-        var f = ftpFiles[ftpPage * FTP_PAGE_SIZE + i];
+        var f = ftpFiles[i];
         box.checked = !!(f && f.selected);
       });
-      // The two select-all controls mean the whole folder, not just this page.
+      // The head checkbox is the one select-all, and it means the whole folder,
+      // not just the rows currently scrolled into view.
       head.checked = hasFiles && count === ftpFiles.length;
       head.indeterminate = count > 0 && count < ftpFiles.length;
-      barCheck.checked = head.checked;
-      barCheck.indeterminate = head.indeterminate;
       document.getElementById('ftpSelectedCount').textContent = count + ' selected';
-      if (hasFiles) {
-        var from = ftpPage * FTP_PAGE_SIZE + 1;
-        var to = Math.min(ftpFiles.length, (ftpPage + 1) * FTP_PAGE_SIZE);
-        document.getElementById('ftpPagerInfo').textContent = from + '–' + to + ' of ' + ftpFiles.length;
-        document.getElementById('ftpPrevBtn').disabled = ftpPage === 0;
-        document.getElementById('ftpNextBtn').disabled = ftpPage >= ftpPageCount() - 1;
-      }
+      // Import always sits in the footer; it only goes live once something is
+      // ticked, like the import page's disabled Continue.
+      document.getElementById('ftpImportBtn').disabled = count === 0;
     }
     function toggleFtpFile(index, on) {
       if (ftpFiles[index]) ftpFiles[index].selected = !!on;
@@ -6837,7 +6816,6 @@
       ftpFiles = FTP_DEMO_FILES.map(function (f) {
         return { name: f.name, size: f.size, selected: false };
       });
-      ftpPage = 0;
       renderFtpRows();
       renderFtpFiles();
     }
@@ -6847,15 +6825,13 @@
       var picked = ftpFiles.filter(function (f) { return f.selected; });
       if (!picked.length) return;
       ftpFiles = ftpFiles.filter(function (f) { return !f.selected; });
-      ftpClampPage();
       renderFtpRows();
       renderFtpFiles();
       showToast(picked.length === 1 ? picked[0].name + ' imported' : picked.length + ' files imported');
     }
     function openFtpModal() {
-      // Every open starts on page one with the credentials showing; the fold
-      // is a per-visit choice, not a setting that quietly persists.
-      ftpPage = 0;
+      // Every open starts with the credentials showing and the file list at the
+      // top; the fold is a per-visit choice, not a setting that quietly persists.
       setFtpInfoCollapsed(false);
       renderFtpRows();
       renderFtp();
