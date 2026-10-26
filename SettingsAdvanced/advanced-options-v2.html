@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advanced Options — Content (mockup v3)</title>
+<style>
+  :root{
+    --navy:#12283E;
+    --text:#1E2833;
+    --text-2:#39434F;
+    --muted:#77818F;
+    --line:#E6E9ED;
+    --line-soft:#EEF0F3;
+    --bg:#F4F6F8;
+    --green:#12A67C;
+    --sidebar-w:258px;
+    --topbar-h:82px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Hiragino Sans GB",Arial,sans-serif;
+    font-size:15px;
+    color:var(--text);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    flex:0 0 var(--topbar-h);height:var(--topbar-h);
+    background:var(--navy);display:flex;align-items:center;
+    padding:0 26px;gap:30px;position:relative;z-index:20;
+  }
+  .brand{
+    position:relative;display:flex;align-items:baseline;
+    color:#fff;font-size:26px;font-weight:700;letter-spacing:-.7px;line-height:1;
+    padding-top:4px;user-select:none;
+  }
+  .brand-pro{font-size:21px;font-style:italic;font-weight:600;margin-left:3px;letter-spacing:-.3px}
+  .brand-arc{
+    position:absolute;left:1px;top:-6px;width:27px;height:13px;
+    border:2.5px solid #fff;border-bottom:0;border-radius:30px 30px 0 0;
+  }
+  .topnav a{
+    display:block;padding:5px 11px 6px;
+    border:1px solid rgba(150,190,226,.75);border-radius:3px;
+    color:#fff;font-size:15px;background:rgba(255,255,255,.04);
+  }
+  .mock-switcher{
+    margin-left:auto;display:flex;align-items:center;gap:8px;
+    padding:5px 8px 5px 12px;
+    border:1px dashed rgba(255,255,255,.42);border-radius:7px;
+  }
+  .mock-switcher > span{
+    font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(255,255,255,.62);margin-right:2px;
+  }
+  .mock-switcher button{
+    border:1px solid rgba(255,255,255,.22);background:transparent;
+    color:rgba(255,255,255,.8);font-size:12.5px;padding:5px 10px;
+    border-radius:5px;cursor:pointer;transition:background .12s ease,color .12s ease;
+  }
+  .mock-switcher button:hover{background:rgba(255,255,255,.1)}
+  .mock-switcher button.is-on{background:#fff;color:var(--navy);border-color:#fff;font-weight:600}
+  .top-actions{display:flex;align-items:center;gap:34px;margin-left:8px}
+  .top-action{
+    display:inline-flex;align-items:center;gap:9px;
+    color:#fff;font-size:15px;background:none;border:0;padding:0;cursor:pointer;
+  }
+  .top-action .ic{width:18px;height:18px;display:block}
+  .top-action .caret{width:11px;height:11px;margin-left:2px;opacity:.85}
+
+  /* ---------- layout ---------- */
+  .layout{flex:1;display:flex;min-height:0}
+
+  .sidebar{
+    flex:0 0 var(--sidebar-w);width:var(--sidebar-w);
+    background:#fff;border-right:1px solid #E9ECEF;
+    padding:10px 0 40px;overflow-y:auto;
+  }
+  .nav-item{
+    display:flex;align-items:center;gap:17px;width:100%;height:64px;
+    padding:0 26px;color:var(--text-2);font-size:15px;
+    background:none;border:0;text-align:left;cursor:pointer;
+  }
+  .nav-item .ic{width:19px;height:19px;flex:0 0 auto;color:#2E3946}
+  .nav-item:hover{background:#F8F9FA}
+  .nav-item .caret{margin-left:auto;width:11px;height:11px;color:#5C6775}
+  .nav-item.is-open{background:#F1F3F6;font-weight:600;color:var(--text)}
+  .subnav a{display:flex;align-items:center;height:52px;padding-left:62px;font-size:15px;color:var(--text-2)}
+  .subnav a:hover{background:#F8F9FA}
+  .subnav a.active{background:#F1F3F6;color:#0F1720;font-weight:700}
+
+  .main{flex:1;min-width:0;display:flex;flex-direction:column;overflow-y:auto}
+
+  .tabbar{flex:0 0 auto;background:#FAFBFC;border-bottom:1px solid var(--line);display:flex}
+  .tabs{display:flex;flex:1 1 auto;max-width:1200px;min-width:0}
+  .tab{
+    flex:1 1 0;min-width:0;height:94px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;color:var(--muted);background:#FAFBFC;
+    border:0;border-left:1px solid var(--line-soft);cursor:pointer;
+  }
+  .tab:first-child{border-left:0}
+  .tab:hover{color:#4A5563}
+  .tab.is-active{background:#fff;color:#111A24;font-weight:600}
+
+  .page{flex:1 1 auto;display:flex;flex-direction:column;padding:26px 26px 0}
+
+  .card{
+    flex:1 1 auto;min-height:640px;
+    background:#fff;border:1px solid #EDEFF2;
+    display:flex;flex-direction:column;
+    padding:40px 32px 64px;
+  }
+  .inner{width:100%;max-width:920px;margin:0 auto;flex:1 1 auto;display:flex;flex-direction:column}
+
+  /* ---------- form rows ---------- */
+  .form-row{display:flex;align-items:flex-start;gap:36px;padding:22px 0}
+  .form-row[hidden]{display:none}
+  .sub-line{
+    position:relative;display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+    margin-top:10px;padding-left:2px;font-size:13px;color:#6B7684;
+  }
+  .sub-line[hidden]{display:none}
+  .sub-options{flex-direction:column;align-items:flex-start;gap:14px;padding-top:2px;padding-bottom:2px}
+  .radio{
+    position:relative;display:inline-flex;align-items:center;gap:11px;
+    font-size:14px;line-height:1.45;color:#2B3542;cursor:pointer;user-select:none;
+  }
+  .radio input{position:absolute;opacity:0;width:0;height:0}
+  .rbox{
+    width:20px;height:20px;border-radius:50%;flex:0 0 auto;
+    background:#fff;box-shadow:inset 0 0 0 2px #C8D0D9;
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:box-shadow .12s ease;
+  }
+  .rbox::after{
+    content:"";width:10px;height:10px;border-radius:50%;background:var(--green);
+    transform:scale(0);transition:transform .12s ease;
+  }
+  .radio input:checked + .rbox{box-shadow:inset 0 0 0 2px var(--green)}
+  .radio input:checked + .rbox::after{transform:scale(1)}
+  .radio input:focus-visible + .rbox{box-shadow:inset 0 0 0 2px var(--green),0 0 0 3px rgba(18,166,124,.25)}
+  .radio .info{margin-left:2px}
+  .form-row:first-child{padding-top:6px}
+
+  .form-label{
+    flex:0 0 222px;
+    display:flex;align-items:center;justify-content:flex-end;gap:9px;
+    padding-top:11px;
+    font-size:15px;color:#2B3542;text-align:right;white-space:nowrap;
+  }
+  .form-control{flex:1 1 auto;min-width:0;max-width:660px}
+
+  .info{
+    position:relative;
+    width:16px;height:16px;border-radius:50%;background:#BFC7D1;color:#fff;
+    font-size:11px;font-style:italic;font-weight:700;line-height:1;
+    display:inline-flex;align-items:center;justify-content:center;
+    cursor:help;user-select:none;flex:0 0 auto;
+    font-family:Georgia,"Times New Roman",serif;
+  }
+  .info::after{
+    content:attr(data-tip);
+    position:absolute;left:50%;bottom:calc(100% + 9px);
+    transform:translate(-50%,4px);
+    width:max-content;max-width:260px;
+    padding:8px 11px;border-radius:5px;
+    background:#1D2B3A;color:#fff;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:12.5px;font-style:normal;font-weight:400;line-height:1.5;letter-spacing:0;
+    text-align:left;white-space:normal;
+    opacity:0;pointer-events:none;z-index:200;
+    transition:opacity .14s ease,transform .14s ease;
+    box-shadow:0 6px 18px rgba(16,28,42,.22);
+  }
+  .info::before{
+    content:"";position:absolute;left:50%;bottom:calc(100% + 4px);
+    transform:translate(-50%,4px);
+    border:5px solid transparent;border-top-color:#1D2B3A;
+    opacity:0;pointer-events:none;z-index:200;
+    transition:opacity .14s ease,transform .14s ease;
+  }
+  .info:hover::after,.info:focus-visible::after{opacity:1;transform:translate(-50%,0)}
+  .info:hover::before,.info:focus-visible::before{opacity:1;transform:translate(-50%,0)}
+  .info:focus-visible{outline:2px solid rgba(45,111,168,.45);outline-offset:2px}
+
+  .chip{
+    display:inline-flex;align-items:center;height:20px;padding:0 8px;
+    border-radius:10px;background:#EEF1F5;color:#6B7684;
+    font-size:11.5px;font-weight:600;white-space:nowrap;
+  }
+
+  /* underlined select */
+  .select-line{position:relative}
+  .select-line select{
+    -webkit-appearance:none;appearance:none;
+    width:100%;height:42px;padding:0 32px 0 0;
+    border:0;border-bottom:1px solid #DCE0E6;border-radius:0;
+    background:transparent;font-family:inherit;font-size:15px;color:var(--text);
+    cursor:pointer;
+  }
+  .select-line select:focus{outline:none;border-bottom-color:#93A1B2}
+  .select-line .caret{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    width:13px;height:13px;color:#9AA4B1;pointer-events:none;
+  }
+
+  /* read-only value on plans without the control */
+
+  /* checkbox row */
+  .checks{display:flex;align-items:center;gap:52px;flex-wrap:wrap;min-height:42px}
+  .check{display:inline-flex;align-items:center;gap:11px;font-size:15px;color:#2B3542;cursor:pointer;user-select:none}
+  .check input{position:absolute;opacity:0;width:0;height:0}
+  .box{
+    width:21px;height:21px;border-radius:5px;background:var(--green);
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+    transition:background .12s ease,box-shadow .12s ease;
+  }
+  .box svg{width:13px;height:13px;display:block;transition:opacity .12s ease}
+  .check input:not(:checked) + .box{background:#fff;box-shadow:inset 0 0 0 1.5px #C8D0D9}
+  .check input:not(:checked) + .box svg{opacity:0}
+  .check input:focus-visible + .box{box-shadow:inset 0 0 0 1.5px #C8D0D9,0 0 0 3px rgba(18,166,124,.25)}
+  .check input:disabled + .box{opacity:.5}
+
+  /* ---------- multi-select dropdown ---------- */
+  .multi{position:relative;width:100%}
+  .multi-btn{
+    position:relative;
+    -webkit-appearance:none;appearance:none;
+    display:flex;align-items:center;width:100%;height:42px;padding:0 32px 0 0;
+    border:0;border-bottom:1px solid #DCE0E6;border-radius:0;
+    background:transparent;font-family:inherit;font-size:15px;color:var(--text);
+    cursor:pointer;text-align:left;
+  }
+  .multi-btn:focus{outline:none;border-bottom-color:#93A1B2}
+  .multi-btn .caret{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    width:13px;height:13px;color:#9AA4B1;pointer-events:none;
+  }
+  .multi-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .multi-tags .tag{
+    display:inline-flex;align-items:center;height:22px;padding:0 9px;
+    border-radius:4px;background:#EEF1F5;color:#39434F;
+    font-size:13px;font-weight:500;line-height:1;
+  }
+  .multi-tags .muted{color:#98A2AF;font-size:15px}
+  .multi-panel{
+    position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:80;
+    padding:12px 16px;
+    background:#fff;border:1px solid #E6E9ED;border-radius:6px;
+    box-shadow:0 10px 28px rgba(16,28,42,.14);
+    display:flex;flex-direction:column;gap:13px;
+  }
+  .multi-panel[hidden]{display:none}
+
+  /* ---------- actions ---------- */
+  .actions{
+    margin-top:auto;padding-top:56px;
+    display:flex;align-items:center;justify-content:center;gap:14px;
+  }
+  .save{
+    min-width:168px;height:54px;padding:0 42px;border:0;border-radius:27px;
+    background:#13293F;color:#fff;font-size:16px;letter-spacing:.2px;cursor:pointer;
+    box-shadow:0 2px 6px rgba(19,41,63,.16);
+    transition:background .15s ease,transform .06s ease;
+  }
+  .save:hover{background:#1B3B58}
+  .save:disabled{background:#B7C0CB;box-shadow:none;cursor:not-allowed}
+  .save:active{transform:translateY(1px)}
+
+  /* ---------- footer ---------- */
+  .footer{
+    margin:44px 0 0;padding:18px 0 26px;
+    border-top:1px solid var(--line);
+    color:#8B95A3;font-size:14px;
+  }
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:38px;transform:translate(-50%,14px);
+    background:#1D2B3A;color:#fff;font-size:14px;padding:11px 22px;border-radius:24px;
+    box-shadow:0 8px 24px rgba(16,28,42,.24);
+    opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease;z-index:60;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+
+
+  @media (max-width:1080px){
+    .card{padding:26px 24px 56px}
+    .form-row{flex-direction:column;gap:10px;padding:16px 0}
+    .form-label{justify-content:flex-start;padding-top:0}
+    .form-control{width:100%;max-width:none}
+  }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-arc" aria-hidden="true"></span>
+      PodBean<span class="brand-pro">pro</span>
+    </div>
+
+    <nav class="topnav"><a href="#" aria-current="page">Advanced Options</a></nav>
+
+    <div class="mock-switcher" role="group" aria-label="Prototype: preview as plan">
+      <span>View as</span>
+      <button type="button" data-plan="network">Network</button>
+      <button type="button" data-plan="business" class="is-on">Business</button>
+    </div>
+
+    <div class="top-actions">
+      <a class="top-action" href="#">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2"/>
+          <path d="M9.6 9.3a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.4v.4" stroke-linecap="round"/>
+          <circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none"/>
+        </svg>
+        Support
+      </a>
+      <button class="top-action" type="button">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <circle cx="12" cy="8.2" r="3.9"/>
+          <path d="M4.8 20.2c.7-3.5 3.7-5.6 7.2-5.6s6.5 2.1 7.2 5.6" stroke-linecap="round"/>
+        </svg>
+        PB network
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+          <path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="nav-item" href="#">
+        <svg class="ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M11.4 2.6a1 1 0 0 1 1.2 0l8.2 6.4c.4.3.6.7.6 1.2v10.3a1 1 0 0 1-1 1h-5.2a1 1 0 0 1-1-1v-5.2h-4.4v5.2a1 1 0 0 1-1 1H3.6a1 1 0 0 1-1-1V10.2c0-.5.2-.9.6-1.2l8.2-6.4z"/>
+        </svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="3" y="3" width="8" height="8" rx="1.4"/>
+          <rect x="13" y="3" width="8" height="8" rx="1.4"/>
+          <rect x="3" y="13" width="8" height="8" rx="1.4"/>
+          <rect x="13" y="13" width="8" height="8" rx="1.4"/>
+        </svg>
+        Channels
+      </a>
+      <button class="nav-item" type="button">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M5 19V13" stroke-linecap="round"/><path d="M12 19V6" stroke-linecap="round"/><path d="M19 19V10" stroke-linecap="round"/>
+        </svg>
+        Statistics
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+          <path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="nav-item is-open" type="button">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="4.2"/>
+          <circle cx="12" cy="10" r="2.5"/>
+          <path d="M7.6 17.6c.9-2 2.5-3 4.4-3s3.5 1 4.4 3" stroke-linecap="round"/>
+        </svg>
+        Settings
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+          <path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="subnav">
+        <a href="#">Organization Details</a>
+        <a href="#">Team Members</a>
+        <a href="#" class="active" aria-current="page">Advanced Options</a>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <div class="tabbar">
+        <div class="tabs" role="tablist" aria-label="Advanced options sections">
+          <button class="tab" type="button" role="tab" aria-selected="false">Security</button>
+          <button class="tab" type="button" role="tab" aria-selected="false">App</button>
+          <button class="tab is-active" type="button" role="tab" aria-selected="true">Content</button>
+          <button class="tab" type="button" role="tab" aria-selected="false">AI &amp; Integrations</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <div class="inner">
+
+            <!-- Private Player -->
+            <div class="form-row" id="row-private-player">
+              <div class="form-label">
+                Private Embed Player
+                <span class="info" tabindex="0" role="note" aria-label="Enable Embed Player for All Private Channels." data-tip="Enable Embed Player for All Private Channels.">i</span>
+              </div>
+              <div class="form-control">
+                <div class="ctrl">
+                  <div class="select-line">
+                    <select id="privatePlayerSelect" aria-label="Private Embed Player">
+                      <option value="enable">Enable</option>
+                      <option value="disable">Disable</option>
+                    </select>
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                      <path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="sub-line sub-options" id="privatePlayerOptions">
+                    <label class="radio">
+                      <input type="radio" name="ppAccess" value="login" checked />
+                      <span class="rbox"></span>
+                      Request user login to access
+                    </label>
+                    <label class="radio">
+                      <input type="radio" name="ppAccess" value="url" />
+                      <span class="rbox"></span>
+                      <span>Don't request user login and limit access with Reference URL</span>
+                      <span class="info" tabindex="0" role="note" aria-label="This allows you to add reference URLs for the private embed player. Users can access the private content via the reference URL without login." data-tip="This allows you to add reference URLs for the private embed player. Users can access the private content via the reference URL without login.">i</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="form-row" id="row-comments">
+              <div class="form-label">
+                Podcast Comments
+                <span class="info" tabindex="0" role="note" aria-label="Enable or disable comments for all channels." data-tip="Enable or disable comments for all channels in the company.">i</span>
+              </div>
+              <div class="form-control">
+                <div class="ctrl">
+                  <div class="select-line">
+                    <select id="commentsSelect" aria-label="Podcast Comments">
+                      <option value="enable">Enable</option>
+                      <option value="disable">Disable</option>
+                    </select>
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                      <path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Share -->
+            <div class="form-row" id="row-share">
+              <div class="form-label">
+                Share on Public Channels
+                <span class="info" tabindex="0" role="note" aria-label="Shows the Share button on all public channels of your podcast website. Private channels have no Share button on the web." data-tip="Shows the Share button on all public channels of your podcast website. Private channels have no Share button on the web.">i</span>
+              </div>
+              <div class="form-control">
+                <div class="ctrl">
+                  <div class="select-line">
+                    <select id="shareSelect" aria-label="Share on Public Channels">
+                      <option value="enable">Enable</option>
+                      <option value="disable">Disable</option>
+                    </select>
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                      <path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enable download -->
+            <div class="form-row" id="row-download">
+              <div class="form-label">
+                Enable Download
+                <span class="info" tabindex="0" role="note" aria-label="This controls the download link on your podcast website, embeddable player and the Podbean Pro App/White Label App." data-tip="This controls the download link on your podcast website, embeddable player and the Podbean Pro App/White Label App.">i</span>
+              </div>
+              <div class="form-control">
+                <div class="ctrl">
+                  <div class="multi" id="downloadMulti">
+                    <button class="multi-btn" type="button" id="downloadToggle" aria-haspopup="true" aria-expanded="false">
+                      <span class="multi-tags" id="downloadSummary"><span class="tag">Web</span><span class="tag">Player</span><span class="tag">App</span></span>
+                      <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                        <path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+
+                    <div class="multi-panel" id="downloadPanel" hidden>
+                      <label class="check">
+                        <input type="checkbox" checked data-target="web" />
+                        <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" aria-hidden="true"><path d="M5 12.5l4.6 4.6L19 7.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        Web
+                      </label>
+                      <label class="check">
+                        <input type="checkbox" checked data-target="player" />
+                        <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" aria-hidden="true"><path d="M5 12.5l4.6 4.6L19 7.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        Player
+                      </label>
+                      <label class="check">
+                        <input type="checkbox" checked data-target="app" />
+                        <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" aria-hidden="true"><path d="M5 12.5l4.6 4.6L19 7.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        App
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Brand -->
+            <div class="form-row" id="row-brand">
+              <div class="form-label">
+                Removing Podbean Brand
+              </div>
+              <div class="form-control">
+                <div class="ctrl">
+                  <div class="select-line">
+                    <select id="brandSelect" aria-label="Removing Podbean Brand">
+                      <option value="enable">Enable</option>
+                      <option value="disable">Disable</option>
+                    </select>
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                      <path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="save" type="button" id="saveBtn">Save</button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="footer">Copyright © Podbean.com 2026. All Rights Reserved.</div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Saved</div>
+
+<script>
+
+  const CAPS = {
+    network:  { comments:true,  share:true,  download:true,  brand:true,  privatePlayer:false },
+    business: { comments:true,  share:true,  download:true,  brand:true,  privatePlayer:true  }
+  };
+
+  const state = {
+    plan: 'business',
+    commentsOn: true,
+    share: true,
+    downloadWeb: true,
+    downloadPlayer: true,
+    downloadApp: true,
+    brand: false,
+    privatePlayer: false
+  };
+
+  const $ = s => document.querySelector(s);
+
+  const toastEl = $('#toast');
+  let toastTimer;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
+  }
+
+  /* ---------------- controls ---------------- */
+  function setOn(section, on){
+    if(section === 'comments') state.commentsOn = on;
+    if(section === 'share') state.share = on;
+    if(section === 'download') state.downloadWeb = on;
+  }
+
+  function applyMode(section, mode){
+    setOn(section, mode === 'enable');
+    render();
+  }
+
+  $('#commentsSelect').addEventListener('change', e => applyMode('comments', e.target.value));
+  $('#shareSelect').addEventListener('change', e => applyMode('share', e.target.value));
+
+  $('#privatePlayerSelect').addEventListener('change', e => {
+    state.privatePlayer = e.target.value === 'enable';
+    render();
+  });
+
+  function updateDownloadSummary(){
+    const labels = { web:'Web', player:'Player', app:'App' };
+    const on = ['web','player','app'].filter(t => $('[data-target="' + t + '"]').checked);
+    const el = $('#downloadSummary');
+    el.innerHTML = on.length
+      ? on.map(t => `<span class="tag">${labels[t]}</span>`).join('')
+      : '<span class="muted">None</span>';
+  }
+
+  const dlBtn = $('#downloadToggle');
+  const dlPanel = $('#downloadPanel');
+  dlBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    dlPanel.hidden = !dlPanel.hidden;
+    dlBtn.setAttribute('aria-expanded', String(!dlPanel.hidden));
+  });
+  document.addEventListener('click', e => {
+    if(!e.target.closest('#downloadMulti')){ dlPanel.hidden = true; dlBtn.setAttribute('aria-expanded','false'); }
+  });
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && !dlPanel.hidden){ dlPanel.hidden = true; dlBtn.setAttribute('aria-expanded','false'); }
+  });
+
+  document.querySelectorAll('[data-target]').forEach(cb => {
+    cb.addEventListener('change', e => {
+      const t = e.target.dataset.target;
+      if(t === 'web') state.downloadWeb = e.target.checked;
+      if(t === 'player') state.downloadPlayer = e.target.checked;
+      if(t === 'app') state.downloadApp = e.target.checked;
+      updateDownloadSummary();
+      render();
+    });
+  });
+
+  $('#brandSelect').addEventListener('change', e => {
+    state.brand = e.target.value === 'enable';
+    render();
+  });
+
+  /* ---------------- render ---------------- */
+  function render(){
+    const caps = CAPS[state.plan];
+
+    $('#row-private-player').hidden = !caps.privatePlayer;
+
+    // comments
+    $('#commentsSelect').value = state.commentsOn ? 'enable' : 'disable';
+
+    // share
+    $('#shareSelect').value = state.share ? 'enable' : 'disable';
+
+    // download — one row, but only the web checkbox owns a channel scope
+    document.querySelector('[data-target="web"]').checked = state.downloadWeb;
+    document.querySelector('[data-target="player"]').checked = state.downloadPlayer;
+    document.querySelector('[data-target="app"]').checked = state.downloadApp;
+    updateDownloadSummary();
+
+    // private player
+    $('#privatePlayerSelect').value = state.privatePlayer ? 'enable' : 'disable';
+    $('#privatePlayerOptions').hidden = !state.privatePlayer;
+
+    // brand
+    $('#brandSelect').value = state.brand ? 'enable' : 'disable';
+
+    // page level
+    $('#saveBtn').disabled = !(caps.comments || caps.share || caps.download || caps.brand || caps.privatePlayer);
+  }
+
+  document.querySelectorAll('.mock-switcher button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.plan = btn.dataset.plan;
+      document.querySelectorAll('.mock-switcher button').forEach(b =>
+        b.classList.toggle('is-on', b === btn));
+      render();
+    });
+  });
+
+  $('#saveBtn').addEventListener('click', () => {
+    toast(CAPS[state.plan].comments || CAPS[state.plan].share ? 'Saved' : 'Nothing to save on this plan');
+  });
+
+  render();
+</script>
+</body>
+</html>
